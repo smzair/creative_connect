@@ -29,19 +29,11 @@ class creativeCommercials extends Controller
     // view Commercial list
     public function View()
    {
-
-        // $commercial_list = DB::table('create_commercial')
-        // ->leftJoin('users', ' users.id' , '=', 'create_commercial.user_id')
-        // ->leftJoin('brands', 'brands.id', '=', 'create_commercial.brand_id')
-        // ->get('create_commercial.user_id','create_commercial.brand_id','create_commercial.project_name', 'create_commercial.kind_of_work', 'create_commercial.per_qty_value', 'users.Company' , 'brands.name' );
-
-
-        // $commercial_list = DB::table('create_commercial')
-        // ->leftJoin('brands', 'brands.id', '=', 'create_commercial.brand_id')
-        // ->get('create_commercial.id','create_commercial.user_id', 'create_commercial.brand_id', 'create_commercial.project_name', 'create_commercial.kind_of_work', 'create_commercial.per_qty_value', 'brands.name');
-
-        // print_r($commercial_list);
-        $commercial_list = create_commercial::get();
+        $commercial_list = create_commercial::
+        leftJoin('brands', 'brands.id', '=', 'create_commercial.brand_id')
+        ->leftJoin('users', 'create_commercial.user_id', 'users.id')
+        ->select('create_commercial.id', 'create_commercial.brand_id', 'create_commercial.project_name', 'create_commercial.kind_of_work', 'create_commercial.per_qty_value', 'users.Company', 'brands.name')
+        ->get();
         // dd($commercial_list);
         $num = 1;
        return view('commercial.Creative_commercialView')->with('com', $commercial_list)->with('num',$num);
@@ -117,4 +109,6 @@ class creativeCommercials extends Controller
             return view('commercial.Creative-commercials')->with('users_data', $users_data)->with('commercial_data', $commercial_data);
         }
     }
+
+
 }
