@@ -11,4 +11,10 @@ class creativeCommercials extends Controller
    {
        return view('commercial.Creative-commercials');
    }
+
+
+    public function View()
+   {
+       return view('commercial.Creative_commercialView');
+   }
 }

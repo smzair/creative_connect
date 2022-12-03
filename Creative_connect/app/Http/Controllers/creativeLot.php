@@ -10,4 +10,9 @@ class creativeLot extends Controller
    {
        return view('Lots.creative-Lot-create');
    }
+
+    public function View()
+   {
+       return view('Lots.Creative_lotView');
+   }
 }

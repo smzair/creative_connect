@@ -10,4 +10,9 @@ class creativeWrc extends Controller
    {
        return view('Wrc.Creative-wrc-create');
    }
+
+     public function View()
+   {
+       return view('Lots.Creative_Wrc');
+   }
 }
