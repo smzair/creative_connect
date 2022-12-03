@@ -22,6 +22,17 @@ Route::get('/Creative-createComs','creativeCommercials@index')->name('CREATECOM'
 Route::get('/Creative-createLots','creativeLot@index')->name('CREATELOT');
 Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
 
-Route::get('/Creative-viewComs','creativeCommercials@view')->name('viewCOM');
+// Route::get('/Creative-viewComs','creativeCommercials@view')->name('viewCOM'); // old
+
+Route::get('/Creative_commercialView', 'creativeCommercials@view')->name('viewCOM');
 Route::get('/Creative-viewLots','creativeLot@view')->name('viewLOT');
 Route::get('/Creative-viewWrcs','creativeWrc@view')->name('viewWRC');
+
+
+/****************  Commercial views routing   **************/
+Route::post('/Creative-createComs', 'creativeCommercials@create')->name('SAVECOMS');
+
+
+
+/********** Ajax calling ********/
+Route::post('/get-brand', 'AjaxController@getBrand');
