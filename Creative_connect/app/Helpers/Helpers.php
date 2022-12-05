@@ -110,3 +110,51 @@ if (!function_exists('kindOfWork')) {
         return   $kindOfWork;
     }
 }
+
+// Marketplace
+if (!function_exists('getMarketPlace')) {
+
+    function getMarketPlace() {
+        $getMarketPlace = array(
+            'Myntra' => 'Myntra',
+            'Amazon' => 'Amazon',
+            'Flipkart' => 'Flipkart',
+            'Ajio' => 'Ajio',
+            'Nykaa' => 'Nykaa',
+            'Tata Cliq' => 'Tata Cliq',
+            'First Cry' => 'First Cry',
+            'Brand Site' => 'Brand Site',
+            'Any Other Website' => 'Any Other Website',
+            'Shopify' => 'Shopify',
+        );
+        return $getMarketPlace;
+    }
+}
+
+// Type of Service
+if (!function_exists('getTypeOfService')) {
+
+    function getTypeOfService()
+    {
+        $getTypeOfService = array(
+            'Fossil Master Sheet' => 'Fossil Master Sheet',
+            'Creative Descriptions' => 'Creative Descriptions',
+            'GHC Content + Descriptions + Images Scraping' => 'GHC Content + Descriptions + Images Scraping',
+            'Content Sheet Creation' => 'Content Sheet Creation',
+            'Uploading' => 'Uploading',
+            'Image Scraping' => 'Image Scraping',
+            'Fossil Carryover SKUs' => 'Fossil Carryover SKUs'
+        );
+        return $getTypeOfService;
+    }
+}
+
+// pre 
+if (!function_exists('pre')){
+    function pre($arr){
+        echo "<pre>";
+        print_r($arr);
+        echo "</pre>";
+        return ;
+    }
+}

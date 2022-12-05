@@ -22,15 +22,19 @@ Route::get('/Creative-createComs','creativeCommercials@index')->name('CREATECOM'
 Route::get('/Creative-createLots','creativeLot@index')->name('CREATELOT');
 Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
 
-// Route::get('/Creative-viewComs','creativeCommercials@view')->name('viewCOM'); // old
-
 Route::get('/Creative_commercialView', 'creativeCommercials@view')->name('viewCOM');
 Route::get('/Creative-viewLots','creativeLot@view')->name('viewLOT');
 Route::get('/Creative-viewWrcs','creativeWrc@view')->name('viewWRC');
 
 
 /****************  Commercial views routing   **************/
-Route::post('/Creative-createComs', 'creativeCommercials@create')->name('SAVECOMS');
+Route::post('/Creative-createComs', 'creativeCommercials@create')->name('SAVECOMS'); // for save Commercial
+
+Route::get('/Creative-createCatalog', 'catalogCommercials@index')->name('CREATECATALOG'); // for Commercials Create Catalog  Form
+
+Route::post('/Creative-createCatalog','catalogCommercials@create')->name('SAVECATALOG'); // For save Commercials Catalog  Log
+
+Route::get('/Creative-CatalogView', 'catalogCommercials@view')->name('viewCommercial'); // for Commercials Create Catalog  Form
 
 
 

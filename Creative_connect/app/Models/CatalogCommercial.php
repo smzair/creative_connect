@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class create_commercial extends Model
+class CatalogCommercial extends Model
 {
     use HasFactory;
     protected $fillable = [
-       'id', 'user_id', 'brand_id', 'project_name', 'kind_of_work', 'per_qty_value',
+        'id', 'user_id', 'brand_id', 'market_place', 'type_of_service', 'CommercialSKU'
     ];
 
-    protected $table = 'create_commercial';
+    protected $table = 'create_commercial_log';
 }

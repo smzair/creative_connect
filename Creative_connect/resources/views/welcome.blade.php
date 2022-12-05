@@ -139,6 +139,7 @@
 
   <div class= "magic-container">
     <div id="magic" ></div>
+    <a href="{{route('CREATECOM')}}">Create Commercials</a>
     <div class="playground">
      
     </div>

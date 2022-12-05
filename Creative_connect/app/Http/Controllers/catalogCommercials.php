@@ -1,0 +1,111 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\CatalogCommercial;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class catalogCommercials extends Controller
+{
+
+    public function Index()
+    {
+        $commercial_data = (object) [
+            'id' => '0',
+            'user_id' => '',
+            'brand_id' => '',
+            'market_place' => '',
+            'type_of_service' => '',
+            'CommercialSKU' => '',
+        ];
+        $users_data = DB::table('users')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
+            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
+            ->where([['users.Company', '<>', NULL], ['roles.name', '=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+        return view('commercial.Catalog_commercial')->with('users', $users_data)->with('commercial_data', $commercial_data);
+    }
+
+    // create function for save and update Commercial
+    public function create(Request $request)
+    {
+
+        // dd($request->all());
+        $id = $request->id;
+        $btn_val = $request->save;
+        $user_id = $request->user_id;
+        $brand_id = $request->brand_id;
+        $market_place = $request->market_place;
+        $type_of_service = $request->type_of_service;
+        $CommercialSKU = $request->CommercialSKU;
+
+        $create_commercial = new CatalogCommercial();
+
+        if ($id > 0) {
+            // update
+        } else {
+            // insert
+            $create_commercial->user_id = $user_id;
+            $create_commercial->brand_id = $brand_id;
+            $create_commercial->market_place = $market_place;
+            $create_commercial->type_of_service = $type_of_service;
+            $create_commercial->CommercialSKU = $CommercialSKU;
+            $status = $create_commercial->save();
+            if ($status) {
+
+                if ($btn_val == 1) {
+                    request()->session()->flash('success', 'Commercial Successfully added');
+                    $commercial_data = (object) [
+                        'id' => '0',
+                        'user_id' => '',
+                        'brand_id' => '',
+                        'market_place' => '',
+                        'type_of_service' => '',
+                        'CommercialSKU' => '',
+                    ];
+                }
+
+                if ($btn_val == 2) {
+                    request()->session()->flash('success', 'Commercial Successfully added Add new');
+                    $commercial_data = (object) [
+                        'id' => $id,
+                        'user_id' => $user_id,
+                        'brand_id' => $brand_id,
+                        'market_place' => '',
+                        'type_of_service' => '',
+                        'CommercialSKU' => '',
+                    ];
+                }
+            }
+            if (!$status) {
+                request()->session()->flash('false', 'Commercial Successfully added');
+                $commercial_data = (object) [
+                    'id' => $id,
+                    'user_id' => $user_id,
+                    'brand_id' => $brand_id,
+                    'market_place' => '',
+                    'type_of_service' => '',
+                    'CommercialSKU' => '',
+                ];
+            }
+            $users_data = DB::table('users')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
+            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
+            ->where([['users.Company', '<>', NULL], ['roles.name', '=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+            return view('commercial.Catalog_commercial')->with('users', $users_data)->with('commercial_data', $commercial_data);
+        }
+    }
+
+    // function for listing all Commercial logs
+    public function View()
+    {
+        $commercial_list = CatalogCommercial::leftJoin('brands', 'brands.id', '=', 'create_commercial_log.brand_id')
+        ->leftJoin('users', 'create_commercial_log.user_id', 'users.id')
+        ->select('create_commercial_log.id', 'create_commercial_log.brand_id', 'create_commercial_log.market_place', 'create_commercial_log.type_of_service', 'create_commercial_log.CommercialSKU', 'users.Company', 'brands.name')
+        ->get();
+        $num = 1;
+        return view('commercial.Catalog_commercialView')->with('com', $commercial_list)->with('num', $num);
+    }
+
+    
+}
