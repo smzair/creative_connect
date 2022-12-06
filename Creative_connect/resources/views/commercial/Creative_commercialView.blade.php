@@ -58,6 +58,7 @@ Create New Commercial for Creative
                   <th class="p-2">Project Name</th>
                   <th class="p-2">Kind of Work</th>
                   <th class="p-2">Commercial Per Qty</th>
+                  <th class="p-2">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -72,7 +73,10 @@ Create New Commercial for Creative
                   <td class="p-sm-2 p-1">
                     <i class="fas fa-rupee-sign"></i>
                     {{$comer->per_qty_value}}
-                  </td>                  
+                  </td> 
+                  <td>
+                    <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{ url('Creative-createComs/' . $comer->id)}}">Edit</a>  
+                  </td>                 
                 </tr>
                 @endforeach
               </tbody>

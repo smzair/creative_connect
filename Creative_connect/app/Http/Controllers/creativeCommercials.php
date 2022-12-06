@@ -52,9 +52,7 @@ class creativeCommercials extends Controller
 
         $create_commercial = new create_commercial();
 
-        if ($id > 0) {
-            // update
-        } else {
+        
             // insert
             $create_commercial->user_id = $user_id;
             $create_commercial->brand_id = $brand_id;
@@ -107,7 +105,35 @@ class creativeCommercials extends Controller
             // return redirect()->route('CREATECOM')->with('users_data', $users_data)->with('commercial_data', $commercial_data);
             // redirect()->back()->with('users_data', $users_data)->with('commercial_data', $commercial_data);
             return view('commercial.Creative-commercials')->with('users_data', $users_data)->with('commercial_data', $commercial_data);
-        }
+        
+    }
+
+    // sending data for selectd id to edit this
+    public function edit($id)
+    {
+        $users_data = DB::table('users')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
+            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
+            ->where([['users.Company', '<>', NULL], ['roles.name', '=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+
+
+        $commercial_data = create_commercial::where('id', $id)->first();
+        // $commercial_data = CatalogCommercial::find($id);
+
+        // $commercial_data = (object) [
+        //     'id' =>$data->id,
+        //     'user_id' =>$data->user_id,
+        //     'brand_id' =>$data->brand_id,
+        //     'market_place' => $data->market_place,
+        //     'type_of_service' => $data->type_of_service,
+        //     'CommercialSKU' => $data->CommercialSKU,
+        // ];
+        // dd($commercial_data);
+
+
+        return view('commercial.Creative-commercials')->with('users_data', $users_data)->with('commercial_data', $commercial_data);
+
+        // dd($id);
     }
 
 
