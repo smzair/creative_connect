@@ -10,6 +10,8 @@ Create New Commercial for Creative
             <div class="card card-transparent card-info mt-3">
                 <div class="card-header">
                     <h3 class="card-title">Add Commercial</h3>
+                    <a style="float: right;" class="btn btn-success swalDefaultSuccess" href="{{route('viewCOM')}}">Commercial List</a>
+
                 </div>
                 <div class="card-body">
 
@@ -26,117 +28,135 @@ Create New Commercial for Creative
                             </div>
                         @endif
                     </div>
-                     <form method="POST" action="{{ route('SAVECOMS') }}"
-                            onsubmit="return validateForm(event)">
+
+                    @php
+                        $formRoute = 'SAVECOMS';
+                        $btn_Name = 'Save';
+                        if($commercial_data->id > 0){
+                            $formRoute = 'UPDATECOMS';
+                            $btn_Name = 'Update';
+                        }
+                    @endphp
+                     <form method="POST" action="{{ route($formRoute) }}"  onsubmit="return validateForm(event)">
                         @csrf
                         <div class="row">
-                                {{-- Company Name --}}
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label class="control-label required">Company Name</label>
-                                        <input type="hidden" id="create_commercial_id" name="id"
-                                            value="{{ $commercial_data->id }}">
-                                        <select id="user_id" class="custom-select form-control-border " name="user_id"
-                                            aria-hidden="true" style="width: 100%;">
-                                            <option value="">Select Company Name</option>
-                                            @foreach ($users_data as $user)
-                                                <option value="{{ $user->id }}" data-client_id="{{ $user->client_id }}">
-                                                    {{ $user->Company . ' (' . $user->name . ')' }}
-                                                </option>
-                                            @endforeach
-                                            {{-- <option value="{user->id}" data-client_id="{user->client_id}">{user->Company}}</option> --}}
-                                        </select>
-                                        <p class="input_err" style="color: red; display: none;" id="user_id_err"></p>
-                                    </div>
-                                </div>
-
-                                {{-- Brand Name --}}
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label class="control-label required">Brand Name</label>
-                                        <select class="custom-select form-control-border" name="brand_id" id="brands">
-                                            <option value="">Select Brand Name</option>
-                                        </select>
-                                        <p class="input_err" style="color: red; display: none;" id="brands_err"></p>
-
-                                    </div>
-                                </div>
-
-                                {{-- Client Id --}}
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <label>Client Id</label>
-                                        <input type="text" class="form-control form-control-border" id="client_id"
-                                            name="client_id" placeholder="Client Id" readonly>
-                                        <p class="input_err" style="color: red; display: none;" id="client_id_err"></p>
-                                    </div>
+                            {{-- Company Name --}}
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label required">Company Name</label>
+                                    <input type="hidden" id="create_commercial_id" name="id"
+                                        value="{{ $commercial_data->id }}">
+                                    <select id="user_id" class="custom-select form-control-border " name="user_id"
+                                        aria-hidden="true" style="width: 100%;">
+                                        <option value="">Select Company Name</option>
+                                        @foreach ($users_data as $user)
+                                            <option value="{{ $user->id }}" data-client_id="{{ $user->client_id }}">
+                                                {{ $user->Company . ' (' . $user->name . ')' }}
+                                            </option>
+                                        @endforeach
+                                        {{-- <option value="{user->id}" data-client_id="{user->client_id}">{user->Company}}</option> --}}
+                                    </select>
+                                    <p class="input_err" style="color: red; display: none;" id="user_id_err"></p>
                                 </div>
                             </div>
 
-                            {{-- Enter New Commercial Info row --}}
-                            <div class="row">
-                                <div class="col-sm-12 col-12">
-                                    <div class="cc-title">
-                                        <h5>Enter New Commercial Info</h5>
-                                    </div>
+                            {{-- Brand Name --}}
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label required">Brand Name</label>
+                                    <select class="custom-select form-control-border" name="brand_id" id="brands">
+                                        <option value="">Select Brand Name</option>
+                                    </select>
+                                    <p class="input_err" style="color: red; display: none;" id="brands_err"></p>
+
                                 </div>
-                                {{-- Project Type --}}
-                                <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label required">Project Name</label>
-                                        <input type="text" class="form-control" name="project_name" id="project_name"
-                                            placeholder="Enter Project Name" onKeyPress="return isAlphabet(event);">
-                                        <p class="input_err" style="color: red; display: none;" id="project_name_err"></p>
-                                    </div>
+                            </div>
+
+                            {{-- Client Id --}}
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Client Id</label>
+                                    <input type="text" class="form-control form-control-border" id="client_id"
+                                        name="client_id" placeholder="Client Id" readonly>
+                                    <p class="input_err" style="color: red; display: none;" id="client_id_err"></p>
                                 </div>
-                                {{-- Kind of Work kindOfWork --}}
-                                <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label required">Kind of Work</label>
+                            </div>
+                        </div>
+
+                        {{-- Enter New Commercial Info row --}}
+                        <div class="row">
+                            <div class="col-sm-12 col-12">
+                                <div class="cc-title">
+                                    <h5>Enter New Commercial Info</h5>
+                                </div>
+                            </div>
+                            {{-- Project Type --}}
+                            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label class="control-label required">Project Name</label>
+                                    <input type="text" class="form-control" name="project_name" id="project_name"
+                                        placeholder="Enter Project Name" onKeyPress="return isAlphabet(event);"  value="{{ $commercial_data->project_name }}" />
+                                    <p class="input_err" style="color: red; display: none;" id="project_name_err"></p>
+                                </div>
+                                 
+                            </div>
+                            {{-- Kind of Work kindOfWork --}}
+                            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label class="control-label required">Kind of Work</label>
+                                    @php
+                                        $kindOfWork = kindOfWork();
+                                    @endphp
+                                    <select class="custom-select form-control-border reset"
+                                        placeholder="Select Kind of Work" id="kind_of_work" name="kind_of_work">
+                                        <option value="">Select Kind of Work</option>
+
+                                        @foreach ($kindOfWork as $row)
+                                            <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    <script>
+                                        console.log("{{ $commercial_data->kind_of_work }}")
+                                         document.getElementById("kind_of_work").value = "{{ $commercial_data->kind_of_work }}";
+                                    </script>
+                                    <p class="input_err" style="color: red; display: none;" id="kind_of_work_err"></p>
+                                </div>
+                            </div>
+                            {{-- Commercial Per Qty --}}
+                            <div class="col-lg-4 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label class="control-label required">Commercial Per Qty</label>
+                                    <input type="text" class="form-control" name="per_qty_value" id="per_qty_value"
+                                        placeholder="Enter Order Quantity" onKeyPress="return isNumber(event);" value="{{$commercial_data->per_qty_value}}" />
+                                    <p class="input_err" style="color: red; display: none;" id="per_qty_value_err"></p>
+
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+
+
+                                <button type="submit" name="save" value="1"
+                                    class="btn btn-success swalDefaultSuccess">{{ $btn_Name }}</button>
+                                    
                                         @php
-                                            $kindOfWork = kindOfWork();
-                                        @endphp
-                                        <select class="custom-select form-control-border reset"
-                                            placeholder="Select Kind of Work" id="kind_of_work" name="kind_of_work">
-                                            <option value="">Select Kind of Work</option>
+                                if($commercial_data->id == 0 || $commercial_data->id == ''){
 
-                                            @foreach ($kindOfWork as $row)
-                                                <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
-                                            @endforeach
-                                            {{-- <option value="{Id}">Kind Of Work</option> --}}
+                                echo '<button type="submit" name="save" value="2"
+                                    class="btn btn-info ml-1 wrc-btn" onclick="">Save & Add
+                                    Another </button>';
+                                    }
+                            @endphp
 
-                                        </select>
-                                        <p class="input_err" style="color: red; display: none;" id="kind_of_work_err"></p>
-                                    </div>
-                                </div>
-                                {{-- Commercial Per Qty --}}
-                                <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                                    <div class="form-group">
-                                        <label class="control-label required">Commercial Per Qty</label>
-                                        <input type="text" class="form-control" name="per_qty_value" id="per_qty_value"
-                                            placeholder="Enter Order Quantity" onKeyPress="return isNumber(event);">
-                                        <p class="input_err" style="color: red; display: none;" id="per_qty_value_err"></p>
-
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12">
-                                    <button type="submit" name="save" value="1"
-                                        class="btn btn-success swalDefaultSuccess">Save</button>
-                                    <button type="submit" name="save" value="2"
-                                        class="btn btn-info ml-1 wrc-btn" onclick="">Save & Add
-                                        Another </button>
-
-                                    </div>
-                                </div>
-                            </form>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 
 <!-- jQuery -->
 <script src="{{ asset('/js/app.js') }}"></script>
@@ -179,7 +199,7 @@ Create New Commercial for Creative
                 }
             });
             document.getElementById("brands").innerHTML = options;
-            if(saved_brand_id_is > 0){
+            if(saved_brand_id_is > 0 && user_id_val_is === user_id_is){
                 document.getElementById("brands").value = saved_brand_id_is;
             }
         });
@@ -213,6 +233,7 @@ Create New Commercial for Creative
         const kind_of_work = $("#kind_of_work").val();
         const per_qty_value = $("#per_qty_value").val();
 
+        // console.log(brand_id)
         let user_id_is_Valid = true;
         let brand_id_Valid = true;
         let project_name_Valid = true;

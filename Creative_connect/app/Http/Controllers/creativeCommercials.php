@@ -39,6 +39,34 @@ class creativeCommercials extends Controller
        return view('commercial.Creative_commercialView')->with('com', $commercial_list)->with('num',$num);
    }
 
+    // sending data for selectd id to edit this
+    public function edit($id)
+    {
+        $users_data = DB::table('users')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
+            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
+            ->where([['users.Company', '<>', NULL], ['roles.name', '=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+
+
+        $commercial_data = create_commercial::where('id', $id)->first();
+        // $commercial_data = CatalogCommercial::find($id);
+
+        // $commercial_data = (object) [
+        //     'id' =>$data->id,
+        //     'user_id' =>$data->user_id,
+        //     'brand_id' =>$data->brand_id,
+        //     'market_place' => $data->market_place,
+        //     'type_of_service' => $data->type_of_service,
+        //     'CommercialSKU' => $data->CommercialSKU,
+        // ];
+        // dd($commercial_data);
+
+
+        return view('commercial.Creative-commercials')->with('users_data', $users_data)->with('commercial_data', $commercial_data);
+
+        // dd($id);
+    }
+
     // create function for save and update Commercial
     public function create(Request $request)
     {
@@ -108,32 +136,39 @@ class creativeCommercials extends Controller
         
     }
 
-    // sending data for selectd id to edit this
-    public function edit($id)
+    // update update Commercial 
+    public function update(Request $request)
     {
-        $users_data = DB::table('users')
-            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
-            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
-            ->where([['users.Company', '<>', NULL], ['roles.name', '=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+        $id = $request->id;
+        $btn_val = $request->save;
+        $user_id = $request->user_id;
+        $brand_id = $request->brand_id;
+        $project_name = $request->project_name;
+        $kind_of_work = $request->kind_of_work;
+        $per_qty_value = $request->per_qty_value;
+
+        $create_commercial = create_commercial::find($id);
+        
+        // Update
+
+        $create_commercial->user_id = $user_id;
+        $create_commercial->brand_id = $brand_id;
+        $create_commercial->project_name = $project_name;
+        $create_commercial->kind_of_work = $kind_of_work;
+        $create_commercial->per_qty_value = $per_qty_value;
+        // dd($create_commercial);
+        $status = $create_commercial->update();
+        if ($status) {
+            request()->session()->flash('success', 'Commercial Successfully Updated!!');
+        }
+        if (!$status) {
+            // $commercial_data = CatalogCommercial::where('id', $id)->first();
+            request()->session()->flash('false', 'Somthing went wrong try again!!!');
+        }
 
 
-        $commercial_data = create_commercial::where('id', $id)->first();
-        // $commercial_data = CatalogCommercial::find($id);
+        return redirect()->route('EDITCOMS', [$id]);
 
-        // $commercial_data = (object) [
-        //     'id' =>$data->id,
-        //     'user_id' =>$data->user_id,
-        //     'brand_id' =>$data->brand_id,
-        //     'market_place' => $data->market_place,
-        //     'type_of_service' => $data->type_of_service,
-        //     'CommercialSKU' => $data->CommercialSKU,
-        // ];
-        // dd($commercial_data);
-
-
-        return view('commercial.Creative-commercials')->with('users_data', $users_data)->with('commercial_data', $commercial_data);
-
-        // dd($id);
     }
 
 
