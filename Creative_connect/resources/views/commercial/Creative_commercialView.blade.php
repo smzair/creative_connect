@@ -13,7 +13,7 @@ Create New Commercial for Creative
               <div class="col-lg-12 col-md-12 col-sm-12">
                 <h3 class="card-title text-black text-bold">
                   <span class="d-inline-block align-middle">
-              View Commercial's
+                    View Commercial's
                   </span>
                   <span class="mr-2 ml-1 d-inline-block" style="position: relative; top: 1px;">|</span>
                 </h3>
@@ -55,23 +55,26 @@ Create New Commercial for Creative
                   <th class="p-2">Id</th>
                   <th class="p-2">Company Name</th>
                   <th class="p-2">Brand Name</th>
-                  <th class="p-2">Project Type</th>
+                  <th class="p-2">Project Name</th>
                   <th class="p-2">Kind of Work</th>
                   <th class="p-2">Commercial Per Qty</th>
                 </tr>
               </thead>
-              <tbody>@foreach($com as $comer)
+              <tbody>
+                @foreach($com as $comer)
                 <tr class="wrc-tt">
-                  <td class="p-sm-2 p-1">{{$comer->id}}</td>
+                  <td class="p-sm-2 p-1">{{$num++}}</td>
                   <td class="p-sm-2 p-1">{{$comer->Company}}</td>
                   <td class="p-sm-2 p-1">{{$comer->name}}</td>
-                  <td class="p-sm-2 p-1">{{getTypeOfShootList($comer->type_of_shoot)}}</td>
-                  <td class="p-sm-2 p-1">{{$comer->type_of_clothing}}</td>
+                  <td class="p-sm-2 p-1">{{$comer->project_name}}</td>
+                  {{-- <td class="p-sm-2 p-1">{{getTypeOfShootList($comer->type_of_shoot)}}</td> --}}
+                  <td class="p-sm-2 p-1">{{$comer->kind_of_work}}</td>
                   <td class="p-sm-2 p-1">
                     <i class="fas fa-rupee-sign"></i>
-                    {{$comer->commercial_value_per_sku}}
+                    {{$comer->per_qty_value}}
                   </td>                  
-                </tr>@endforeach
+                </tr>
+                @endforeach
               </tbody>
             </table>
           </div>
