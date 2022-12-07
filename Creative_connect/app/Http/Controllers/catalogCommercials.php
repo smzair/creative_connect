@@ -95,9 +95,9 @@ class catalogCommercials extends Controller
     // function for listing all Commercial logs
     public function View()
     {
-        $commercial_list = CatalogCommercial::leftJoin('brands', 'brands.id', '=', 'create_commercial_log.brand_id')
-        ->leftJoin('users', 'create_commercial_log.user_id', 'users.id')
-        ->select('create_commercial_log.id', 'create_commercial_log.brand_id', 'create_commercial_log.market_place', 'create_commercial_log.type_of_service', 'create_commercial_log.CommercialSKU', 'users.Company', 'brands.name')
+        $commercial_list = CatalogCommercial::leftJoin('brands', 'brands.id', '=', 'create_commercial_catalog.brand_id')
+        ->leftJoin('users', 'create_commercial_catalog.user_id', 'users.id')
+        ->select('create_commercial_catalog.id', 'create_commercial_catalog.brand_id', 'create_commercial_catalog.market_place', 'create_commercial_catalog.type_of_service', 'create_commercial_catalog.CommercialSKU', 'users.Company', 'brands.name')
         ->get();
         $num = 1;
         return view('commercial.Catalog_commercialView')->with('com', $commercial_list)->with('num', $num);

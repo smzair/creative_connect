@@ -21,8 +21,8 @@ class CreativeLots extends Migration
         $table->string('project_type');
          $table->string('verticle');
                   $table->string('client_bucket');
-$table->date('work_initiate_date');
-$table->date('Comitted_initiate_date');
+        $table->date('work_initiate_date');
+        $table->date('Comitted_initiate_date');
         $table->string('status');
         $table->timestamps();
     });
@@ -36,4 +36,5 @@ $table->date('Comitted_initiate_date');
         ->onDelete('cascade');
 
     });
+}
 }

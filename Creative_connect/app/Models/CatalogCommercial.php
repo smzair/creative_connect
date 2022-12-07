@@ -12,5 +12,5 @@ class CatalogCommercial extends Model
         'id', 'user_id', 'brand_id', 'market_place', 'type_of_service', 'CommercialSKU'
     ];
 
-    protected $table = 'create_commercial_log';
+    protected $table = 'create_commercial_catalog';
 }
