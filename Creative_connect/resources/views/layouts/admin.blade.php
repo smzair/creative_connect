@@ -118,13 +118,6 @@
                                                 </li>
 
                                                 <li class="nav-item">
-                                                    <a href="{{route('viewCOM')}}" class="nav-link">
-                                                        <i class="far fa-circle nav-icon"></i>
-                                                        <p>Commercials List</p>
-                                                    </a>
-                                                </li>
-
-                                                <li class="nav-item">
                                                     <a href="{{route('CREATELOT')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
                                                         <p>Create LOTs</p>
@@ -146,6 +139,7 @@
         </div>
     </div>
 
+    @endhasanyrole
 
 
     <div class="os-scrollbar os-scrollbar-horizontal os-scrollbar-unusable os-scrollbar-auto-hidden">
@@ -175,6 +169,7 @@
 
                 <ol class="breadcrumb float-sm-right">
 
+                    <li class="breadcrumb-item active ">{{auth()->user()->name}}</li>
                     <li class="breadcrumb-item active">@yield('title')</li>
                 </ol>
             </div><!-- /.col -->
@@ -184,6 +179,7 @@
 <div class="copy-msg"><p>Copied!</p></div>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper" style="background-color: transparent;">
+    @include('Partials.alert')
     @yield('content')
 </div>
 <!-- /.content-wrapper -->
@@ -261,6 +257,10 @@
     <script src="{{asset('js/select2.full.min.js')}}"></script>
 
     <script src="{{ asset('plugins/jquery-cookie-master/src/jquery.cookie.js') }}"></script>
+
+
+
+
     <script>
     //Date picker
     $('#reservationdate').datetimepicker({

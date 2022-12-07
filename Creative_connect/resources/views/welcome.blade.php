@@ -125,6 +125,7 @@
 
   <div class="hidden fixed top-4 px-6 py-4 " style="z-index: -2; text-align: right; padding-top: 16px; padding-right: 15px">
   
+    <a href="{{ route('extra.assignment') }}" style="font-size: 20px" class="text-lg text-gray-900 ">  Assignment page  </a>
 
    <!--  @if (Route::has('register'))
     <a href="{{ route('register') }}" class="ml-4 text-gray-900 " style="font-size: 17px; padding-left: 5px ">  Register</a>
