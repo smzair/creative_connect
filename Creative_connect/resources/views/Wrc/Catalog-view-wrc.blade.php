@@ -51,7 +51,7 @@ View WRC
                             </div>
                             <div class="col-lg-5 col-md-6 col-sm-12">
                                 <div class="card-tools float-md-right float-sm-none ml-md-0 mr-0 ml-sm-0 mt-sm-1 float-none ml-xs-0 mt-1">
-                                    <a class="btn btn-xs float-left align-middle mt-0 mr-2 py-1 px-2 mb-1" href="{{route('Wrc.createwrc')}}" style="position: relative; top: 2px;">Add New WRC</a>
+                                    <a class="btn btn-xs float-left align-middle mt-0 mr-2 py-1 px-2 mb-1" href="{{route('CREATECATLOGWRC')}}" style="position: relative; top: 2px;">Add New WRC</a>
                                 </div>
                             </div>
                         </div>
@@ -59,26 +59,38 @@ View WRC
                     <div class="card-body table-responsive p-0"  style="max-height: 700px; height: 100%;">
                         <table id="wrcTableCat" class="table table-head-fixed table-hover text-nowrap data-table">
                             <thead>
-                                <tr class="wrc-tt">
+                            <tr class="wrc-tt">
                                     <th class="p-2">Id</th>
                                     <th class="p-2">LOT Number</th>
                                     <th class="p-2">Company Name</th>
                                     <th class="p-2">Brand Name</th>
                                     <th class="p-2">WRC Number</th>
                                     <th class="p-2">WRC Created At</th>
-                                    <th class="p-2">SKU Count</th>
+                                    <!-- <th class="p-2">Work Brief</th>
+                                    <th class="p-2">Guidelines</th>
+                                    <th class="p-2">Add Document 1 </th>
+                                    <th class="p-2">Add Document 2</th> -->
+                                    <th class="p-2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($wrcs as $index => $wrc)
                                 <tr class="wrc-tt">
                                     <td class="p-sm-2 p-1">{{$index+1}}</td>
-                                    <td id="lotNum" class="p-sm-2 p-1">{{$wrc->lot_id}}</td>
-                                    <td id="companyName" class="p-sm-2 p-1">{{$wrc->Company}}</td>
+                                    <td id="lotNum" class="p-sm-2 p-1">{{$wrc->lot_number}}</td>
+                                    <td id="companyName" class="p-sm-2 p-1">{{$wrc->Company_name}}</td>
                                     <td id="brndName" class="p-sm-2 p-1">{{$wrc->name}}</td>
-                                    <td id="wrcNum" class="p-sm-2 p-1">{{$wrc->wrc_id}}  <span class="cpy-clipboardtable" id="copyBTnTable"><i class="fas fa-copy"></i></span> </td>
-                                    <td id="createdAt" class="p-sm-2 p-1">{{$wrc->created_at}}</td>
-                                    <td id="orderQuantity" class="p-sm-2 p-1">10</td>
+                                    <td id="wrcNum" class="p-sm-2 p-1">{{$wrc->wrc_number}}  <span class="cpy-clipboardtable" id="copyBTnTable"><i class="fas fa-copy"></i></span> </td>
+                                    <td id="createdAt" class="p-sm-2 p-1">{{dateFormat($wrc->created_at)}}<br><b>{{timeFormat($wrc->created_at)}}</b></td>
+                                    <!-- <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->work_brief}}</td>
+                                    <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->guidelines}}</td>
+                                    <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->document1}}</td>
+                                    <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->document2}}</td> -->
+                                    <td class="p-sm-2 p-1">
+                                    <div class="btn-group-vertical">
+                                        <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Catalog-Wrc-Create/'.$wrc->id) }}">Edit Catlog WRCs</a>
+                                    </div>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

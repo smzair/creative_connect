@@ -1,9 +1,14 @@
 @extends('layouts.admin')
+
 @section('title')
-Creative Create WRC
+Create Wrc
+
+<!--- if condition to be applied for update details of the page-->
 @endsection
 @section('content')
-
+<link rel="stylesheet" href="{{asset('plugins/datepicker-in-bootstrap-modal/css/datepicker.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<!-- New WRC Creation (For Catalogue) -->
 <div class="container">
     <div class="row mt-5">
     </div>
@@ -18,19 +23,18 @@ Creative Create WRC
                 </div>
                 <div class="card-body"> 
                     @if (Session::has('success'))
-                        <div class="alert alert-success" id="msg_div" role="alert">
-                            {{ Session::get('success') }}
-                        </div>
+                            <div class="alert alert-success" id="msg_div" role="alert">
+                                {{ Session::get('success') }}
+                            </div>
                     @endif
-                    <form method="POST" onsubmit="return validateForm(event)" action="{{ route($CreativeWrc->route)}}"  id = "form" action="{{ route($CreativeWrc->route) }}" >
-
+                    <form method="POST" onsubmit="return validateForm(event)" action="{{ route($CatlogWrc->route)}}"  id = "wrcform" action="{{ route($CatlogWrc->route) }}" >
                         @csrf
                         <div class="row">
-                            <!-- Company Name -->
-                            <div class="col-sm-3 col-12">
+                             <!-- Company Name -->
+                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
 
-                                    <input type="hidden" name="id" value="{{$CreativeWrc->id }}"> 
+                                    <input type="hidden" name="id" value="{{$CatlogWrc->id }}"> 
                                     <input type="hidden" name="c_short" id="c_short" value="">
                                     <input type="hidden" name="short_name" id="short_name" value="">
                                     <input type="hidden" name="s_type" id="s_type" value="">
@@ -46,7 +50,7 @@ Creative Create WRC
                                         @endforeach
                                     </select>
                                     <script>
-                                        document.querySelector("#user_id").value = "{{$CreativeWrc->user_id }}"
+                                        document.querySelector("#user_id").value = "{{$CatlogWrc->user_id }}"
                                     </script>
                                     <p class="input_err" style="color: red; display: none;" id="user_id_err"></p>
                                 </div>
@@ -59,12 +63,12 @@ Creative Create WRC
                                         <option value = "">Select Brand</option>
                                     </select>
                                     <script>
-                                        document.querySelector("#brand_id").value = "{{$CreativeWrc->brand_id }}"
+                                        document.querySelector("#brand_id").value = "{{$CatlogWrc->brand_id }}"
                                     </script>
                                     <p class="input_err" style="color: red; display: none;" id="brand_id_err"></p>
                                 </div>
                             </div>
-                            <!-- Select LOT Number -->
+                            <!-- LOT Number -->
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
                                     <label class="control-label required">LOT Number</label>
@@ -73,12 +77,12 @@ Creative Create WRC
 
                                     </select>
                                     <script>
-                                        document.querySelector("#lot_id").value = "{{$CreativeWrc->lot_id }}"
+                                        document.querySelector("#lot_id").value = "{{$CatlogWrc->lot_id }}"
                                     </script>
                                     <p class="input_err" style="color: red; display: none;" id="lot_id_err"></p>
                                 </div>
                             </div>
-                            <!-- Select Commercial -->
+                            <!-- Work Bucket -->
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
                                     <label class="control-label required">Work Bucket</label>
@@ -86,17 +90,72 @@ Creative Create WRC
                                         <option value="" selected disabled>Select Commercial</option>
                                     </select>
                                     <script>
-                                        document.querySelector("#commercial_id").value = "{{$CreativeWrc->commercial_id }}"
+                                        document.querySelector("#commercial_id").value = "{{$CatlogWrc->commercial_id }}"
                                     </script>
                                     <p class="input_err" style="color: red; display: none;" id="commercial_id_err"></p>
                                 </div>
                             </div>
-                            <!-- Order Quantity -->
+                            <!-- Image Receive Date -->
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
-                                    <label class="control-label required">Order Qty</label>
-                                    <input type="text" class="form-control" name="order_qty" id="order_qty" value="{{$CreativeWrc->order_qty }}" placeholder="Enter Order Quantity" onkeypress="return isNumber(event);">
-                                    <p class="input_err" style="color: red; display: none;" id="order_qty_err"></p>
+                                    <label class="control-label required">Image Receive Date</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" name="img_recevied_date" id="img_recevied_date" placeholder="Select Image Receive Date" data-toggle="datepicker" value="{{$CatlogWrc->img_recevied_date }}">
+                                    </div>
+                                    <p class="input_err" style="color: red; display: none;" id="img_recevied_date_err"></p>
+                                </div>
+                            </div>
+                            <!-- Missing Info Notify Date -->
+                            <div class="col-sm-3 col-12">
+                                <div class="form-group">
+                                    <label class="control-label required">Missing Info Notify Date</label>
+                                    <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" name="missing_info_notify_date" id="missing_info_notify_date" placeholder="Select Missing Info Notify Date" data-toggle="datepicker" value="{{$CatlogWrc->missing_info_notify_date }}">
+                                    </div>
+                                    <p class="input_err" style="color: red; display: none;" id="missing_info_notify_date_err"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Missing Info Received Date -->
+                            <div class="col-sm-3 col-12">
+                                <div class="form-group">
+                                    <label class="control-label required">Missing Info Received Date</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" name="missing_info_recived_date" id="missing_info_recived_date" placeholder="Select Missing Info Received Date" data-toggle="datepicker" value="{{$CatlogWrc->missing_info_recived_date }}">
+                                    </div>
+                                    <p class="input_err" style="color: red; display: none;" id="missing_info_recived_date_err"></p>
+                                    </div>
+                                </div>
+                            
+                            <!-- Details Confirmation Date -->
+                            <div class="col-sm-3 col-12">
+                                <div class="form-group">
+                                    <label class="control-label required">Details Confirmation Date</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" name="confirmation_date" id="confirmation_date" placeholder="Select Details Confirmation Date" data-toggle="datepicker" value="{{$CatlogWrc->confirmation_date }}">
+                                    </div>
+                                    <p class="input_err" style="color: red; display: none;" id="confirmation_date_err"></p>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +169,7 @@ Creative Create WRC
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
                                     <label class="required">Work Brief</label>
-                                    <input type="text" class="form-control" name="work_brief" id="work_brief" placeholder="Add Link" value="{{$CreativeWrc->work_brief }}">
+                                    <input type="text" class="form-control" name="work_brief" id="work_brief" placeholder="Add Link" value="{{$CatlogWrc->work_brief }}">
                                     <p class="input_err" style="color: red; display: none;" id="work_brief_err"></p>
                                 </div>
                             </div>
@@ -118,7 +177,7 @@ Creative Create WRC
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
                                     <label class="required">Guidelines</label>
-                                    <input type="text" class="form-control" name="guide_lines" id="guide_lines" placeholder="Add Link" value="{{$CreativeWrc->guidelines }}">
+                                    <input type="text" class="form-control" name="guide_lines" id="guide_lines" placeholder="Add Link" value="{{$CatlogWrc->guidelines }}">
                                     <p class="input_err" style="color: red; display: none;" id="guide_lines_err"></p>
                                 </div>
                             </div>
@@ -126,7 +185,7 @@ Creative Create WRC
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
                                     <label class="required">Add Document</label>
-                                    <input type="text" class="form-control" name="document1" id="document1" placeholder="Add Link" value="{{$CreativeWrc->document1 }}">
+                                    <input type="text" class="form-control" name="document1" id="document1" placeholder="Add Link" value="{{$CatlogWrc->document1 }}">
                                     <p class="input_err" style="color: red; display: none;" id="document1_err"></p>
                                 </div>
                             </div>
@@ -134,14 +193,14 @@ Creative Create WRC
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
                                     <label class="required">Add Document</label>
-                                    <input type="text" class="form-control" name="document2" id="document2" placeholder="Add Link" value="{{$CreativeWrc->document2 }}">
+                                    <input type="text" class="form-control" name="document2" id="document2" placeholder="Add Link" value="{{$CatlogWrc->document2 }}">
                                     <p class="input_err" style="color: red; display: none;" id="document2_err"></p>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-sm-12">
-                                <button type="submit" class="btn btn-success btn-xl btn-warning mb-2" onclick="">{{$CreativeWrc->button_name}}</button>
+                                <button type="submit" class="btn btn-success btn-xl btn-warning mb-2" onclick="">{{$CatlogWrc->button_name}}</button>
                             </div>
                         </div>
                     </div>
@@ -150,25 +209,34 @@ Creative Create WRC
         </div>
     </div>
 </div>
+<!-- End of New WRC Creation (For Catalogue) -->
+<script type="text/javascript">
+ 
+ $('[data-toggle="datepicker"]').datepicker({
+    autoHide: true,
+    zIndex: 2048,
+    format: 'yyyy-mm-dd'
+});
 
+</script>
 <script type="application/javascript" src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
 
-@if(isset($CreativeWrc->id))
+@if(isset($CatlogWrc->id))
 
 <script>
-    const brand_id_val = "<?= $CreativeWrc->brand_id ?>";
-    const lot_id_val = "<?= $CreativeWrc->lot_id ?>";
+    const brand_id_val = "<?= $CatlogWrc->brand_id ?>";
+    const lot_id_val = "<?= $CatlogWrc->lot_id ?>";
     console.log({brand_id_val});
     setTimeout(()=>{      
     if(brand_id_val > 0){
         $("#user_id").trigger("change");
         setTimeout(()=>{      
         $("#brand_id").trigger("change");
-        document.querySelector("#brand_id").value = "<?= $CreativeWrc->brand_id ?>"
+        document.querySelector("#brand_id").value = "<?= $CatlogWrc->brand_id ?>"
         setTimeout(()=>{      
             if(lot_id_val > 0){
-                document.querySelector("#lot_id").value = "<?= $CreativeWrc->lot_id ?>"
-                document.querySelector("#commercial_id").value = "<?= $CreativeWrc->commercial_id ?>"
+                document.querySelector("#lot_id").value = "<?= $CatlogWrc->lot_id ?>"
+                document.querySelector("#commercial_id").value = "<?= $CatlogWrc->commercial_id ?>"
                 $("#lot_id").trigger("change");
             }
         },2000)
@@ -181,7 +249,7 @@ Creative Create WRC
 <script defer>  
     // setTimeout(()=>{
     //     $("#brand_id").change();
-    //     document.querySelector("#lot_id").value = "<?= $CreativeWrc->lot_id ?>"
+    //     document.querySelector("#lot_id").value = "<?= $CatlogWrc->lot_id ?>"
     // },3000)
     
 </script>
@@ -201,7 +269,7 @@ Creative Create WRC
 
             let options = `<option value="" data-short_name=""  > -- Select Brand Name -- </option>`;
             $.ajax({
-                url: "{{ url('get-brand') }}",
+                url: "{{ url('get-catlog-brand') }}",
                 type: "POST",
                 dataType: 'json',
                 data: {
@@ -220,7 +288,7 @@ Creative Create WRC
                 }
             });
             setTimeout(()=>{
-                document.querySelector("#brand_id").value = "<?= $CreativeWrc->brand_id ?>"
+                document.querySelector("#brand_id").value = "<?= $CatlogWrc->brand_id ?>"
             },1000)
         });
     })
@@ -240,7 +308,7 @@ Creative Create WRC
             let options = `<option value="" data-s_type="" > -- Select LOT Number -- </option>`;
             let options_work = `<option value="" > -- Select Commercial -- </option>`;
             $.ajax({
-                url: "{{ url('get-lot-number') }}",
+                url: "{{ url('get-catlog-lot-number') }}",
                 type: "POST",
                 dataType: 'json',
                 data: {
@@ -249,16 +317,15 @@ Creative Create WRC
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(res) {
-
-                 const {commercial_data,lot_number_data} = res;
-                 lot_number_data?.length >0 && lot_number_data.map(lots => {
+                    const {commercial_data,lot_number_data} = res;
+                    lot_number_data.map(lots => {
                         options +=
                             ` <option value="${lots.id}" data-s_type="${lots.project_name}"> ${lots.lot_number}</option>`;
 
                     })
-                    commercial_data?.length >0 && commercial_data.map(lots => {
+                    commercial_data.map(lots => {
                             options_work +=
-                            ` <option value="${lots.create_commercial_id}" > ${lots.project_name} | ${lots.kind_of_work} | ${lots.per_qty_value}</option>`;
+                            ` <option value="${lots.create_commercial_catalog_id}" > ${lots.market_place} | ${lots.type_of_service}</option>`;
                     })
                     document.getElementById("lot_id").innerHTML = options;
                     document.getElementById("commercial_id").innerHTML = options_work;
@@ -293,7 +360,10 @@ Creative Create WRC
         const check_brand_id = $('#brand_id').val();
         const check_lot_id = $('#lot_id').val();
         const check_commercial_id = $('#commercial_id').val();
-        const check_order_qty = $('#order_qty').val();
+        const check_img_recevied_date = $('#img_recevied_date').val();
+        const check_missing_info_notify_date = $('#missing_info_notify_date').val();
+        const check_missing_info_recived_date = $('#missing_info_recived_date').val();
+        const check_confirmation_date = $('#confirmation_date').val();
         const check_work_brief = $('#work_brief').val();
         const check_guide_lines = $('#guide_lines').val();
         const check_document1 = $('#document1').val();
@@ -304,11 +374,38 @@ Creative Create WRC
         let brand_id_Valid = true;
         let lot_id_Valid = true;
         let commercial_id_Valid = true;
-        let order_qty_Valid = true;
+        let img_recevied_date_Valid = true;
+        let missing_info_notify_date_Valid = true;
+        let missing_info_recived_date_Valid = true;
+        let confirmation_date_Valid = true;
         let work_brief_Valid = true;
         let guide_lines_Valid = true;
         let document1_Valid = true;
         let document2_Valid = true;
+
+        if (check_confirmation_date === '') {
+            $("#confirmation_date_err").html("Details Confirmation Date is required");
+            document.getElementById("confirmation_date_err").style.display = "block";
+            order_qty_Valid = false;
+        }
+
+        if (check_missing_info_recived_date === '') {
+            $("#missing_info_recived_date_err").html("Missing Info Received Date is required");
+            document.getElementById("missing_info_recived_date_err").style.display = "block";
+            order_qty_Valid = false;
+        }
+
+        if (check_missing_info_notify_date === '') {
+            $("#missing_info_notify_date_err").html("Missing Info Notify Date is required");
+            document.getElementById("missing_info_notify_date_err").style.display = "block";
+            order_qty_Valid = false;
+        }
+
+        if (check_img_recevied_date === '') {
+            $("#img_recevied_date_err").html("Image Receive Date is required");
+            document.getElementById("img_recevied_date_err").style.display = "block";
+            order_qty_Valid = false;
+        }
 
         if (check_document2 === '') {
             $("#document2_err").html("Add Document is required");
@@ -334,12 +431,6 @@ Creative Create WRC
             work_brief_Valid = false;
         }
 
-        if (check_order_qty === '') {
-            $("#order_qty_err").html("Order Qty is required");
-            document.getElementById("order_qty_err").style.display = "block";
-            order_qty_Valid = false;
-        }
-
         if (check_commercial_id === '') {
             $("#commercial_id_err").html("Work Bucket is required");
             document.getElementById("commercial_id_err").style.display = "block";
@@ -363,8 +454,8 @@ Creative Create WRC
             document.getElementById("brand_id_err").style.display = "block";
             brand_id_Valid = false;
         }
-        
-        if (user_id_is_Valid && brand_id_Valid && lot_id_Valid && commercial_id_Valid && order_qty_Valid && work_brief_Valid && guide_lines_Valid && document1_Valid && document2_Valid) {
+
+        if (user_id_is_Valid && brand_id_Valid && lot_id_Valid && commercial_id_Valid && img_recevied_date_Valid && missing_info_notify_date_Valid && missing_info_recived_date_Valid && confirmation_date_Valid && work_brief_Valid && guide_lines_Valid && document1_Valid && document2_Valid) {
         return true
         } else {
             return false
@@ -378,5 +469,4 @@ Creative Create WRC
         document.getElementById('msg_div').style.display = "none";
     },3000)
 </script>
-
 @endsection
