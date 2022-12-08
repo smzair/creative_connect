@@ -17,15 +17,13 @@ Route::get('/', function () {
 });
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-//////////////// Creative  Commercial Routes /////////////////
+//////////////// Creative Commercial AND Catalog  Routes /////////////////
 
 Route::get('/Creative-createComs','creativeCommercials@index')->name('CREATECOM');
 Route::post('/Creative-createComs', 'creativeCommercials@create')->name('SAVECOMS'); // for save Commercial
 Route::get('/Creative_commercialView', 'creativeCommercials@view')->name('viewCOM'); // for view Commercial
 Route::get('/Creative-createComs/{id}', 'creativeCommercials@edit')->name('EDITCOMS'); // for save Commercial
 Route::post('/Creative-updateComs', 'creativeCommercials@update')->name('UPDATECOMS'); // for save Commercial
-
-
 
 
 Route::get('/Creative-createCatalog', 'catalogCommercials@index')->name('CREATECATALOG'); // for Commercials Create Catalog  Form
@@ -36,11 +34,22 @@ Route::post('/Creative-updateCatalog', 'catalogCommercials@update')->name('UPDAT
 
 
 
+//////////////// Creative Lots Routes VIEWLOTCATALOG /////////////////
 Route::get('/Creative-createLots','creativeLot@index')->name('CREATELOT');
-Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
-
 Route::get('/Creative-viewLots','creativeLot@view')->name('viewLOT');
+
+
+Route::get('/Creative-createLotCatalog', 'CatalogLotsController@index')->name('CREATELOTCATALOG');
+
+Route::post('/Creative-createLotCatalog', 'CatalogLotsController@create')->name('SAVELOTSCATALOG'); // For save Lots Catalog  Log
+Route::get('/Creative-lotsCatalogView', 'CatalogLotsController@view')->name('VIEWLOTCATALOG'); // for Listing Lots Catalog
+Route::get('/Creative-createLotCatalog/{id}', 'CatalogLotsController@edit')->name('EDITLOTCATALOG'); // for Lots Catalog edit Form
+Route::post('/Creative-UpdateLotCatalog', 'CatalogLotsController@update')->name('UPDATELOTSCATALOG'); // For save Lots Catalog  Log
+
+
+//////////////// Creative Wrc Routes /////////////////
 Route::get('/Creative-viewWrcs','creativeWrc@view')->name('viewWRC');
+Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
 
 /********** Ajax calling /{id} ********/
 Route::post('/get-brand', 'AjaxController@getBrand');

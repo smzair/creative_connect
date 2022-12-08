@@ -141,9 +141,25 @@
                                                 <li class="nav-item">
                                                     <a href="{{route('CREATELOT')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
-                                                        <p>Create LOTs</p>
+                                                        <p>Create Lots</p>
                                                     </a>
                                                 </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('CREATELOTCATALOG')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Create LOTs CataLogs</p>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="nav-item">
+                                                    <a href="{{route('VIEWLOTCATALOG')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Lots CataLogs List</p>
+                                                    </a>
+                                                </li>
+
+
                                                 <li class="nav-item">
                                                     <a href="{{route('CREATEWRC')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
@@ -282,5 +298,8 @@
     });
 
 </script>
+ @yield('datatable')
+ @yield('customScript')
+
 </body>
 </html>

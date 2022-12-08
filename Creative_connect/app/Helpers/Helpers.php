@@ -1,5 +1,44 @@
 <?php
 // project / vartical type
+
+use Illuminate\Support\Facades\DB;
+
+
+if(!function_exists('getLotNo')){
+    function getLotNo($c_short = "c_short" , $short_name = "short_name" ,$s_type_name = "s_type"){
+        $s_type ="";
+        $serviceType_array = explode(" ", $s_type_name);
+        foreach($serviceType_array  as $key => $val){
+            $s_type .= $val[0];
+        }
+        return $lot_number = strtoupper('ODN'.date('dmY')."-".$c_short.$short_name.$s_type);
+    }
+
+}
+
+// date formet functions YYYY-MM-DD
+if(!function_exists('dateFormet_ymd')){
+    function dateFormet_ymd($date){
+        return date('Y-m-d' , strtotime($date));
+    }
+}
+
+// date formet functions DD-MM-YYYY
+if (!function_exists('dateFormet_dmy')) {
+    function dateFormet_dmy($date)
+    {
+        return date('d-m-Y', strtotime($date));
+    }
+}
+
+// date formet functions MM-DD-YYYY
+if (!function_exists('dateFormet_mdy')) {
+    function dateFormet_mdy($date)
+    {
+        return date('m/d/Y', strtotime($date));
+    }
+}
+
 if (!function_exists('projectType')) {
     function projectType()
     {
@@ -156,5 +195,18 @@ if (!function_exists('pre')){
         print_r($arr);
         echo "</pre>";
         return ;
+    }
+}
+
+// user/compny data
+if(!function_exists('getUserCompanyData')){
+
+    function getUserCompanyData(){
+        $users = DB::table('users')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
+            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
+            ->where([['users.Company', '<>', NULL], ['roles.name', '=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+
+         return $users;   
     }
 }
