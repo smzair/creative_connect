@@ -33,7 +33,7 @@ Route::post('/get-lot-number', 'creativeWrc@getLotNumber');
 
 /****************  Creative-createLots  **************/
 Route::get('/Creative-createLots','creativeLot@index')->name('CREATELOT');
-Route::post('/storelots', 'creativeLot@store')->name('STORELOTS');
+Route::post('/Creative-createLots', 'creativeLot@store')->name('STORELOTS');
 Route::get('/Creative-viewLots','creativeLot@view')->name('viewLOT');
 Route::get('/Creative-editLots/{id}','creativeLot@edit');
 Route::post('/Creative-updateLots','creativeLot@update')->name('UPDATELOT');

@@ -114,12 +114,16 @@ Update LOT
                             <div class="col-sm-6" id="clientBucketCol">
                                 <div class="form-group">
                                         @php
-                                            $clientBucket = clientBucket();
+                                            $clientBucketStatic = (object) array(
+                                                                            array( 'id' => "1",'value' => 'Existing',),
+                                                                            array('id' => "2",'value' => 'Upselling'),
+                                                                            array('id' => "3",'value' => 'New')
+                                                                        );
                                         @endphp
                                     <label class="control-label required">Client Bucket</label>
                                     <select class="form-control client-bucket-select" name="client_bucket" id="client_bucket">
                                     <option value="">Select Client Bucket</option>
-                                        @foreach ($clientBucket as $row)
+                                        @foreach ($clientBucketStatic as $row)
                                                     <option value="{{ $row['id'] }}">{{ $row['value'] }}</option>
                                         @endforeach
                                     </select>
