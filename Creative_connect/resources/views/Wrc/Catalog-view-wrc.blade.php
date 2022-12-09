@@ -70,6 +70,7 @@ View WRC
                                     <th class="p-2">Guidelines</th>
                                     <th class="p-2">Add Document 1 </th>
                                     <th class="p-2">Add Document 2</th> -->
+                                    <th class="p-2">SKU Qty</th>
                                     <th class="p-2">Actions</th>
                                 </tr>
                             </thead>
@@ -86,6 +87,7 @@ View WRC
                                     <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->guidelines}}</td>
                                     <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->document1}}</td>
                                     <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->document2}}</td> -->
+                                    <td id="brndName" class="p-sm-2 p-1">{{$wrc->sku_qty}}</td>
                                     <td class="p-sm-2 p-1">
                                     <div class="btn-group-vertical">
                                         <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Catalog-Wrc-Create/'.$wrc->id) }}">Edit Catlog WRCs</a>

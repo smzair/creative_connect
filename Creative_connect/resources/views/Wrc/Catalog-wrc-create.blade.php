@@ -158,6 +158,14 @@ Create Wrc
                                     <p class="input_err" style="color: red; display: none;" id="confirmation_date_err"></p>
                                 </div>
                             </div>
+                            <!-- Sku Quantity -->
+                            <div class="col-sm-3 col-12">
+                                <div class="form-group">
+                                    <label class="control-label required">SKU Qty</label>
+                                    <input type="text" class="form-control" name="sku_qty" id="sku_qty" value="{{$CatlogWrc->sku_qty }}" placeholder="Enter SKU Quantity" onkeypress="return isNumber(event);">
+                                    <p class="input_err" style="color: red; display: none;" id="sku_qty_err"></p>
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12 col-12">
@@ -197,6 +205,7 @@ Create Wrc
                                     <p class="input_err" style="color: red; display: none;" id="document2_err"></p>
                                 </div>
                             </div>
+                            
                         </div>
                         <div class="row mt-2">
                             <div class="col-sm-12">
@@ -368,6 +377,7 @@ Create Wrc
         const check_guide_lines = $('#guide_lines').val();
         const check_document1 = $('#document1').val();
         const check_document2 = $('#document2').val();
+        const check_sku_qty = $('#sku_qty').val();
        
 
         let user_id_is_Valid = true;
@@ -382,6 +392,13 @@ Create Wrc
         let guide_lines_Valid = true;
         let document1_Valid = true;
         let document2_Valid = true;
+        let sku_qty_Valid = true;
+
+        if (check_sku_qty === '') {
+            $("#sku_qty_err").html("SKU qty is required");
+            document.getElementById("sku_qty_err").style.display = "block";
+            sku_qty_Valid = false;
+        }
 
         if (check_confirmation_date === '') {
             $("#confirmation_date_err").html("Details Confirmation Date is required");
@@ -455,7 +472,7 @@ Create Wrc
             brand_id_Valid = false;
         }
 
-        if (user_id_is_Valid && brand_id_Valid && lot_id_Valid && commercial_id_Valid && img_recevied_date_Valid && missing_info_notify_date_Valid && missing_info_recived_date_Valid && confirmation_date_Valid && work_brief_Valid && guide_lines_Valid && document1_Valid && document2_Valid) {
+        if (user_id_is_Valid && brand_id_Valid && lot_id_Valid && commercial_id_Valid && img_recevied_date_Valid && missing_info_notify_date_Valid && missing_info_recived_date_Valid && confirmation_date_Valid && work_brief_Valid && guide_lines_Valid && document1_Valid && document2_Valid && sku_qty_Valid) {
         return true
         } else {
             return false

@@ -27,6 +27,7 @@ class CatalogWrcController extends Controller
             'missing_info_notify_date'=>'',
             'missing_info_recived_date'=>'',
             'confirmation_date'=>'',
+            'sku_qty'=>'',
             'work_brief'=>'',
             'guidelines'=>'',
             'document1'=>'',
@@ -46,23 +47,6 @@ class CatalogWrcController extends Controller
 
         echo $brand_data;
     }
-
-    // LOT Number List // Work Bucket
-    // public function getLotNumber(Request $request){
-
-    //     $user_id = $request->user_id;
-    //     $brand_id = $request->brand_id;
-
-    //     $lot_number_data = DB::table('lots_catalog')->where('lots_catalog.user_id' , $user_id)->where('lots_catalog.brand_id' , $brand_id)
-    //     ->leftJoin('brands', 'lots_catalog.brand_id' , 'brands.id')
-    //     ->leftJoin('create_commercial_catalog', function($join){
-    //         $join->on('create_commercial_catalog.user_id', '=', 'lots_catalog.user_id');
-    //         $join->on('create_commercial_catalog.brand_id', '=', 'lots_catalog.brand_id');
-    //     })
-    //     ->select('lots_catalog.id', 'lots_catalog.lot_number', 'lots_catalog.user_id', 'lots_catalog.brand_id', 'brands.short_name', 'create_commercial_catalog.id as create_commercial_catalog_id', 'create_commercial_catalog.market_place', 'create_commercial_catalog.type_of_service')->get();
-
-    //     echo $lot_number_data;
-    // }
 
     public function getLotNumber(Request $request){
 
@@ -111,6 +95,7 @@ class CatalogWrcController extends Controller
         $createWrc->guidelines = $request->guide_lines;
         $createWrc->document1 = $request->document1;
         $createWrc->document2 = $request->document2;
+        $createWrc->sku_qty = $request->sku_qty;
         $createWrc->status = 'Ready_for_allocation';
         $createWrc->save();
 
@@ -200,6 +185,7 @@ class CatalogWrcController extends Controller
         $createWrc->guidelines = $request->guide_lines;
         $createWrc->document1 = $request->document1;
         $createWrc->document2 = $request->document2;
+        $createWrc->sku_qty = $request->sku_qty;
         $createWrc->status = 'Ready_for_allocation';
         $createWrc->update();
         
