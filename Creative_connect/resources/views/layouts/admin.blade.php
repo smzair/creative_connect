@@ -166,6 +166,29 @@
                                                         <p> Create WRCs</p>
                                                     </a>
                                                 </li>
+                                                
+                                                {{-- Allocation section {{route('CREATEWRC')}}  --}}
+                                                <li class="nav-item">
+                                                    <a href="{{route('CATALOG_ALLOCT')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Catalog Allocation</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('CATALOG_ALLOCTED_DETAILS')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Catalog Allocation Details</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('CATALOG_UPLOAD')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Catalog Upload</p>
+                                                    </a>
+                                                </li>
+                                                {{--End Allocation section   --}}
                                             </ul>
                                         </li>
                                   

@@ -5,6 +5,16 @@ Create New Commercial for Creative
 @section('content')
 
 <div class="container">
+
+    <style>
+        .form-group .input_err{
+            margin: 0.1em 0;
+            color: red;
+            background: #7e79798a;
+            display: block;
+            padding: 0.3em;
+        }
+    </style>
     <div class="row">
         <div class="col-sm-12">
             <div class="card card-transparent card-info mt-3">
@@ -14,7 +24,7 @@ Create New Commercial for Creative
 
                 </div>
                 <div class="card-body">
-
+                    {{-- sucsses and false msg div --}}
                     <div id="msg_div">
                         @if (Session::has('success'))
                             <div class="alert alert-success" role="alert">

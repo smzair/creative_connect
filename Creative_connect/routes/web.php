@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CatalogAllocationController;
 use Illuminate\Support\Facades\Route;
 /*
   |--------------------------------------------------------------------------
@@ -53,3 +54,11 @@ Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
 
 /********** Ajax calling /{id} ********/
 Route::post('/get-brand', 'AjaxController@getBrand');
+
+/****** Allocation Route  set-catalog-allocation *********/
+// Route::get('catalog-allocation' , 'CatalogAllocationController@index')->name('CATALOG_ALLOCT'); // 
+Route::get('catalog-allocation', [CatalogAllocationController::class, 'index'])->name('CATALOG_ALLOCT'); // 
+Route::get('catalog-allocated-details', [CatalogAllocationController::class, 'details'])->name('CATALOG_ALLOCTED_DETAILS'); // 
+Route::get('catalog-upload', [CatalogAllocationController::class, 'upload'])->name('CATALOG_UPLOAD'); //
+
+Route::post('set-catalog-allocation', [CatalogAllocationController::class, 'save']); // for save catalog allocation

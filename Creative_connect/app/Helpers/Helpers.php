@@ -199,14 +199,29 @@ if (!function_exists('pre')){
 }
 
 // user/compny data
-if(!function_exists('getUserCompanyData')){
+if(!function_exists('getCataloguer')){
 
-    function getUserCompanyData(){
+    function getCataloguer(){
         $users = DB::table('users')
             ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
             ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
-            ->where([['users.Company', '<>', NULL], ['roles.name', '=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+            ->where([['roles.name', '=', 'Cataloguer']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
 
          return $users;   
+    }
+}
+
+// Cataloguer
+
+if (!function_exists('getUserCompanyData')) {
+
+    function getUserCompanyData()
+    {
+        $users = DB::table('users')
+        ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
+        ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
+        ->where([['users.Company', '<>', NULL], ['roles.name', '=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+
+        return $users;
     }
 }

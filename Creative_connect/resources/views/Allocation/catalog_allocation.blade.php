@@ -13,6 +13,15 @@ Update LOT
 <!-- New Allocation Table View (For Catalogue) -->
 
 <div class="container-fluid mt-5 plan-shoot new-allocation-table-main">
+     <style>
+        .form-group .input_err , #msg_box{
+            margin: 0.1em 0;
+            color: red;
+            background: #928c8cfc;
+            display: block;
+            padding: 0.3em;
+        }
+    </style>
     <div class="row">
         <div class="col-12">
             <div class="card card-transparent">
@@ -21,6 +30,13 @@ Update LOT
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
+
+                    {{-- getCataloguer --}}
+
+                    @php
+                        $getCataloguer = getCataloguer();
+                        // pre($getCataloguer);
+                    @endphp
                     <table id="allocTableC" class="table table-head-fixed text-nowrap data-table">
                         <thead>
                             <tr>
@@ -38,25 +54,35 @@ Update LOT
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($allocationList as $lotinfo)
-                            <tr>
-                                <td>WRC-1234</td>
-                                <td>{$lotinfo['lot_id']}</td>
-                                <td>{$lotinfo['Company']}</td>
-                                <td>Venkat Charan</td>
-                                <td>{count($lotinfo['wrcs'])}</td>
-                                <td>01-Dec-2022</td>
-                                <td>01-Dec-2022</td>
-                                <td>01-Dec-2022</td>
-                                <td>Product Shoot</td>
-                                <td>Not Applicable</td>
+
+                            @php
+                                // pre($wrcList);
+                            @endphp
+                            @foreach($wrcList as $key => $row)
+
+                            <tr id="tr{{ $key }}" >
+                                <td data-value="wrc_number">
+                                    {{ $row['wrc_number'] }}
+                                </td>
+                                <td data-value="lot_number">{{ $row['lot_number'] }}</td>
+                                <td data-value="Company">{{ $row['Company'] }}</td>
+                                <td data-value="name">{{ $row['name'] }}
+                                    <input type="hidden" id="wrc_id{{ $key }}" value="{{ $row['id'] }}">
+                                </td>
+                                <td data-value="sku_qty">{{ $row['sku_qty'] }}</td>
+                                <td data-value="wrc_cr_at">{{ dateFormet_dmy($row['created_at']) }}</td>
+                                <td data-value="img_recevied_date">{{ dateFormet_dmy($row['img_recevied_date']) }}</td>
+                                <td data-value="raw_img_date">{{ dateFormet_dmy($row['created_at']) }}</td>
+                                <td data-value="market_place">{{ $row['market_place'] }}</td>
+                                <td data-value="type_of_service">{{ $row['type_of_service'] }}</td>
                                 <td>
-                                    <a href="javascript:;" class="btn btn-warning" id="allocateBTnC" data-toggle="modal" data-target="#allocateWRCPopupCAt">
+                                    <button class="btn btn-warning" id="allocateBTnC" data-toggle="modal" 
+                                    data-target="#allocateWRCPopupCAt" onclick="setvalue({{ $key }})">
                                         Allocate
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
-                            @endforeach
+                            @endforeach 
                         </tbody>
                     </table>
                 </div>
@@ -76,25 +102,25 @@ Update LOT
                 </button>
             </div>
             <div class="modal-body">
-                <form class="" method="POST" action="" id="allocWRCform">
+                {{-- <form class="" method="POST" action="" id="allocWRCform"> --}}
                     <div class="custom-dt-row wrc-details">
                         <div class="row">
                             <div class="col-sm-4 col-12">
                                 <div class="col-ac-details">
                                     <h6>WRC Number</h6>
-                                    <p id="wrcNo">fneivnsdvi;msdol;dvm</p>
+                                    <p id="wrcNo"></p>
                                 </div>
                             </div>
                             <div class="col-sm-4 col-6">
                                 <div class="col-ac-details">
                                     <h6>SKU Count</h6>
-                                    <p id="SKUCount">100</p>
+                                    <p id="sku_qty"></p>
                                 </div>
                             </div>
                             <div class="col-sm-4 col-6">
                                 <div class="col-ac-details">
                                     <h6>Selected LOT</h6>
-                                    <textarea rows="4" cols="4" style="width: 100%;" disabled>ODN-23456777</textarea>
+                                    <textarea id="lot_number" rows="3" cols="4" style="width: 100%;" disabled></textarea>
                                 </div>
                             </div>
                         </div>
@@ -104,21 +130,27 @@ Update LOT
                             <div class="col-sm-12 col-12">
                                 <div class="form-group">
                                     <label class="control-label required">Allocate Cataloguer</label>
-                                    <select class="custom-select form-control-border select2 Cataloguer-name" name="CataloguerName"  id="CataloguerName" style="width:100%;">
-                                        <option selected>Select Cataloguer</option>
-                                        <option value="Sunil">Sunil</option>
-                                        <option value="Sandeep">Sandeep</option>
-                                        <option value="Raj">Sandeep</option>
-                                        <option value="Rohit">Sandeep</option>
+                                    <select class="custom-select form-control-border Cataloguer-name" name="CataloguerName"  id="CataloguerName" style="width:100%;">
+                                        <option value="">--Select Cataloguer--</option>
+                                        @foreach ($getCataloguer as $row)
+                                            <option value="{{ $row->id }}" data-name="{{ $row->name }}">{{ $row->name }}</option>
+                                        
+                                        @endforeach
+                                        {{-- <option value="2">Sandeep</option>
+                                        <option value="3">Sandeep</option>
+                                        <option value="4">Sandeep</option> --}}
                                     </select>
+                                    <p class="input_err" style="color: red; display: none;" id="user_id_err"></p>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-12">
-                                <a class="btn btn-warning" href="javascript:void(0)">Complete Allocation</a>
+                                <input id="wrc_id" name="wrcNo" type="hidden" value="">
+                                <button class="btn btn-warning" onclick="saveData()" >Complete Allocation</button>
+                                <span id="msg_box" style="color: red; display: none;"></span>
                             </div>
                         </div>
                     </div>
-                </form>
+                {{-- </form> --}}
             </div>
         </div>
     </div>
@@ -138,6 +170,7 @@ Update LOT
 
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
 
+
 <!-- End of DataTable Plugins Path -->
 
 <!-- Data Table Calling Function -->
@@ -149,6 +182,79 @@ Update LOT
         "buttons": ["copy", "csv", "excel", "pdf"]
   }).buttons().container().insertAfter('#masterData_wrapper .dataTables_length');
 </script>
+
+
+{{-- setvalue to model --}}
+<script>
+    function setvalue(val){
+        // 
+        let data = {}
+        var rowItems = $("#tr"+val).children('td').map(function () {
+            data = {
+                ...data,
+                [this.getAttribute('data-value')]: this.innerHTML
+            }
+        })
+
+        document.querySelector("#wrcNo").innerHTML = data.wrc_number
+        document.querySelector("#sku_qty").innerHTML = data.sku_qty
+        document.querySelector("#lot_number").innerHTML = data.lot_number
+        document.querySelector("#wrc_id").value =  document.querySelector("#wrc_id"+val).value 
+        console.log(data)
+    }
+   
+</script>
+
+{{-- save Data to allocation   --}}
+<script>
+    const saveData = async () => {
+        //   const wrc_number =  document.querySelector("#wrcNo").innerHTML 
+        //   const sku_qty =  document.querySelector("#sku_qty").innerHTML 
+        //   const lot_number =  document.querySelector("#lot_number").innerHTML 
+        const user_id_is =  document.querySelector("#CataloguerName").value 
+        const wrc_id =  document.querySelector("#wrc_id").value 
+        const CataloguerName = $("#CataloguerName").find(':selected').data('name')
+
+         $(".input_err").css("display", "none");
+        if(user_id_is === ''){
+            document.querySelector("#user_id_err").innerHTML  = "User not selected"
+            $(".input_err").css("display", "block");
+            return
+        }
+
+        await $.ajax({
+            url: "{{ url('set-catalog-allocation') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                user_id: user_id_is,
+                wrc_id,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+
+                if(res == 1){
+                    document.querySelector("#CataloguerName").value = "";
+                    $("#msg_box").css("color", "green");
+                    document.querySelector("#msg_box").innerHTML  = "Catalog Wrc allocated to "+CataloguerName+" Successfully"
+                }else if(res == 2){
+                    document.querySelector("#CataloguerName").value = "";
+                    $("#msg_box").css("color", "red");
+                    document.querySelector("#msg_box").innerHTML  = "This Wrc already allocated to "+CataloguerName;
+                }else{
+                    $("#msg_box").css("color", "red");
+                    document.querySelector("#msg_box").innerHTML  = "Somthing went Wrong please try again!!!"
+                }
+                $("#msg_box").css("display", "block");
+            }
+        });
+        setTimeout( () => {
+            $("#msg_box").css("color", "red");
+            $('#msg_box').html("");
+            $("#msg_box").css("display", "none");
+        }, 2000);
+    }
+</script>
 @endsection
 
-<!-- End of Data Table Calling Function -->
+<!-- End of Data Table Calling Function  -->

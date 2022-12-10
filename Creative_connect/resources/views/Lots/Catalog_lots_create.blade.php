@@ -9,13 +9,13 @@ Create LOTS CATALOGS
 <!-- New Create Lot (For Catalogue) -->
 <div class="container-lg container-fluid my-5 lot-create-updateversion">
      <style>
-    .form-group .input_err{
-        margin: 0.1em 0;
-        color: red;
-        background: #7e79798a;
-        display: block;
-        padding: 0.3em;
-    }
+        .form-group .input_err{
+            margin: 0.1em 0;
+            color: red;
+            background: #7e79798a;
+            display: block;
+            padding: 0.3em;
+        }
     </style>
     <div class="row">
         <div class="col-12">
@@ -26,7 +26,7 @@ Create LOTS CATALOGS
                 </div>
                 <div class="card-body">
                     <!-- New Create Lot  -->
-
+                    {{-- sucsses and false msg div --}}
                      <div id="msg_div">
                         @if (Session::has('success'))
                             <div class="alert alert-success" role="alert">
@@ -41,6 +41,7 @@ Create LOTS CATALOGS
                         @endif
                     </div>
 
+                    {{-- Changing routing based on condition --}}
                     @php
                         $formRoute = 'SAVELOTSCATALOG';
                         $btn_Name = 'Create Lots Catalog';
@@ -50,11 +51,12 @@ Create LOTS CATALOGS
                         }
                     @endphp
 
+                    {{-- geting data from helpers --}}
                     @php
                         $users = getUserCompanyData();
                         $typeOfService = getTypeOfService();
                     @endphp
-
+                    {{-- Form --}}
                     <form method="POST" action="{{route($formRoute)}}" onsubmit="return validateForm(event)">
                         <div class="row custom-select-row">
                             @csrf
@@ -108,6 +110,7 @@ Create LOTS CATALOGS
                                     </script>
                                 </div>
                             </div>
+                            {{-- Request Type --}}
                             <div class="col-sm-6 col-12">
                                 <div class="form-group">
                                     <label class="control-label required">Request Type</label>
@@ -122,6 +125,7 @@ Create LOTS CATALOGS
                                     <p class="input_err" style="color: red; display: none;" id="requestType_err"></p>
                                 </div>
                             </div>
+                            {{-- Request Received Date --}}
                             <div class="col-sm-6 col-12">
                                 <div class="form-group">
                                     <label class="control-label required">Request Received Date</label>
@@ -136,6 +140,7 @@ Create LOTS CATALOGS
                                     <p class="input_err" style="color: red; display: none;" id="reqReceviedDate_err"></p>
                                 </div>
                             </div>
+                            {{-- Raw Image Receive Date --}}
                             <div class="col-sm-6 col-12">
                                 <div class="form-group">
                                     <label class="control-label required">Raw Image Receive Date</label>

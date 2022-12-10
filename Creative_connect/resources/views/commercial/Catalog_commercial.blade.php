@@ -6,14 +6,14 @@ Create New Commercial for Creative
 @section('content')
 <div class="container">
     <style>
-  .form-group .input_err{
-    margin: 0.1em 0;
-    color: red;
-    background: #999;
-    display: block;
-    padding: 0.3em;
-  }
-</style>
+    .form-group .input_err{
+        margin: 0.1em 0;
+        color: red;
+        background: #999;
+        display: block;
+        padding: 0.3em;
+    }
+    </style>
     <div class="row">
         <div class="col-sm-12">
             <div class="card card-transparent card-info mt-3">
@@ -22,6 +22,7 @@ Create New Commercial for Creative
                     <a style="float: right;" class="btn btn-success swalDefaultSuccess" href="{{route('viewCommercial')}}">Commercial Logs List</a>
                 </div>
                 <div class="card-body">
+                    {{-- sucsses and false msg div --}}
                     <div id="msg_div">
                         @if (Session::has('success'))
                             <div class="alert alert-success" role="alert">
@@ -35,6 +36,7 @@ Create New Commercial for Creative
                             </div>
                         @endif
                     </div>
+
 
                     @php
                         $formRoute = 'SAVECATALOG';
@@ -83,10 +85,11 @@ Create New Commercial for Creative
                         </div>
                         {{-- 2nd row --}}
                         <div class="row">
+                            {{-- geting data from helpers --}}
                              @php
-                                    $marketPlace = getMarketPlace();
-                                    $typeOfService = getTypeOfService();
-                                @endphp
+                                $marketPlace = getMarketPlace();
+                                $typeOfService = getTypeOfService();
+                            @endphp
                             <div class="col-sm-12 col-12">
                                 <div class="cc-title">
                                     <h5>Enter New Commercial Info</h5>
@@ -154,9 +157,6 @@ Create New Commercial for Creative
                             </div>
                         </div>
                     </form>
-                     @php
-                        // dd($commercial_data);
-                    @endphp
                 </div>
             </div>
         </div>
