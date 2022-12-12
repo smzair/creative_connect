@@ -100,7 +100,7 @@ Update LOT
                                     <select class="form-control" name="vertical_type" id="vertical_type">
                                     <option value="">Select Vertical Type</option>
                                     @foreach ($projectType as $row)
-                                                <option value="{{ $row['id'] }}">{{ $row['value'] }}</option>
+                                                <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
                                     @endforeach
                                     </select>
                                     <script>
@@ -124,7 +124,7 @@ Update LOT
                                     <select class="form-control client-bucket-select" name="client_bucket" id="client_bucket">
                                     <option value="">Select Client Bucket</option>
                                         @foreach ($clientBucketStatic as $row)
-                                                    <option value="{{ $row['id'] }}">{{ $row['value'] }}</option>
+                                                    <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
                                         @endforeach
                                     </select>
                                     <script>

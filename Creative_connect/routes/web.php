@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CreativeAllocationController;
 use Illuminate\Support\Facades\Route;
 /*
   |--------------------------------------------------------------------------
@@ -55,3 +56,11 @@ Route::post('/Catlog-updateWrc','catalogWrcController@update')->name('UPDATECATL
 #ajax
 Route::post('/get-catlog-brand', 'catalogWrcController@getBrand');
 Route::post('/get-catlog-lot-number', 'catalogWrcController@getLotNumber');
+
+/****************  Creative-Allocation  **************/
+//creative allocation create
+Route::get('/Creative-allocation-create' , [CreativeAllocationController::class , 'index'])->name('CREATIVE_ALLOCATION_CREATE');
+//creative allocation get
+Route::get('/Creative-allocation-get' , [CreativeAllocationController::class , 'CreativeAllocationGet'])->name('CREATIVE_ALLOCATION_GET');
+// store creative allocation
+Route::post('/Creative-allocation-create', 'CreativeAllocationController@store')->name('CREATIVE_ALLOCATION_STORE');

@@ -108,10 +108,10 @@ Allocation Details (For Creatives)
               <div class="card-body p-0">
                 <div class="editor-links">
                   <ul class="nav flex-column" style="margin-bottom: 10px;">
-                    @foreach($allocationList as $editorId => $allo)
+                    @foreach($allocationList['resData'] as $editorId => $allo)
                     <li class="nav-item">
-                      <a id="editorname1" class="nav-link" href="#{{$editorId}}" data-toggle="tab">
-                        {{$allo['editor']}}
+                      <a id="editorname1" class="nav-link" href=".{{$allo['user_id']}}" data-toggle="tab">
+                        {{$allo['name']}}
                      </a>
                    </li>
                    @endforeach
@@ -123,37 +123,29 @@ Allocation Details (For Creatives)
          <div class="col-xl-8 col-md-8 col-sm-8 col-12 editor-table-grp">
           <div class="editor-dtl card m-0">
             <div class="edit-upld-info">
-              <h2>Select Name To View Allocations Details</h2>
+              <h2 class="text-primary">Select Name To View Allocations Details</h2>
             </div>
             <div class="edit-upld-pop">
               <div class="table-responsive p-0 editor-table-list tab-content" style="max-height: 350px; height: 100%;">
-                @foreach($allocationList as $editorId => $allo)
-                <table class="table text-nowrap mb-0 tab-pane" id="{{$editorId}}">
+                @foreach($allocationList['resDataManyUser'] as $editorId => $allo)
+                <table class="table text-nowrap mb-0 tab-pane {{$allo['user_id']}}" >
                   <thead>
+                    <!-- <tr>
+                      <th class="align-middle border-top-0 text-primary" width="1%">User Id</th>
+                      <th class="align-middle border-top-0 text-primary">Lot Number</th>
+                      <th class="align-middle border-top-0 text-primary">Wrc Number</th>
+                      <th class="align-middle border-top-0 text-primary">Allocated Qty</th>
+                    </tr> -->
                     <tr>
-                      <th class="align-middle border-top-0" width="1%">#</th>
-                      <th class="align-middle border-top-0">LOT Number</th>
-                      <th class="align-middle border-top-0">WRC Count</th>
-                      <th class="align-middle border-top-0">Qty Count</th>
+                      <th class="align-middle border-top-0 text-primary" width="1%">User Id :- {{$allo['user_id']}}</th>
+                      <th class="align-middle border-top-0 text-primary">Lot Number :- {{$allo['lot_number']}}</th>
+                      <th class="align-middle border-top-0 text-primary">Wrc Number :- {{$allo['wrc_number']}}</th>
+                      <th class="align-middle border-top-0 text-primary">Allocated Qty :- {{$allo['allocated_qty']}}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php $sr = 1; ?>
-                    @foreach($allo['lot_info'] as $lotInfo)
-                    <tr>
-                      <td class="align-middle" width="1%">{{$sr++}}</td>
-                      <td class="align-middle">{{$lotInfo['lot_id']}}</td>
-                      <td class="align-middle position-relative">
-                        <span class="dropdown-toggle d-inline-block ed-wrc-cnt" style="cursor: pointer;">{{count($lotInfo['wrc_info'])}}</span>
-                        <ol class="list-group mt-2 edt-sku-list" style="display: none;">
-                          @foreach($lotInfo['wrc_info'] as $wrcInfo)
-                          <li class="list-group-item">{{$wrcInfo['wrc_id']}}</li>
-                          @endforeach
-                        </ol>
-                      </td>
-                      <td class="align-middle">{{count($lotInfo['all_files'])}}</td>
-                    </tr>
-                    @endforeach
+                    
                   </tbody>
                 </table>
                 @endforeach
