@@ -10,7 +10,7 @@ Create Wrc
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <!-- New WRC Creation (For Catalogue) -->
 <div class="container">
-    <div class="row mt-5">
+    <div class="row mt-5"> 
     </div>
     <div class="row">
         <div class="col-sm-12">

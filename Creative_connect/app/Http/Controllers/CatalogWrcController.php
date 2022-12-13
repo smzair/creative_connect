@@ -38,7 +38,7 @@ class CatalogWrcController extends Controller
         return view('Wrc.Catalog-wrc-create')->with('users_data', $users_data)->with('CatlogWrc',$CatlogWrc);
     }
 
-    // getBrand List 
+    // getBrand List  
     public function getBrand(Request $request){
 
         $brand_data = DB::table('brands_user')->where('user_id' , $request->user_id)
