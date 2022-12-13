@@ -30,6 +30,7 @@ class creativeWrc extends Controller
         'guidelines'=>'',
         'document1'=>'',
         'document2'=>'',
+        'alloacte_to_copy_writer'=>1,
         'button_name' => 'Create New WRC',
          'route' => 'STOREWRC'
     ];
@@ -82,6 +83,8 @@ class creativeWrc extends Controller
         $project_name .= $project_name_array[0][0];
         $project_name .= $project_name_array[$count-1][0];
 
+        $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
+
         $wrcNumber = $request->c_short . $request->short_name . $project_name . $request->lot_id . '-' . chr($wrcCount + 65);
 
         $createWrc = new CreativeWrcModel();
@@ -93,6 +96,7 @@ class creativeWrc extends Controller
         $createWrc->guidelines = $request->guide_lines;
         $createWrc->document1 = $request->document1;
         $createWrc->document2 = $request->document2;
+        $createWrc->alloacte_to_copy_writer = $alloacte_to_copy_writer;
         $createWrc->status = 'inwarding_done';
         $createWrc->save();
 
@@ -167,7 +171,8 @@ class creativeWrc extends Controller
         $project_name .= $project_name_array[$count-1][0];
 
         $wrcNumber = $request->c_short . $request->short_name . $project_name . $request->lot_id . '-' . chr($wrcCount + 65);
-
+        $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
+            // dd($alloacte_to_copy_writer);
         //create
         $CreativeWrcs =  CreativeWrcModel::find($id);
         $CreativeWrcs->lot_id = $request->lot_id;
@@ -178,6 +183,7 @@ class creativeWrc extends Controller
         $CreativeWrcs->guidelines = $request->guide_lines;
         $CreativeWrcs->document1 = $request->document1;
         $CreativeWrcs->document2 = $request->document2;
+        $CreativeWrcs->alloacte_to_copy_writer = $alloacte_to_copy_writer;
         $CreativeWrcs->status = 'inwarding_done';
         $CreativeWrcs->update();
         

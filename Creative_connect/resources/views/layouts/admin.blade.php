@@ -118,20 +118,20 @@
                                             <li class="nav-item">
                                                 <a href="{{ route('CREATECOM') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
-                                                    <p>Create Commercials</p>
+                                                    <p>Creative-createComs</p>
                                                 </a>
                                             </li>
 
                                             <li class="nav-item">
                                                 <a href="{{ route('CREATELOT') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
-                                                    <p>Create LOTs</p>
+                                                    <p>Creative-createLots</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="{{ route('viewLOT') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
-                                                    <p>View LOTs</p>
+                                                    <p>View Creative LOTs</p>
                                                 </a>
                                             </li>
                                             
@@ -174,6 +174,13 @@
                                                 <a href="{{ route('CREATIVE_ALLOCATION_GET') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Creative Allocation GET</p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('UPLOAD_CREATIVE_PANEL') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Upload Creative Panel</p>
                                                 </a>
                                             </li>
                                            

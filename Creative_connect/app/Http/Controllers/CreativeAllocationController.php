@@ -11,6 +11,7 @@ class CreativeAllocationController extends Controller
     // get data for create
     public function index(){
         $allocationList = CreativeWrcModel::getDataForCreativeAllocation() ;
+        // dd( $allocationList);
         return view('Allocation.creative_allocation')->with('allocationList',$allocationList);
     }
 
@@ -53,5 +54,12 @@ class CreativeAllocationController extends Controller
         $allocationList = CreativeAllocation::GetCreativeAllocation();
         // dd($allocationList);
         return view('Allocation.creative_allocation_details')->with('allocationList',$allocationList);
+    }
+
+    // upload creative panel
+    public function uploadCreative(){
+        $allocationList = CreativeAllocation::GetCreativeAllocationForUpload();
+        // dd($allocationList);
+        return view('Allocation.upload_creative_panel')->with('allocationList',$allocationList);
     }
 }

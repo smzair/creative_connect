@@ -32,6 +32,7 @@ class CatalogWrcController extends Controller
             'guidelines'=>'',
             'document1'=>'',
             'document2'=>'',
+            'alloacte_to_copy_writer'=>1,
             'button_name' => 'Create New Catlog WRC',
              'route' => 'STORECATLOGWRC'
         ];
@@ -82,7 +83,7 @@ class CatalogWrcController extends Controller
         $project_name .= $project_name_array[$count-1][0];
 
         $wrcNumber = $request->c_short . $request->short_name . $project_name . $request->lot_id . '-' . chr($wrcCount + 65);
-
+        $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
         $createWrc = new CatlogWrc();
         $createWrc->lot_id = $request->lot_id;
         $createWrc->wrc_number = $wrcNumber;
@@ -95,6 +96,7 @@ class CatalogWrcController extends Controller
         $createWrc->guidelines = $request->guide_lines;
         $createWrc->document1 = $request->document1;
         $createWrc->document2 = $request->document2;
+        $createWrc->alloacte_to_copy_writer = $alloacte_to_copy_writer;
         $createWrc->sku_qty = $request->sku_qty;
         $createWrc->status = 'Ready_for_allocation';
         $createWrc->save();
@@ -170,7 +172,7 @@ class CatalogWrcController extends Controller
         $project_name .= $project_name_array[$count-1][0];
 
         $wrcNumber = $request->c_short . $request->short_name . $project_name . $request->lot_id . '-' . chr($wrcCount + 65);
-
+        $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
         //update
 
         $createWrc = CatlogWrc::find($id);
@@ -185,6 +187,7 @@ class CatalogWrcController extends Controller
         $createWrc->guidelines = $request->guide_lines;
         $createWrc->document1 = $request->document1;
         $createWrc->document2 = $request->document2;
+        $createWrc->alloacte_to_copy_writer = $alloacte_to_copy_writer;
         $createWrc->sku_qty = $request->sku_qty;
         $createWrc->status = 'Ready_for_allocation';
         $createWrc->update();

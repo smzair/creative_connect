@@ -123,8 +123,10 @@ Creative Allocation
                                 <th>Company Name</th>
                                 <th>Brand Name</th>
                                 <th>Order Qty</th>
-                                <th>Allocated Qty</th>
-                                <th>Pending Qty</th>
+                                <th>GD Allocated Qty</th>
+                                <th>GD Pending Qty</th>
+                                <th>CW Allocated Qty</th>
+                                <th>CW Pending Qty</th>
                                 <th>WRC Created At</th>
                                 <th>Work Initiate Date</th>
                                 <th>Work Committed Date</th>
@@ -138,13 +140,16 @@ Creative Allocation
                             <tr>
                                 <td id="wrc_number{{$key}}">{{$lotinfo['wrc_number']}}</td>
                                 <td style="display: none;" id="wrc_number_id{{$key}}">{{$lotinfo['wrc_id']}}</td>
+                                <td style="display: none;" id="alloacte_to_copy_writer{{$key}}">{{$lotinfo['alloacte_to_copy_writer']}}</td>
                                 <td id="lot_number{{$key}}">{{$lotinfo['lot_number']}}</td>
                                 <td id="Company{{$key}}">{{$lotinfo['Company']}}</td>
                                 <td id="brand_name{{$key}}">{{$lotinfo['brand_name']}}</td>
                                 <!-- <td>{{--count($lotinfo['wrcs'])--}}</td> -->
                                 <td id="order_qty{{$key}}">{{$lotinfo['order_qty']}}</td>
-                                <td id="allocated_qty{{$key}}">{{($lotinfo['allocated_qty'] == null || $lotinfo['allocated_qty'] == 0) ? 0 : $lotinfo['allocated_qty']}}</td>
-                                <td id="pending_qty{{$key}}">{{$lotinfo['order_qty']- $lotinfo['allocated_qty']}}</td>
+                                <td id="gd_allocated_qty{{$key}}">{{($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']}}</td>
+                                <td id="pending_qty_gd{{$key}}">{{$lotinfo['order_qty']- $lotinfo['gd_allocated_qty']}}</td>
+                                <td id="cw_allocated_qty{{$key}}">{{($lotinfo['cw_allocated_qty'] == null || $lotinfo['cw_allocated_qty'] == 0) ? 0 : $lotinfo['cw_allocated_qty']}}</td>
+                                <td id="pending_qty_cw{{$key}}">{{$lotinfo['order_qty']- $lotinfo['cw_allocated_qty']}}</td>
                                 <td id="created_at{{$key}}">{{dateFormat($lotinfo->created_at)}}<br><b>{{timeFormat($lotinfo->created_at)}}</td>
                                 <td id="work_initiate_date{{$key}}">{{dateFormat($lotinfo->work_initiate_date)}}<br><b>{{timeFormat($lotinfo->work_initiate_date)}}</b></td>
                                 <td id="Comitted_initiate_date{{$key}}">{{dateFormat($lotinfo->Comitted_initiate_date)}}<br><b>{{timeFormat($lotinfo->Comitted_initiate_date)}}</b></td>
@@ -187,14 +192,26 @@ Creative Allocation
                         </div>
                         <div class="col-sm-4 col-6">
                             <div class="col-ac-details">
-                                <h6>Allocated Qty</h6>
-                                <p class="AllocatedCount"></p>
+                                <h6>GD Allocated Qty</h6>
+                                <p class="AllocatedCountGd"></p>
                             </div>
                         </div>
                         <div class="col-sm-4 col-6">
                             <div class="col-ac-details">
-                                <h6>Pending Qty</h6>
-                                <p class="PendingCount"></p>
+                                <h6>GD Pending Qty</h6>
+                                <p class="PendingCountGd"></p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-6">
+                            <div class="col-ac-details">
+                                <h6>CW Allocated Qty</h6>
+                                <p class="AllocatedCountCw"></p>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-6">
+                            <div class="col-ac-details">
+                                <h6>CW Pending Qty</h6>
+                                <p class="PendingCountCw"></p>
                             </div>
                         </div>
                         <div class="col-sm-4 col-12">
@@ -215,6 +232,7 @@ Creative Allocation
                     <form class="" method="POST" action="{{ route('CREATIVE_ALLOCATION_STORE') }}" id="allocWRCform" onsubmit="return validateForm(event)">
                         @csrf
                         <input type="hidden" name="wrc_id" class="wrc_id" value="" />
+                        <input type="hidden" name="alloacte_to_copy_writer" class="alloacte_to_copy_writer" value="" />
                         <?php
                             $reqArray = [1,2,3];
 
@@ -234,27 +252,27 @@ Creative Allocation
                                     <div class="form-group custom-new-form-group">
                                         <div class="group-inner select-wrapper">
                                             <label class="control-label required">Graphic Designer '.$data.'</label>
-                                            <select class="custom-select form-control-border designer-name" name="designerName[]" >
+                                            <select class="custom-select form-control-border designer-name GDNAMESTYLE'.$data.'" name="designerName[]" >
                                                  '.$graphicDesignerData.' 
                                             </select>
                                         </div>
                                         <div class="group-inner input-wrapper">
                                             <label class="control-label">Qty</label>
-                                            <input type="number" class="form-control" id="GraphicDesignerQty" name="GraphicDesignerQty[]">
+                                            <input type="number" class="form-control GDQTYSTYLE'.$data.'" id="GraphicDesignerQty" name="GraphicDesignerQty[]">
                                         </div>  
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-12">
+                                <div class="col-sm-6 col-12 CWSTYLE'.$data.'">
                                     <div class="form-group custom-new-form-group">
                                         <div class="group-inner select-wrapper">
                                             <label class="control-label required">Copy Writer '.$data.'</label>
-                                            <select class="custom-select form-control-border copywriter-name" name="copywriterName[]">
+                                            <select class="custom-select form-control-border copywriter-name CWNAMESTYLE'.$data.'" name="copywriterName[]">
                                              '.$copyWriterData.'
                                             </select>
                                         </div>
                                         <div class="group-inner input-wrapper">
                                             <label class="control-label">Qty</label>
-                                            <input type="number" class="form-control" name="copyWriterQty[]" id="copyWriterQty">
+                                            <input type="number" class="form-control CWQTYSTYLE'.$data.'" name="copyWriterQty[]" id="copyWriterQty">
                                         </div>  
                                     </div>
                                 </div>';
@@ -303,20 +321,44 @@ Creative Allocation
 <script>
     function setdata(id){
 
+        // document.querySelector("#CWQTYSTYLE1").value = "";
+        // document.querySelector("#CWQTYSTYLE2").value = "";
+        // document.querySelector("#CWQTYSTYLE2").value = "";
+        // document.querySelector("#CWNAMESTYLE1").value = "";
+        // document.querySelector("#CWNAMESTYLE2").value = "";
+        // document.querySelector("#CWNAMESTYLE3").value = "";
+        // document.querySelector("#GDQTYSTYLE1").value = "";
+        // document.querySelector("#GDQTYSTYLE2").value = "";
+        // document.querySelector("#GDQTYSTYLE2").value = "";
+        // document.querySelector("#GDNAMESTYLE1").value = "";
+        // document.querySelector("#GDNAMESTYLE2").value = "";
+        // document.querySelector("#GDNAMESTYLE3").value = "";
+        
+
         // set order qty
         const order_qty_td = "order_qty"+id;
         const order_qty = document.getElementById(order_qty_td).innerHTML;
         document.querySelector('.QuntyCount').innerHTML = order_qty;
 
-        // set allocated qty
-        const allocated_qty_td = "allocated_qty"+id;
-        const allocated_qty = document.getElementById(allocated_qty_td).innerHTML;
-        document.querySelector('.AllocatedCount').innerHTML = allocated_qty;
+        // set copy writer allocated qty
+        const cw_allocated_qty_td = "cw_allocated_qty"+id;
+        const cw_allocated_qty = document.getElementById(cw_allocated_qty_td).innerHTML;
+        document.querySelector('.AllocatedCountCw').innerHTML = cw_allocated_qty;
 
-        // set Pending qty
-        const pending_qty_td = "pending_qty"+id;
-        const pending_qty = document.getElementById(pending_qty_td).innerHTML;
-        document.querySelector('.PendingCount').innerHTML = pending_qty;
+         // set graphics designer allocated qty
+         const gd_allocated_qty_td = "gd_allocated_qty"+id;
+        const gd_allocated_qty = document.getElementById(gd_allocated_qty_td).innerHTML;
+        document.querySelector('.AllocatedCountGd').innerHTML = gd_allocated_qty;
+
+        // set GD Pending qty
+        const pending_qty_gd_td = "pending_qty_gd"+id;
+        const pending_qty_gd = document.getElementById(pending_qty_gd_td).innerHTML;
+        document.querySelector('.PendingCountGd').innerHTML = pending_qty_gd;
+
+        // set CW Pending qty
+        const pending_qty_cw_td = "pending_qty_cw"+id;
+        const pending_qty_cw = document.getElementById(pending_qty_cw_td).innerHTML;
+        document.querySelector('.PendingCountCw').innerHTML = pending_qty_cw;
 
         // set wrc number
         const wrc_number_td = "wrc_number"+id;
@@ -332,6 +374,23 @@ Creative Allocation
         const wrc_id_td = "wrc_number_id"+id;
         const wrc_id = document.getElementById(wrc_id_td).innerHTML;
         document.querySelector(".wrc_id").value = wrc_id
+
+        // set wrc id
+        const alloacte_to_copy_writer_td = "alloacte_to_copy_writer"+id;
+        const alloacte_to_copy_writer = document.getElementById(alloacte_to_copy_writer_td).innerHTML;
+        document.querySelector(".alloacte_to_copy_writer").value = alloacte_to_copy_writer
+
+        console.log('alloacte_to_copy_writer', alloacte_to_copy_writer)
+        if(alloacte_to_copy_writer == 0){
+            document.querySelector(".CWSTYLE1").style.display = 'none'
+            document.querySelector(".CWSTYLE2").style.display = 'none'
+            document.querySelector(".CWSTYLE3").style.display = 'none'
+        }else{
+            document.querySelector(".CWSTYLE1").style.display = 'block'
+            document.querySelector(".CWSTYLE2").style.display = 'block'
+            document.querySelector(".CWSTYLE3").style.display = 'block'
+
+        }
     }
 </script>
 
@@ -368,49 +427,42 @@ Creative Allocation
         var copyWriterQtyValues = $("input[name='copyWriterQty[]']")
               .map(function(){return $(this).val();}).get();
 
-        let gd = ''
-        let gdq = ''
-        let cw = ''
-        let cwq = ''
+              console.log('GraphicDesignerNameValues', GraphicDesignerNameValues)
+              console.log('GraphicDesignerQtyValues', GraphicDesignerQtyValues)
+
+        let gd = false // for graphic designer validation
+        let gdq = false // for graphic designer qty validation
+        let cw = false // for copy writer validation
+        let cwq = false // for copy writer qty validation
 
         GraphicDesignerNameValues.find((val)=>{
-            if(val == 0 || val == ''){
-                return gd = 'All Graphic Designer Fields Are required'
-                
+            if(val != 0){
+                return gd = true
             }
         })
-        if(gd !== ''){
-            return alert("All Graphic Designer Fields Are required"), false;
-            
-        }
-
         copyWriterNameValues.find((val)=>{
-            if(val == 0 || val == ''){
-                return cw = 'All Copy Writer Fields Are required'
+            if(val != 0){
+                return cw = true
             }
         })
-        if(cw !== ''){
-            return alert("All Copy Writer Fields Are required"), false;
+
+        if((!cw) && (!gd)){
+            return alert("At least one graphic designer or copywriter should be selected"),false; 
         }
 
         GraphicDesignerQtyValues.find((val)=>{
-            if(val == 0 || val == ''){
-                return gdq = 'Qty All Fields Are required';
-                
+            if(val != 0){
+                return gdq = true
             }
         })
-
-        if(gdq !== ''){
-            return alert("Qty All Fields Are required"), false;
-        }
-
         copyWriterQtyValues.find((val)=>{
-            if(val == 0 || val == ''){
-                return cwq = 'Qty All Fields Are required';
+            if(val != 0){
+                return cwq = true
             }
         })
-        if(cwq !== ''){
-            return alert("Qty All Fields Are required"), false;
+
+        if((!cwq) && (!gdq)){
+            return alert("Qty is required with selected user"),false; 
         }
 
         $(GraphicDesignerQtyValues).each(function (index, element) {
@@ -420,12 +472,18 @@ Creative Allocation
             copyWriterQtyTotal = copyWriterQtyTotal + Number(element);
         });
 
-        const pending_qty = document.querySelector('.PendingCount').innerHTML;
-        const validate_allocated_qty = (Number(copyWriterQtyTotal) + Number(GraphicDesignerQtyTotal));
+        const pending_qty_gd = document.querySelector('.PendingCountGd').innerHTML;
+        const pending_qty_cw = document.querySelector('.PendingCountCw').innerHTML;
+        // const validate_allocated_qty = (Number(copyWriterQtyTotal) + Number(GraphicDesignerQtyTotal));
 
         //The allocated quantity cannot be greater than the pending quantity
-        if(validate_allocated_qty > pending_qty){
-            alert("Sum of Qty cannot be greater than the pending quantity");
+        if(GraphicDesignerQtyTotal > pending_qty_gd){
+            alert("Sum of Graphics designer Qty cannot be greater than the GD pending quantity");
+            return false
+        }
+
+        if(copyWriterQtyTotal > pending_qty_cw){
+            alert("Sum of Copy Writer Qty cannot be greater than the CW pending quantity");
             return false
         }
         return true

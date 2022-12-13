@@ -107,6 +107,7 @@ Allocation Details (For Creatives)
             <div class="card m-0" style="border-radius: 10px; box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;">
               <div class="card-body p-0">
                 <div class="editor-links">
+                  <h3 class="text-primary">Select Name To View Allocations Details</h3>
                   <ul class="nav flex-column" style="margin-bottom: 10px;">
                     @foreach($allocationList['resData'] as $editorId => $allo)
                     <li class="nav-item">
@@ -123,7 +124,7 @@ Allocation Details (For Creatives)
          <div class="col-xl-8 col-md-8 col-sm-8 col-12 editor-table-grp">
           <div class="editor-dtl card m-0">
             <div class="edit-upld-info">
-              <h2 class="text-primary">Select Name To View Allocations Details</h2>
+              <h3 class="text-primary">Allocations Details</h3>
             </div>
             <div class="edit-upld-pop">
               <div class="table-responsive p-0 editor-table-list tab-content" style="max-height: 350px; height: 100%;">
@@ -141,6 +142,7 @@ Allocation Details (For Creatives)
                       <th class="align-middle border-top-0 text-primary">Lot Number :- {{$allo['lot_number']}}</th>
                       <th class="align-middle border-top-0 text-primary">Wrc Number :- {{$allo['wrc_number']}}</th>
                       <th class="align-middle border-top-0 text-primary">Allocated Qty :- {{$allo['allocated_qty']}}</th>
+                      <th class="align-middle border-top-0 text-primary">Allocation Date :- {{dateFormat($allo['created_at'])}}</th>
                     </tr>
                   </thead>
                   <tbody>

@@ -99,6 +99,14 @@ Creative Create WRC
                                     <p class="input_err" style="color: red; display: none;" id="order_qty_err"></p>
                                 </div>
                             </div>
+                            {{-- Allow to Copy Writer --}}
+                            <div class="col-sm-3 col-12">
+                                <div class="form-group">
+                                    <label class="control-label  required" style="display: block">Allow to Copy Writer</label>
+                                    <input type="checkbox" class="form-control" name="alloacte_to_copy_writer" value="1" <?php if($CreativeWrc->alloacte_to_copy_writer == 1)echo 'checked'?>>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="row">
                             <div class="col-sm-12 col-12">

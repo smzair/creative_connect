@@ -44,5 +44,21 @@ class CreativeAllocation extends Model
          ];
 
 	}
+
+	//GetCreativeAllocation for view user detail
+	public static function GetCreativeAllocationForUpload(){
+		// $id = Auth::user()->id;
+		
+		$login_user_id = 50;
+		$resData = CreativeAllocation::orderBy('creative_allocation.user_id', 'DESC')
+		->leftJoin('users', 'users.id','creative_allocation.user_id')
+		->leftJoin('creative_wrc', 'creative_wrc.id','creative_allocation.wrc_id')
+		->leftJoin('creative_lots', 'creative_lots.id','creative_wrc.lot_id')
+		->select('creative_allocation.*','creative_wrc.wrc_number','creative_wrc.lot_id','creative_lots.lot_number','users.name')
+		->where('creative_allocation.user_id',$login_user_id)
+		->get();
+		// dd($resData);
+		return $resData;
+	}
 	
 }
