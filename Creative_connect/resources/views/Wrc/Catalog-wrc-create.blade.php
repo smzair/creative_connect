@@ -12,6 +12,14 @@ Create Wrc
 <div class="container">
     <div class="row mt-5"> 
     </div>
+    <div class="row WrcNoShowHide" style="padding-bottom: 2rem">
+        <div class="col-12">
+            <div class="card card-transparent m-0" style="flex-direction:row;">
+                <h5 style="float: left;padding:2%">Catalog Wrc Number :- </h5>
+                <h5 class="WrcNo" style="float: right;padding-top:2%">{{$CatlogWrc->wrc_number }}</h5>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-12">
             <div class="card card-transparent card-info mt-3">
@@ -492,5 +500,12 @@ Create Wrc
     setTimeout(function(){
         document.getElementById('msg_div').style.display = "none";
     },3000)
+</script>
+<!-- Wrc no div script -->
+<script>
+    const wrcNoId = document.querySelector('.WrcNo').innerHTML;
+    if(wrcNoId == 0){
+        $(".WrcNoShowHide").css("display", "none");
+    }
 </script>
 @endsection

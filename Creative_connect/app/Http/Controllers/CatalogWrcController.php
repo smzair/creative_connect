@@ -32,6 +32,7 @@ class CatalogWrcController extends Controller
             'guidelines'=>'',
             'document1'=>'',
             'document2'=>'',
+            'wrc_number'=>'',
             'alloacte_to_copy_writer'=>1,
             'button_name' => 'Create New Catlog WRC',
              'route' => 'STORECATLOGWRC'

@@ -24,10 +24,21 @@ Update LOT
 
     /* End of New Page Additional CSS  */
 </style> 
+
+    
 <div class="container-lg container-fluid my-5 lot-create-updateversion">
+    <div class="row lotNoShowHide" style="padding-bottom: 2rem">
+        <div class="col-12">
+            <div class="card card-transparent m-0" style="flex-direction:row;">
+                <h5 style="float: left;padding:2%">Creative Lot Number :- </h5>
+                <h5 class="lotNo" style="float: right;padding-top:2%">{{$CreativeLots->lot_number }}</h5>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12">
             <div class="card card-transparent m-0">
+                
                 <div class="card-body">
                     <!-- New Create Lot -->
                     @if (Session::has('success'))
@@ -330,4 +341,13 @@ Update LOT
         document.getElementById('msg_div').style.display = "none";
     },3000)
 </script>
+
+<!-- lot no div script -->
+<script>
+    const lotNoId = document.querySelector('.lotNo').innerHTML;
+    if(lotNoId == 0){
+        $(".lotNoShowHide").css("display", "none");
+    }
+</script>
+
 @endsection

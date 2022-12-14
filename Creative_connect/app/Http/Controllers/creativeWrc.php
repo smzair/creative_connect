@@ -23,6 +23,7 @@ class creativeWrc extends Controller
         'id'=>0,
         'user_id'=>'',
         'brand_id'=>'',
+        'wrc_number'=>'',
         'lot_id'=>'',
         'commercial_id'=>'',
         'order_qty'=>'',
