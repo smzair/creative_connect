@@ -67,3 +67,9 @@ Route::post('/Creative-allocation-create', 'CreativeAllocationController@store')
 
 //creative allocation get
 Route::get('/Upload-Creative' , [CreativeAllocationController::class , 'uploadCreative'])->name('UPLOAD_CREATIVE_PANEL');
+
+//update start time
+Route::post('/set-creative-allocation-start' , [CreativeAllocationController::class , 'setCreativeAllocationStart']);
+
+// store creative allocation upload data
+Route::post('/Upload-Creative', 'CreativeAllocationController@storeUploaddata')->name('CREATIVE_ALLOCATION_UPLOAD_STORE');

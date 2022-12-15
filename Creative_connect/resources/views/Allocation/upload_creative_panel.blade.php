@@ -70,6 +70,16 @@ Designers Panel
 </style>
 <div class="container-fluid mt-5 plan-shoot new-allocation-table-main">
     <div class="row">
+        <!-- New Create Lot -->
+        @if (Session::has('success'))
+            <div class="alert alert-success" id="sub_msg_div" role="alert">
+                {{ Session::get('success') }}
+            </div>
+            {{ Session::forget('success') }}
+        @endif
+        <div class="" id="msg_div" style="display: none" role="alert">
+            <p id='msg_p'></p>
+        </div>
         <div class="col-12">
             <div class="card card-transparent">
                 <div class="card-header">
@@ -84,54 +94,102 @@ Designers Panel
                                 <th>Company Name</th>
                                 <th>Brand Name</th>
                                 <th>Order Qty</th>
-                                <th>Assigned GD</th>
+                                <?php if($allocationList['role'] == 'CD'){  ?>
+                                <th>Assigned Graphics Designers</th>
+                                <?php }?> 
+                                <?php if($allocationList['role'] == 'GD'){  ?>
+                                    <th>Assigned Copy Writers</th>
+                                <?php }?> 
                                 <th>Guidelines Links</th>
-                                <th>Task Date</th>
+                                <th>Task End Date</th>
+                                <th>Task Start Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($allocationList as $lotinfo)
+                            @foreach($allocationList['resData'] as $key => $allocationInfo)
                             <tr>
-                                <td>WRC-1234</td>
-                                <td>Tital</td>
-                                <td>Venkat Charan</td>
-                                <td>300</td>
+                                <td id="wrc_number{{$key}}">{{$allocationInfo['wrc_number']}}</td>
+                                <td id="creative_allocation_id{{$key}}" style="display: none;">{{$allocationInfo['creative_allocation_id']}}</td>
+                                <td id="role{{$key}}" style="display: none;">{{$allocationList['role']}}</td>
+                                <td id="creative_upload_links_allocation_id{{$key}}" style="display: none;">{{$allocationInfo['creative_upload_links_allocation_id']}}</td>
+                                <td id="creative_link{{$key}}" style="display: none;">{{$allocationInfo['creative_link']}}</td>
+                                <td id="copy_link{{$key}}" style="display: none;">{{$allocationInfo['copy_link']}}</td>
+                                <td id="project_name{{$key}}" style="display: none;">{{$allocationInfo['project_name']}}</td>
+                                <td id="kind_of_work{{$key}}" style="display: none;">{{$allocationInfo['kind_of_work']}}</td>
+                                <td>{{$allocationInfo['company_name']}}</td>
+                                <td id="brand_name{{$key}}">{{$allocationInfo['brand_name']}}</td>
+                                <td>{{$allocationInfo['order_qty']}}</td>
+                                <?php if($allocationList['role'] == 'CD'){  ?>
                                 <td>
                                   <ul class="info-list">
-                                    <li><span class="gd-name">Tanya</span></li>
-                                    <li><span class="gd-name">Sunil</span></li>
-                                    <li><span class="gd-name">Rohit</span></li>
-                                    <li><span class="gd-name">Shruti</span></li>
+                                    @foreach ($allocationInfo['gd_user_with_wrc'] as $user_with_wrc_data)
+                                    <li><span class="gd-name">{{$user_with_wrc_data->name}}</span></li>
+                                    @endforeach
                                   </ul>
                                 </td>
+                                <?php }?>
+                                <?php if($allocationList['role'] == 'GD'){  ?>
+                                <td>
+                                    <?php if ($allocationInfo['alloacte_to_copy_writer'] == 1) { ?>
+                                    <ul class="info-list">
+                                      @foreach ($allocationInfo['cw_user_with_wrc'] as $cw_user_with_wrc_data)
+                                      <li><span class="gd-name">{{$cw_user_with_wrc_data->name}}</span></li>
+                                      @endforeach
+                                    </ul>
+                                    <?php } ?>
+                                </td>
+                                <?php }?>
                                 <td>
                                   <ul class="info-list">
-                                    <li><a href="#" class="work-link">cascv vsdnvksjdv vaeflj</a></li>
-                                    <li><a href="#" class="work-link">cascv vsdnvksjdv vaeflj</a></li>
-                                    <li><a href="#" class="work-link">cascv vsdnvksjdv vaeflj</a></li>
-                                    <li><a href="#" class="work-link">cascv vsdnvksjdv vaeflj</a></li>
+                                    <li><a href={{$allocationInfo['work_brief']}} class="work-link">{{$allocationInfo['work_brief']}}</a></li>
+                                    <li><a href={{$allocationInfo['guidelines']}} class="work-link">{{$allocationInfo['guidelines']}}</a></li>
+                                    <li><a href={{$allocationInfo['document1']}} class="work-link">{{$allocationInfo['document1']}}</a></li>
+                                    <li><a href={{$allocationInfo['document2']}} class="work-link">{{$allocationInfo['document2']}}</a></li>
                                   </ul>
                                 </td>
+                                <?php if($allocationInfo['end_time'] != 'NULL'){  ?>
+                                    <td>{{dateFormat($allocationInfo->end_time)}}<br><b>{{timeFormat($allocationInfo->end_time)}}</b></td>
                                 <td>
-                                  <div class="task-action task-start-button">
-                                    <a href="javascript:;" class="btn btn-warning" id="startBTN">
+                                <?php } ?>
+                                <?php if(($allocationInfo['end_time'] == 'NULL')){  ?>
+                                    <td></td>
+                                <td>
+                                <?php } ?>
+                                
+                                <?php if($allocationInfo['start_time'] == 'NULL'){  ?>
+                                  <div class="task-action task-start-button" style="display:bock;" id="start_btn">
+                                    <a href="javascript:;" class="btn btn-warning" onclick="start_task('{{ $allocationInfo->creative_allocation_id }}')" id="startBTN{{ $key }}" id="startBTN">
                                       Start
                                     </a>
                                   </div>
-                                  <div class="task-action task-start-timings" style="display:none;">
-                                    <span class="date">20-oct-2022</span>
-                                    <span class="time">05:48:08 AM</span>
+                                <?php }?>
+                                <?php if($allocationInfo['start_time'] != 'NULL'){  ?>
+                                  <div class="task-action task-start-timings" style="display:block;">
+                                    <span  class="start_time1{{$key}}">{{dateFormat($allocationInfo->start_time)}}</span>
+                                    <span class="time">{{timeFormat($allocationInfo->start_time)}}</span>
+                                  </div>
+                                <?php }?>
+                                <div class="task-action task-start-timings" style="display:none;" id="start_time">
+                                    <span id="start_time1" class="start_time1{{$key}}"></span><br>
+                                    <span id="start_time2"></span>
                                   </div>
                                 </td>
-                                <td>
-                                    <a href="javascript:;" class="btn btn-warning alloc-action-btn inactive" id="uploadBTn" data-toggle="modal" data-target="#editpanelPopup">
-                                        Upload
-                                    </a>
-                                    <a href="javascript:;" class="btn btn-warning alloc-action-btn inactive" id="editBTn">
-                                        Edit
-                                    </a>
-                                </td>
+                                <?php if(($allocationInfo['end_time'] == 'NULL') || ($allocationInfo['end_time'] == null)){  ?>
+                                    <td>
+                                        <?php if($allocationInfo['start_time'] != 'NULL'){  ?>
+                                            <a href="#" class="btn btn-warning alloc-action-btn" data-toggle="modal" data-target="#editpanelPopup" onclick='setdata(<?php echo $key;?>)'>
+                                                Upload
+                                            </a>
+                                        <?php } ?>
+                                        <a href="#" class="btn btn-warning alloc-action-btn" id="uploadBTn" data-toggle="modal" data-target="#editpanelPopup" style="display:none;" onclick='setdata(<?php echo $key;?>)'>
+                                            Upload
+                                        </a>
+                                        <a href="javascript:;" class="btn btn-warning alloc-action-btn inactive" id="editBTn" style="display:none;">
+                                            Edit
+                                        </a>
+                                    </td>
+                                <?php } ?>
                             </tr>
                             @endforeach
                         </tbody>
@@ -143,81 +201,90 @@ Designers Panel
     <!-- /.card-body -->
 </div>
 
-<div class="modal fade" id="editpanelPopup">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header py-2">
-                <h4 class="modal-title">Uploading Panel - Creatives</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="custom-dt-row work-details">
-                    <div class="row">
-                        <div class="col-sm-4 col-12">
-                            <div class="col-ac-details">
-                                <h6>WRC Number</h6>
-                                <p id="wrcNo">WRC-2345</p>
+<form class="" method="POST" action="{{ route('CREATIVE_ALLOCATION_UPLOAD_STORE') }}" id="uploadCreativeAllocForm" onsubmit="return validateForm(event)">
+    @csrf
+    <div class="modal fade" id="editpanelPopup">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h4 class="modal-title">Uploading Panel - Creatives</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <input type="hidden" name="creative_allocation_id" class="creative_allocation_id" value="" />
+                <input type="hidden" name="user_role" class="user_role" value="" />
+                <div class="modal-body">
+                    <div class="custom-dt-row work-details">
+                        <div class="row">
+                            <div class="col-sm-4 col-12">
+                                <div class="col-ac-details">
+                                    <h6>WRC Number</h6>
+                                    <p class="wrcNo"></p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-4 col-6">
-                            <div class="col-ac-details">
-                                <h6>Brand Name</h6>
-                                <p id="brndName">ODN11jidfv23e4r</p>
+                            <div class="col-sm-4 col-6">
+                                <div class="col-ac-details">
+                                    <h6>Brand Name</h6>
+                                    <p class="brndName">ODN11jidfv23e4r</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-4 col-6">
-                            <div class="col-ac-details">
-                                <h6>Start Date</h6>
-                                <p id="startDate">11/11/1111</p>
+                            <div class="col-sm-4 col-6">
+                                <div class="col-ac-details">
+                                    <h6>Start Date</h6>
+                                    <p class="startDate"></p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-4 col-6">
-                            <div class="col-ac-details">
-                                <h6>Project Type</h6>
-                                <p id="projectType">fneivnsdvi;msdol;dvm</p>
+                            <div class="col-sm-4 col-6">
+                                <div class="col-ac-details">
+                                    <h6>Project Type</h6>
+                                    <p class="projectType">fneivnsdvi;msdol;dvm</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-4 col-6">
-                            <div class="col-ac-details">
-                                <h6>Kind of Work</h6>
-                                <p id="kindOfWork">vdssvdsvvds</p>
+                            <div class="col-sm-4 col-6">
+                                <div class="col-ac-details">
+                                    <h6>Kind of Work</h6>
+                                    <p class="kindOfWork">vdssvdsvvds</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="custom-dt-row">
-                    <form class="" method="POST" action="" id="workdetailsform">
-                        <div class="row">
-                            <div class="col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label class="control-label required">Link</label>
-                                    <input type="text" class="form-control" name="workLink1" id="workLink1" placeholder="Link">
+                    <div class="custom-dt-row">
+                        <form class="" method="POST" action="" id="workdetailsform">
+                            <div class="row">
+                                <div class="col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label class="control-label required">GD Link</label>
+                                        <input type="text" class="form-control creative_link" name="workLink1"  placeholder="Link" value="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label class="control-label required">CW Link</label>
+                                        <input type="text" class="form-control copy_link" name="workLink2"  placeholder="Link" value="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-12">
+                                    <div class="custom-info">
+                                    <p>Please mark the WRC as complete only after you have uploaded the corresponding documents.</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-12">
+                                    <button type="submit" name = "submit" value="complete_allocation" class="btn btn-warning" href="javascript:void(0)" style="float:right;margin-right:10px">Complete Allocation</button>
+                                    
+                                    <button type="submit" name="submit" value="save" class="btn btn-warning" id="save_btn" href="javascript:void(0)" style="float:right;margin-right:10px;display: none" >Save</button>
+
+                                    <button type="submit" name="submit" value="save" class="btn btn-warning" id="update_btn" href="javascript:void(0)" style="float:right;margin-right:10px;display: none" >Update</button>
+                                    
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label class="control-label required">Link</label>
-                                    <input type="text" class="form-control" name="workLink2" id="workLink2" placeholder="Link">
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-12">
-                                <div class="custom-info">
-                                  <p>Please mark the WRC as complete only after you have uploaded the corresponding documents.</p>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-12">
-                                <a class="btn btn-warning" href="javascript:void(0)" style="float:right;">Complete Allocation</a>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
+</form>
 <!-- End of New Editor Panel (For Creative) -->
 
 <!-- End of New Allocation Details View -->
@@ -230,6 +297,167 @@ Designers Panel
     });
 </script>
 
-@endsection
+<!-- script for update start time -->
+<script>
+    async function start_task(id){
+        console.log('id', id)
+        allocation_id = id;
+         await $.ajax({
+            url: "{{ url('set-creative-allocation-start')}}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                allocation_id,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+               console.log('res', res.message)
+               if(res.message == 'success'){
+                   document.getElementById('msg_p').innerHTML  = 'Allocation successfully started';
+                   $("#msg_div").addClass("alert alert-success");
+                   document.getElementById('msg_div').style.display = 'block';
+                   document.getElementById('start_btn').style.display = 'none';
+                   document.getElementById('start_time').style.display = 'block';
+                   document.getElementById('uploadBTn').style.display = 'block';
+                   document.getElementById('start_time1').innerHTML = res.start_time1;
+                   document.getElementById('start_time2').innerHTML = res.start_time2;
+                
+               }else{
+                document.getElementById('msg_p').innerHTML  = 'something went wrong';
+                $("#msg_div").addClass("alert alert-danger");
+                document.getElementById('msg_div').style.display = 'block';
+               }
+            }
+        });
+        setTimeout(function(){
+        document.getElementById('msg_div').style.display = "none";
+        $("#msg_div").removeClass();
+        // window.location.reload();
+        },3000)
+     }
+ </script>
 
-<!-- End of New Allocation View -->
+ <!-- get dynamic data in modal -->
+<script>
+    function setdata(id){
+        console.log('first', id)
+
+        // set wrc number
+        const wrc_number_td = "wrc_number"+id;
+        const wrc_number = document.getElementById(wrc_number_td).innerHTML;
+        document.querySelector('.wrcNo').innerHTML = wrc_number;
+
+        // set creative_allocation_id
+        const creative_allocation_id_td = "creative_allocation_id"+id;
+        const creative_allocation_id = document.getElementById(creative_allocation_id_td).innerHTML;
+        document.querySelector('.creative_allocation_id').value = creative_allocation_id;
+
+        // set user_role
+        const role_td = "role"+id;
+        const role = document.getElementById(role_td).innerHTML;
+        document.querySelector('.user_role').value = role;
+
+        // set brand name
+        const brand_name_td = "brand_name"+id;
+        const brand_name = document.getElementById(brand_name_td).innerHTML;
+        document.querySelector('.brndName').innerHTML = brand_name;
+
+        // set start time
+        const start_time_td = "start_time1"+id;
+        const start_time = document.getElementsByClassName(start_time_td)[0].innerHTML;
+        document.querySelector('.startDate').innerHTML = start_time;
+
+        // set project name
+        const project_name_td = "project_name"+id;
+        const project_name = document.getElementById(project_name_td).innerHTML;
+        document.querySelector('.projectType').innerHTML = project_name;
+
+        // set kind of work
+        const kind_of_work_td = "kind_of_work"+id;
+        const kind_of_work = document.getElementById(kind_of_work_td).innerHTML;
+        document.querySelector('.kindOfWork').innerHTML = kind_of_work;
+
+
+        // set creative_upload_links_allocation_id
+        var creative_upload_links_allocation_id = null;
+        const creative_upload_links_allocation_id_td = "creative_upload_links_allocation_id"+id;
+        var creative_upload_links_allocation_id = document.getElementById(creative_upload_links_allocation_id_td).innerHTML;
+
+        console.log('creative_upload_links_allocation_id', creative_upload_links_allocation_id)
+
+        if(creative_upload_links_allocation_id != null && creative_upload_links_allocation_id > 0){
+            console.log('raj', creative_upload_links_allocation_id)
+            document.getElementById('update_btn').style.display = "block";
+        }else{
+            console.log('umesh', creative_upload_links_allocation_id)
+            document.getElementById('save_btn').style.display = "block";
+
+        }
+
+        // set creative_link
+        var creative_link = null;
+        const creative_link_td = "creative_link"+id;
+        var creative_link = document.getElementById(creative_link_td).innerHTML;
+
+        console.log('creative_link', creative_link)
+
+        if(creative_link != null){
+            document.querySelector('.creative_link').value = creative_link;
+        }else{
+            document.querySelector('.creative_link').value = '';
+        }
+
+        // set copy_link
+        var copy_link = null;
+        const copy_link_td = "copy_link"+id;
+        var copy_link = document.getElementById(copy_link_td).innerHTML;
+
+        console.log('copy_link', copy_link)
+
+        if(copy_link != null){
+            document.querySelector('.copy_link').value = copy_link;
+        }else{
+            document.querySelector('.copy_link').value = '';
+        }
+
+    }
+</script>
+
+<!-- validateForm script -->
+<script>
+    function validateForm(event) {
+        console.log('testrequired')
+        const user_role = document.querySelector('.user_role').value;
+        console.log('user_role', user_role);
+
+        if(user_role == 'CD'){
+            const copy_link = document.querySelector('.copy_link').value;
+            console.log('copy_link', copy_link)
+            if(copy_link == '' || copy_link == undefined){
+                alert('CW Link field is required');
+                return false;
+            }
+        }
+
+        if(user_role == 'GD'){
+            const gd_link = document.querySelector('.creative_link').value;
+            if(gd_link == '' || gd_link == undefined){
+                alert('GD Link field is required');
+                return false;
+            }
+        }
+
+        return true;
+
+        
+    }
+</script>
+
+<!-- msg div script -->
+<script>
+    setTimeout(function(){
+        document.getElementById('sub_msg_div').style.display = "none";
+    },3000)
+</script>
+
+@endsection
