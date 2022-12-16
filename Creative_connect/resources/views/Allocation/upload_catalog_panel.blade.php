@@ -6,16 +6,18 @@ Cataloger Panel
 
 @section('content')
 <div class="container-fluid mt-5 plan-shoot new-allocation-table-main">
+
+    <style>
+         .msg_box{
+            margin: 0.1em 0;
+            background: #928c8cfc;
+            display: none;
+            padding: 0.3em;
+        }
+    </style>
     <div class="row">
         <div class="col-12">
             <div class="card card-transparent">
-
-                
-
-                <div class="card-header">
-                    <h3 class="card-title">Cataloger Panel</h3>
-                </div>
-
                 @php
                     $getcopyWriter_array = getcopyWriter();
                     $getcopyWriter = array_column($getcopyWriter_array, 'name','id');
@@ -39,6 +41,10 @@ Cataloger Panel
                         $td_head = "Assigned Cataloguers";
                     }
                 @endphp
+
+                <div class="card-header">
+                    <h3 class="card-title">{{ $user_role }} Panel</h3>
+                </div>
                
                 <!-- /.card-header msg_div msg_box  -->
                 <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
@@ -58,6 +64,7 @@ Cataloger Panel
                                
                                 <th>{{ $td_head }}</th>
                                 <th>Guidelines Links</th>
+                                <th>Time Spent</th>
                                 <th>Start Date</th>
                                 <th>Action</th>
                             </tr>
@@ -82,7 +89,9 @@ Cataloger Panel
                                 // pre($allocated_data_arr);
                                $time_hash_id =  $allocated_data_arr['time_hash_id'];
                                $start_time =  $allocated_data_arr['start_time'];
+                               $end_time =  $allocated_data_arr['end_time'];
                                $start_time_is = "";
+                               $end_time_is = "";
                                $display_date_time = "display:none;";
                                $display_start = "display:block;";
                                $btn_disable = "disabled";
@@ -91,8 +100,12 @@ Cataloger Panel
                                     $display_start = "display:none;";
                                     $display_date_time = "display:block;";
                                     $start_time_is = date('d-m-Y h:i:s A' , strtotime($start_time));
-                               }
+                                    
+                                    if($end_time != '0000-00-00 00:00:00'){
+                                        $end_time_is = date('d-m-Y h:i:s A' , strtotime($end_time));
 
+                                    }
+                               }
                             @endphp
                             <tr>
                                 <td>{{ $row['wrc_number'] }}</td>
@@ -135,6 +148,12 @@ Cataloger Panel
                                     <li><a href="{{ $row['document1'] }}" class="work-link">Link</a></li>
                                     <li><a href="{{ $row['document2'] }}" class="work-link">Link</a></li>
                                   </ul>
+                                </td>
+
+                                <td >
+                                    <p id="time_spant{{ $allocation_id }}">
+                                        {{ $end_time_is }}
+                                    </p>
                                 </td>
                                 <td>
                                   <div class="task-action task-start-button" >
@@ -180,7 +199,7 @@ Cataloger Panel
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header py-2">
-                <h4 class="modal-title">Uploading Panel - Catalogue</h4>
+                <h4 class="modal-title">Uploading Panel - {{ $user_role }}</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -225,13 +244,13 @@ Cataloger Panel
                         <div class="row">
                             <div class="col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label class="control-label required">Link</label>
+                                    <label class="control-label <?php echo $user_role == 'Cataloguer' ? 'required' : ''  ?>"> Cataloguer Link</label>
                                     <input type="text" class="form-control" name="workLink1" id="workLink1" placeholder="Link">
                                 </div>
                             </div>
                             <div class="col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label class="control-label required">Link</label>
+                                    <label class="control-label  <?php echo $user_role == 'CW' ? 'required' : ''  ?> "> CW Link</label>
                                     <input type="text" class="form-control" name="workLink2" id="workLink2" placeholder="Link">
                                 </div>
                             </div>
@@ -240,10 +259,19 @@ Cataloger Panel
                                   <p>Please mark the WRC as complete only after you have uploaded the corresponding documents.</p>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-12" >
-                                <a class="btn btn-warning" href="javascript:void(0)" style="float:right; margin: 0 5px;">Complete Allocation</a>
-                                <a class="btn btn-warning" href="javascript:void(0)" style="float:right; margin: 0 5px;">Save</a>
+
+                            <div class="col-sm-6 col-12"  style="position: relative;" >
+                                <input type="hidden" name="allocation_id_is" id="allocation_id_is">
+                                <button type="button" id="btn_comp" class="btn btn-warning" name="comp_wrc" value="comp_wrc" style="float:right; margin: 0 5px;" onclick="formvalidate('comp')">Complete Wrc</button>
+
+                                <button type="button" id="btn_save" class="btn btn-warning" style="float:right; margin: 0 5px;"  onclick="formvalidate('save')"  name="save_wrc" value="save_wrc">Save</button>
+                                
                             </div>
+
+                            <p class="msg_box" id="msg_box1" style="color: red; display: none;">
+                            </p>
+
+
                         </div>
                     </form>
                 </div>
@@ -285,8 +313,9 @@ Cataloger Panel
 {{-- set_data --}}
 <script>
     async function set_data(params) {
+        console.log(params)
         const data_id = 'data'+params;
-
+        const time_spant = 'time_spant'+params;
         const project_type = $("#"+data_id).data('project_type');
         const wrc_number = $("#"+data_id).data('wrc_number');
         const kind_of_work = $("#"+data_id).data('kind_of_work');
@@ -294,11 +323,47 @@ Cataloger Panel
         const company = $("#"+data_id).data('company');
         const startDate = $("#"+data_id).data('start_date');
 
+        document.getElementById("allocation_id_is").value = params;
         document.querySelector("#projectType").innerHTML = project_type
         document.querySelector("#wrcNo").innerHTML = wrc_number 
         document.querySelector("#kindOfWork").innerHTML =  kind_of_work
         document.querySelector("#brndName").innerHTML = brand_name
         document.querySelector("#startDate").innerHTML = startDate
+
+        // $("#btn_save").css("display", "none");
+        // $("#btn_comp").css("display", "none");
+        document.querySelector("#workLink1").value = "";
+        document.querySelector("#workLink2").value = "";
+        $("#btn_save").css("display", "block");
+        $("#btn_comp").css("display", "block");
+
+        await $.ajax({
+            url: "{{ url('get-catalog_upload_links')}}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                allocation_id : params,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                console.log(res)
+                if(res == 0){
+                    document.querySelector("#btn_save").innerHTML = "save";
+                }else{
+                    document.querySelector("#btn_save").innerHTML = "update";
+                    document.querySelector("#workLink1").value = res[0].catalog_link
+                    document.querySelector("#workLink2").value = res[0].copy_link
+
+                    end_time = res[0].end_time
+
+                    if(end_time != '0000-00-00 00:00:00' && end_time != ''){
+                        $("#btn_save").css("display", "none");
+                        $("#btn_comp").css("display", "none");
+                        document.querySelector("#"+time_spant).innerHTML = end_time;
+                    }
+                }
+            }
+        });
     }
 </script>
 
@@ -338,7 +403,6 @@ Cataloger Panel
                     msg_box.innerHTML  = "Somthing went Wrong!! Try again!!";
                 }
                 $("#msg_div").css("display", "block");
-
             }
         });
         setTimeout( () => {
@@ -346,4 +410,77 @@ Cataloger Panel
         }, 2500);
     }
 </script>
+
+<Script>
+   async function formvalidate(action){
+        // Cataloguer / CW
+
+        const user_role = '{{ $user_role }}'
+        const allocation_id_is  = $("#allocation_id_is").val()
+        const workLink1  = $("#workLink1").val()
+        const workLink2  = $("#workLink2").val()
+
+        if(user_role == 'Cataloguer' && workLink1 == ''){
+            alert('Cataloguer Link in required ');
+            $( "#workLink1" ).focus();
+            return
+        }
+
+        if(user_role == 'CW' && workLink2 == ''){
+            alert('Copy Writer Link in required ');
+            $( "#workLink1" ).focus();
+            return
+        }
+        console.log({allocation_id_is , workLink1 , workLink2 , user_role })
+        console.warn(action)
+
+         await $.ajax({
+            url: "{{ url('catalog-upload-link') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                allocation_id_is: allocation_id_is,
+                catalog_link: workLink1,
+                copy_link: workLink2,
+                action,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                console.log(res)
+                if(res?.status > 0){
+                    const status = res.status
+
+                    if(status == 1){
+                        document.querySelector("#btn_save").innerHTML = "update";
+                        document.querySelector("#msg_box1").innerHTML = user_role +" link Saved Successfully";
+                    }else{
+                        document.querySelector("#btn_save").innerHTML = "update";
+                        document.querySelector("#msg_box1").innerHTML = user_role+" link Updated Successfully";
+                    }
+                    
+                    
+                    if(res.up_status == 1){
+                        document.querySelector("#msg_box1").innerHTML = user_role+" WRC Completed Successfully";
+                        // document.querySelector("#btn_save").innerHTML = "update";
+                        console.warn(res.end_time)
+                        document.querySelector("#time_spant"+allocation_id_is).innerHTML = res.end_time;
+                        $("#btn_save").css("display", "none");
+                        $("#btn_comp").css("display", "none");
+
+                    }
+                }else{
+
+                }
+                    $("#msg_box1").css("display", "block");
+            }
+        });
+        setTimeout( () => {
+            $(".msg_box").css("display", "none");
+            $('#msg_box1').html("");
+        // $('#msg_box2').html("");
+        // $("#msg_box1").css("display", "none");
+        // $("#msg_box2").css("display", "none");
+        }, 3000);
+    }
+</Script>
 @endsection

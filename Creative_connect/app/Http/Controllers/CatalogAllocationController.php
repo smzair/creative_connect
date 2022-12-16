@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CatalogAllocation;
 use App\Models\CatalogTimeHash;
+use App\Models\CatalogUploadLinks;
 use App\Models\CatlogWrc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -121,7 +122,7 @@ class CatalogAllocationController extends Controller
     // show catalog allocation upload blade
     function upload()
     {
-
+        
         $login_user_id_is = 34;
         $user_role = 'CW';
         $login_user_id_is = 7;
@@ -147,6 +148,45 @@ class CatalogAllocationController extends Controller
 
     }
 
-   
+    // get catalog uploaded link 
 
+    function get_catalog_link(Request $request){
+        $allocation_id = $request->allocation_id;
+        $response = CatalogUploadLinks::get_catalog_uploaded_link($allocation_id);
+        if($response == 0){
+            echo $response;
+        }
+        else{
+            echo json_encode($response);
+        }
+    }
+
+
+    // upload_catalog_link 
+    function upload_catalog_link(Request $request){
+
+        $allocation_id_is = $request->allocation_id_is;
+        $catalog_link = $request->catalog_link;
+        $copy_link = $request->copy_link;
+        $action = $request->action;
+
+        $status = CatalogUploadLinks::upload_catalog_link($allocation_id_is, $catalog_link, $copy_link, $action );
+
+        $end_time_is = '';
+        $up_status = '';
+
+        if ($status != 0 && $action == 'comp') {
+            $end_time = date('Y-m-d H:i:s');
+            $up_status = CatalogTimeHash::where('allocation_id', $allocation_id_is)->update(['end_time' => $end_time]);
+            if($up_status){
+                $end_time_is = date('Y-m-d h:i:s A', strtotime($end_time));
+            }
+        }
+        $response = array(
+            'status' => $status,
+            'up_status' => $up_status,
+            'end_time' => $end_time_is
+        );
+        echo json_encode($response);
+    }
 }

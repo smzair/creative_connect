@@ -76,5 +76,7 @@ Route::get('catalog-allocated-details', [CatalogAllocationController::class, 'de
 Route::get('catalog-upload', [CatalogAllocationController::class, 'upload'])->name('CATALOG_UPLOAD'); //
 
 Route::post('set-catalog-allocation', [CatalogAllocationController::class, 'save']); // for save catalog allocation
-Route::post('catalog-allocated-sku-count', [CatalogAllocationController::class, 'alocated_sku_count']); // for save catalog allocation
-Route::post('set-catalog-allocation-start', [CatalogAllocationController::class, 'set_tast_start']); // for save catalog allocation
+Route::post('catalog-allocated-sku-count', [CatalogAllocationController::class, 'alocated_sku_count']); // for list of allocated catalog WRC sku count ajax
+Route::post('set-catalog-allocation-start', [CatalogAllocationController::class, 'set_tast_start']); // for start catalog allocation Wrc
+Route::post('catalog-upload-link', [CatalogAllocationController::class, 'upload_catalog_link']); // for upload catalog WRC link 
+Route::post('get-catalog_upload_links', [CatalogAllocationController::class, 'get_catalog_link']); // for get-catalog_upload_links 
