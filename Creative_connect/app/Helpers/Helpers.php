@@ -4,11 +4,26 @@
 use Illuminate\Support\Facades\DB;
 
 
+// getcopywriter
+if (!function_exists('getcopywriter')) {
+
+    function getcopywriter()
+    {
+        $users = DB::table('users')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
+            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
+            ->where([['roles.name', '=', 'CW']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short'])->toArray();
+        return $users;
+    }
+}
+
+// getLotNo
 if(!function_exists('getLotNo')){
     function getLotNo($c_short = "c_short" , $short_name = "short_name" ,$s_type_name = "s_type"){
         $s_type ="";
         $serviceType_array = explode(" ", $s_type_name);
         foreach($serviceType_array  as $key => $val){
+            if($val !== '+')
             $s_type .= $val[0];
         }
         return $lot_number = strtoupper('ODN'.date('dmY')."-".$c_short.$short_name.$s_type);
@@ -198,20 +213,33 @@ if (!function_exists('pre')){
     }
 }
 
-// user/compny data
-if(!function_exists('getCataloguer')){
 
-    function getCataloguer(){
+// Copy writer
+if (!function_exists('getcopyWriter')) {
+
+    function getcopyWriter()
+    {
         $users = DB::table('users')
             ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
             ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
-            ->where([['roles.name', '=', 'Cataloguer']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
-
-         return $users;   
+            ->where([['roles.name', '=', 'CW']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short'])->toArray();
+        return $users;
     }
 }
 
 // Cataloguer
+if(!function_exists('getCataloguer')){
+    
+    function getCataloguer(){
+        $users = DB::table('users')
+        ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
+        ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
+        ->where([['roles.name', '=', 'Cataloguer']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short'])->toArray();
+        return $users;   
+    }
+}
+
+// user/compny data
 
 if (!function_exists('getUserCompanyData')) {
 
@@ -225,3 +253,20 @@ if (!function_exists('getUserCompanyData')) {
         return $users;
     }
 }
+
+//  Rajesh 
+// dateFormat
+
+function dateFormat($date)
+{
+    return date('d-m-Y', strtotime($date));
+}
+
+// timeFormat
+
+function timeFormat($date)
+{
+    return date('H:i A', strtotime($date));
+}
+
+// 

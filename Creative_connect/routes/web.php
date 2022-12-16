@@ -52,13 +52,29 @@ Route::post('/Creative-UpdateLotCatalog', 'CatalogLotsController@update')->name(
 Route::get('/Creative-viewWrcs','creativeWrc@view')->name('viewWRC');
 Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
 
+// rajesh wrc route start
+
+/****************catalog-wrc-create **************/
+Route::get('/Catalog-Wrc-Create', 'catalogWrcController@index')->name('CREATECATLOGWRC');
+Route::get('/Catalog-viewWrcs', 'catalogWrcController@view')->name('viewCatalogWRC');
+Route::post('/Catalog-Wrc-Create', 'catalogWrcController@store')->name('STORECATLOGWRC');
+Route::get('/Catalog-Wrc-Create/{id}', 'catalogWrcController@edit');
+Route::post('/Catlog-updateWrc', 'catalogWrcController@update')->name('UPDATECATLOGWRC');
+#ajax
+Route::post('/get-catlog-brand', 'catalogWrcController@getBrand');
+Route::post('/get-catlog-lot-number', 'catalogWrcController@getLotNumber');
+
+// rajesh wrc route end
+
 /********** Ajax calling /{id} ********/
 Route::post('/get-brand', 'AjaxController@getBrand');
 
-/****** Allocation Route  set-catalog-allocation *********/
+/****** Allocation Route  set-catalog-allocation  set-catalog-allocation-start *********/
 // Route::get('catalog-allocation' , 'CatalogAllocationController@index')->name('CATALOG_ALLOCT'); // 
 Route::get('catalog-allocation', [CatalogAllocationController::class, 'index'])->name('CATALOG_ALLOCT'); // 
 Route::get('catalog-allocated-details', [CatalogAllocationController::class, 'details'])->name('CATALOG_ALLOCTED_DETAILS'); // 
 Route::get('catalog-upload', [CatalogAllocationController::class, 'upload'])->name('CATALOG_UPLOAD'); //
 
 Route::post('set-catalog-allocation', [CatalogAllocationController::class, 'save']); // for save catalog allocation
+Route::post('catalog-allocated-sku-count', [CatalogAllocationController::class, 'alocated_sku_count']); // for save catalog allocation
+Route::post('set-catalog-allocation-start', [CatalogAllocationController::class, 'set_tast_start']); // for save catalog allocation

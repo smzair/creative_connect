@@ -30,6 +30,12 @@
 
     <link rel="stylesheet" href="{{ asset('/css/common.css') }}">
 
+    <style>
+        .nav-item a{
+            margin-bottom: 2px !important;
+        }
+    </style>
+
 
 </head>
 
@@ -166,6 +172,20 @@
                                                         <p> Create WRCs</p>
                                                     </a>
                                                 </li>
+
+                                                 <li class="nav-item">
+                                                <a href="{{ route('CREATECATLOGWRC') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Create Catlog WRCs</p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('viewCatalogWRC') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>View Catlog WRCs</p>
+                                                </a>
+                                            </li>
                                                 
                                                 {{-- Allocation section {{route('CREATEWRC')}}  --}}
                                                 <li class="nav-item">

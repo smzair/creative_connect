@@ -26,13 +26,19 @@ class CatlogWrc extends Model
             $join->on('cc_catalog.user_id', '=', 'lots_catalog.user_id');
             $join->on('cc_catalog.brand_id', '=', 'lots_catalog.brand_id');
         })
-        ->select('sku_qty' ,'catlog_wrc.lot_id', 'catlog_wrc.wrc_number', 'catlog_wrc.commercial_id', 
+        ->leftJoin('catalog_allocation' , 'catalog_allocation.wrc_id' , 'catlog_wrc.id')
+        ->select('sku_qty' ,'catlog_wrc.lot_id', 'catlog_wrc.wrc_number',
+            'catlog_wrc.alloacte_to_copy_writer' , 'catlog_wrc.commercial_id', 
         'catlog_wrc.status', 'catlog_wrc.img_recevied_date', 'catlog_wrc.missing_info_notify_date', 
         'catlog_wrc.missing_info_recived_date', 'catlog_wrc.confirmation_date', 'catlog_wrc.work_brief', 
         'catlog_wrc.guidelines',  'catlog_wrc.created_at' ,
             'catlog_wrc.id', 
         'lots_catalog.lot_number' ,'users.Company', 'brands.name' ,  'cc_catalog.market_place' ,
-        'cc_catalog.type_of_service' )
+        'cc_catalog.type_of_service',
+        DB::raw('SUM(CASE  	WHEN user_role = 0 THEN allocated_qty else 0 END)  as cataloger_sum'),
+        DB::raw('SUM(CASE  	WHEN user_role = 1 THEN allocated_qty else 0 END)  as cp_sum'),
+        )
+        ->groupBy('catlog_wrc.id')
         ->get()->toArray();
         return $wrcList;
 
