@@ -1,9 +1,12 @@
 @extends('layouts.admin')
 
 @section('title')
-
-Designers Panel
-
+<?php if($allocationList['role'] == 'CD'){?>
+    Copy Writers Panel
+<?php } ?>
+<?php if($allocationList['role'] == 'GD'){?>
+    Graphics Designers Panel
+<?php } ?>
 @endsection
 @section('content')
 <!-- New Allocation Details - Person Allocated (For Creative) -->
@@ -83,7 +86,16 @@ Designers Panel
         <div class="col-12">
             <div class="card card-transparent">
                 <div class="card-header">
-                    <h3 class="card-title">Designers Panel</h3>
+                    <h3 class="card-title">
+                        
+                        <?php if($allocationList['role'] == 'CD'){?>
+                            Copy Writers Panel
+                        <?php } ?>
+                        <?php if($allocationList['role'] == 'GD'){?>
+                            Graphics Designers Panel
+                        <?php } ?>
+                    
+                    </h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
@@ -207,7 +219,7 @@ Designers Panel
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header py-2">
-                    <h4 class="modal-title">Uploading Panel - Creatives</h4>
+                    <h4 class="modal-title" id="modal_title"></h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -254,13 +266,13 @@ Designers Panel
                             <div class="row">
                                 <div class="col-sm-6 col-12">
                                     <div class="form-group">
-                                        <label class="control-label required">GD Link</label>
+                                        <label class="" id="gd_link_required">GD Link</label>
                                         <input type="text" class="form-control creative_link" name="workLink1"  placeholder="Link" value="">
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-12">
                                     <div class="form-group">
-                                        <label class="control-label required">CW Link</label>
+                                        <label class="" id="cw_link_required">CW Link</label>
                                         <input type="text" class="form-control copy_link" name="workLink2"  placeholder="Link" value="">
                                     </div>
                                 </div>
@@ -270,7 +282,7 @@ Designers Panel
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-12">
-                                    <button type="submit" name = "submit" value="complete_allocation" class="btn btn-warning" href="javascript:void(0)" style="float:right;margin-right:10px">Complete Allocation</button>
+                                    <button type="submit" name = "submit" value="complete_allocation" class="btn btn-warning" href="javascript:void(0)" style="float:right;margin-right:10px">Complete WRC</button>
                                     
                                     <button type="submit" name="submit" value="save" class="btn btn-warning" id="save_btn" href="javascript:void(0)" style="float:right;margin-right:10px;display: none" >Save</button>
 
@@ -418,6 +430,18 @@ Designers Panel
             document.querySelector('.copy_link').value = copy_link;
         }else{
             document.querySelector('.copy_link').value = '';
+        }
+
+        const user_role = document.querySelector('.user_role').value;
+        if(user_role == 'CD'){
+            $("#cw_link_required").addClass('control-label required');
+            document.querySelector('#modal_title').innerHTML = 'Creatives Uploading Panel - Copy Writers';
+
+        }
+
+        if(user_role == 'GD'){
+            document.querySelector('#modal_title').innerHTML = 'Creatives Uploading Panel - Graphics Designers';
+            $("#gd_link_required").addClass('control-label required');
         }
 
     }
