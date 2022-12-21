@@ -28,6 +28,7 @@ class creativeLot extends Controller
             'client_bucket'=>'',
             'work_initiate_date'=>'',
             'Comitted_initiate_date'=>'',
+            'lot_delivery_days'=>'',
             'status'=>'',
             'button_name' => 'Create Lot',
             'route' => 'STORELOTS'
@@ -38,7 +39,7 @@ class creativeLot extends Controller
     public function view()
     {
         // $num = 1;
-       $lots =  CreatLots::OrderBy('creative_lots.id','ASC')
+       $lots =  CreatLots::OrderBy('creative_lots.id','DESC')
        ->leftJoin('users', 'users.id', 'creative_lots.user_id')
        ->leftJoin('brands', 'brands.id', 'creative_lots.brand_id')
        ->select('creative_lots.*','users.Company','users.client_id','brands.name')
@@ -57,6 +58,7 @@ class creativeLot extends Controller
         $CreativeLots->lot_number = "";
         $CreativeLots->project_name = $request->project_name;
         $CreativeLots->verticle = $request->vertical_type;
+        $CreativeLots->lot_delivery_days = $request->lot_delevery_days;
         $CreativeLots->client_bucket = $request->client_bucket;
         $CreativeLots->work_initiate_date =   date("Y/m/d", strtotime($request->int_date)) ;
         $CreativeLots->Comitted_initiate_date =  date("Y/m/d", strtotime($request->cmt_date));
@@ -115,6 +117,7 @@ class creativeLot extends Controller
         $CreativeLots->lot_number = "";
         $CreativeLots->project_name = $request->project_name;
         $CreativeLots->verticle = $request->vertical_type;
+        $CreativeLots->lot_delivery_days = $request->lot_delevery_days;
         $CreativeLots->client_bucket = $request->client_bucket;
         $CreativeLots->work_initiate_date =   date("Y/m/d", strtotime($request->int_date)) ;
         $CreativeLots->Comitted_initiate_date =  date("Y/m/d", strtotime($request->cmt_date));

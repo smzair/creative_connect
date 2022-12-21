@@ -62,8 +62,9 @@ Create New Commercial for Creative
                     <th class="p-2">Company Name</th>
                     <th class="p-2">Brand Name</th>
                     <th class="p-2">Client ID</th>
-                    <th class="p-2">Initiate Date</th>
-                    <th class="p-2">Committed Date</th>
+                    <th class="p-2">LOT Delivery Days</th>
+                    {{-- <th class="p-2">Initiate Date</th> --}}
+                    {{-- <th class="p-2">Committed Date</th> --}}
                     <th class="p-2">Actions</th>
                   </tr>
                 </thead>
@@ -75,8 +76,9 @@ Create New Commercial for Creative
                     <td class="p-sm-2 p-1">{{$lot->Company}}</td>
                     <td class="p-sm-2 p-1">{{$lot->name}}</td>
                     <td class="p-sm-2 p-1">{{$lot->client_id}}</td>
-                    <td class="p-sm-2 p-1">{{dateFormat($lot->work_initiate_date)}}<br><b>{{timeFormat($lot->work_initiate_date)}}</b></td>
-                    <td class="p-sm-2 p-1">{{dateFormat($lot->Comitted_initiate_date)}}<br><b>{{timeFormat($lot->Comitted_initiate_date)}}</b></td>
+                    <td class="p-sm-2 p-1">{{$lot->lot_delivery_days}}</td>
+                    {{-- <td class="p-sm-2 p-1">{{dateFormat($lot->work_initiate_date)}}<br><b>{{timeFormat($lot->work_initiate_date)}}</b></td> --}}
+                    {{-- <td class="p-sm-2 p-1">{{dateFormat($lot->Comitted_initiate_date)}}<br><b>{{timeFormat($lot->Comitted_initiate_date)}}</b></td> --}}
                     <td class="p-sm-2 p-1">
                       <div class="btn-group-vertical">
                         <button type="button" class="btn btn-primary px-1 py-1 btn-xs" data-client_id="{{$lot->client_id}}"  data-created_at="{{dateFormat($lot->created_at)}} {{timeFormat($lot->created_at)}}"  data-Company="{{$lot->Company}}" data-lot_id = "{{$lot->lot_id}}" data-name = "{{$lot->name}}" onclick="viewlots(this)">View Status</button>

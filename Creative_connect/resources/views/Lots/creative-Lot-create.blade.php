@@ -102,7 +102,7 @@ Update LOT
                                 <p class="input_err" style="color: red; display: none;" id="project_name_err"></p>
                             </div>
                             <!-- >Vertical Type -->
-                            <div class="col-sm-6" id="verticalTypeCol">
+                            <div class="col-sm-4" id="verticalTypeCol">
                                 <div class="form-group">
                                         @php
                                             $projectType = projectType();
@@ -122,7 +122,7 @@ Update LOT
                             </div>
 
 
-                            <div class="col-sm-6" id="clientBucketCol">
+                            <div class="col-sm-4" id="clientBucketCol">
                                 <div class="form-group">
                                         @php
                                             $clientBucketStatic = (object) array(
@@ -145,7 +145,7 @@ Update LOT
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            {{-- <div class="col-sm-4">
                                 <div class="form-group">
                                     <label class="control-label required">Work Initiate Date</label>
                                     <div class="input-group">
@@ -158,9 +158,9 @@ Update LOT
                                     </div>
                                     <p class="input_err" style="color: red; display: none;" id="int_date_err"></p>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- Work Committed Date -->
-                            <div class="col-sm-6">
+                            {{-- <div class="col-sm-4">
                                 <div class="form-group">
                                     <label class="control-label required">Work Committed Date</label>
                                     <div class="input-group">
@@ -172,6 +172,16 @@ Update LOT
                                         <input type="text" class="form-control" name="cmt_date" id="cmt_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="{{$CreativeLots->Comitted_initiate_date }}">
                                     </div>
                                     <p class="input_err" style="color: red; display: none;" id="cmt_date_err"></p>
+                                </div>
+                            </div> --}}
+                            <!-- Work Committed Date -->
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label required">LOT Delivery Days</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="lot_delevery_days" id="lot_delevery_days" value="{{$CreativeLots->lot_delivery_days }}" placeholder="Enter LOT Delivery Days" onkeypress="return isNumber(event);">
+                                    </div>
+                                    <p class="input_err" style="color: red; display: none;" id="lot_delevery_days_err"></p>
                                 </div>
                             </div>
                         </div>
@@ -274,8 +284,9 @@ Update LOT
         const check_project_name = $('#project_name').val();
         const check_vertical_type = $('#vertical_type').val();
         const check_client_bucket = $('#client_bucket').val();
-        const check_int_date = $('#int_date').val();
-        const check_cmt_date = $('#cmt_date').val();
+        // const check_int_date = $('#int_date').val();
+        // const check_cmt_date = $('#cmt_date').val();
+        const check_lot_delevery_days = $('#lot_delevery_days').val();
 
         let user_id_is_Valid = true;
         let brand_id_Valid = true;
@@ -284,35 +295,42 @@ Update LOT
         let client_bucket_Valid = true;
         let int_date_Valid = true;
         let cmt_date_Valid = true;
+        let lot_delevery_days_Valid = true;
 
-        if (check_cmt_date === '') {
-            $("#cmt_date_err").html("Work Committed Date is required");
-            document.getElementById("cmt_date_err").style.display = "block";
-            brand_id_Valid = false;
+        // if (check_cmt_date === '') {
+        //     $("#cmt_date_err").html("Work Committed Date is required");
+        //     document.getElementById("cmt_date_err").style.display = "block";
+        //     brand_id_Valid = false;
+        // }
+
+        if (check_lot_delevery_days === '') {
+            $("#lot_delevery_days_err").html("LOT Delivery Days is requied");
+            document.getElementById("lot_delevery_days_err").style.display = "block";
+            lot_delevery_days_Valid = false;
         }
 
-        if (check_int_date === '') {
-            $("#int_date_err").html("Work Initiate Date is required");
-            document.getElementById("int_date_err").style.display = "block";
-            brand_id_Valid = false;
-        }
+        // if (check_int_date === '') {
+        //     $("#int_date_err").html("Work Initiate Date is required");
+        //     document.getElementById("int_date_err").style.display = "block";
+        //     brand_id_Valid = false;
+        // }
 
         if (check_client_bucket === '') {
             $("#client_bucket_err").html("Client Bucket is required");
             document.getElementById("client_bucket_err").style.display = "block";
-            brand_id_Valid = false;
+            client_bucket_Valid = false;
         }
         
         if (check_project_name === '') {
             $("#project_name_err").html("Project Name is required");
             document.getElementById("project_name_err").style.display = "block";
-            brand_id_Valid = false;
+            project_name_Valid = false;
         }
 
         if (check_vertical_type === '') {
             $("#vertical_type_err").html("Vertical Type is required");
             document.getElementById("vertical_type_err").style.display = "block";
-            brand_id_Valid = false;
+            vertical_type_Valid = false;
         }
 
         if (check_user_id === '') {
@@ -327,7 +345,7 @@ Update LOT
             brand_id_Valid = false;
         }
         
-        if (user_id_is_Valid && brand_id_Valid && project_name_Valid && vertical_type_Valid && client_bucket_Valid && int_date_Valid && cmt_date_Valid) {
+        if (user_id_is_Valid && brand_id_Valid && project_name_Valid && vertical_type_Valid && client_bucket_Valid && int_date_Valid && cmt_date_Valid && lot_delevery_days_Valid) {
         return true
         } else {
             return false
