@@ -174,6 +174,7 @@ Catalog Qc Panel
                                 }
 
                                 $btn_disable = "disabled";
+                                $reworkbtn_disable = "";
                                 $submit_check_disable = "disabled"; // checked
                                 $submit_check_is_checked = ""; //
                                 
@@ -189,6 +190,7 @@ Catalog Qc Panel
                                     
                                 }else if ($allow_to_submit == 2) {
                                     $submit_check_disable = "disabled"; // checked
+                                    $reworkbtn_disable = "disabled"; // checked
                                     $submit_check_is_checked = "checked"; 
                                     $submit_msg = "Wrc submited";
                                     $p_style = "color:green;";
@@ -261,7 +263,10 @@ Catalog Qc Panel
                                 </td>
                                 <td>
                                     <div class="d-inline-block mt-1">
-                                        <button onclick="setdata('{{ $wrc_id }}')"  {{ $btn_disable }} class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal">
+                                        {{-- <button onclick="setdata('{{ $wrc_id }}')"  class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal">
+                                            <i class="fas fa-comment mr-1" ></i>Rework
+                                        </button> --}}
+                                        <button onclick="setdata('{{ $wrc_id }}')"  {{ $reworkbtn_disable }} class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal">
                                             <i class="fas fa-comment mr-1" ></i>Rework
                                         </button>
                                     </div>
@@ -381,8 +386,6 @@ Catalog Qc Panel
     function submit_wrc(id){
         console.log(id)
         const wrc_id = id
-
-
         $.ajax({
             url: "{{ url('completed-qc-wrc')}}",
             type: "POST",
@@ -399,13 +402,9 @@ Catalog Qc Panel
                     window.location.reload();
                 }else{
                     alert('Somthing Went Wrong!!!');
-
                 }
-                
-
             }
         });
-
     }
 </script>
 
@@ -420,6 +419,7 @@ Catalog Qc Panel
     }
 </script>
 
+{{-- get user list for rework --}}
 <script>
     async function get_list(){
         const wrc_id = document.querySelector("#wrc_id_is").value  
@@ -447,11 +447,12 @@ Catalog Qc Panel
     }
 </script>
 
-{{-- script for save data to rewrok --}}
+{{-- script for save data to rewrok  comments --}}
 <script>
     async function save_data(){
         const wrc_id = document.querySelector("#wrc_id_is").value  
         const catalog_copy_user = document.querySelector("#catalog_copy_user").value  
+        const comments = document.querySelector("#commentsec").value  
         const role_id_is = document.querySelector('input[name="role_id_is"]:checked').value;
         const catalog_allocation_id = $("#catalog_copy_user").find(':selected').data('catalog_allocation_id')
         console.warn({wrc_id,role_id_is,catalog_allocation_id ,catalog_copy_user})
@@ -466,6 +467,7 @@ Catalog Qc Panel
             dataType: 'json',
             data: {
                 wrc_id : wrc_id,
+                comments : comments,
                 role_id_is : role_id_is,
                 catalog_allocation_id : catalog_allocation_id,
                 _token: '{{ csrf_token() }}'

@@ -77,7 +77,7 @@ class CatlaogQc extends Model
     }
 
     // Set Qc Rework
-    public static function set_qc_rework($wrc_id, $role_id_is, $catalog_allocation_id){
+    public static function set_qc_rework($wrc_id, $role_id_is, $catalog_allocation_id , $comments){
 
         $message = "Somthing Went Wrong";
         $status = 0;
@@ -104,6 +104,11 @@ class CatlaogQc extends Model
 
                 if($status){
                     $message = "Rework Done!!";
+
+                    $commentsData = new CatalogQcCommentsTable();
+                    $commentsData->allocation_id = $catalog_allocation_id;
+                    $commentsData->comments = $comments;
+                    $commentsData->save();
                 }
             }else if($task_status == 0 && $is_rework == 1){
                 // task alloted to rework but not started

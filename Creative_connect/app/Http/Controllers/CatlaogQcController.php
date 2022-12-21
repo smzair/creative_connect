@@ -36,8 +36,9 @@ class CatlaogQcController extends Controller
     public function set_qc_rework(Request $request){
         $wrc_id = $request->wrc_id;
         $role_id_is = $request->role_id_is;
+        $comments = $request->comments;
         $catalog_allocation_id = $request->catalog_allocation_id;  
-        $status = CatlaogQc::set_qc_rework($wrc_id, $role_id_is, $catalog_allocation_id);
+        $status = CatlaogQc::set_qc_rework($wrc_id, $role_id_is, $catalog_allocation_id , $comments);
         echo $status;
     }
 

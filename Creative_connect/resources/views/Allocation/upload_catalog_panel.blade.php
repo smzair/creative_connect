@@ -185,10 +185,6 @@ Cataloger Panel
                                     $display_start = "display:none;";
                                     $display_date_time = "display:block;";
                                     $start_time_is = date('d-m-Y h:i:s A' , strtotime($start_time));
-                                    
-                                    // if($end_time != '0000-00-00 00:00:00'){
-                                    //     $end_time_is = date('d-m-Y h:i:s A' , strtotime($end_time));
-                                    // }
                                }
                             @endphp
                             <tr>
@@ -440,13 +436,13 @@ Cataloger Panel
 
                     end_time = res[0].end_time
                     task_status = res[0].task_status
-                    spent_time = res[0].spent_time
+                    spent_time_is = res[0].spent_time_is
 
                     // if(end_time != '0000-00-00 00:00:00' && end_time != '' ||){  // task_status
                     if(task_status > 0){
                         $("#btn_save").css("display", "none");
                         $("#btn_comp").css("display", "none");
-                        document.querySelector("#"+time_spant).innerHTML = end_time;
+                        // document.querySelector("#"+time_spant).innerHTML = spent_time_is;
                     }
                 }
             }
@@ -549,7 +545,7 @@ Cataloger Panel
                         document.querySelector("#msg_box1").innerHTML = user_role+" WRC Completed Successfully";
                         // document.querySelector("#btn_save").innerHTML = "update";
                         console.warn(res.end_time)
-                        document.querySelector("#time_spant"+allocation_id_is).innerHTML = res.end_time;
+                        document.querySelector("#time_spant"+allocation_id_is).innerHTML = res.spent_time_is;
                         $("#btn_save").css("display", "none");
                         $("#btn_comp").css("display", "none");
 

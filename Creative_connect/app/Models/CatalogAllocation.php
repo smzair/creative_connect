@@ -85,10 +85,6 @@ class CatalogAllocation extends Model
     public static function allocated_wrc_list_by_user($login_user_id_is)
     {
 
-        // LEFT JOIN catlog_wrc on catlog_wrc.id = catalog_allocation.wrc_id
-// LEFT JOIN create_commercial_catalog on create_commercial_catalog.id = catlog_wrc.commercial_id
-
-//  catlog_wrc.lot_id , catlog_wrc.wrc_number, catlog_wrc.commercial_id ,create_commercial_catalog.market_place , create_commercial_catalog.type_of_service
         $login_user_id = $login_user_id_is;
         $allocated_wrc_list_by_user = CatalogAllocation::
         leftJoin('catalog_time_hash', 'catalog_time_hash.allocation_id', 'catalog_allocation.id')->
