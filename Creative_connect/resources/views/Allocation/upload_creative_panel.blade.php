@@ -113,6 +113,7 @@
                                     <th>Assigned Copy Writers</th>
                                 <?php }?> 
                                 <th>Guidelines Links</th>
+                                <th>Spent Time</th>
                                 <th>Task End Date</th>
                                 <th>Task Start Date</th>
                                 <th>Action</th>
@@ -160,23 +161,38 @@
                                     <li><a href={{$allocationInfo['document2']}} class="work-link">{{$allocationInfo['document2']}}</a></li>
                                   </ul>
                                 </td>
-                                <?php if($allocationInfo['end_time'] != 'NULL'){  ?>
+                                @php
+                                    $get_date_time = get_date_time($allocationInfo['spent_time_data']);
+                            
+                                @endphp
+                                <td>{{ $get_date_time}}</td>
+
+                                {{-- <td>
+                                    <ul class="info-list">
+                                      @foreach ([$allocationInfo->spent_time_data] as $spent_time_data)
+                                      <li><span class="gd-name">{{$spent_time_data}}</span></li>
+                                      @endforeach
+                                    </ul>
+                                  </td> --}}    
+
+
+                                <?php if($allocationInfo['task_status'] == 1){  ?>
                                     <td>{{dateFormat($allocationInfo->end_time)}}<br><b>{{timeFormat($allocationInfo->end_time)}}</b></td>
                                 <td>
                                 <?php } ?>
-                                <?php if(($allocationInfo['end_time'] == 'NULL')){  ?>
+                                <?php if(($allocationInfo['task_status'] != 1)){  ?>
                                     <td></td>
                                 <td>
                                 <?php } ?>
                                 
-                                <?php if($allocationInfo['start_time'] == 'NULL'){  ?>
+                                <?php if(($allocationInfo['start_time'] == '0000-00-00 00:00:00')){  ?>
                                   <div class="task-action task-start-button" style="display:bock;" id="start_btn">
                                     <a href="javascript:;" class="btn btn-warning" onclick="start_task('{{ $allocationInfo->creative_allocation_id }}')" id="startBTN{{ $key }}" id="startBTN">
                                       Start
                                     </a>
                                   </div>
                                 <?php }?>
-                                <?php if($allocationInfo['start_time'] != 'NULL'){  ?>
+                                <?php if($allocationInfo['start_time'] != '0000-00-00 00:00:00'){  ?>
                                   <div class="task-action task-start-timings" style="display:block;">
                                     <span  class="start_time1{{$key}}">{{dateFormat($allocationInfo->start_time)}}</span>
                                     <span class="time">{{timeFormat($allocationInfo->start_time)}}</span>
@@ -187,16 +203,16 @@
                                     <span id="start_time2"></span>
                                   </div>
                                 </td>
-                                <?php if(($allocationInfo['end_time'] == 'NULL') || ($allocationInfo['end_time'] == null)){  ?>
+                                <?php if(($allocationInfo['start_time'] != 'NULL') || ($allocationInfo['end_time'] == null)){  ?>
                                     <td>
-                                        <?php if($allocationInfo['start_time'] != 'NULL'){  ?>
+                                        <?php if($allocationInfo['start_time'] != '0000-00-00 00:00:00' && $allocationInfo['task_status'] == 0){  ?>
                                             <a href="#" class="btn btn-warning alloc-action-btn" data-toggle="modal" data-target="#editpanelPopup" onclick='setdata(<?php echo $key;?>)'>
                                                 Upload
                                             </a>
                                         <?php } ?>
-                                        <a href="#" class="btn btn-warning alloc-action-btn" id="uploadBTn" data-toggle="modal" data-target="#editpanelPopup" style="display:none;" onclick='setdata(<?php echo $key;?>)'>
+                                        {{-- <a href="#" class="btn btn-warning alloc-action-btn" id="uploadBTn" data-toggle="modal" data-target="#editpanelPopup" style="display:none;" onclick='setdata(<?php echo $key;?>)'>
                                             Upload
-                                        </a>
+                                        </a> --}}
                                         <a href="javascript:;" class="btn btn-warning alloc-action-btn inactive" id="editBTn" style="display:none;">
                                             Edit
                                         </a>
@@ -344,7 +360,7 @@
         setTimeout(function(){
         document.getElementById('msg_div').style.display = "none";
         $("#msg_div").removeClass();
-        // window.location.reload();
+        window.location.reload();
         },3000)
      }
  </script>

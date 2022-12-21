@@ -183,6 +183,13 @@
                                                     <p>Upload Creative Panel</p>
                                                 </a>
                                             </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('CREATIVE_QC_GET') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>QC Approval - Creative</p>
+                                                </a>
+                                            </li>
                                            
                                         </ul>
                                     </li>

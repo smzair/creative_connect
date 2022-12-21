@@ -98,7 +98,7 @@ class CreativeAllocationController extends Controller
         return view('Allocation.creative_allocation_details')->with('allocationList',$allocationList);
     }
 
-    // upload creative panel
+    // upload creative panel get list
     public function uploadCreative(){
         $allocationList = CreativeAllocation::GetCreativeAllocationForUpload();
         // dd(Carbon::now());
@@ -115,6 +115,8 @@ class CreativeAllocationController extends Controller
             $storeData = new CreativeTimeHash();
             $storeData->start_time = $start_time;
             $storeData->allocation_id = $request->allocation_id;
+            $storeData->is_rework = 0;
+            $storeData->end_time = '0000-00-00 00:00:00';
             $storeData->save();
             if($storeData){
                 echo json_encode([
@@ -136,6 +138,8 @@ class CreativeAllocationController extends Controller
             $storeData = CreativeTimeHash::find($already_allocated_id);
             $storeData->start_time = $start_time;
             $storeData->allocation_id = $request->allocation_id;
+            $storeData->is_rework = 0;
+            $storeData->end_time = '0000-00-00 00:00:00';
             $storeData->update();
             if($storeData){
                 echo json_encode([
@@ -211,14 +215,26 @@ class CreativeAllocationController extends Controller
             $end_time = Carbon::now();
 
             if( $already_allocated_id == 0){
+
                 $storeData = new CreativeUploadLink();
                 $storeData->allocation_id = $creative_allocation_id;
                 $storeData->creative_link = $creative_link;
                 $storeData->copy_link = $copy_link;
                 $storeData->save();
+
+                $timeHashData = CreativeTimeHash::where('allocation_id', $creative_allocation_id)->get()->first();
+                $old_start_time = $timeHashData->start_time;
+                $old_spent_time = $timeHashData->spent_time;
+                $old_spent_time = ($old_spent_time == "" || $old_spent_time == 0) ? 0 : (int)$old_spent_time;
+                // "%Y-%m-%d %H:%i:%s"
+                // $new_spent_time = (new Carbon($end_time))->diff(new Carbon($old_start_time))->format('%Y-%m-%d %H:%I:%s');
+                $new_spent_time = (new Carbon($end_time))->diffInSeconds(new Carbon($old_start_time));
+                //  echo strtotime($new_spent_time);
+                $tot_spent = $old_spent_time + $new_spent_time;
+
                
                 // update creative_time_hash end time
-                CreativeTimeHash::where('allocation_id',$storeData->allocation_id)->update(['end_time'=>$end_time ]);
+                CreativeTimeHash::where('allocation_id',$creative_allocation_id)->update(['end_time'=>$end_time, 'task_status'=>1, 'is_rework'=>0, 'spent_time' => $tot_spent ]);
 
                 if($storeData){
                     request()->session()->flash('success','Allocated Completed Successfully');
@@ -234,8 +250,18 @@ class CreativeAllocationController extends Controller
                 $storeData->copy_link = $copy_link;
                 $storeData->update();
 
+                $timeHashData = CreativeTimeHash::where('allocation_id', $creative_allocation_id)->get()->first();
+                $old_start_time = $timeHashData->start_time;
+                $old_spent_time = $timeHashData->spent_time;
+                $old_spent_time = ($old_spent_time == "" || $old_spent_time == 0) ? 0 : (int)$old_spent_time;
+                // "%Y-%m-%d %H:%i:%s"
+                // $new_spent_time = (new Carbon($end_time))->diff(new Carbon($old_start_time))->format('%Y-%m-%d %H:%I:%s');
+                $new_spent_time = (new Carbon($end_time))->diffInSeconds(new Carbon($old_start_time));
+                //  echo strtotime($new_spent_time);
+                $tot_spent = $old_spent_time + $new_spent_time;
+
                 // update creative_time_hash end time
-                CreativeTimeHash::where('allocation_id',$creative_allocation_id)->update(['end_time'=>$end_time ]);
+                CreativeTimeHash::where('allocation_id',$creative_allocation_id)->update(['end_time'=>$end_time , 'task_status'=>1, 'is_rework'=>0, 'spent_time' => $tot_spent]);
 
                 if($storeData){
                     request()->session()->flash('success','Allocated Completed Successfully');

@@ -51,16 +51,17 @@ class CreativeAllocation extends Model
 		// $id = Auth::user()->id;
 		
 		$login_user_id = 51;//login user id CW
-		// $login_user_id = 7;//login user id GD
+		// $login_user_id = 10;//login user id GD
 
 		$resData = CreativeAllocation::orderBy('creative_allocation.user_id', 'DESC')
 		->leftJoin('creative_upload_links', 'creative_upload_links.allocation_id','creative_allocation.id')
+		->leftJoin('creative_time_hash', 'creative_time_hash.allocation_id', 'creative_upload_links.allocation_id')
 		->leftJoin('users', 'users.id','creative_allocation.user_id')
 		->leftJoin('creative_wrc', 'creative_wrc.id','creative_allocation.wrc_id')
 		->leftJoin('create_commercial', 'create_commercial.id','creative_wrc.commercial_id')
 		->leftJoin('creative_lots', 'creative_lots.id','creative_wrc.lot_id')
 		->leftJoin('brands', 'brands.id','creative_lots.brand_id')
-		->select('creative_allocation.*','creative_allocation.id as  creative_allocation_id','creative_wrc.wrc_number','creative_wrc.lot_id','creative_wrc.work_brief','creative_wrc.guidelines','creative_wrc.document1','creative_wrc.document2','creative_wrc.order_qty','creative_wrc.alloacte_to_copy_writer','creative_lots.lot_number','users.name','users.Company as company_name','brands.name as brand_name','create_commercial.project_name', 'create_commercial.kind_of_work','creative_upload_links.allocation_id as creative_upload_links_allocation_id','creative_upload_links.creative_link','creative_upload_links.copy_link' )
+		->select('creative_allocation.*','creative_allocation.id as  creative_allocation_id','creative_wrc.wrc_number','creative_wrc.lot_id','creative_wrc.work_brief','creative_wrc.guidelines','creative_wrc.document1','creative_wrc.document2','creative_wrc.order_qty','creative_wrc.alloacte_to_copy_writer','creative_lots.lot_number','users.name','users.Company as company_name','brands.name as brand_name','create_commercial.project_name', 'create_commercial.kind_of_work','creative_upload_links.allocation_id as creative_upload_links_allocation_id','creative_upload_links.creative_link','creative_upload_links.copy_link',DB::raw('GROUP_CONCAT(creative_time_hash.spent_time) as spent_time_data') )
 		->where('creative_allocation.user_id',$login_user_id)
 		->groupBy('creative_allocation.wrc_id')
 		->get();
@@ -117,12 +118,16 @@ class CreativeAllocation extends Model
 
 			// $val['role'] = $role;
 
-			$creative_time_hash = CreativeTimeHash::where('allocation_id',$val['creative_allocation_id'])->get(['start_time','end_time'])->first();
+			$creative_time_hash = CreativeTimeHash::where('allocation_id',$val['creative_allocation_id'])->get(['start_time','end_time','task_status','is_rework'])->first();
 
-			$start_time = $creative_time_hash != NULL ?  $creative_time_hash->start_time : 'NULL';
-			$end_time = $creative_time_hash != NULL ?  $creative_time_hash->end_time : 'NULL';
+			$start_time = $creative_time_hash != NULL ?  $creative_time_hash->start_time : '0000-00-00 00:00:00';
+			$end_time = $creative_time_hash != NULL ?  $creative_time_hash->end_time : '0000-00-00 00:00:00';
+			$task_status = $creative_time_hash != NULL ?  $creative_time_hash->task_status : 0;
+			$is_rework = $creative_time_hash != NULL ?  $creative_time_hash->is_rework : 'NULL';
 			$val['start_time'] = $start_time; 
 			$val['end_time'] = $end_time; 
+			$val['task_status'] = $task_status; 
+			$val['is_rework'] = $is_rework; 
 
 			// $interval = $end_time->diff($start_time);
 			// $elapsed = $interval->format('%y years %m months %a days %h hours %i minutes %s seconds');
