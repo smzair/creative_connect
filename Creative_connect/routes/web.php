@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CatalogAllocationController;
+use App\Http\Controllers\CatlaogQcController;
 use Illuminate\Support\Facades\Route;
 /*
   |--------------------------------------------------------------------------
@@ -80,3 +81,14 @@ Route::post('catalog-allocated-sku-count', [CatalogAllocationController::class, 
 Route::post('set-catalog-allocation-start', [CatalogAllocationController::class, 'set_tast_start']); // for start catalog allocation Wrc
 Route::post('catalog-upload-link', [CatalogAllocationController::class, 'upload_catalog_link']); // for upload catalog WRC link 
 Route::post('get-catalog_upload_links', [CatalogAllocationController::class, 'get_catalog_link']); // for get-catalog_upload_links 
+
+
+// QC route  get-catalog-users_list qc-rework completed-qc-wrc
+
+Route::get('catalog-qc', [CatlaogQcController::class, 'index'])->name('QcList'); // Qc List 
+Route::post('get-catalog-users_list', [CatlaogQcController::class, 'userlist'])->name('userlist'); // Qc List 
+Route::post('qc-rework', [CatlaogQcController::class, 'set_qc_rework'])->name('QCREWORK'); // Qc List 
+Route::post('completed-qc-wrc', [CatlaogQcController::class, 'completed_qc_wrc'])->name('QCCOMPWRC'); // completed-qc-wrc
+
+
+

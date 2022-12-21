@@ -107,6 +107,10 @@ class CatalogAllocation extends Model
             'catalog_time_hash.start_time',
             'catalog_time_hash.end_time',
             'catalog_time_hash.id as time_hash_id',
+            'catalog_time_hash.task_status',
+            'catalog_time_hash.is_rework',
+            'catalog_time_hash.rework_count',
+            'catalog_time_hash.spent_time',            
         )->
         get()->toArray();
 
@@ -117,8 +121,6 @@ class CatalogAllocation extends Model
 
     public static function getcatalog_allocation_list()
     {
-
-        
         $catalog_allocated_list = CatalogAllocation::
         leftJoin('catlog_wrc', 'catlog_wrc.id', 'catalog_allocation.wrc_id')->
         leftJoin('lots_catalog', 'lots_catalog.id', 'catlog_wrc.lot_id')->

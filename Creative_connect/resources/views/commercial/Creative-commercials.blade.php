@@ -136,9 +136,9 @@ Create New Commercial for Creative
                             {{-- Commercial Per Qty --}}
                             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label class="control-label required">Commercial Per Qty</label>
+                                    <label class="control-label required">Commercial Per Unit</label>
                                     <input type="text" class="form-control" name="per_qty_value" id="per_qty_value"
-                                        placeholder="Enter Order Quantity" onKeyPress="return isNumber(event);" value="{{$commercial_data->per_qty_value}}" />
+                                        placeholder="Enter Commercial Per Unit" onKeyPress="return isNumber(event);" value="{{$commercial_data->per_qty_value}}" />
                                     <p class="input_err" style="color: red; display: none;" id="per_qty_value_err"></p>
 
                                 </div>

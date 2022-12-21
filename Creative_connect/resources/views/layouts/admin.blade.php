@@ -154,7 +154,7 @@
                                                 <li class="nav-item">
                                                     <a href="{{route('CREATELOTCATALOG')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
-                                                        <p>Create LOTs CataLogs</p>
+                                                        <p>Create Lots CataLogs</p>
                                                     </a>
                                                 </li>
 
@@ -209,6 +209,15 @@
                                                     </a>
                                                 </li>
                                                 {{--End Allocation section   --}}
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('QcList')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> QC Status</p>
+                                                    </a>
+                                                </li>
+
+
                                             </ul>
                                         </li>
                                   

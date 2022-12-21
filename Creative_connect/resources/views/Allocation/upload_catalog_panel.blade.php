@@ -7,6 +7,67 @@ Cataloger Panel
 @section('content')
 <div class="container-fluid mt-5 plan-shoot new-allocation-table-main">
 
+    <style type="text/css">
+    
+
+    /* .info-list > li {
+        display: block;
+        width: 100%;
+        position: relative;
+    }
+
+    .info-list > li:not(:last-child) {
+        margin-bottom: 4px;
+    }
+
+    .info-list > li > span, .info-list > li > a {
+        display: inline-block;
+    }
+
+    .info-list > li > a:hover, .info-list > li > a:focus {
+        text-decoration: underline !important;
+    }
+
+    .date, .time {
+        display: block;
+        width: 100%;
+    }
+
+    .time {
+        font-weight: 700;
+    }
+
+    .allocation-wrc-modal .modal-body {
+        padding: 1rem 1.2rem;
+    }
+
+    .alloc-action-btn.inactive {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    .card.card-transparent .table td .task-start-button .btn {
+        background-color: #FBF702 !important;
+        color: #000 !important;
+        border-color: transparent;
+        width: 100%;
+    }
+
+    .card.card-transparent .table td .task-start-button .btn:hover, 
+    .card.card-transparent .table td .task-start-button .btn:focus {
+        background-color: #ba8b00 !important;
+    }
+
+    .alloc-action-btn {
+        display: block;
+    }
+
+    .alloc-action-btn:first-of-type {
+        margin-bottom: 10px;
+    } */
+
+
+</style>
     <style>
          .msg_box{
             margin: 0.1em 0;
@@ -70,13 +131,18 @@ Cataloger Panel
                             </tr>
                         </thead>
                         <tbody>
+
+                            @php
+                                $second = 26584;
+                                
+                            @endphp
                              
                             @foreach($allocationList as $allocationkey => $row)
                             @php
-                                // pre($row);
                                 // pre($allocationList);
-
-                                $wrc_id =  $row['wrc_id'] ;
+                                $wrc_id =  $row['wrc_id'];
+                                
+                                
                                 if(!array_search($wrc_id,$allocated_wrc_user_list,true)){
                                     continue;
                                 }
@@ -86,31 +152,49 @@ Cataloger Panel
                                 $allocation_id = $allocated_id_arr[$wrc_id];
                                 
                                 $allocated_data_arr = $allocated_wrc_list_by_user[$alloc_wrc_list_key[$wrc_id]];
-                                // pre($allocated_data_arr);
+                                
                                $time_hash_id =  $allocated_data_arr['time_hash_id'];
+                               $is_rework =  $allocated_data_arr['is_rework'];
+                               $task_status =  $allocated_data_arr['task_status'];
+                               $rework_count =  $allocated_data_arr['rework_count'];
                                $start_time =  $allocated_data_arr['start_time'];
                                $end_time =  $allocated_data_arr['end_time'];
+                               $end_time_is = $spent_time =  $allocated_data_arr['spent_time'];
+
+                               $spent_time_is = ($spent_time != 0 && $spent_time != "") ? get_date_time($spent_time) : "";
+
+                            //    $spent_time_is = $
+
+                            //  echo $diff =   (new Carbon($end_time))->diff(new Carbon($start_time))->format('%h:%I');
+                            //   echo $diff =  date('G:i', strtotime($end_time) - strtotime($start_time)); 
+                               if($wrc_id == 16){
+                                    // pre($row);
+                                    // pre($allocated_data_arr);
+                                }
+
                                $start_time_is = "";
-                               $end_time_is = "";
                                $display_date_time = "display:none;";
                                $display_start = "display:block;";
                                $btn_disable = "disabled";
-                               if($time_hash_id > 0){
+
+                               $extra = " ".$wrc_id;
+
+
+                               if(($time_hash_id > 0 && (($task_status == 0 && $is_rework == 0) || ($task_status == 1 && $is_rework == 0) || $task_status == 2  )) ){
                                    $btn_disable = "";
                                     $display_start = "display:none;";
                                     $display_date_time = "display:block;";
                                     $start_time_is = date('d-m-Y h:i:s A' , strtotime($start_time));
                                     
-                                    if($end_time != '0000-00-00 00:00:00'){
-                                        $end_time_is = date('d-m-Y h:i:s A' , strtotime($end_time));
-
-                                    }
+                                    // if($end_time != '0000-00-00 00:00:00'){
+                                    //     $end_time_is = date('d-m-Y h:i:s A' , strtotime($end_time));
+                                    // }
                                }
                             @endphp
                             <tr>
                                 <td>{{ $row['wrc_number'] }}</td>
                                 <td>{{ $row['Company'] }}</td>
-                                <td>{{ $row['brand_name'].$row['lot_id'] }}</td>
+                                <td>{{ $row['brand_name'].$extra }}</td>
                                 <td>{{ $allocated_data_arr['allocated_qty'] }}</td>
                                 {{-- Assigned Cataloguers --}}
                                 @if ($show_td == 2)
@@ -152,7 +236,7 @@ Cataloger Panel
 
                                 <td >
                                     <p id="time_spant{{ $allocation_id }}">
-                                        {{ $end_time_is }}
+                                        {{ $spent_time_is }}
                                     </p>
                                 </td>
                                 <td>
@@ -355,8 +439,11 @@ Cataloger Panel
                     document.querySelector("#workLink2").value = res[0].copy_link
 
                     end_time = res[0].end_time
+                    task_status = res[0].task_status
+                    spent_time = res[0].spent_time
 
-                    if(end_time != '0000-00-00 00:00:00' && end_time != ''){
+                    // if(end_time != '0000-00-00 00:00:00' && end_time != '' ||){  // task_status
+                    if(task_status > 0){
                         $("#btn_save").css("display", "none");
                         $("#btn_comp").css("display", "none");
                         document.querySelector("#"+time_spant).innerHTML = end_time;
@@ -457,7 +544,6 @@ Cataloger Panel
                         document.querySelector("#btn_save").innerHTML = "update";
                         document.querySelector("#msg_box1").innerHTML = user_role+" link Updated Successfully";
                     }
-                    
                     
                     if(res.up_status == 1){
                         document.querySelector("#msg_box1").innerHTML = user_role+" WRC Completed Successfully";

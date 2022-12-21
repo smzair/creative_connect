@@ -49,9 +49,8 @@ class CatalogUploadLinks extends Model
 
     public static function get_catalog_uploaded_link($allocation_id){
         // SELECT catalog_upload_links.* FROM `catalog_upload_links` LEFT join catalog_time_hash on catalog_time_hash.allocation_id = catalog_upload_links.allocation_id WHERE catalog_upload_links.allocation_id = 32;
-
         
-
+        // SELECT `id`, `allocation_id`, `start_time`, `end_time`, `task_status`, `is_rework`, `rework_count`, `spent_time`, `created_at`, `updated_at` FROM `catalog_time_hash` WHERE 1;
         $response = CatalogUploadLinks::
         where('catalog_upload_links.allocation_id',$allocation_id)->
         leftJoin('catalog_time_hash', 'catalog_time_hash.allocation_id', 'catalog_upload_links.allocation_id')->
@@ -60,6 +59,9 @@ class CatalogUploadLinks extends Model
             'catalog_upload_links.catalog_link',
             'catalog_upload_links.copy_link',
             'catalog_time_hash.end_time',
+            'catalog_time_hash.task_status',
+            'catalog_time_hash.spent_time',
+            'catalog_time_hash.is_rework',
         )->
         get()->toArray();
         if(count($response) == 0){
