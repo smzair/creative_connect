@@ -153,6 +153,13 @@
 
         </div>
     </div>
+  <div class= "magic-container">
+    <div id="magic" ></div>
+    <a href="{{route('CREATECOM')}}">Create Commercials</a>
+    <div class="playground">
+     
+    </div>
+  </div>
 
     <!-- partial -->
     <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js'></script>

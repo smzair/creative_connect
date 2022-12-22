@@ -32,6 +32,12 @@
 
     <link rel="stylesheet" href="{{ asset('/css/common.css') }}">
 
+    <style>
+        .nav-item a{
+            margin-bottom: 2px !important;
+        }
+    </style>
+
 
 </head>
 
@@ -80,7 +86,7 @@
                 <div class="os-size-auto-observer observed" style="height: calc(100% + 1px); float: left;">
                     <div class="os-resize-observer"></div>
                 </div>
-                {{-- <div class="os-content-glue" style="margin: 0px -8px; width: 73px; height: 497px;"></div> --}}
+                {{-- <div class="os-content-glue" style="margin: 0px -8px; width: 73px;"></div> --}}
                 <div class="os-padding">
                     <div class="os-viewport os-viewport-native-scrollbars-invisible os-viewport-native-scrollbars-overlaid"
                         style="overflow-y: scroll;">
@@ -115,6 +121,113 @@
 
                                         <ul class="nav nav-treeview">
 
+                                                <li class="nav-item">
+                                                    <a href="{{route('CREATECOM')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Create Commercials</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('viewCOM')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Commercials List</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('CREATECATALOG')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Create Commercials Logs</p>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="nav-item">
+                                                    <a href="{{route('viewCommercial')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Commercial Logs List</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('CREATELOT')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Create Lots</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('CREATELOTCATALOG')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Create Lots CataLogs</p>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="nav-item">
+                                                    <a href="{{route('VIEWLOTCATALOG')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Lots CataLogs List</p>
+                                                    </a>
+                                                </li>
+
+
+                                                {{-- <li class="nav-item">
+                                                    <a href="{{route('CREATEWRC')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Create WRCs</p>
+                                                    </a>
+                                                </li> --}}
+
+                                                 <li class="nav-item">
+                                                <a href="{{ route('CREATECATLOGWRC') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Create Catlog WRCs</p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('viewCatalogWRC') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>View Catlog WRCs</p>
+                                                </a>
+                                            </li>
+                                                
+                                                {{-- Allocation section {{route('CREATEWRC')}}  --}}
+                                                <li class="nav-item">
+                                                    <a href="{{route('CATALOG_ALLOCT')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Catalog Allocation</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('CATALOG_ALLOCTED_DETAILS')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Catalog Allocation Details</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('CATALOG_UPLOAD')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Catalog Upload</p>
+                                                    </a>
+                                                </li>
+                                                {{--End Allocation section   --}}
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('QcList')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> QC Status</p>
+                                                    </a>
+                                                </li>
+
+
+                                            </ul>
+                                        </li>
+                                  
+                        </ul>
+                    </nav>  <!-- /.sidebar-menu -->
                                             <li class="nav-item">
                                                 <a href="{{ route('CREATECOM') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
@@ -331,11 +444,15 @@
 
 
     <script>
-        //Date picker
-        $('#reservationdate').datetimepicker({
-            format: 'L'
-        });
-    </script>
+    //Date picker
+    $('#reservationdate').datetimepicker({
+        format: 'L'
+    });
+
+</script>
+ @yield('datatable')
+ @yield('customScript')
+
 </body>
 
 </html>
