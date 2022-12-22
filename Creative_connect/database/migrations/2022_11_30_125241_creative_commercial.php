@@ -18,6 +18,7 @@ class CreativeCommercial extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('brand_id')->unsigned();
             $table->string('product_type');
+            $table->string('type_of_service');
             $table->string('kind_of_work');
             $table->integer('per_qty_value');
             $table->timestamps();

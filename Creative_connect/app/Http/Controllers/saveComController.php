@@ -2,30 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\create_commercial;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class creativeCommercials extends Controller
+class saveComController extends Controller
 {
-    public function Index()
-    {
-        $commercial_data = (object) [
-            'id' => '0',
-            'user_id' => '',
-            'brand_id' => '',
-            'project_name' => '',
-            'kind_of_work' => '',
-            'per_qty_value' => '',
-        ];
-
-        $users_data = DB::table('users')
-            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
-            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
-            ->where([['users.Company', '<>', NULL], ['roles.name', '=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
-        return view('commercial.Creative-commercials')->with('users_data', $users_data)->with('commercial_data', $commercial_data);
-    }
-
     public function create(Request $request)
     {
 
@@ -63,8 +45,8 @@ class creativeCommercials extends Controller
                     'kind_of_work' => '',
                     'per_qty_value' => '',
                 ];
-            } 
-            if($status && $btn_val == 2) {
+            }
+            if ($status && $btn_val == 2) {
                 request()->session()->flash('success', 'Commercial Successfully added Add new');
                 $commercial_data = (object) [
                     'id' => $id,

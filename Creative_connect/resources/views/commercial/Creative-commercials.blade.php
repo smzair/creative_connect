@@ -1,35 +1,41 @@
 @extends('layouts.admin')
 @section('title')
-Create New Commercial for Creative
+    Create New Commercial for Creative
 @endsection
+@push('styles')
+    <style>
+        .input_err {
+            color: red
+        }
+    </style>
+@endpush
 @section('content')
-
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="card card-transparent card-info mt-3">
-                <div class="card-header">
-                    <h3 class="card-title">Add Commercial</h3>
-                </div>
-                <div class="card-body">
-
-                    <div id="msg_div">
-                        @if (Session::has('success'))
-                            <div class="alert alert-success" role="alert">
-                                {{ Session::get('success') }}
-                            </div>
-                        @endif
-
-                        @if (Session::has('false'))
-                            <div class="alert alert-false" role="alert">
-                                {{ Session::get('false') }}
-                            </div>
-                        @endif
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-transparent card-info mt-3">
+                    <div class="card-header">
+                        <h3 class="card-title">Add Commercial</h3>
                     </div>
-                     <form method="POST" action="{{ route('SAVECOMS') }}"
+                    <div class="card-body">
+
+                        <div id="msg_div">
+                            @if (Session::has('success'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ Session::get('success') }}
+                                </div>
+                            @endif
+
+                            @if (Session::has('false'))
+                                <div class="alert alert-false" role="alert">
+                                    {{ Session::get('false') }}
+                                </div>
+                            @endif
+                        </div>
+                        <form method="POST" action="{{ route('SAVECOMS') }}"
                             onsubmit="return validateForm(event)">
-                        @csrf
-                        <div class="row">
+                            @csrf
+                            <div class="row">
                                 {{-- Company Name --}}
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -85,7 +91,7 @@ Create New Commercial for Creative
                                     <div class="form-group">
                                         <label class="control-label required">Project Name</label>
                                         <input type="text" class="form-control" name="project_name" id="project_name"
-                                            placeholder="Enter Project Name" onKeyPress="return isAlphabet(event);">
+                                            placeholder="Enter Project Name" onKeyPress="return inputIsAlphabet(event);">
                                         <p class="input_err" style="color: red; display: none;" id="project_name_err"></p>
                                     </div>
                                 </div>
@@ -114,7 +120,7 @@ Create New Commercial for Creative
                                     <div class="form-group">
                                         <label class="control-label required">Commercial Per Qty</label>
                                         <input type="text" class="form-control" name="per_qty_value" id="per_qty_value"
-                                            placeholder="Enter Order Quantity" onKeyPress="return isNumber(event);">
+                                            placeholder="Enter Order Quantity" onKeyPress="return inputIsNumber(event);">
                                         <p class="input_err" style="color: red; display: none;" id="per_qty_value_err"></p>
 
                                     </div>
@@ -126,78 +132,20 @@ Create New Commercial for Creative
                                     <button type="submit" name="save" value="2"
                                         class="btn btn-info ml-1 wrc-btn" onclick="">Save & Add
                                         Another </button>
-
-                                    </div>
                                 </div>
-                            </form>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
+@endsection
 
 <!-- jQuery -->
 <script src="{{ asset('/js/app.js') }}"></script>
 <script type="application/javascript" src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
 <script type="application/javascript" src="{{asset('plugins/jquery-ui/jquery-ui.min.js')}}"></script>
-
-
-<script>
-    const user_id_val_is = "{{ $commercial_data->user_id }}";
-    const saved_brand_id_is = "{{ $commercial_data->brand_id }}";
-</script>
-{{-- get-brand List --}}
-<script>
-    $(document).ready(function() {
-        $("#user_id").change(async function() {
-
-            const user_id_is = $("#user_id").val();
-            const client_id = $("#user_id").find(':selected').data('client_id')
-            // client_id
-            $("#client_id").val(client_id);
-            showLoader();
-
-            let options = `<option value=""> -- Select Brand Name -- </option>`;
-            document.getElementById("brands").innerHTML = "";
-            await $.ajax({
-                url: "{{ url('get-brand') }}",
-                type: "POST",
-                dataType: 'json',
-                data: {
-                    user_id: user_id_is,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(res) {
-                    res.map(brands => {
-                        options +=
-                            ` <option value="${brands.brand_id}"> ${brands.name}</option>`;
-                    })
-                    hideLoader();
-
-                }
-            });
-            document.getElementById("brands").innerHTML = options;
-            if(saved_brand_id_is > 0){
-                document.getElementById("brands").value = saved_brand_id_is;
-            }
-        });
-    })
-</script>
-
-{{-- setting data into form --}}
-<script>
-    $(document).ready(function() {
-        setTimeout(() => {
-            $('#msg_div').attr("style", "display:none")
-        }, 2000);
-        if (user_id_val_is > 0) {
-            $("#user_id").val(user_id_val_is);
-            $("#user_id").trigger("change");
-        }
-    });
-</script>
 
 {{-- form submiting --}}
 <script>
@@ -245,6 +193,7 @@ Create New Commercial for Creative
             brand_id_Valid = false;
         }
         if (user_id_is_Valid && brand_id_Valid && project_name_Valid && per_qty_value_Valid && kind_of_work_Valid) {
+            console.log('dasgjddgksa')
             return true
         } else {
             return false
@@ -252,4 +201,87 @@ Create New Commercial for Creative
     }
 </script>
 
-@endsection
+<script>
+    const user_id_val_is = "{{ $commercial_data->user_id }}";
+    const saved_brand_id_is = "{{ $commercial_data->brand_id }}";
+</script>
+
+{{-- get-brand List --}}
+<script>
+    $(document).ready(function() {
+        $("#user_id").change(async function() {
+
+            const user_id_is = $("#user_id").val();
+            const client_id = $("#user_id").find(':selected').data('client_id')
+            // client_id
+            $("#client_id").val(client_id);
+            showLoader();
+
+            let options = `<option value=""> -- Select Brand Name -- </option>`;
+            document.getElementById("brands").innerHTML = "";
+            await $.ajax({
+                url: "{{ url('get-brand') }}",
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    user_id: user_id_is,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    res.map(brands => {
+                        options +=
+                            ` <option value="${brands.brand_id}"> ${brands.name}</option>`;
+                    })
+                    hideLoader();
+
+                }
+            });
+            document.getElementById("brands").innerHTML = options;
+            if(saved_brand_id_is > 0){
+                document.getElementById("brands").value = saved_brand_id_is;
+            }
+        });
+    })
+</script>
+{{-- setting data into form --}}
+<script>
+    $(document).ready(function() {
+        setTimeout(() => {
+            $('#msg_div').attr("style", "display:none")
+        }, 2000);
+        if (user_id_val_is > 0) {
+            $("#user_id").val(user_id_val_is);
+            $("#user_id").trigger("change");
+        }
+    });
+</script>
+
+{{-- input is number --}}
+<script>
+    function inputIsNumber(evt) {
+        evt = evt ? evt : window.event;
+        var charCode = evt.which ? evt.which : evt.keyCode;
+
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+</script>
+{{-- input is Alphabet --}}
+
+<script>
+    function inputIsAlphabet(evt) {
+        evt = evt ? evt : window.event;
+        var charCode = evt.which ? evt.which : evt.keyCode;
+        if (
+            (charCode >= 65 && charCode <= 90) ||
+            (charCode >= 97 && charCode <= 122) ||
+            charCode == 8 ||
+            charCode == 32
+        ) {
+            return true;
+        }
+        return false;
+    }
+</script>
