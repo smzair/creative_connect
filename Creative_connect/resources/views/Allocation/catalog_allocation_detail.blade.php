@@ -11,18 +11,40 @@ Allocation Details (For Catalogue)
 <!-- New Allocation Details (For Catalogue) -->
 
 <div class="container-fluid mt-5">
-    <div class="row m-0">
+    <div class="row m-0" >
+
+      <div style="background: #fff;">
+        @php
+              // pre($catalog_allocated_users_list);
+              // pre($catalog_allocation_List_by_lot_numbers);
+              $catalog_user_list = array_column($catalog_allocation_List_by_lot_numbers, 'user_id');
+              // foreach ($catalog_allocated_users_list as $editorId => $value) {
+              //   $lot_info_keys = array_intersect($catalog_user_list,[$value['user_id']]);
+              //   foreach ($lot_info_keys as $key => $user_id) {
+              //     $lot_info_array = $catalog_allocation_List_by_lot_numbers[$key];
+              //     pre($lot_info_array);
+              //     echo  "<br> " .$value['user_id']." => " . $lot_info_array['wrc_numbers'];
+              //   }
+              // }
+          @endphp
+
+      </div>
+
+     
       <div class="col-12 card card-transparent py-4" style="border-radius: 15px; box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;">
         <div class="row m-0">
           <div class="col-xl-4 col-md-4 col-sm-4 col-12 editor-list-grp">
             <div class="card m-0" style="border-radius: 10px; box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;">
               <div class="card-body p-0">
                 <div class="editor-links">
+                  <div class="edit-upld-info">
+                    <h4 style="color: #333">Catloger</h4>
+                  </div>
                   <ul class="nav flex-column" style="margin-bottom: 10px;">
-                    @foreach($allocationList as $editorId => $allo)
+                    @foreach($catalog_allocated_users_list as $editorId => $value)
                     <li class="nav-item">
-                      <a id="editorname1" class="nav-link" href="#{{$editorId}}" data-toggle="tab">
-                        {{$allo['editor']}}
+                      <a id="{{ $value['editor'].$editorId }}" class="nav-link" href="#{{$editorId}}" data-toggle="tab">
+                        {{ $value['editor'] }}
                      </a>
                    </li>
                    @endforeach
@@ -34,12 +56,13 @@ Allocation Details (For Catalogue)
          <div class="col-xl-8 col-md-8 col-sm-8 col-12 editor-table-grp">
           <div class="editor-dtl card m-0">
             <div class="edit-upld-info">
-              <h2>Select Name To View Allocations Details</h2>
+              <h4 style="color: #333">Select Name To View Allocations Details</h4>
             </div>
             <div class="edit-upld-pop">
               <div class="table-responsive p-0 editor-table-list tab-content" style="max-height: 350px; height: 100%;">
-                @foreach($allocationList as $editorId => $allo)
-                <table class="table text-nowrap mb-0 tab-pane" id="{{$editorId}}">
+                @foreach($catalog_allocated_users_list as $editorId => $value)
+               
+                <table class="table table-dark text-nowrap mb-0 tab-pane" id="{{$editorId}}">
                   <thead>
                     <tr>
                       <th class="align-middle border-top-0" width="1%">#</th>
@@ -50,19 +73,29 @@ Allocation Details (For Catalogue)
                   </thead>
                   <tbody>
                     <?php $sr = 1; ?>
-                    @foreach($allo['lot_info'] as $lotInfo)
+                     @php
+                      $lot_info_keys = array_intersect($catalog_user_list,[$value['user_id']]);
+                    @endphp
+                    @foreach($lot_info_keys as $key => $user_id)
+                    @php
+                      $lot_info_array = $catalog_allocation_List_by_lot_numbers[$key];
+                      // pre($lot_info_array);
+                      $wrc_number_arr = explode(',',$lot_info_array['wrc_numbers']);
+                      $wrc_info_arr = explode(',',$lot_info_array['wrc_ids']);
+                    @endphp
+
                     <tr>
                       <td class="align-middle" width="1%">{{$sr++}}</td>
-                      <td class="align-middle">{{$lotInfo['lot_id']}}</td>
+                      <td class="align-middle">{{ $lot_info_array['lot_number'] }}</td>
                       <td class="align-middle position-relative">
-                        <span class="dropdown-toggle d-inline-block ed-wrc-cnt" style="cursor: pointer;">{{count($lotInfo['wrc_info'])}}</span>
-                        <ol class="list-group mt-2 edt-sku-list" style="display: none;">
-                          @foreach($lotInfo['wrc_info'] as $wrcInfo)
-                          <li class="list-group-item">{{$wrcInfo['wrc_id']}}</li>
+                        <span class="dropdown-toggle d-inline-block ed-wrc-cnt" onclick="showhideli({{ $lot_info_array['lot_id'].$lot_info_array['user_id'] }})"  style="cursor: pointer;">{{ $lot_info_array['wrc_cnt'] }}</span>
+                        <ol class="list-group mt-2 edt-sku-list" id="wrcInfo{{ $lot_info_array['lot_id'].$lot_info_array['user_id'] }}" style="display: none;">
+                          @foreach($wrc_info_arr as $wrc_key => $wrcInfo)
+                          <li class="list-group-item" style="color: #999">{{$wrc_number_arr[$wrc_key]}}</li>
                           @endforeach
                         </ol>
                       </td>
-                      <td class="align-middle">{{count($lotInfo['all_files'])}}</td>
+                      <td class="align-middle">{{$lot_info_array['tot_sku_qty']}}</td>
                     </tr>
                     @endforeach
                   </tbody>
@@ -75,4 +108,16 @@ Allocation Details (For Catalogue)
       </div>
     </div>
 </div>
+
+<script>
+  function showhideli(val){
+    var x = document.getElementById("wrcInfo"+val);
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+
+  }
+</script>
 @endsection

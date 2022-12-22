@@ -13,7 +13,7 @@ class CatlogWrc extends Migration
      */
     public function up()
     {
-        Schema::create('catlog_wrc',function (Blueprint $table){
+        Schema::create('catlog_wrc', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('lot_id')->unsigned();
             $table->string('wrc_number');

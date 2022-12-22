@@ -716,8 +716,8 @@ $(function () {
         togglePlanShootBtn();
     });
 
-    getPlanCount();
-    getAllocationCount();
+    // getPlanCount();
+    // getAllocationCount();
 
     makeDataTable();
 

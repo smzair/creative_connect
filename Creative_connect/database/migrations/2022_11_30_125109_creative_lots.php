@@ -32,3 +32,4 @@ class CreativeLots extends Migration
         Schema::dropIfExists('creative_lots');
     }
 }
+
