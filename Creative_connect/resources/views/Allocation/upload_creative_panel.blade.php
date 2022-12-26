@@ -162,7 +162,13 @@
                                   </ul>
                                 </td>
                                 @php
-                                    $get_date_time = get_date_time($allocationInfo['spent_time_data']);
+                                    // if($allocationInfo['spent_time_data'] == "0:00"){
+                                    //     $get_date_time = 0;
+
+                                    // }else {
+                                        $get_date_time = get_date_time((int)$allocationInfo['spent_time_data']);
+                                        
+                                    // }
                             
                                 @endphp
                                 <td>{{ $get_date_time}}</td>

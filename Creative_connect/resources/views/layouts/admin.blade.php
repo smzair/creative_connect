@@ -150,6 +150,13 @@
                                             </li>
 
                                             <li class="nav-item">
+                                                <a href="{{ route('viewWRCBatchPanel') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>View Creative WRCs Batch Panel</p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
                                                 <a href="{{ route('CREATECATLOGWRC') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Create Catlog WRCs</p>

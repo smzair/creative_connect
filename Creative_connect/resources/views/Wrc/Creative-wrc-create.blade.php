@@ -8,11 +8,36 @@ Creative Create WRC
     <div class="row mt-5">
     </div>
 
-    <div class="row WrcNoShowHide" style="padding-bottom: 2rem">
-        <div class="col-12">
-            <div class="card card-transparent m-0" style="flex-direction:row;">
-                <h5 style="float: left;padding:2%">Creative Wrc Number :- </h5>
-                <h5 class="WrcNo" style="float: right;padding-top:2%">{{$CreativeWrc->wrc_number }}</h5>
+    <div class="row " style="padding-bottom: 2rem">
+        <div class="col-5">
+            <div class="card card-transparent m-0 " style="">
+                {{-- <div class="WrcNoShowHide"> --}}
+                <div class="" style="height: 83px !important">
+                        <h5 style="float: left;padding:2%">Creative Wrc Number :- </h5>
+                    <h5 class="WrcNo" style="padding-top:2%">{{$CreativeWrc->wrc_number }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card card-transparent m-0 " style="align-items:center"  id="div2">
+
+                <div>
+                    <a download="sku_master_sheet" href="{{ asset('files/sku_master_sheet.csv') }}" class="btn" style="margin-bottom: 6px"><i class="fa fa-download"></i> Download Master Sheet</a>
+                </div>
+
+                <div>
+                    {{-- style="margin-left:45px" --}}
+                    <label for="files" class="btn">Upload Sheet</label>
+                    <br>
+                </div>
+                <span class="file_name_field" style="color: white;" id="file_name_field"></span>
+            </div>
+        </div>    
+        <div class="col-4">
+            
+            <div class="card card-transparent m-0 " style="flex-direction:row;">
+           
             </div>
         </div>
     </div>
@@ -32,7 +57,7 @@ Creative Create WRC
                             {{ Session::get('success') }}
                         </div>
                     @endif
-                    <form method="POST" onsubmit="return validateForm(event)" action="{{ route($CreativeWrc->route)}}"  id = "form" action="{{ route($CreativeWrc->route) }}" >
+                    <form method="POST" onsubmit="return validateForm(event)" action="{{ route($CreativeWrc->route)}}"  id = "form" action="{{ route($CreativeWrc->route) }}" enctype="multipart/form-data" >
 
                         @csrf
                         <div class="row">
@@ -40,7 +65,8 @@ Creative Create WRC
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
 
-                                    <input type="hidden" name="id" value="{{$CreativeWrc->id }}"> 
+                                    <input type="hidden" name="id" id="id" value="{{$CreativeWrc->id }}"> 
+                                    <input type="hidden" id="sku_required_check" name="sku_required_check" value="{{$CreativeWrc->sku_required }}"> 
                                     <input type="hidden" name="c_short" id="c_short" value="">
                                     <input type="hidden" name="short_name" id="short_name" value="">
                                     <input type="hidden" name="s_type" id="s_type" value="">
@@ -101,14 +127,7 @@ Creative Create WRC
                                     <p class="input_err" style="color: red; display: none;" id="commercial_id_err"></p>
                                 </div>
                             </div>
-                            <!-- Order Quantity -->
-                            <div class="col-sm-3 col-12">
-                                <div class="form-group">
-                                    <label class="control-label required">Order Qty</label>
-                                    <input type="text" class="form-control" name="order_qty" id="order_qty" value="{{$CreativeWrc->order_qty }}" placeholder="Enter Order Quantity" onkeypress="return isNumber(event);">
-                                    <p class="input_err" style="color: red; display: none;" id="order_qty_err"></p>
-                                </div>
-                            </div>
+
                             {{-- Allow to Copy Writer --}}
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
@@ -116,9 +135,50 @@ Creative Create WRC
                                     <input type="checkbox" class="form-control" name="alloacte_to_copy_writer" value="1" <?php if($CreativeWrc->alloacte_to_copy_writer == 1)echo 'checked'?>>
                                 </div>
                             </div>
+                            
+
+                            {{-- SKUs Required --}}
+                            <div class="col-sm-3 col-12 sku_div" style="display: none">
+                                <div class="form-group">
+                                    <label class="required">SKUs Required</label>
+                                    {{-- <input type="text" class="form-control" name="sku_req" id="sku_req" placeholder="Add Link" > --}}
+                                    <div>
+                                        <input type="radio" onclick="show1();" id="sku_yes" name="sku_required" value="sku_yes">
+                                        <label for="sku_yes">Yes</label>
+                                        <input type="radio" onclick="show2();" id="sku_no" name="sku_required" value="sku_no" checked>
+                                        <label for="sku_no">No</label>
+                                    </div>
+                                    <p class="input_err" style="color: red; display: none;" id="sku_req_err"></p>
+                                </div>
+                            </div>
 
                         </div>
+
                         <div class="row">
+                            <!-- Order Quantity -->
+                            <div class="col-sm-3 col-12" style="display: none" id="div1">
+                                <div class="form-group">
+                                    <label class="control-label required">Order Qty</label>
+                                    <input type="text" class="form-control" name="order_qty" id="order_qty" value="{{$CreativeWrc->order_qty }}" placeholder="Enter Order Quantity" onkeypress="return isNumber(event);">
+                                    <p class="input_err" style="color: red; display: none;" id="order_qty_err"></p>
+                                </div>
+                            </div>
+
+                            <!-- Upload Sheet -->
+                            <div class="col-sm-6 col-12" style="margin-top: 3%; display: none" >
+                                <div class="form-group">
+                                    {{-- <label for="btn" class="btn">Download</label> --}}
+                                    {{-- <label for="files" class="btn">Upload Sheet</label>
+                                    <button class="btn" style="margin-bottom: 6px"><i class="fa fa-download"></i> Download Master Sheet</button>
+
+                                    <span class="file_name_field" style="color: white;" id="file_name_field"></span> --}}
+                                    <input id="files" style="visibility:hidden;" type="file" id="sku_sheet" name="sku_sheet" class="btn btn-success btn-xl btn-warning mb-2">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row" id="guidelines_div">
                             <div class="col-sm-12 col-12">
                                 <div class="cc-title">
                                     <h5>Guidelines</h5>
@@ -141,7 +201,7 @@ Creative Create WRC
                                 </div>
                             </div>
                             <!-- Add Document -->
-                            <div class="col-sm-3 col-12">
+                            <div class="col-sm-3 col-12" style="display: none">
                                 <div class="form-group">
                                     <label class="required">Add Document</label>
                                     <input type="text" class="form-control" name="document1" id="document1" placeholder="Add Link" value="{{$CreativeWrc->document1 }}">
@@ -149,7 +209,7 @@ Creative Create WRC
                                 </div>
                             </div>
                             <!-- Add Document -->
-                            <div class="col-sm-3 col-12">
+                            <div class="col-sm-3 col-12" style="display: none">
                                 <div class="form-group">
                                     <label class="required">Add Document</label>
                                     <input type="text" class="form-control" name="document2" id="document2" placeholder="Add Link" value="{{$CreativeWrc->document2 }}">
@@ -255,7 +315,7 @@ Creative Create WRC
             const short_name = $("#brand_id").find(':selected').data('short_name');
             $("#short_name").val(short_name);
 
-            let options = `<option value="" data-s_type="" > -- Select LOT Number -- </option>`;
+            let options = `<option value="" data-s_type="" data-client_bucket="" > -- Select LOT Number -- </option>`;
             let options_work = `<option value="" > -- Select Commercial -- </option>`;
             $.ajax({
                 url: "{{ url('get-lot-number') }}",
@@ -271,7 +331,7 @@ Creative Create WRC
                  const {commercial_data,lot_number_data} = res;
                  lot_number_data?.length >0 && lot_number_data.map(lots => {
                         options +=
-                            ` <option value="${lots.id}" data-s_type="${lots.project_name}"> ${lots.lot_number}</option>`;
+                            ` <option value="${lots.id}" data-s_type="${lots.project_name}" data-client_bucket="${lots.client_bucket}"> ${lots.lot_number}</option>`;
 
                     })
                     commercial_data?.length >0 && commercial_data.map(lots => {
@@ -282,6 +342,10 @@ Creative Create WRC
                     document.getElementById("commercial_id").innerHTML = options_work;
                 }
             });
+            // setTimeout(()=>{
+            //     var client_bucket = $("#lot_id").find(':selected').data('client_bucket');
+            //     console.log('client_bucket', client_bucket)
+            // },1000)
            
         });
     })
@@ -295,6 +359,28 @@ Creative Create WRC
        const s_type = $("#lot_id").find(':selected').data('s_type');
             $("#s_type").val(s_type);
             console.log(s_type);
+
+        const client_bucket = $("#lot_id").find(':selected').data('client_bucket');
+        console.log('client_bucket', client_bucket)
+        // sku_div
+
+        if(client_bucket == 'Retainer'){
+            $(".sku_div").css("display", "block");
+        }else{
+            document.getElementById('guidelines_div').style.display ='flex';
+            document.getElementById('div1').style.display = 'block';
+            document.getElementById('div2').style.display ='none';
+            $(".sku_div").css("display", "block");
+            document.getElementById("sku_no").checked = true;
+            // const sku_checked_val = $('input[name="sku_required"]:checked').val();
+            // console.log('sku_checked_val', sku_checked_val)
+
+            // if(sku_checked_val == 'sku_yes'){
+            //     document.getElementById('div2').style.display = 'flex';
+            //     document.getElementById('div1').style.display ='none';
+            // }
+        }
+
     }
 </script>
 
@@ -328,31 +414,33 @@ Creative Create WRC
         let document1_Valid = true;
         let document2_Valid = true;
 
-        if (check_document2 === '') {
+        const sku_checked_val = $('input[name="sku_required"]:checked').val();
+
+        if (check_document2 === '' && sku_checked_val == 'sku_no') {
             $("#document2_err").html("Add Document is required");
             document.getElementById("document2_err").style.display = "block";
-            document2_Valid = false;
+            // document2_Valid = false;
         }
 
-        if (check_document1 === '') {
+        if (check_document1 === '' && sku_checked_val == 'sku_no') {
             $("#document1_err").html("Add Document is required");
             document.getElementById("document1_err").style.display = "block";
-            document1_Valid = false;
+            // document1_Valid = false;
         }
 
-        if (check_guide_lines === '') {
+        if (check_guide_lines === '' && sku_checked_val == 'sku_no') {
             $("#guide_lines_err").html("Guidelines is required");
             document.getElementById("guide_lines_err").style.display = "block";
             guide_lines_Valid = false;
         }
 
-        if (check_work_brief === '') {
+        if (check_work_brief === '' && sku_checked_val == 'sku_no') {
             $("#work_brief_err").html("Work Brief is required");
             document.getElementById("work_brief_err").style.display = "block";
             work_brief_Valid = false;
         }
 
-        if (check_order_qty === '') {
+        if (check_order_qty === '' && sku_checked_val == 'sku_no') {
             $("#order_qty_err").html("Order Qty is required");
             document.getElementById("order_qty_err").style.display = "block";
             order_qty_Valid = false;
@@ -404,5 +492,77 @@ Creative Create WRC
         $(".WrcNoShowHide").css("display", "none");
     }
 </script>
+
+{{-- script for show file name --}}
+<script>
+    // $(".file_name_field").css("display", "none");
+    $("#files").change(function() {
+    filename = this.files[0].name;
+    $("#file_name_field").html(filename);
+    document.getElementById("file_name_field").style.display = "flex";
+    console.log(filename);
+});
+</script>
+
+{{-- script for show hide order qty and sku qty  --}}
+<script>
+    const sku_checked_val = $('input[name="sku_required"]:checked').val();
+        console.log('sku_checked_val', sku_checked_val)
+
+        if(sku_checked_val == 'sku_yes'){
+            document.getElementById('div2').style.display = 'flex';
+            document.getElementById('div1').style.display ='none';
+        }
+
+        if(sku_checked_val == 'sku_no'){
+            document.getElementById('div1').style.display = 'block';
+            document.getElementById('div2').style.display ='none';
+        }
+
+        //yes sku
+        function show1(){
+            document.getElementById('div2').style.display = 'flex';
+            document.getElementById('div1').style.display ='none';
+            document.getElementById('guidelines_div').style.display ='none';
+            
+        }
+        // nos sku
+        function show2(){
+            document.getElementById('div1').style.display = 'block';
+            document.getElementById('div2').style.display ='none';
+            document.getElementById('guidelines_div').style.display ='flex';
+
+            
+        }
+</script>
+
+<script>
+     const update_id = document.querySelector("#id").value;
+     console.log('update_id', update_id)
+
+     const sku_required_check = document.querySelector("#sku_required_check").value;
+     console.log('update_id', update_id)
+
+    if(update_id > 0 && sku_required_check > 0){
+        // document.getElementById('div2').style.display = 'flex';
+        document.getElementById('div1').style.display ='none';
+        document.getElementById('guidelines_div').style.display ='none';
+        document.getElementById("sku_yes").checked = true;
+        // document.getElementById('sku_no').disabled = true;  
+        // document.getElementById('div2').style.display ='none';
+    }
+
+    if(update_id > 0 && sku_required_check == 0){
+        document.getElementById('div2').style.display = 'flex';
+        document.getElementById('div1').style.display ='none';
+        document.getElementById('guidelines_div').style.display ='none';
+        document.getElementById("sku_no").checked = true;
+        // document.getElementById("sku_yes").disabled = true;
+
+    }
+     
+</script>
+
+
 
 @endsection

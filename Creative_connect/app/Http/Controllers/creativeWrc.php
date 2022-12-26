@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\CreativeWrcModel;
 use App\Models\CreatLots;
+use App\Models\CreativeWrcSkus;
+use App\Models\CreativeWrcBatch;
+use Carbon\Carbon;
+use CreativeLots;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class creativeWrc extends Controller
@@ -31,6 +36,7 @@ class creativeWrc extends Controller
         'guidelines'=>'',
         'document1'=>'',
         'document2'=>'',
+        'sku_required'=>0,
         'alloacte_to_copy_writer'=>1,
         'button_name' => 'Create New WRC',
          'route' => 'STOREWRC'
@@ -59,7 +65,7 @@ class creativeWrc extends Controller
         // get lot number dropdown value
         $lot_number_data = DB::table('creative_lots')->where('creative_lots.user_id' , $user_id)->where('creative_lots.brand_id' , $brand_id)
         ->leftJoin('brands', 'creative_lots.brand_id' , 'brands.id')
-        ->select('creative_lots.id', 'creative_lots.lot_number', 'creative_lots.user_id', 'creative_lots.brand_id', 'brands.short_name')->get();
+        ->select('creative_lots.id','creative_lots.project_name','creative_lots.client_bucket', 'creative_lots.lot_number', 'creative_lots.user_id', 'creative_lots.brand_id', 'brands.short_name')->get();
 
         // get commercial dropdown value
         $commercial_data = DB::table('create_commercial')->where('user_id',$user_id)->where('brand_id',$brand_id)->select('id as create_commercial_id', 'kind_of_work', 'project_name', 'per_qty_value')->get();
@@ -70,48 +76,129 @@ class creativeWrc extends Controller
     // for store data
     public function store(Request $request)
     {
-        // $wrcNumber = $lotInfo->c_short . $lotInfo->short_name . $lotInfo->s_type . $lotInfo->id . '-' . chr($wrcCount + 65);
-        $project_name_array = explode(" ",$request->s_type);
-        $count = count($project_name_array);
-        $project_name = "";
-        $wrcs = CreativeWrcModel::where(['lot_id' => $request->lot_id])->get();
-        $wrcCount = $wrcs->count();
-        //get first char of each word
-        // foreach( $project_name_array  as $key=>$val){
-        //     $project_name .= $val[0];
-        // }
-        //get first char of first and last word
-        $project_name .= $project_name_array[0][0];
-        $project_name .= $project_name_array[$count-1][0];
+        DB::beginTransaction();
 
-        $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
+        try {
+            // dd($request);
+            // $wrcNumber = $lotInfo->c_short . $lotInfo->short_name . $lotInfo->s_type . $lotInfo->id . '-' . chr($wrcCount + 65);
+            $project_name_array = explode(" ",$request->s_type);
+            $count = count($project_name_array);
+            $project_name = "";
+            $wrcs = CreativeWrcModel::where(['lot_id' => $request->lot_id])->get();
+            $wrcCount = $wrcs->count();
+            //get first char of each word
+            // foreach( $project_name_array  as $key=>$val){
+            //     $project_name .= $val[0];
+            // }
+            //get first char of first and last word
+            $project_name .= $project_name_array[0][0];
+            $project_name .= $project_name_array[$count-1][0];
 
-        $wrcNumber = $request->c_short . $request->short_name . $project_name . $request->lot_id . '-' . chr($wrcCount + 65);
+            $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
 
-        $createWrc = new CreativeWrcModel();
-        $createWrc->lot_id = $request->lot_id;
-        $createWrc->wrc_number = $wrcNumber;
-        $createWrc->commercial_id = $request->commercial_id;
-        $createWrc->order_qty = $request->order_qty;
-        $createWrc->work_brief = $request->work_brief;
-        $createWrc->guidelines = $request->guide_lines;
-        $createWrc->document1 = $request->document1;
-        $createWrc->document2 = $request->document2;
-        $createWrc->alloacte_to_copy_writer = $alloacte_to_copy_writer;
-        $createWrc->status = 'inwarding_done';
-        $createWrc->save();
+            $wrcNumber = $request->c_short . $request->short_name . $project_name . $request->lot_id . '-' . chr($wrcCount + 65);
 
-        
-        
-        if($createWrc){
-            request()->session()->flash('success','Wrc Successfully added');
+            $sku_required = $request->sku_required;
+            if($sku_required == 'sku_yes'){
+                $sku_required_num = 1;
+            }else{
+                $sku_required_num = 0;
+            }
+
+            $createWrc = new CreativeWrcModel();
+            $createWrc->lot_id = $request->lot_id;
+            $createWrc->wrc_number = $wrcNumber;
+            $createWrc->commercial_id = $request->commercial_id;
+            $createWrc->order_qty = $request->order_qty;
+            $createWrc->work_brief = $request->work_brief;
+            $createWrc->guidelines = $request->guide_lines;
+            $createWrc->document1 = $request->document1;
+            $createWrc->document2 = $request->document2;
+            $createWrc->sku_required = $sku_required_num;
+            $createWrc->alloacte_to_copy_writer = $alloacte_to_copy_writer;
+            $createWrc->status = 'inwarding_done';
+            $createWrc->save();
+
+            //insert excel data 
+
+            if($sku_required == 'sku_yes'){
+                $file = ($request->sku_sheet->getRealPath());
+
+                $handle = fopen($_FILES['sku_sheet']['tmp_name'], "r");
+                $header = true;
+                $count = 1;
+                while ($csvLine = fgetcsv($handle, 1000, ",")) {
+                    // Add a condition to stop header insertion
+                    if ($count <= 1) {
+                        $count++;
+                        continue;
+                    }
+
+                    $sku_code = $csvLine[1];
+                    $project_name = $csvLine[2];
+                    $kind_of_work = $csvLine[3];
+                    $wrc_id = $createWrc->id;
+
+                    $creative_wrc_batch = CreativeWrcBatch::orderby('id','DESC')->where('wrc_id',$wrc_id)->get('batch_no')->first();
+                    $creative_wrc_batch_no = $creative_wrc_batch != null ? $creative_wrc_batch->batch_no : 0;
+
+                    $new_creative_wrc_batch_no = $creative_wrc_batch_no + 1;
+
+
+                    if($sku_code != null && $project_name != null && $kind_of_work != null){
+                        $skuObj = new CreativeWrcSkus();
+                        $skuObj->sku_code = $sku_code;
+                        $skuObj->project_name = $project_name;
+                        $skuObj->kind_of_work = $kind_of_work;
+                        $skuObj->creative_wrc_batch_no = $new_creative_wrc_batch_no;
+                        $skuObj->wrc_id = $wrc_id ;
+
+                        $skuObj->save();
+                    }
+                    
+                }
+            }
+
+            $wrc_data = CreativeWrcModel::where('id',$createWrc->id)->get(['sku_count'])->first();
+            $old_sku_count = $wrc_data != null ?  $wrc_data->sku_count : 0;
+            $skus = CreativeWrcSkus::where('wrc_id',$createWrc->id)->get()->count();
+
+            $new_sku_count = $skus +  $old_sku_count ;
+            CreativeWrcModel::where('id',$createWrc->id)->update(['sku_count'=> $new_sku_count]);
+
+            $lot_id = $request->lot_id;
+            $creativeLot = DB::table('creative_lots')->where('id',$lot_id)->get(['client_bucket'])->first();
+            $client_bucket = $creativeLot  != null ? $creativeLot->client_bucket : null;
+
+
+            // create batch no of wrc when client bucked is Retainer
+
+            if($client_bucket == 'Retainer'){
+                $creativeWrcBatch = new CreativeWrcBatch();
+                $creativeWrcBatch->wrc_id = $createWrc->id;
+                $creativeWrcBatch->batch_no = 1;
+                $creativeWrcBatch->order_qty = $request->order_qty;
+                $creativeWrcBatch->sku_count = $new_sku_count;
+                $creativeWrcBatch->save();
+            }
+
+            DB::commit();
+            
+            if($createWrc){
+                request()->session()->flash('success','Wrc Successfully added');
+            }
+            else{
+                request()->session()->flash('error','Please try again!!');
+            }
+
+            //    return $this->Index();
+            return $this->edit($request,$createWrc->id);
+            // all good
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
         }
-        else{
-            request()->session()->flash('error','Please try again!!');
-        }
-
-        //    return $this->Index();
-       return $this->edit($request,$createWrc->id);
+        
 
     }
 
@@ -125,6 +212,25 @@ class creativeWrc extends Controller
        ->get();
         //    dd($wrcs);
         return view('Wrc.Creative-wrc-view')->with('wrcs',$wrcs);
+    }
+
+    // get data for view in batch panel
+    public function viewBatchPanel()
+    {
+        $wrcs = CreatLots::where('creative_lots.client_bucket','=','Retainer')
+        ->leftJoin('creative_wrc', 'creative_wrc.lot_id', 'creative_lots.id')
+        ->leftJoin('users', 'users.id', 'creative_lots.user_id')
+        ->leftJoin('brands', 'brands.id', 'creative_lots.brand_id')
+        ->leftJoin('creative_wrc_batch', 'creative_wrc_batch.wrc_id', 'creative_wrc.id')
+        ->leftJoin('create_commercial as create_commercial',function($join)
+			{
+				$join->on('create_commercial.user_id','=','creative_lots.user_id');
+				$join->on('create_commercial.brand_id','=','creative_lots.brand_id');
+			})
+       ->select('creative_wrc.*','creative_lots.user_id','creative_lots.project_name','creative_lots.brand_id','creative_lots.lot_number','users.Company as Company_name','brands.name','create_commercial.kind_of_work','creative_wrc_batch.batch_no')
+        ->get();
+        //    dd($wrcs);
+        return view('Wrc.Creative-wrc-batch-view')->with('wrcs',$wrcs);
     }
 
     public function edit(Request $request, $id){
@@ -174,6 +280,14 @@ class creativeWrc extends Controller
         $wrcNumber = $request->c_short . $request->short_name . $project_name . $request->lot_id . '-' . chr($wrcCount + 65);
         $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
             // dd($alloacte_to_copy_writer);
+
+
+        $sku_required = $request->sku_required;
+        if($sku_required == 'sku_yes'){
+            $sku_required_num = 1;
+        }else{
+            $sku_required_num = 0;
+        }
         //create
         $CreativeWrcs =  CreativeWrcModel::find($id);
         $CreativeWrcs->lot_id = $request->lot_id;
@@ -184,6 +298,7 @@ class creativeWrc extends Controller
         $CreativeWrcs->guidelines = $request->guide_lines;
         $CreativeWrcs->document1 = $request->document1;
         $CreativeWrcs->document2 = $request->document2;
+        $CreativeWrcs->sku_required = $sku_required_num;
         $CreativeWrcs->alloacte_to_copy_writer = $alloacte_to_copy_writer;
         $CreativeWrcs->status = 'inwarding_done';
         $CreativeWrcs->update();

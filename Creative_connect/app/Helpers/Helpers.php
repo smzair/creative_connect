@@ -127,7 +127,9 @@ if (!function_exists('clientBucket')) {
             array(
                 'id' => "3",
                 'value' => 'New'
-            )
+            ),
+            array('id' => "4",
+            'value' => 'Retainer')
         );
         return   $clientBucket;
     }

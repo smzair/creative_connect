@@ -46,6 +46,8 @@ Route::get('/Creative-createWrcs/{id}','creativeWrc@edit');
 Route::post('/Creative-updateWrc','creativeWrc@update')->name('UPDATEWRC');
 Route::get('/Creative-viewWrcs','creativeWrc@view')->name('viewWRC');
 
+/****************  Creative-createWrc-Batch-Panel  **************/
+Route::get('/Creative-viewWrcsBatchPanel','creativeWrc@viewBatchPanel')->name('viewWRCBatchPanel');
 
 /****************catalog-wrc-create **************/
 Route::get('/Catalog-Wrc-Create','catalogWrcController@index')->name('CREATECATLOGWRC');
@@ -85,4 +87,6 @@ Route::post('/Creative-Qc','CreativeQcController@storeUserDataForRework')->name(
 
 //check_completed_wrc
 Route::post('/check_completed_wrc','CreativeQcController@checkCompletedWrc');
+
+
 

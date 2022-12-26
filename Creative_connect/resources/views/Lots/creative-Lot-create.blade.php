@@ -128,7 +128,8 @@ Update LOT
                                             $clientBucketStatic = (object) array(
                                                                             array( 'id' => "1",'value' => 'Existing',),
                                                                             array('id' => "2",'value' => 'Upselling'),
-                                                                            array('id' => "3",'value' => 'New')
+                                                                            array('id' => "3",'value' => 'New'),
+                                                                            array('id' => "4",'value' => 'Retainer')
                                                                         );
                                         @endphp
                                     <label class="control-label required">Client Bucket</label>
