@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CatalogAllocationController;
+use App\Http\Controllers\CatalogSubmissionController;
 use App\Http\Controllers\CatlaogQcController;
 use Illuminate\Support\Facades\Route;
 /*
@@ -89,6 +90,10 @@ Route::get('catalog-qc', [CatlaogQcController::class, 'index'])->name('QcList');
 Route::post('get-catalog-users_list', [CatlaogQcController::class, 'userlist'])->name('userlist'); // Qc List 
 Route::post('qc-rework', [CatlaogQcController::class, 'set_qc_rework'])->name('QCREWORK'); // Qc List 
 Route::post('completed-qc-wrc', [CatlaogQcController::class, 'completed_qc_wrc'])->name('QCCOMPWRC'); // completed-qc-wrc
+
+
+// Submission Route 
+Route::get('catalog-submission', [CatalogSubmissionController::class, 'index'])->name('CATALOGWRCLI'); // Qc List 
 
 
 

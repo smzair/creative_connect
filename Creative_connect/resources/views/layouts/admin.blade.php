@@ -217,6 +217,13 @@
                                                     </a>
                                                 </li>
 
+                                                {{-- Submission  --}}
+                                                <li class="nav-item">
+                                                    <a href="{{route('CATALOGWRCLI')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Catalog WRC Submission</p>
+                                                    </a>
+                                                </li>
 
                                             </ul>
                                         </li>
