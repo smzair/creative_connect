@@ -35,9 +35,19 @@ class CreativeAllocation extends Model
 		$resDataManyUser = CreativeAllocation::orderBy('creative_allocation.user_id', 'DESC')
 		->leftJoin('users', 'users.id','creative_allocation.user_id')
 		->leftJoin('creative_wrc', 'creative_wrc.id','creative_allocation.wrc_id')
+		
 		->leftJoin('creative_lots', 'creative_lots.id','creative_wrc.lot_id')
-		->select('creative_allocation.*','creative_wrc.wrc_number','creative_wrc.lot_id','creative_lots.lot_number','users.name')
+		->groupBy('creative_allocation.user_id')
+		->groupBy('creative_wrc.id')
+		->select('creative_allocation.*','creative_wrc.wrc_number','creative_wrc.lot_id','creative_lots.lot_number','users.name','creative_wrc.sku_count','creative_wrc.order_qty')
 		->get();
+
+		foreach($resDataManyUser as $key=>$val){
+			$batches_data = DB::table('creative_wrc_batch')->where('wrc_id',$val['wrc_id'])->orderBy('id','DESC')->get(['batch_no'])->first();
+			$batch_no = $batches_data != null ? $batches_data->batch_no : 0;
+
+			$val['batch_no'] = $batch_no;
+		}
 
 		return [
             "resData"         => $resData,

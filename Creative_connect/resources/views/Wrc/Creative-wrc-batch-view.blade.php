@@ -6,6 +6,11 @@ All WRCs Batch Panel
 <div class="lot-table mt-1">
     <div class="container-fluid">
         <div class="row">
+            @if (Session::has('success'))
+                        <div class="alert alert-success" id="msg_div" role="alert">
+                            {{ Session::get('success') }}
+                        </div>
+            @endif
             <div class="col-12">
                 <div class="card card-transparent">
                     <div class="card-header">
@@ -66,6 +71,7 @@ All WRCs Batch Panel
                                     <th class="p-2">Kind Of Work</th>
                                     <th class="p-2">WRC Created At</th>
                                     <th class="p-2">Order Quantity</th>
+                                    <th class="p-2">Sku Counts</th>
                                     <th class="p-2">Batch No</th>
                                     <th class="p-2">Actions</th>
                                 </tr>
@@ -75,13 +81,16 @@ All WRCs Batch Panel
                                 <tr class="wrc-tt">
                                     <td class="p-sm-2 p-1">{{$key+1}}</td>
                                     <td id="lot_number{{$key}}" class="p-sm-2 p-1">{{$wrc->lot_number}}</td>
+                                    <td id="sku_required{{$key}}" class="p-sm-2 p-1" style="display: none">{{$wrc->sku_required}}</td>
+                                    <td id="wrc_id{{$key}}" class="p-sm-2 p-1" style="display: none">{{$wrc->id}}</td>
                                     <td id="wrc_number{{$key}}" class="p-sm-2 p-1">{{$wrc->wrc_number}}  <span class="cpy-clipboardtable" id="copyBTnTable"><i class="fas fa-copy"></i></span> </td>
                                     <td id="company_name{{$key}}" class="p-sm-2 p-1">{{$wrc->Company_name}}</td>
                                     <td id="brand_name{{$key}}" class="p-sm-2 p-1">{{$wrc->name}}</td>
                                     <td id="project_name{{$key}}" class="p-sm-2 p-1">{{$wrc->project_name}}</td>
                                     <td id="kind_of_work{{$key}}" class="p-sm-2 p-1">{{$wrc->kind_of_work}}</td>
                                     <td id="createdAt" class="p-sm-2 p-1">{{dateFormat($wrc->created_at)}}<br><b>{{timeFormat($wrc->created_at)}}</b></td>
-                                    <td id="orderQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->order_qty}}</td>
+                                    <td id="orderQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->order_qty == null ? 0 : $wrc->order_qty}}</td>
+                                    <td id="skuQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->sku_count}}</td>
                                     <td id="batchQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->batch_no}}</td>
                                     <td class="p-sm-2 p-1">
                                     <div class="btn-group-vertical">
@@ -100,19 +109,21 @@ All WRCs Batch Panel
                 </div>
 
                 <!-- /.card-body -->
-                <form class="" method="POST" action="{{ route('CREATIVE_ALLOCATION_UPLOAD_STORE') }}" id="uploadCreativeAllocForm" onsubmit="return validateForm(event)">
+                <form class="" method="POST" action="{{ route('INVERD_NEW_BATCH') }}" id="uploadCreativeAllocForm" onsubmit="return validateForm(event)" enctype="multipart/form-data">
                     @csrf
-                    <div class="modal fade" id="inverdnewPopup">
+                    <div class="modal fade inverdnewPopup" id="inverdnewPopup">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header py-2">
                                     <h4 class="modal-title" id="modal_title">Inward New Batch</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick='resetdata()'> 
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <input type="hidden" name="creative_allocation_id" class="creative_allocation_id" value="" />
                                 <input type="hidden" name="user_role" class="user_role" value="" />
+                                <input type="hidden" name="sku_required" class="sku_required" value="" />
+                                <input type="hidden" name="wrc_id" class="wrc_id" value="" />
                                 <div class="modal-body">
                                     <div class="custom-dt-row work-details">
                                         <div class="row">
@@ -159,9 +170,15 @@ All WRCs Batch Panel
 
                                             <div class="col-sm-4 col-12">
                                                 <div class="col-ac-details">
-                                                    <h6>Total SKU Count/ 
-                                                        Order Qty</h6>
-                                                    <p class="totalSkuCountOrderQty">000</p>
+                                                    <h6>Total SKU Count</h6>
+                                                    <p class="totalSkuCount"></p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-4 col-12">
+                                                <div class="col-ac-details">
+                                                    <h6>Order Qty</h6>
+                                                    <p class="totalOrderQty"></p>
                                                 </div>
                                             </div>
 
@@ -178,7 +195,7 @@ All WRCs Batch Panel
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="" id="gd_link_required">SKU Count/ Order Qty</label>
-                                                        <input type="text" class="form-control creative_link" name="sku_order_count"  placeholder="Enter SKU Count/ Order Qty" value="">
+                                                        <input type="text" class="form-control creative_link" name="sku_order_count" id="sku_order_count"  placeholder="Enter SKU Count/ Order Qty" value="" onkeypress="return isNumber(event);">
                                                     </div>
                                                 </div>
                                                 
@@ -187,7 +204,7 @@ All WRCs Batch Panel
                                                     <p><h3>Upload SKU Sheet</h3></p>
                                                     <div class="col-sm-2 col-12">
                                                         {{-- <label for="files" class="btn">Upload Sheet</label> --}}
-                                                        <input id="files" type="file" id="sku_sheet" name="sku_sheet" class="btn btn-success btn-xl btn-warning mb-2">
+                                                        <input id="files" type="file" name="sku_sheet" class="btn btn-success btn-xl btn-warning mb-2">
                                                     </div>
                                                     
 
@@ -206,7 +223,7 @@ All WRCs Batch Panel
                                                     
                                                     <button type="submit" name="submit" value="save" class="btn btn-warning" id="save_btn" href="javascript:void(0)" style="float:right;margin-right:10px;display: flex" >Save</button>
 
-                                                    <button type="submit" name = "submit" value="complete_allocation" class="btn btn-warning" href="javascript:void(0)" style="float:right;margin-right:10px">Save & Add Another</button>
+                                                    {{-- <button type="submit" name = "submit" value="complete_allocation" class="btn btn-warning" href="javascript:void(0)" style="float:right;margin-right:10px">Save & Add Another</button> --}}
 
                                             </div>
                                         </form>
@@ -264,6 +281,41 @@ All WRCs Batch Panel
     function setdata(id){
         console.log('first', id)
 
+        // set order qty
+        const orderQuantity_td = "orderQuantity"+id;
+        const orderQuantity = document.getElementById(orderQuantity_td).innerHTML;
+        document.querySelector('.totalOrderQty').innerHTML = orderQuantity;
+
+        // set sku qty
+        const skuQuantity_td = "skuQuantity"+id;
+        const skuQuantity = document.getElementById(skuQuantity_td).innerHTML;
+        document.querySelector('.totalSkuCount').innerHTML = skuQuantity;
+
+        //set total Batch Count
+        const batchQuantity_td = "batchQuantity"+id;
+        const batchQuantity = document.getElementById(batchQuantity_td).innerHTML;
+        document.querySelector('.totalBatchCount').innerHTML = batchQuantity;
+
+        // set sku required
+        const sku_required_td = "sku_required"+id;
+        const sku_required = document.getElementById(sku_required_td).innerHTML;
+        document.querySelector('.sku_required').value = sku_required;
+
+        // sku_required == 0 means no sku needed insert order qty
+        if(sku_required != 0){
+            document.querySelector('#sku_order_count').disabled = true;
+        }
+
+        // sku_required == 0 means no sku needed insert order qty
+        if(sku_required == 0){
+            document.querySelector('#files').disabled = true;
+        }
+
+         // set wrc id 
+         const wrc_id_td = "wrc_id"+id;
+        const wrc_id = document.getElementById(wrc_id_td).innerHTML;
+        document.querySelector('.wrc_id').value = wrc_id;
+
         // set wrc number
         const wrc_number_td = "wrc_number"+id;
         const wrc_number = document.getElementById(wrc_number_td).innerHTML;
@@ -289,18 +341,27 @@ All WRCs Batch Panel
         const kind_of_work = document.getElementById(kind_of_work_td).innerHTML;
         document.querySelector('.kindOfWork').innerHTML = kind_of_work;
 
-        //set total Batch Count
-        const batchQuantity_td = "batchQuantity"+id;
-        const batchQuantity = document.getElementById(batchQuantity_td).innerHTML;
-        document.querySelector('.totalBatchCount').innerHTML = batchQuantity;
-
         // //set total Batch Count
         // const batchQuantity_td = "batchQuantity"+id;
         // const batchQuantity = document.getElementById(batchQuantity_td).innerHTML;
         // document.querySelector('.totalBatchCount').innerHTML = batchQuantity;
-
-       
-
     }
+</script>
+
+{{-- reset enable disable of sku and order qty modal reset--}}
+<script>
+    function resetdata(){
+        $(".inverdnewPopup").on("hidden.bs.modal", function(){
+            document.querySelector('#sku_order_count').disabled = false;
+            document.querySelector('#sku_order_count').value = '';
+            document.querySelector('#files').disabled = false;
+        });
+    }
+</script>
+<!-- msg div script -->
+<script>
+    setTimeout(function(){
+        document.getElementById('msg_div').style.display = "none";
+    },3000)
 </script>
 @endsection

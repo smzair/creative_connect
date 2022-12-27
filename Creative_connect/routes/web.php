@@ -42,6 +42,7 @@ Route::post('/Creative-updateLots','creativeLot@update')->name('UPDATELOT');
 /****************  Creative-createWrc  **************/
 Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
 Route::post('/Creative-createWrcs', 'creativeWrc@store')->name('STOREWRC');
+Route::post('/Creative-viewWrcsBatchPanel','creativeWrc@storeNewBatch')->name('INVERD_NEW_BATCH');
 Route::get('/Creative-createWrcs/{id}','creativeWrc@edit');
 Route::post('/Creative-updateWrc','creativeWrc@update')->name('UPDATEWRC');
 Route::get('/Creative-viewWrcs','creativeWrc@view')->name('viewWRC');

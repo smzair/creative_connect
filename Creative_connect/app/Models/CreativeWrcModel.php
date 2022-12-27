@@ -55,7 +55,7 @@ class CreativeWrcModel extends Model
                     $join->on('create_commercial.brand_id', '=', 'cl.brand_id');
                     $join->on('create_commercial.id', '=', 'creative_wrc.commercial_id');
                 })
-        ->select('creative_wrc.id as wrc_id','creative_wrc.lot_id', 'creative_wrc.wrc_number', 'creative_wrc.commercial_id', 'creative_wrc.order_qty', 'creative_wrc.work_brief', 'creative_wrc.guidelines', 'creative_wrc.document1', 'creative_wrc.document2', 'creative_wrc.status', 'cl.user_id', 'cl.brand_id', 'cl.lot_number', 'cl.project_name', 'cl.work_initiate_date', 'cl.Comitted_initiate_date', 'users.Company as Company', 'brands.name as brand_name','create_commercial.project_name', 'create_commercial.kind_of_work','creative_wrc.alloacte_to_copy_writer')
+        ->select('creative_wrc.id as wrc_id','creative_wrc.lot_id', 'creative_wrc.wrc_number', 'creative_wrc.commercial_id', 'creative_wrc.order_qty', 'creative_wrc.work_brief', 'creative_wrc.guidelines', 'creative_wrc.document1', 'creative_wrc.document2', 'creative_wrc.status', 'cl.user_id', 'cl.brand_id', 'cl.lot_number', 'cl.project_name', 'cl.work_initiate_date', 'cl.Comitted_initiate_date', 'users.Company as Company', 'brands.name as brand_name','create_commercial.project_name', 'create_commercial.kind_of_work','creative_wrc.alloacte_to_copy_writer','creative_wrc.sku_count')
         ->groupBy('creative_wrc.id')->get();
 
         foreach($resData as $rkey=> $rdata){

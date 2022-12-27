@@ -123,6 +123,7 @@ Creative Allocation
                                 <th>Company Name</th>
                                 <th>Brand Name</th>
                                 <th>Order Qty</th>
+                                <th>Sku Qty</th>
                                 <th>GD Allocated Qty</th>
                                 <th>GD Pending Qty</th>
                                 <th>CW Allocated Qty</th>
@@ -145,11 +146,14 @@ Creative Allocation
                                 <td id="Company{{$key}}">{{$lotinfo['Company']}}</td>
                                 <td id="brand_name{{$key}}">{{$lotinfo['brand_name']}}</td>
                                 <!-- <td>{{--count($lotinfo['wrcs'])--}}</td> -->
-                                <td id="order_qty{{$key}}">{{$lotinfo['order_qty']}}</td>
+                                <td id="order_qty{{$key}}">{{$lotinfo['order_qty'] != null ? $lotinfo['order_qty'] : 0}}</td>
+                                <td id="sku_count{{$key}}">{{$lotinfo['sku_count'] != null ? $lotinfo['sku_count'] : 0}}</td>
                                 <td id="gd_allocated_qty{{$key}}">{{($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']}}</td>
-                                <td id="pending_qty_gd{{$key}}">{{$lotinfo['order_qty']- $lotinfo['gd_allocated_qty']}}</td>
+
+                                <td id="pending_qty_gd{{$key}}">{{ (($lotinfo['order_qty'] == '' || $lotinfo['order_qty'] == 0 || $lotinfo['order_qty'] == null) ? $lotinfo['sku_count'] : $lotinfo['order_qty']) - $lotinfo['gd_allocated_qty']}}</td>
+                               
                                 <td id="cw_allocated_qty{{$key}}">{{($lotinfo['cw_allocated_qty'] == null || $lotinfo['cw_allocated_qty'] == 0) ? 0 : $lotinfo['cw_allocated_qty']}}</td>
-                                <td id="pending_qty_cw{{$key}}">{{$lotinfo['order_qty']- $lotinfo['cw_allocated_qty']}}</td>
+                                <td id="pending_qty_cw{{$key}}">{{(($lotinfo['order_qty'] == '' || $lotinfo['order_qty'] == 0 || $lotinfo['order_qty'] == null) ? $lotinfo['sku_count'] : $lotinfo['order_qty'])- $lotinfo['cw_allocated_qty']}}</td>
                                 <td id="created_at{{$key}}">{{dateFormat($lotinfo->created_at)}}<br><b>{{timeFormat($lotinfo->created_at)}}</td>
                                 <td id="work_initiate_date{{$key}}">{{dateFormat($lotinfo->work_initiate_date)}}<br><b>{{timeFormat($lotinfo->work_initiate_date)}}</b></td>
                                 <td id="Comitted_initiate_date{{$key}}">{{dateFormat($lotinfo->Comitted_initiate_date)}}<br><b>{{timeFormat($lotinfo->Comitted_initiate_date)}}</b></td>
@@ -186,7 +190,7 @@ Creative Allocation
                         
                         <div class="col-sm-4 col-6">
                             <div class="col-ac-details">
-                                <h6>Quantity Count</h6>
+                                <h6>Order/Sku Quantity Count</h6>
                                 <p class="QuntyCount"></p>
                             </div>
                         </div>
@@ -338,7 +342,20 @@ Creative Allocation
         // set order qty
         const order_qty_td = "order_qty"+id;
         const order_qty = document.getElementById(order_qty_td).innerHTML;
-        document.querySelector('.QuntyCount').innerHTML = order_qty;
+
+        // set sku  qty
+        const sku_count_td = "sku_count"+id;
+        const sku_count = document.getElementById(sku_count_td).innerHTML; 
+
+        if(order_qty == 0){
+            document.querySelector('.QuntyCount').innerHTML = sku_count;
+        }
+
+        if(sku_count == 0){
+            document.querySelector('.QuntyCount').innerHTML = order_qty;
+        }
+
+        
 
         // set copy writer allocated qty
         const cw_allocated_qty_td = "cw_allocated_qty"+id;

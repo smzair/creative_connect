@@ -202,6 +202,104 @@ class creativeWrc extends Controller
 
     }
 
+    // for store data
+    public function storeNewBatch(Request $request)
+    {
+        // dd($request);
+        DB::beginTransaction();
+
+        try {
+
+            $wrc_id = $request->wrc_id;
+            $sku_required_num = $request->sku_required; // if 0 then no and if 1 then yes
+            $sku_order_count = $request->sku_order_count; // order qty
+
+            //insert excel data 
+
+            if($sku_required_num == 1){
+                $file = ($request->sku_sheet->getRealPath());
+
+                $handle = fopen($_FILES['sku_sheet']['tmp_name'], "r");
+                $header = true;
+                $count = 1;
+                while ($csvLine = fgetcsv($handle, 1000, ",")) {
+                    // Add a condition to stop header insertion
+                    if ($count <= 1) {
+                        $count++;
+                        continue;
+                    }
+
+                    $sku_code = $csvLine[1];
+                    $project_name = $csvLine[2];
+                    $kind_of_work = $csvLine[3];
+                   
+
+                    $creative_wrc_batch = CreativeWrcBatch::orderby('id','DESC')->where('wrc_id',$wrc_id)->get('batch_no')->first();
+                    $creative_wrc_batch_no = $creative_wrc_batch != null ? $creative_wrc_batch->batch_no : 0;
+
+                    $new_creative_wrc_batch_no = $creative_wrc_batch_no + 1;
+
+
+                    if($sku_code != null && $project_name != null && $kind_of_work != null){
+                        $skuObj = new CreativeWrcSkus();
+                        $skuObj->sku_code = $sku_code;
+                        $skuObj->project_name = $project_name;
+                        $skuObj->kind_of_work = $kind_of_work;
+                        $skuObj->creative_wrc_batch_no = $new_creative_wrc_batch_no;
+                        $skuObj->wrc_id = $wrc_id ;
+
+                        $skuObj->save();
+                    }
+                    
+                }
+            }
+
+            $wrc_data = CreativeWrcModel::where('id',$wrc_id)->get(['sku_count','order_qty'])->first();
+
+            $old_order_qty = $wrc_data != null ?  $wrc_data->order_qty : 0;
+            $new_order_qty = $old_order_qty + $sku_order_count;
+
+            // $old_sku_count = $wrc_data != null ?  $wrc_data->sku_count : 0;
+            $skus = CreativeWrcSkus::where('wrc_id',$wrc_id)->get()->count();
+            $new_sku_count = $skus;
+            CreativeWrcModel::where('id',$wrc_id)->update(['sku_count'=> $new_sku_count,'order_qty'=> $new_order_qty]);
+
+            // create batch no of wrc when client bucked is Retainer
+
+            $creativeWrcBatch = CreativeWrcBatch::where('wrc_id',$wrc_id)->orderBy('id','DESC')->get(['batch_no'])->first();
+
+            $old_batch_no = $creativeWrcBatch != null ? $creativeWrcBatch->batch_no : 0;
+            $new_batch_no =  $old_batch_no + 1;
+
+            CreativeWrcModel::where('id',$wrc_id)->update(['sku_count'=> $new_sku_count,'order_qty'=> $new_order_qty]);
+
+            $creativeWrcBatch = new CreativeWrcBatch();
+            $creativeWrcBatch->wrc_id = $wrc_id;
+            $creativeWrcBatch->batch_no = $new_batch_no;
+            $creativeWrcBatch->order_qty = $sku_order_count;
+            $creativeWrcBatch->sku_count = $new_sku_count;
+            $creativeWrcBatch->save();
+
+            DB::commit();
+            
+            if($wrc_id){
+                request()->session()->flash('success','Wrc Batch Successfully added');
+            }
+            else{
+                request()->session()->flash('error','Please try again!!');
+            }
+
+            //    return $this->Index();
+            return $this->viewBatchPanel();
+            // all good
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+        }
+        
+
+    }
+
     public function view()
     {
        $wrcs =  CreativeWrcModel::OrderBy('creative_wrc.id','ASC')
@@ -222,12 +320,14 @@ class creativeWrc extends Controller
         ->leftJoin('users', 'users.id', 'creative_lots.user_id')
         ->leftJoin('brands', 'brands.id', 'creative_lots.brand_id')
         ->leftJoin('creative_wrc_batch', 'creative_wrc_batch.wrc_id', 'creative_wrc.id')
+        ->orderBy('creative_wrc_batch.id', 'DESC')
+        ->groupBy('creative_wrc_batch.wrc_id')
         ->leftJoin('create_commercial as create_commercial',function($join)
 			{
 				$join->on('create_commercial.user_id','=','creative_lots.user_id');
 				$join->on('create_commercial.brand_id','=','creative_lots.brand_id');
 			})
-       ->select('creative_wrc.*','creative_lots.user_id','creative_lots.project_name','creative_lots.brand_id','creative_lots.lot_number','users.Company as Company_name','brands.name','create_commercial.kind_of_work','creative_wrc_batch.batch_no')
+       ->select('creative_wrc.*','creative_lots.user_id','creative_lots.project_name','creative_lots.brand_id','creative_lots.lot_number','users.Company as Company_name','brands.name','create_commercial.kind_of_work',DB::raw('MAX(creative_wrc_batch.batch_no) as batch_no'))
         ->get();
         //    dd($wrcs);
         return view('Wrc.Creative-wrc-batch-view')->with('wrcs',$wrcs);
