@@ -176,6 +176,13 @@
                                                     <p>Creative Allocation Create</p>
                                                 </a>
                                             </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('CREATIVE_REALLOCATION_CREATE') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Creative ReAllocation Create</p>
+                                                </a>
+                                            </li>
                                            
                                             <li class="nav-item">
                                                 <a href="{{ route('CREATIVE_ALLOCATION_GET') }}" class="nav-link">

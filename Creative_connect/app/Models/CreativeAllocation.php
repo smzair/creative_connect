@@ -25,7 +25,6 @@ class CreativeAllocation extends Model
 
 	//GetCreativeAllocation for view user detail
 	public static function GetCreativeAllocation(){
-
 		$resData = CreativeAllocation::orderBy('creative_allocation.user_id', 'DESC')
 		->leftJoin('users', 'users.id','creative_allocation.user_id')
 		->select('creative_allocation.user_id','users.name')

@@ -139,9 +139,7 @@ Creative Allocation
                         </thead>
                         <tbody>
                             @foreach($allocationList['resData']  as $key => $lotinfo)
-
-                            <?php  if( ((($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']) == 0) && ((($lotinfo['cw_allocated_qty'] == null || $lotinfo['cw_allocated_qty'] == 0) ? 0 : $lotinfo['cw_allocated_qty']) == 0)) {?>
-
+                            <?php  if( ((($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']) != 0) || ((($lotinfo['cw_allocated_qty'] == null || $lotinfo['cw_allocated_qty'] == 0) ? 0 : $lotinfo['cw_allocated_qty']) != 0)) {?>
                                 <tr>
                                     {{-- <?php dd($lotinfo); ?> --}}
                                     <td id="wrc_number{{$key}}">{{$lotinfo['wrc_number']}}</td>
@@ -198,7 +196,6 @@ Creative Allocation
                                     </td>
                                 </tr>
                             <?php } ?>
-
                             @endforeach
                         </tbody>
                     </table>

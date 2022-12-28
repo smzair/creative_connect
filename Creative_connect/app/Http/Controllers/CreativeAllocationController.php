@@ -18,15 +18,22 @@ class CreativeAllocationController extends Controller
         return view('Allocation.creative_allocation')->with('allocationList',$allocationList);
     }
 
+    // get data for re allocation create
+    public function indexForReAllocation(){
+        $allocationList = CreativeWrcModel::getDataForCreativeReAllocation() ;
+        // dd( $allocationList);
+        return view('Allocation.creative_reallocation')->with('allocationList',$allocationList);
+    }
+
     // assign wrc to user
     public function store(Request $request){
-      
+        // dd($request);
         $requestedData = $request->all();
         $msgCheck = false;
         
         foreach($requestedData['copywriterName'] as $key =>  $copywriterNameData){
 
-            $presentDataCW = CreativeAllocation::where(['wrc_id'=>$request->wrc_id,'user_id'=>$requestedData['copywriterName'][$key]])
+            $presentDataCW = CreativeAllocation::where(['wrc_id'=>$request->wrc_id,'batch_no'=>$request->batch_no,'user_id'=>$requestedData['copywriterName'][$key]])
             ->groupBy('wrc_id')->get(['id','allocated_qty'])->first();
 
             $presentIdCW = $presentDataCW != NULL ? $presentDataCW->id : 0;
@@ -38,6 +45,7 @@ class CreativeAllocationController extends Controller
                 if($presentIdCW === 0){
                     $CreativeAllocation                = new CreativeAllocation();
                     $CreativeAllocation->wrc_id        = $request->wrc_id;
+                    $CreativeAllocation->batch_no        = $request->batch_no;
                     $CreativeAllocation->user_id       = $requestedData['copywriterName'][$key];
                     $CreativeAllocation->allocated_qty = $requestedData['copyWriterQty'][$key];
                     $CreativeAllocation->save();
@@ -45,6 +53,7 @@ class CreativeAllocationController extends Controller
                 }else{
                     $CreativeAllocation                =  CreativeAllocation::find($presentIdCW);
                     $CreativeAllocation->wrc_id        = $request->wrc_id;
+                    $CreativeAllocation->batch_no        = $request->batch_no;
                     $CreativeAllocation->user_id       = $requestedData['copywriterName'][$key];
                     $CreativeAllocation->allocated_qty = $requestedData['copyWriterQty'][$key] + $allocated_qty_cw;
                     $CreativeAllocation->update();
@@ -56,7 +65,7 @@ class CreativeAllocationController extends Controller
 
         foreach($requestedData['designerName'] as $key =>  $designerNameData){
 
-            $presentDataGd = CreativeAllocation::where(['wrc_id'=>$request->wrc_id,'user_id'=>$requestedData['designerName'][$key]])
+            $presentDataGd = CreativeAllocation::where(['wrc_id'=>$request->wrc_id,'batch_no'=>$request->batch_no,'user_id'=>$requestedData['designerName'][$key]])
             ->groupBy('wrc_id')->get(['id','allocated_qty'])->first();
 
             $presentIdGd = $presentDataGd != NULL ? $presentDataGd->id : 0;
@@ -66,6 +75,7 @@ class CreativeAllocationController extends Controller
                 if($presentIdGd === 0){
                     $CreativeAllocation                 = new CreativeAllocation();
                     $CreativeAllocation->wrc_id         = $request->wrc_id;
+                    $CreativeAllocation->batch_no        = $request->batch_no;
                     $CreativeAllocation->user_id        = $requestedData['designerName'][$key];
                     $CreativeAllocation->allocated_qty  = $requestedData['GraphicDesignerQty'][$key];
                     $CreativeAllocation->save();
@@ -73,6 +83,7 @@ class CreativeAllocationController extends Controller
                 }else{
                     $CreativeAllocation                 =  CreativeAllocation::find($presentIdGd);
                     $CreativeAllocation->wrc_id         = $request->wrc_id;
+                    $CreativeAllocation->batch_no        = $request->batch_no;
                     $CreativeAllocation->user_id        = $requestedData['designerName'][$key];
                     $CreativeAllocation->allocated_qty  = $requestedData['GraphicDesignerQty'][$key] + $allocated_qty_gd;
                     $CreativeAllocation->update();

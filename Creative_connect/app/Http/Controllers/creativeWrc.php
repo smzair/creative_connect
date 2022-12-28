@@ -180,6 +180,13 @@ class creativeWrc extends Controller
                 $creativeWrcBatch->order_qty = $request->order_qty;
                 $creativeWrcBatch->sku_count = $new_sku_count;
                 $creativeWrcBatch->save();
+            }else{
+                $creativeWrcBatch = new CreativeWrcBatch();
+                $creativeWrcBatch->wrc_id = $createWrc->id;
+                $creativeWrcBatch->batch_no = 0; // batch 0 not retainer case
+                $creativeWrcBatch->order_qty = $request->order_qty;
+                $creativeWrcBatch->sku_count = $new_sku_count;
+                $creativeWrcBatch->save();
             }
 
             DB::commit();

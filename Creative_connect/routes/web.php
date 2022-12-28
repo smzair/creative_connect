@@ -63,6 +63,8 @@ Route::post('/get-catlog-lot-number', 'catalogWrcController@getLotNumber');
 /****************  Creative-Allocation  **************/
 //creative allocation create
 Route::get('/Creative-allocation-create' , [CreativeAllocationController::class , 'index'])->name('CREATIVE_ALLOCATION_CREATE');
+//creative reallocation create
+Route::get('/Creative-Reallocation-create' , [CreativeAllocationController::class , 'indexForReAllocation'])->name('CREATIVE_REALLOCATION_CREATE');
 //creative allocation get
 Route::get('/Creative-allocation-get' , [CreativeAllocationController::class , 'CreativeAllocationGet'])->name('CREATIVE_ALLOCATION_GET');
 // store creative allocation
