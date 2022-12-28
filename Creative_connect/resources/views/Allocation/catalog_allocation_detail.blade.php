@@ -34,16 +34,16 @@ Allocation Details (For Catalogue)
       <div class="col-12 card card-transparent py-4" style="border-radius: 15px; box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;">
         <div class="row m-0">
           <div class="col-xl-4 col-md-4 col-sm-4 col-12 editor-list-grp">
-            <div class="card m-0" style="border-radius: 10px; box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;">
-              <div class="card-body p-0">
-                <div class="editor-links">
+            <div class=" m-0" style="border-radius: 10px; box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;">
+              <div class="card-body p-0 ">
+                <div class="editor-links card-transparent">
                   <div class="edit-upld-info">
                     <h4 style="color: #333">Catloger</h4>
                   </div>
                   <ul class="nav flex-column" style="margin-bottom: 10px;">
                     @foreach($catalog_allocated_users_list as $editorId => $value)
                     <li class="nav-item">
-                      <a id="{{ $value['editor'].$editorId }}" class="nav-link" href="#{{$editorId}}" data-toggle="tab">
+                      <a style="color: #fff;" id="{{ $value['editor'].$editorId }}" class="nav-link" href="#{{$editorId}}" data-toggle="tab">
                         {{ $value['editor'] }}
                      </a>
                    </li>
@@ -53,8 +53,8 @@ Allocation Details (For Catalogue)
              </div>
            </div>
          </div>
-         <div class="col-xl-8 col-md-8 col-sm-8 col-12 editor-table-grp">
-          <div class="editor-dtl card m-0">
+         <div class="col-xl-8 col-md-8 col-sm-8 col-12 editor-table-grp card-transparent">
+          <div class="editor-dtl card m-0 card-transparent">
             <div class="edit-upld-info">
               <h4 style="color: #333">Select Name To View Allocations Details</h4>
             </div>
@@ -62,7 +62,7 @@ Allocation Details (For Catalogue)
               <div class="table-responsive p-0 editor-table-list tab-content" style="max-height: 350px; height: 100%;">
                 @foreach($catalog_allocated_users_list as $editorId => $value)
                
-                <table class="table table-dark text-nowrap mb-0 tab-pane" id="{{$editorId}}">
+                <table class="table  text-nowrap mb-0 tab-pane" id="{{$editorId}}">
                   <thead>
                     <tr>
                       <th class="align-middle border-top-0" width="1%">#</th>

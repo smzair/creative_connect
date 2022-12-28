@@ -14,7 +14,9 @@ class CreateCatalogSubmissionsTable extends Migration
     public function up()
     {
         Schema::create('catalog_submissions', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->integer('wrc_id')->unsigned();
+            $table->date('submission_date');
             $table->timestamps();
         });
     }

@@ -124,10 +124,11 @@ class CatalogAllocationController extends Controller
     function upload()
     {
         
-        $login_user_id_is = 26; // sahil
+        $login_user_id_is = 26; // 26 sahil 29 Prerit 34 Rajesh
         $user_role = 'CW';
-        $login_user_id_is = 7; // neetu
-        $user_role = 'Cataloguer';
+        // $login_user_id_is = 22; // neetu 7 , ZAIRRQW 8 , 22 SDGB 
+        // $login_user_id_is = 8; // neetu 7 , ZAIRRQW 8 , 22 SDGB 
+        // $user_role = 'Cataloguer';
         $allocationList = CatalogAllocation::getcatalog_allocation_list();
         $allocated_wrc_list_by_user = CatalogAllocation::allocated_wrc_list_by_user($login_user_id_is);
         return view('Allocation.upload_catalog_panel')->with('allocationList', $allocationList)->with('allocated_wrc_list_by_user', $allocated_wrc_list_by_user)->with('user_role', $user_role);
@@ -137,7 +138,6 @@ class CatalogAllocationController extends Controller
     function set_tast_start(Request $request){
         $allocation_id = $request->allocation_id;
         $start_time = date('Y-m-d H:i:s');
-
         $status = CatalogTimeHash::set_tast_start($allocation_id , $start_time);
 
         $response = array(
@@ -184,8 +184,21 @@ class CatalogAllocationController extends Controller
 
         if ($status != 0 && $action == 'comp') {
             $old_start_time = $storeData->start_time;
-
             $end_time = date('Y-m-d H:i:s');
+            
+            $ini_start_time = $storeData->ini_start_time;
+            $ini_end_time = $storeData->ini_end_time;
+
+            if ($ini_start_time == '' || $ini_start_time == '0000-00-00 00:00:00') {
+                $ini_start_time = $old_start_time;
+            }
+
+            if ($ini_end_time == '' || $ini_end_time == '0000-00-00 00:00:00') {
+                $ini_end_time = $end_time;
+            }
+
+            // dd($storeData);
+            
             // $new_spent_time = (new Carbon($end_time))->diff(new Carbon($old_start_time))->format('%Y-%m-%d %H:%I:%s');
 
             $new_spent_time = (new Carbon($end_time))->diffInSeconds(new Carbon($old_start_time));
@@ -193,6 +206,8 @@ class CatalogAllocationController extends Controller
             
             $up_status = CatalogTimeHash::where('allocation_id', $allocation_id_is)->update([
                 'end_time' => $end_time,
+                'ini_start_time' => $ini_start_time,
+                'ini_end_time' => $ini_end_time,
                 'spent_time' => $tot_spent,
                 'task_status' => 1,
                 'is_rework' => 0,

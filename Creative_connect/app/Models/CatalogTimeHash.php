@@ -19,6 +19,7 @@ class CatalogTimeHash extends Model
         $allocated_time_has_id = $time_has_id != null ?  $time_has_id->id : 0;
 
         // dd($allocated_time_has_id);
+        // SELECT `id`, `allocation_id`, `start_time`, `end_time`, `ini_start_time`, `ini_end_time`, `task_status`, `is_rework`, `rework_count`, `spent_time`, `created_at`, `updated_at` FROM `catalog_time_hash` WHERE 1
 
         if ($allocated_time_has_id > 0) {
             $storeData = CatalogTimeHash::find($allocated_time_has_id);
@@ -30,6 +31,8 @@ class CatalogTimeHash extends Model
             $CatalogTimeHash->allocation_id = $allocation_id;
             $CatalogTimeHash->start_time = $start_time;
             $CatalogTimeHash->end_time = '';
+            $CatalogTimeHash->ini_start_time = $start_time;
+            $CatalogTimeHash->ini_end_time = '';
             $CatalogTimeHash->task_status = 0;
             $CatalogTimeHash->is_rework = '';
             $CatalogTimeHash->rework_count = '';

@@ -89,11 +89,12 @@ Route::post('get-catalog_upload_links', [CatalogAllocationController::class, 'ge
 Route::get('catalog-qc', [CatlaogQcController::class, 'index'])->name('QcList'); // Qc List 
 Route::post('get-catalog-users_list', [CatlaogQcController::class, 'userlist'])->name('userlist'); // Qc List 
 Route::post('qc-rework', [CatlaogQcController::class, 'set_qc_rework'])->name('QCREWORK'); // Qc List 
-Route::post('completed-qc-wrc', [CatlaogQcController::class, 'completed_qc_wrc'])->name('QCCOMPWRC'); // completed-qc-wrc
+Route:: post('completed-qc-wrc', [CatlaogQcController::class, 'completed_qc_wrc'])->name('QCCOMPWRC'); // completed-qc-wrc
 
 
-// Submission Route 
+// Submission Route comp-submission
 Route::get('catalog-submission', [CatalogSubmissionController::class, 'index'])->name('CATALOGWRCLI'); // Qc List 
+Route::post('comp-submission', [CatalogSubmissionController::class, 'comp_submission'])->name('QCCOMPWRC'); // completed-qc-wrc
 
 
 

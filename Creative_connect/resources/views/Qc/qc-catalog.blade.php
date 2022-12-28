@@ -129,6 +129,9 @@ Catalog Qc Panel
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                // pre($get_catalog_allocated_wrc_list);
+                            @endphp
                            
                             @foreach($get_catalog_allocated_wrc_list as $qc)
                             @php
@@ -152,6 +155,7 @@ Catalog Qc Panel
 
                                 
                                 $allow_to_submit = 0;
+
                                 
                                 if($tot_allocation_ids == $tot_time_hash_id){
                                     
@@ -164,11 +168,20 @@ Catalog Qc Panel
                                         $allow_to_submit = 1;
                                     }
                                     
-                                    if($task_status_sum > $tot_task_status){
+                                    if($task_status_sum == ($tot_allocation_ids * 2)){
                                         $allow_to_submit = 2;
                                         // foreach ($task_status_arr as $key => $task_status) {
-                                        //     if($task_status );
-                                        // }
+                                            //     if($task_status );
+                                            // }
+                                        }
+                                        
+                                    if($wrc_id == 16){
+                                        // echo " <br> wrc_id => $wrc_id , tot_allocation_ids => $tot_allocation_ids ,
+                                        //  tot_time_hash_id => $tot_time_hash_id 
+                                        //  task_status_sum => $task_status_sum 
+                                        //  tot_task_status => $tot_task_status 
+                                        //  task_status_is => $task_status_is 
+                                        //  ";
                                     }
                                     // $wrc_id_is = " task_status_sum $task_status_sum , tot_task_status $tot_task_status";
                                 }
@@ -181,6 +194,7 @@ Catalog Qc Panel
                                 $btn_clsss = "";
 
                                 $p_style = "color:red;";
+                                // echo " allow_to_submit => $allow_to_submit";
                                 if($allow_to_submit == 1){
                                     $btn_disable = "";
                                     $submit_check_disable = "";
@@ -213,7 +227,7 @@ Catalog Qc Panel
                             <tr>
                                 <td>{{$qc['wrc_number']}}</td>
                                 <td>{{$qc['brands_name'].$wrc_id_is }}</td>
-                                {{-- <td>{{$qc['user_list']}}</td> --}}
+                                {{-- <td>{{$qc['user_list'] }}</td> --}}
                                 <td>{{$qc['sku_qty']}}</td>
                                 <td>
                                     <ul class="info-list">

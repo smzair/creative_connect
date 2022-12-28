@@ -85,6 +85,20 @@ Catalogin Allocation
                             @endphp
                             @foreach($wrcList as $key => $row)
 
+
+                            @php
+
+                            $sku_qty = $row['sku_qty'];
+                            $cataloger_sum = $row['cataloger_sum'];
+                            $cp_sum = $row['cp_sum'];
+                            $alloacte_to_copy_writer = $row['alloacte_to_copy_writer'];
+
+                            if(($alloacte_to_copy_writer == 1 && ($sku_qty - $cp_sum) == 0)){
+
+                            }
+                                
+                            @endphp
+
                             <tr id="tr{{ $key }}" >
                                 <td data-value="wrc_number">
                                     {{ $row['wrc_number'] }}
