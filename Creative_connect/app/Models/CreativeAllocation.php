@@ -59,8 +59,8 @@ class CreativeAllocation extends Model
 	public static function GetCreativeAllocationForUpload(){
 		// $id = Auth::user()->id;
 		
-		$login_user_id = 51;//login user id CW
-		// $login_user_id = 10;//login user id GD
+		// $login_user_id = 51;//login user id CW
+		$login_user_id = 10;//login user id GD
 
 		$resData = CreativeAllocation::orderBy('creative_allocation.user_id', 'DESC')
 		->leftJoin('creative_upload_links', 'creative_upload_links.allocation_id','creative_allocation.id')

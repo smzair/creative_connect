@@ -163,7 +163,7 @@ Creative Allocation
                                         <td id="sku_count{{$key}}">{{$lotinfo['sku_count'] != null ? $lotinfo['sku_count'] : 0}}</td>
                                     <?php  } ?>
                                     {{-- add this logic for lot with Retainer client bucket --end--}}
-                                    <td id="batch_batch_no{{$key}}">{{$lotinfo['batch_batch_no'] != null ? $lotinfo['batch_batch_no'] : 0}}</td>
+                                    <td title="0 for not retainer and other for retainer" id="batch_batch_no{{$key}}">{{$lotinfo['batch_batch_no'] != null ? $lotinfo['batch_batch_no'] : 0}}</td>
 
                                     <td id="gd_allocated_qty{{$key}}">{{($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']}}</td>
 

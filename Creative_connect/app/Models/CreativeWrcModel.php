@@ -125,6 +125,15 @@ class CreativeWrcModel extends Model
         ->get();
 
         foreach($resData as $rkey=> $rdata){
+
+            $allocated_users = CreativeAllocation::where('wrc_id',$rdata['wrc_id'])
+            ->where('batch_no',$rdata['batch_batch_no'])
+            ->leftJoin('users as ulist', 'ulist.id', 'creative_allocation.user_id')
+            ->select('ulist.name')->get();
+
+            $rdata['allocated_users'] = $allocated_users;
+
+
             // calculate copy writer allocated qty
             $rdata['cw_allocated_qty'] = DB::table('creative_allocation')->whereIn('user_id',$cw_user_id_data)->where('wrc_id',$rdata['wrc_id'])->where('batch_no',$rdata['batch_batch_no'])->sum('allocated_qty');
 

@@ -122,9 +122,10 @@ Creative Allocation
                                 <th>LOT Numbers</th>
                                 <th>Company Name</th>
                                 <th>Brand Name</th>
+                                <th>Allocated Users Name</th>
                                 <th>Order Qty</th>
                                 <th>Sku Qty</th>
-                                <th>Batches No</th>
+                                <th >Batches No</th>
                                 <th>GD Allocated Qty</th>
                                 <th>GD Pending Qty</th>
                                 <th>CW Allocated Qty</th>
@@ -148,6 +149,16 @@ Creative Allocation
                                     <td id="lot_number{{$key}}">{{$lotinfo['lot_number']}}</td>
                                     <td id="Company{{$key}}">{{$lotinfo['Company']}}</td>
                                     <td id="brand_name{{$key}}">{{$lotinfo['brand_name']}}</td>
+                                    <td id="brand_name{{$key}}">
+                                        @foreach($lotinfo['allocated_users']  as $ukey => $uval)
+                                        <ul>{{$uval['name']}}</ul>
+
+                                        @endforeach
+                                        
+                                        
+                                    
+                                    
+                                    </td>
                                     <!-- <td>{{--count($lotinfo['wrcs'])--}}</td> -->
 
 
@@ -161,7 +172,7 @@ Creative Allocation
                                         <td id="sku_count{{$key}}">{{$lotinfo['sku_count'] != null ? $lotinfo['sku_count'] : 0}}</td>
                                     <?php  } ?>
                                     {{-- add this logic for lot with Retainer client bucket --end--}}
-                                    <td id="batch_batch_no{{$key}}">{{$lotinfo['batch_batch_no'] != null ? $lotinfo['batch_batch_no'] : 0}}</td>
+                                    <td title="0 for not retainer and other for retainer" id="batch_batch_no{{$key}}">{{$lotinfo['batch_batch_no'] != null ? $lotinfo['batch_batch_no'] : 0}}</td>
 
                                     <td id="gd_allocated_qty{{$key}}">{{($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']}}</td>
 
@@ -257,7 +268,7 @@ Creative Allocation
                         </div>
                         <div class="col-sm-4 col-12">
                             <div class="col-ac-details">
-                                <h6>Batches No</h6>
+                                <h6 title="0 for not retainer and other for retainer">Batches No</h6>
                                 <p class="batchesNo"></p>
                             </div>
                         </div>

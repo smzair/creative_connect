@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CreativeAllocationController;
+use App\Http\Controllers\CreativeSubmissionController;
 use Illuminate\Support\Facades\Route;
 /*
   |--------------------------------------------------------------------------
@@ -90,6 +91,8 @@ Route::post('/Creative-Qc','CreativeQcController@storeUserDataForRework')->name(
 
 //check_completed_wrc
 Route::post('/check_completed_wrc','CreativeQcController@checkCompletedWrc');
+
+/****************creative Submission **************/
 
 
 
