@@ -74,6 +74,7 @@ Route::post('/get-brand', 'AjaxController@getBrand');
 /****** Allocation Route  set-catalog-allocation  set-catalog-allocation-start *********/
 // Route::get('catalog-allocation' , 'CatalogAllocationController@index')->name('CATALOG_ALLOCT'); // 
 Route::get('catalog-allocation', [CatalogAllocationController::class, 'index'])->name('CATALOG_ALLOCT'); // 
+Route::get('catalog-re-allocation', [CatalogAllocationController::class, 'catalog_re_allocation'])->name('CATALOG_RE_ALLOCT'); // 
 Route::get('catalog-allocated-details', [CatalogAllocationController::class, 'details'])->name('CATALOG_ALLOCTED_DETAILS'); // 
 Route::get('catalog-upload', [CatalogAllocationController::class, 'upload'])->name('CATALOG_UPLOAD'); //
 

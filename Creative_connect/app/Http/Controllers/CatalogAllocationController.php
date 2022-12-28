@@ -13,10 +13,20 @@ use Illuminate\Support\Facades\DB;
 class CatalogAllocationController extends Controller
 {
     // List of catalog for allocate it to users
-    function index(){
+    function index()
+    {
         $wrcList = CatlogWrc::getcatalog_allocation_list();
         return view('Allocation.catalog_allocation')->with('wrcList', $wrcList);
     }
+
+    function catalog_re_allocation()
+    {
+        $wrcList = CatlogWrc::getcatalog_allocation_list();
+        return view('Allocation.catalog_re_allocation')->with('wrcList', $wrcList);
+    }
+
+
+    
 
     // function for allocate wrc to user (save)
     function save(Request $request){

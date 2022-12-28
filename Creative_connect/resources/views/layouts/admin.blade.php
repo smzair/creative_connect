@@ -196,6 +196,13 @@
                                                 </li>
 
                                                 <li class="nav-item">
+                                                    <a href="{{route('CATALOG_RE_ALLOCT')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Catalog Re Allocation</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
                                                     <a href="{{route('CATALOG_ALLOCTED_DETAILS')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
                                                         <p> Catalog Allocation Details</p>

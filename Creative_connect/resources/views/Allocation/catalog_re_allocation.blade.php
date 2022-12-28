@@ -92,7 +92,7 @@ Catalogin Allocation
                             $cataloger_sum = $row['cataloger_sum'];
                             $cp_sum = $row['cp_sum'];
 
-                            if($cataloger_sum > 0 || $cp_sum > 0){
+                            if($cataloger_sum == 0 && $cp_sum == 0){
                                 continue;
                             }
 
