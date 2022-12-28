@@ -92,9 +92,11 @@ Route::post('qc-rework', [CatlaogQcController::class, 'set_qc_rework'])->name('Q
 Route:: post('completed-qc-wrc', [CatlaogQcController::class, 'completed_qc_wrc'])->name('QCCOMPWRC'); // completed-qc-wrc
 
 
-// Submission Route comp-submission
-Route::get('catalog-submission', [CatalogSubmissionController::class, 'index'])->name('CATALOGWRCLI'); // Qc List 
-Route::post('comp-submission', [CatalogSubmissionController::class, 'comp_submission'])->name('QCCOMPWRC'); // completed-qc-wrc
+// Submission Route comp-submission catalog-submission-details
+Route:: get('catalog-ready-for-submission', [CatalogSubmissionController::class, 'index'])->name('C_READYFORSUB'); // Qc List 
+Route::post( 'comp-submission', [CatalogSubmissionController::class, 'comp_submission'])->name('Comp-submission'); // completed-qc-wrc
+Route::get('catalog-submission-done', [CatalogSubmissionController::class, 'catalog_submission_done'])->name('C_SUB_DONE'); // Qc List 
+Route::post('catalog-submission-details', [CatalogSubmissionController::class, 'comp_submission_details'])->name('Submission-details'); // completed-qc-wrc
 
 
 

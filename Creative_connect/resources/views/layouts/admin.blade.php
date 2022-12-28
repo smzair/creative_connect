@@ -219,9 +219,16 @@
 
                                                 {{-- Submission  --}}
                                                 <li class="nav-item">
-                                                    <a href="{{route('CATALOGWRCLI')}}" class="nav-link">
+                                                    <a href="{{route('C_READYFORSUB')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
-                                                        <p>Catalog WRC Submission</p>
+                                                        <p>Catalog Submission List</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('C_SUB_DONE')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Catalog Submission Done</p>
                                                     </a>
                                                 </li>
 

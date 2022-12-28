@@ -13,11 +13,10 @@ class CatalogSubmission extends Model
     protected $fillable = [
         'id', 'wrc_id', 'submission_date'
     ];
-    public static function catalog_Wrc_list_for_Submission()
+
+    // catalog Wrc list for Submission
+    public static function catalog_Wrc_list_for_Submission($tsak_status_is)
     {
-
-        // GROUP_CONCAT(catalog_upload_links.catalog_link) as 'catalog_links' , GROUP_CONCAT(catalog_upload_links.copy_link) as 'copy_links' , COUNT(catalog_upload_links.catalog_link) as 'catalog_link_cnt'
-
         $catalog_Wrc_list_for_Submission = CatalogAllocation::
         select(
             'catalog_allocation.wrc_id',
@@ -62,12 +61,13 @@ class CatalogSubmission extends Model
         leftJoin('users', 'users.id', 'lots_catalog.user_id')->
         leftJoin('users as allocated_users', 'allocated_users.id', 'catalog_allocation.user_id')->
         leftJoin('brands', 'brands.id', 'lots_catalog.brand_id')->
-        WHERE('catalog_time_hash.task_status' , '=', '2')->
+        WHERE('catalog_time_hash.task_status' , '=', $tsak_status_is)->
         groupBy(['catalog_allocation.wrc_id'])->
         get()->toArray();
         return $catalog_Wrc_list_for_Submission;
     }
 
+    // complte wrc submission
     public static function comp_submission($wrc_id , $submission_date, $catalog_allocation_ids ){
 
         $submission_id = CatalogSubmission::where('wrc_id', $wrc_id)->get(['id'])->first();
@@ -92,7 +92,6 @@ class CatalogSubmission extends Model
                 $task_update_status = CatalogTimeHash::whereIn('allocation_id', $ids)
                     ->update(['task_status' => 3]);
             }
-
             // $test_value = $request->id;
         }
 
@@ -104,5 +103,21 @@ class CatalogSubmission extends Model
             'status' => $status,
             'massage' => $massage
         ));
+    }
+
+    // comp_submission_details
+    public static function comp_submission_details($wrc_id){
+        $comp_submission_details = CatalogSubmission::
+        WHERE('wrc_id' , '=', $wrc_id)->
+        select(
+            'wrc_id',
+            DB::raw('DATE_FORMAT(submission_date, "%d-%m-%Y") as submission_date')
+        )->
+        get()->toArray(); 
+
+        return json_encode($comp_submission_details);
+
+
+
     }
 }
