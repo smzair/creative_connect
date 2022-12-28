@@ -56,7 +56,7 @@ Catalogin Allocation
                     @php
                         $getCataloguer = getCataloguer();
                         $getcopywriter = getcopywriter();
-                        // pre($wrcList);
+                        // pre($wrcList); ass_users
                     @endphp
                     <table id="allocTableC" class="table table-head-fixed text-nowrap data-table">
                         <thead>
@@ -64,6 +64,7 @@ Catalogin Allocation
                                 <th>WRC</th>
                                 <th>LOT Numbers</th>
                                 <th>Company Name</th>
+                                <th>Assigned Users</th>
                                 <th>Brand Name</th>
                                 <th>SKU Count</th>
                                 <th>Cata Allocated Qty</th>
@@ -84,8 +85,6 @@ Catalogin Allocation
                                 // pre($wrcList);
                             @endphp
                             @foreach($wrcList as $key => $row)
-
-
                             @php
 
                             $sku_qty = $row['sku_qty'];
@@ -97,11 +96,9 @@ Catalogin Allocation
                             }
 
                             $alloacte_to_copy_writer = $row['alloacte_to_copy_writer'];
-
-                            if(($alloacte_to_copy_writer == 1 && ($sku_qty - $cp_sum) == 0)){
-
+                            if(($alloacte_to_copy_writer == 1 && $sku_qty == $cp_sum && $sku_qty == $cataloger_sum) || ($alloacte_to_copy_writer == 0 && $sku_qty == $cataloger_sum) ){
+                                continue;
                             }
-                                
                             @endphp
 
                             <tr id="tr{{ $key }}" >
@@ -110,6 +107,7 @@ Catalogin Allocation
                                 </td>
                                 <td data-value="lot_number">{{ $row['lot_number'] }}</td>
                                 <td data-value="Company">{{ $row['Company'] }}</td>
+                                <td data-value="ass_users">{{ $row['ass_users'] }}</td>
                                 <td data-value="name">{{ $row['name'] }}
                                     <input type="hidden" id="wrc_id{{ $key }}" data-alloacte_to_copy_writer="{{ $row['alloacte_to_copy_writer'] }}" value="{{ $row['id'] }}">
                                 </td>
