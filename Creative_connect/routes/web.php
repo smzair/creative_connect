@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CatalogAllocationController;
+use App\Http\Controllers\CatalogClientARController;
 use App\Http\Controllers\CatalogSubmissionController;
 use App\Http\Controllers\CatlaogQcController;
 use Illuminate\Support\Facades\Route;
@@ -93,11 +94,16 @@ Route::post('qc-rework', [CatlaogQcController::class, 'set_qc_rework'])->name('Q
 Route:: post('completed-qc-wrc', [CatlaogQcController::class, 'completed_qc_wrc'])->name('QCCOMPWRC'); // completed-qc-wrc
 
 
-// Submission Route comp-submission catalog-submission-details
-Route:: get('catalog-ready-for-submission', [CatalogSubmissionController::class, 'index'])->name('C_READYFORSUB'); // Qc List 
+// Submission Route comp-submission catalog-submission-details CATA_CLIENT_AR
+Route::get('catalog-ready-for-submission', [CatalogSubmissionController::class, 'index'])->name('C_READYFORSUB'); // Qc List 
 Route::post( 'comp-submission', [CatalogSubmissionController::class, 'comp_submission'])->name('Comp-submission'); // completed-qc-wrc
 Route::get('catalog-submission-done', [CatalogSubmissionController::class, 'catalog_submission_done'])->name('C_SUB_DONE'); // Qc List 
-Route::post('catalog-submission-details', [CatalogSubmissionController::class, 'comp_submission_details'])->name('Submission-details'); // completed-qc-wrc
+Route:: post('catalog-submission-details', [CatalogSubmissionController::class, 'comp_submission_details'])->name('Submission-details'); // completed-qc-wrc
+
+// client approval rejection Route 
+Route::get('catalog-client-ar', [CatalogClientARController::class, 'index'])->name('CATA_CLIENT_AR'); // Qc List 
+Route::post('client-catalog-wrc-reject', [CatalogClientARController::class, 'wrc_reject_approve_wrc'])->name('wrc_reject_approve_wrc'); // reject-wrc
+
 
 
 

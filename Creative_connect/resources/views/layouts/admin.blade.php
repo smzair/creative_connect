@@ -238,6 +238,13 @@
                                                         <p>Catalog Submission Done</p>
                                                     </a>
                                                 </li>
+                                                {{-- client approval rejection --}}
+                                                <li class="nav-item">
+                                                    <a href="{{route('CATA_CLIENT_AR')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Catalog WRC AR</p>
+                                                    </a>
+                                                </li>
 
                                             </ul>
                                         </li>
