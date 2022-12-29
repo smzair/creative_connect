@@ -5,7 +5,9 @@ use App\Models\CreativeWrcModel;
 use App\Models\CreativeAllocation;
 use App\Models\CreativeUploadLink;
 use App\Models\CreativeTimeHash;
+use App\Models\CreativeWrcSkus as ModelsCreativeWrcSkus;
 use Carbon\Carbon;
+use CreativeWrcSkus;
 use Illuminate\Http\Request;
 
 
@@ -125,6 +127,7 @@ class CreativeAllocationController extends Controller
         if( $already_allocated_id == 0){
             $storeData = new CreativeTimeHash();
             $storeData->start_time = $start_time;
+            $storeData->ini_start_time = $start_time;
             $storeData->allocation_id = $request->allocation_id;
             $storeData->is_rework = 0;
             $storeData->end_time = '0000-00-00 00:00:00';
@@ -148,6 +151,7 @@ class CreativeAllocationController extends Controller
         }else{
             $storeData = CreativeTimeHash::find($already_allocated_id);
             $storeData->start_time = $start_time;
+            $storeData->ini_start_time = $start_time;
             $storeData->allocation_id = $request->allocation_id;
             $storeData->is_rework = 0;
             $storeData->end_time = '0000-00-00 00:00:00';
@@ -245,7 +249,7 @@ class CreativeAllocationController extends Controller
 
                
                 // update creative_time_hash end time
-                CreativeTimeHash::where('allocation_id',$creative_allocation_id)->update(['end_time'=>$end_time, 'task_status'=>1, 'is_rework'=>0, 'spent_time' => $tot_spent ]);
+                CreativeTimeHash::where('allocation_id',$creative_allocation_id)->update(['end_time'=>$end_time,'ini_end_time'=>$end_time, 'task_status'=>1, 'is_rework'=>0, 'spent_time' => $tot_spent ]);
 
                 if($storeData){
                     request()->session()->flash('success','Allocated Completed Successfully');
@@ -272,7 +276,7 @@ class CreativeAllocationController extends Controller
                 $tot_spent = $old_spent_time + $new_spent_time;
 
                 // update creative_time_hash end time
-                CreativeTimeHash::where('allocation_id',$creative_allocation_id)->update(['end_time'=>$end_time , 'task_status'=>1, 'is_rework'=>0, 'spent_time' => $tot_spent]);
+                CreativeTimeHash::where('allocation_id',$creative_allocation_id)->update(['end_time'=>$end_time ,'ini_end_time'=>$end_time, 'task_status'=>1, 'is_rework'=>0, 'spent_time' => $tot_spent]);
 
                 if($storeData){
                     request()->session()->flash('success','Allocated Completed Successfully');
@@ -285,5 +289,18 @@ class CreativeAllocationController extends Controller
 
         return $this->uploadCreative();
 
+    }
+
+    public function getSkuList(Request $request){
+
+        $wrc_id = $request['wrc_id'];
+        $batch_no = $request['batch_no'];
+
+        $sku_list = ModelsCreativeWrcSkus::where('wrc_id',$wrc_id)->where('creative_wrc_batch_no',$batch_no)->get();
+
+        echo $sku_list;
+
+        // dd($sku_list);
+        
     }
 }

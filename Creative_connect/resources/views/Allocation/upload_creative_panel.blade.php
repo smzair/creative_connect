@@ -106,6 +106,7 @@
                                 <th>Company Name</th>
                                 <th>Brand Name</th>
                                 <th>Order Qty</th>
+                                <th>Batch No</th>
                                 <?php if($allocationList['role'] == 'CD'){  ?>
                                 <th>Assigned Graphics Designers</th>
                                 <?php }?> 
@@ -133,6 +134,7 @@
                                 <td>{{$allocationInfo['company_name']}}</td>
                                 <td id="brand_name{{$key}}">{{$allocationInfo['brand_name']}}</td>
                                 <td>{{$allocationInfo['order_qty']}}</td>
+                                <td id="batch_no{{$key}}" title="0 for not retainer and other for retainer">{{$allocationInfo['batch_no']}}</td>
                                 <?php if($allocationList['role'] == 'CD'){  ?>
                                 <td>
                                   <ul class="info-list">
@@ -219,9 +221,20 @@
                                         {{-- <a href="#" class="btn btn-warning alloc-action-btn" id="uploadBTn" data-toggle="modal" data-target="#editpanelPopup" style="display:none;" onclick='setdata(<?php echo $key;?>)'>
                                             Upload
                                         </a> --}}
-                                        <a href="javascript:;" class="btn btn-warning alloc-action-btn inactive" id="editBTn" style="display:none;">
-                                            Edit
-                                        </a>
+
+                                        <?php if($allocationInfo['batch_no'] == 0){  ?>
+                                            <button disabled href="#" class="btn btn-warning alloc-action-btn"  id="viewSkus"  style="display:block;" data-toggle="modal" data-target="#viewSkuPopup" onclick="view_sku('{{ $allocationInfo->wrc_id }}', '{{$allocationInfo->batch_no}}', '{{$key}}')" id="startBTN{{ $key }}">
+                                                View Skus
+                                            </button>
+                                        <?php } ?>
+
+                                        <?php if($allocationInfo['batch_no'] != 0){  ?>
+                                            <a href="#" class="btn btn-warning alloc-action-btn" id="viewSkus" style="display:block;" data-toggle="modal" data-target="#viewSkuPopup" onclick="view_sku('{{ $allocationInfo->wrc_id }}', '{{$allocationInfo->batch_no}}', '{{$key}}')" id="startBTN{{ $key }}">
+                                                View Skus
+                                            </a>
+                                        <?php } ?>
+
+                                        
                                     </td>
                                 <?php } ?>
                             </tr>
@@ -319,6 +332,36 @@
         </div>
     </div>
 </form>
+
+{{-- --view sku popup --}}
+<div class="modal fade" id="viewSkuPopup">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <h4 class="modal-title" id="modal_title">Sku's List Of Wrc :- &nbsp;&nbsp;&nbsp;<h4 class="wrcNoInSkuList"></h4></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    
+
+                    <table id="allocTable" class="table table-head-fixed text-nowrap data-table">
+                        <thead>
+                            <tr>
+                                <th>Sku Code</th>
+                                <th>Project name</th>
+                                <th>Kind Of Work</th>
+                                <th>Batches No</th>
+                             </tr>
+                        </thead>
+                         <tbody class="skutable">
+                         </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- End of New Editor Panel (For Creative) -->
 
 <!-- End of New Allocation Details View -->
@@ -368,6 +411,45 @@
         $("#msg_div").removeClass();
         window.location.reload();
         },3000)
+     }
+ </script>
+
+ <!-- script for update start time -->
+<script>
+    async function view_sku(wrc_id, batch_no, key){
+        console.log('key', key)
+        const wrc_number_td = "wrc_number"+key;
+        const wrc_number = document.getElementById(wrc_number_td).innerHTML;
+        document.querySelector('.wrcNoInSkuList').innerHTML = wrc_number;
+
+        wrc_id = wrc_id;
+        batch_no = batch_no;
+        let table = ``;
+        await $.ajax({
+            url: "{{ url('get-sku-list')}}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                wrc_id,
+                batch_no,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+               console.log('sku_res', res)
+               res.map(sku_list => {
+                        table += `<tr>
+                                        <th>${sku_list.sku_code}</th>
+                                        <th> ${sku_list.project_name}</th>
+                                        <th> ${sku_list.kind_of_work}</th>
+                                        <th> ${sku_list.creative_wrc_batch_no}</th>
+                                    </tr>`;
+
+                })
+          
+            }
+        });
+        document.querySelector('.skutable').innerHTML = table;
+
      }
  </script>
 

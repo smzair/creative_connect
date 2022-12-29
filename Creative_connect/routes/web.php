@@ -92,6 +92,9 @@ Route::post('/Creative-Qc','CreativeQcController@storeUserDataForRework')->name(
 //check_completed_wrc
 Route::post('/check_completed_wrc','CreativeQcController@checkCompletedWrc');
 
+//get sku based on wrc id and batch no
+Route::post('/get-sku-list' , [CreativeAllocationController::class , 'getSkuList']);
+
 /****************creative Submission **************/
 
 
