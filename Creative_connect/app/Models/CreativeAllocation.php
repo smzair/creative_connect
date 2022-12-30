@@ -62,6 +62,11 @@ class CreativeAllocation extends Model
 		// $login_user_id = 51;//login user id CW
 		$login_user_id = 10;//login user id GD
 
+		$gd_role_data = DB::table('roles')->where('name','=','GD')->first(['id']);
+        $cw_role_data = DB::table('roles')->where('name','=','CW')->first(['id']);
+        $gd_id = $gd_role_data != null ? $gd_role_data->id : 0;
+        $cw_id = $cw_role_data != null ? $cw_role_data->id : 0;
+
 		$resData = CreativeAllocation::orderBy('creative_allocation.user_id', 'DESC')
 
 
@@ -90,14 +95,14 @@ class CreativeAllocation extends Model
         $graphic_designer_users_data = DB::table('users')
         ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
         ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
-        ->where([ ['users.Company' ,'<>' ,NULL], ['model_has_roles.role_id','=', 15]])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);   
+        ->where([ ['users.Company' ,'<>' ,NULL], ['model_has_roles.role_id','=', $gd_id]])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);   
 
         // dd(dump($graphic_designer_users_data));
 
         $copy_writer_users_data = DB::table('users')
         ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
         ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
-        ->where([ ['users.Company' ,'<>' ,NULL], ['model_has_roles.role_id','=', 16]])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+        ->where([ ['users.Company' ,'<>' ,NULL], ['model_has_roles.role_id','=', $cw_id]])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
 
         // dd(dump($copy_writer_users_data));
 

@@ -78,11 +78,16 @@ class CreativeUploadLink extends Model
         $gd_user_id_data = [];
         $cw_user_id_data = [];
 
+        $gd_role_data = DB::table('roles')->where('name','=','GD')->first(['id']);
+        $cw_role_data = DB::table('roles')->where('name','=','CW')->first(['id']);
+        $gd_id = $gd_role_data != null ? $gd_role_data->id : 0;
+        $cw_id = $cw_role_data != null ? $cw_role_data->id : 0;
+
         if($role == 'GD'){
             $graphic_designer_users_data = DB::table('users')
             ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
             ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
-            ->where([ ['users.Company' ,'<>' ,NULL], ['model_has_roles.role_id','=', 15]])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']); 
+            ->where([ ['users.Company' ,'<>' ,NULL], ['model_has_roles.role_id','=', $gd_id]])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']); 
             foreach($graphic_designer_users_data as $key => $val){
                 array_push($gd_user_id_data,$val->id);
             }
@@ -92,7 +97,7 @@ class CreativeUploadLink extends Model
             $copy_writer_users_data = DB::table('users')
             ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
             ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
-            ->where([ ['users.Company' ,'<>' ,NULL], ['model_has_roles.role_id','=', 16]])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+            ->where([ ['users.Company' ,'<>' ,NULL], ['model_has_roles.role_id','=', $cw_id]])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
             foreach($copy_writer_users_data as $ckey => $cval){
                 array_push($cw_user_id_data,$cval->id);
             }
