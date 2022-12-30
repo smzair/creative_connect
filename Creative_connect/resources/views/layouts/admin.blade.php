@@ -204,6 +204,13 @@
                                                     <p>QC Approval - Creative</p>
                                                 </a>
                                             </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('CREATIVE_SUBMISSION_GET') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Ready for Submission</p>
+                                                </a>
+                                            </li>
                                            
                                         </ul>
                                     </li>

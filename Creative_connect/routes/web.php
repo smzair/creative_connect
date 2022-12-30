@@ -97,5 +97,6 @@ Route::post('/get-sku-list' , [CreativeAllocationController::class , 'getSkuList
 
 /****************creative Submission **************/
 
-
+//get sku based on wrc id and batch no
+Route::get('/Creative-Submission' , [CreativeSubmissionController::class , 'getCreativeSubmission'])->name('CREATIVE_SUBMISSION_GET');
 

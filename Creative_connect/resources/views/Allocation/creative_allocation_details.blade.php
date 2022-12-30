@@ -165,7 +165,7 @@ Allocation Details (For Creatives)
                       <th class="" >{{$allo['allocated_qty']}}</th>
                       <th class="" >{{$allo['order_qty']}}</th>
                       <th class="" >{{$allo['sku_count']}}</th>
-                      <th class="" >{{$allo['batch_no']}}</th>
+                      <th class="" >{{$allo['batch_no'] == 0 ? 'None' : $allo['batch_no']}}</th>
                       <th class="" >{{dateFormat($allo['created_at'])}}</th>
                     </tr>
                   </thead>

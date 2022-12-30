@@ -13,5 +13,8 @@ use Carbon\Carbon;
 
 class CreativeSubmissionController extends Controller
 {
-    //
+    public function getCreativeSubmission(Request $request){
+        $submissionList = CreativeSubmission::readyForSubmission() ;
+        return view('Submission.creative-ready-for-submission')->with('catalog_Wrc_list_for_Submission',[]);
+    }
 }

@@ -91,7 +91,7 @@ All WRCs Batch Panel
                                     <td id="createdAt" class="p-sm-2 p-1">{{dateFormat($wrc->created_at)}}<br><b>{{timeFormat($wrc->created_at)}}</b></td>
                                     <td id="orderQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->order_qty == null ? 0 : $wrc->order_qty}}</td>
                                     <td id="skuQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->sku_count}}</td>
-                                    <td id="batchQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->batch_no}}</td>
+                                    <td id="batchQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->batch_no == 0 ? 'None' : $wrc->batch_no}}</td>
                                     <td class="p-sm-2 p-1">
                                     <div class="btn-group-vertical">
                                         <a href="#" class="btn btn-warning alloc-action-btn" data-toggle="modal" data-target="#inverdnewPopup" onclick='setdata(<?php echo $key;?>)'>

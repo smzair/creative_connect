@@ -143,7 +143,6 @@ Creative Allocation
                             <?php  if( ((($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']) == 0) && ((($lotinfo['cw_allocated_qty'] == null || $lotinfo['cw_allocated_qty'] == 0) ? 0 : $lotinfo['cw_allocated_qty']) == 0)) {?>
 
                                 <tr>
-                                    {{-- <?php dd($lotinfo); ?> --}}
                                     <td id="wrc_number{{$key}}">{{$lotinfo['wrc_number']}}</td>
                                     <td style="display: none;" id="wrc_number_id{{$key}}">{{$lotinfo['wrc_id']}}</td>
                                     <td style="display: none;" id="alloacte_to_copy_writer{{$key}}">{{$lotinfo['alloacte_to_copy_writer']}}</td>
@@ -163,7 +162,7 @@ Creative Allocation
                                         <td id="sku_count{{$key}}">{{$lotinfo['sku_count'] != null ? $lotinfo['sku_count'] : 0}}</td>
                                     <?php  } ?>
                                     {{-- add this logic for lot with Retainer client bucket --end--}}
-                                    <td title="0 for not retainer and other for retainer" id="batch_batch_no{{$key}}">{{$lotinfo['batch_batch_no'] != null ? $lotinfo['batch_batch_no'] : 0}}</td>
+                                    <td title="0 for not retainer and other for retainer" id="batch_batch_no{{$key}}">{{$lotinfo['batch_batch_no'] != null ? $lotinfo['batch_batch_no'] : 'None'}}</td>
 
                                     <td id="gd_allocated_qty{{$key}}">{{($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']}}</td>
 
@@ -429,7 +428,11 @@ Creative Allocation
         document.querySelector('.batchesNo').innerHTML = batch_batch_no;
 
         // set batch no
-        document.querySelector(".batch_no").value = batch_batch_no
+        if(batch_batch_no == 'None'){
+            document.querySelector(".batch_no").value = 0
+        }else{
+            document.querySelector(".batch_no").value = batch_batch_no
+        }
 
         // set lot number
         const lot_number_td = "lot_number"+id;

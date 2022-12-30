@@ -106,6 +106,7 @@
                                 <th>Company Name</th>
                                 <th>Brand Name</th>
                                 <th>Order Qty</th>
+                                <th>Sku Qty</th>
                                 <th>Batch No</th>
                                 <?php if($allocationList['role'] == 'CD'){  ?>
                                 <th>Assigned Graphics Designers</th>
@@ -133,8 +134,16 @@
                                 <td id="kind_of_work{{$key}}" style="display: none;">{{$allocationInfo['kind_of_work']}}</td>
                                 <td>{{$allocationInfo['company_name']}}</td>
                                 <td id="brand_name{{$key}}">{{$allocationInfo['brand_name']}}</td>
-                                <td>{{$allocationInfo['order_qty']}}</td>
-                                <td id="batch_no{{$key}}" title="0 for not retainer and other for retainer">{{$allocationInfo['batch_no']}}</td>
+                                {{-- <td>{{$allocationInfo['order_qty']}}</td> --}}
+                                <?php 
+                                if($allocationInfo['client_bucket'] == 'Retainer'){ ?>
+                                    <td id="order_qty{{$key}}">{{$allocationInfo['batch_order_qty'] != null ? $allocationInfo['batch_order_qty'] : 0}}</td>
+                                    <td id="sku_count{{$key}}">{{$allocationInfo['batch_sku_count'] != null ? $allocationInfo['batch_sku_count'] : 0}}</td>
+                                <?php }else { ?>
+                                    <td id="order_qty{{$key}}">{{$allocationInfo['order_qty'] != null ? $allocationInfo['order_qty'] : 0}}</td>
+                                    <td id="sku_count{{$key}}">{{$allocationInfo['sku_count'] != null ? $allocationInfo['sku_count'] : 0}}</td>
+                                <?php  } ?>
+                                <td id="batch_no{{$key}}" title="0 for not retainer and other for retainer">{{$allocationInfo['batch_no'] == 0 ? 'None' : $allocationInfo['batch_no']}}</td>
                                 <?php if($allocationList['role'] == 'CD'){  ?>
                                 <td>
                                   <ul class="info-list">

@@ -50,6 +50,7 @@ Creative Qc Panel
                                 <th class="align-middle">Brand Name</th>
                                 {{-- <th class="align-middle">User List</th> --}}
                                 <th class="align-middle">Order Qty</th>
+                                <th class="align-middle">Sku Qty</th>
                                 <th class="align-middle">Creative Link</th>
                                 <th class="align-middle">Copy Link</th>
                                 <th class="align-middle">Qc Status</th>
@@ -76,8 +77,15 @@ Creative Qc Panel
                                     </ul>
                                 </td> --}}
 
-                                <td>{{$qc['order_qty']}}</td>
-                                <td>
+                                <?php 
+                                if($qc['client_bucket'] == 'Retainer'){ ?>
+                                    <td id="order_qty{{$key}}">{{$qc['batch_order_qty'] != null ? $qc['batch_order_qty'] : 0}}</td>
+                                    <td id="sku_count{{$key}}">{{$qc['batch_sku_count'] != null ? $qc['batch_sku_count'] : 0}}</td>
+                                <?php }else { ?>
+                                    <td id="order_qty{{$key}}">{{$qc['order_qty'] != null ? $qc['order_qty'] : 0}}</td>
+                                    <td id="sku_count{{$key}}">{{$qc['sku_count'] != null ? $qc['sku_count'] : 0}}</td>
+                                <?php  } ?>
+                                {{-- <td>
                                     <ul class="info-list">
                                       @foreach ((explode(',',$qc['creative_link_list'])) as $creative_link_data)
                                         <a href="javascript:;" class="cpy-textVal" id="creativetextVal">
@@ -97,7 +105,9 @@ Creative Qc Panel
                                         </a><br>
                                       @endforeach
                                     </ul>
-                                </td>
+                                </td> --}}
+                                <td>{{$qc['creative_link']}}</td>
+                                <td>{{$qc['copy_link']}}</td>
                                 <td >
                                     <?php if($qc['qc_status'] == 0){ ?>
                                     <div class="d-inline-block mt-1">

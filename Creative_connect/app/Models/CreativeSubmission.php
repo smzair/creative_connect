@@ -20,4 +20,8 @@ class CreativeSubmission extends Model
 	 * @var array
 	 */
     protected $fillable=['wrc_id', 'submission_date'];
+
+	public static function readyForSubmission(){
+		return 11;
+	}
 }

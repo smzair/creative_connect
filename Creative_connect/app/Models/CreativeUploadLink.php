@@ -34,7 +34,11 @@ class CreativeUploadLink extends Model
         ->leftJoin('creative_wrc', 'creative_wrc.id', 'creative_allocation.wrc_id')
         ->leftJoin('creative_lots as cl', 'cl.id', 'creative_wrc.lot_id')
         ->leftJoin('brands as brands', 'brands.id', 'cl.brand_id')
-        ->groupBy('creative_wrc.id')
+        ->leftJoin('creative_wrc_batch', function($join){
+			$join->on('creative_wrc_batch.wrc_id', '=', 'creative_allocation.wrc_id');
+			$join->on('creative_wrc_batch.batch_no', '=', 'creative_allocation.batch_no');
+		})
+        // ->groupBy('creative_wrc.id')
         // ->orderBy('creative_time_hash.id','DESC')
         ->select(
             // 'creative_allocation.*',
@@ -45,10 +49,14 @@ class CreativeUploadLink extends Model
             'creative_allocation.wrc_id',
             'creative_wrc.wrc_number',
             'creative_wrc.order_qty',
+            'creative_wrc.sku_count',
             'creative_wrc.qc_status',
             'brands.name as brands_name',
-            DB::raw('GROUP_CONCAT(creative_upload_links.creative_link) as creative_link_list'),
-            DB::raw('GROUP_CONCAT(creative_upload_links.copy_link) as copy_link_list')
+            'creative_upload_links.creative_link as creative_link',
+            'creative_upload_links.copy_link as copy_link',
+            // DB::raw('GROUP_CONCAT(creative_upload_links.creative_link) as creative_link_list'),
+            // DB::raw('GROUP_CONCAT(creative_upload_links.copy_link) as copy_link_list') 
+            'cl.client_bucket','creative_wrc_batch.batch_no','creative_wrc_batch.order_qty as batch_order_qty','creative_wrc_batch.sku_count as batch_sku_count'
         );
         $QcList = $QcList->get();
 
