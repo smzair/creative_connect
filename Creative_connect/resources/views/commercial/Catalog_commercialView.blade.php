@@ -67,12 +67,31 @@ Create New Commercial for Creative
                 </tr>
               </thead>
               <tbody>
+                @php
+                    $marketPlace_list = getMarketPlace();
+                    $marketPlace_data = array_column($marketPlace_list, 'marketPlace_name', 'id');
+                    // pre($marketPlace_data);
+                @endphp
                 @foreach($com as $comer)
+                
+                @php
+                  $market_place = $comer->market_place;
+                  $market_place_id_arr = explode(',',$market_place);
+
+                @endphp
                 <tr class="wrc-tt">
                   <td class="p-sm-2 p-1">{{$num++}}</td>
                   <td class="p-sm-2 p-1">{{$comer->Company}}</td>
                   <td class="p-sm-2 p-1">{{$comer->name}}</td>
-                  <td class="p-sm-2 p-1">{{$comer->market_place}}</td>
+                  <td class="p-sm-2 p-1">
+                    <ul>
+                      @foreach ($market_place_id_arr as $key => $val)
+                      <li>
+                        {{ $marketPlace_data[$val]; }}
+                      </li>
+                      @endforeach
+                    </ul>
+                  </td>
                   <td class="p-sm-2 p-1">{{$comer->type_of_service}}</td>
                   <td class="p-sm-2 p-1"><i class="fas fa-rupee-sign"></i>{{$comer->CommercialSKU}} </td>   
                   <td>

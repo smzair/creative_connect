@@ -89,6 +89,7 @@ Create New Commercial for Creative
                              @php
                                 $marketPlace = getMarketPlace();
                                 $typeOfService = getTypeOfService();
+                                // pre($marketPlace);
                             @endphp
                             <div class="col-sm-12 col-12">
                                 <div class="cc-title">
@@ -99,17 +100,35 @@ Create New Commercial for Creative
                             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label class="control-label required">Marketplace</label>
-                                    <select class="custom-select select2bs4 form-control-border reset" placeholder="Select Marketplace" name="market_place" id="market_place" aria-hidden="true" style="width: 100%;">
-                                        <option value="">Select Marketplace</option>
+                                    {{-- <select class="custom-select select2bs4 form-control-border js-example-basic-multiple" placeholder="Select Marketplace" name="market_place[]" id="market_place" aria-hidden="true" style="width: 100%;" multiple="multiple"> --}}
+                                        @php
+
+                                        $commercial_id_is = $commercial_data->id;
+                                          $market_place_arr =  json_decode($commercial_data->market_place,true);
+                                        //   print_r($market_place_arr);
+                                        @endphp
+                                    <select class="custom-select select2bs4 form-control-border" placeholder="Select Marketplace" name="market_place[]" id="market_place" aria-hidden="true" style="width: 100%;" multiple="multiple">
+                                        <option value="" disabled>Select Marketplace</option>
                                         @foreach($marketPlace as $index => $getProduct)
-                                        <option value="{{$index}}">{{$getProduct}}</option>
+
+                                        @php
+                                        $marketPlace_id =  $getProduct['id'];
+                                        $marketPlace_name =  $getProduct['marketPlace_name'];
+                                        $selected = "";
+                                            if($commercial_id_is > 0){
+                                                if(in_array($marketPlace_id , $market_place_arr)){
+                                                   $selected = "selected";
+                                                }
+                                            }
+                                        @endphp
+                                        <option {{ $selected }} value="{{$marketPlace_id}}">{{$marketPlace_name}}</option>
                                         @endforeach
                                     </select>
                                     <p class="input_err" style="color: red; display: none;" id="market_place_err"></p>
 
                                      <script>
                                         console.log("{{ $commercial_data->market_place }}")
-                                         document.getElementById("market_place").value = "{{ $commercial_data->market_place }}";
+                                        //  document.getElementById("market_place").value = "{{ $commercial_data->market_place }}";
                                     </script>
                                 </div>
                             </div>
@@ -167,6 +186,17 @@ Create New Commercial for Creative
 <script src="{{ asset('/js/app.js') }}"></script>
 <script type="application/javascript" src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
 <script type="application/javascript" src="{{asset('plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
+
+<script src="multiselect/jquery.multiselect.js"></script>
+<script>
+    // $(document).ready(function() {
+    //     $('.js-example-basic-multiple').select2();
+    // });
+
+    $('#market_place').multiselect();
+    // $('select[multiple]').multiselect();market_place
+</script>
 
 {{-- data for update --}}
 <script>

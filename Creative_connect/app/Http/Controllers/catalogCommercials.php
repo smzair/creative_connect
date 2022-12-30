@@ -35,7 +35,7 @@ class catalogCommercials extends Controller
         $btn_val = $request->save;
         $user_id = $request->user_id;
         $brand_id = $request->brand_id;
-        $market_place = $request->market_place;
+        $market_place = implode(',',$request->market_place);
         $type_of_service = $request->type_of_service;
         $CommercialSKU = $request->CommercialSKU;
 
@@ -138,7 +138,7 @@ class catalogCommercials extends Controller
         $btn_val = $request->save;
         $user_id = $request->user_id;
         $brand_id = $request->brand_id;
-        $market_place = $request->market_place;
+        $market_place = implode(',',$request->market_place);
         $type_of_service = $request->type_of_service;
         $CommercialSKU = $request->CommercialSKU;
 

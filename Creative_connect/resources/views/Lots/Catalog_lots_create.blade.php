@@ -143,7 +143,7 @@ Create LOTS CATALOGS
                             {{-- Raw Image Receive Date --}}
                             <div class="col-sm-6 col-12">
                                 <div class="form-group">
-                                    <label class="control-label required">Raw Image Receive Date</label>
+                                    <label class="control-label">Raw Image Receive Date</label>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">
@@ -301,11 +301,11 @@ Create LOTS CATALOGS
                 reqReceviedDate_Valid = false;
             }
            
-            if (imgReceviedDate == '') {
-                $("#imgReceviedDate_err").html("Raw Image Receive Date not Selected");
-                document.getElementById("imgReceviedDate_err").style.display = "block";
-                imgReceviedDate_Valid = false;
-            }
+            // if (imgReceviedDate == '') {
+            //     $("#imgReceviedDate_err").html("Raw Image Receive Date not Selected");
+            //     document.getElementById("imgReceviedDate_err").style.display = "block";
+            //     imgReceviedDate_Valid = false;
+            // }
            
             if (user_id_is_Valid && brand_id_Valid && requestType_Valid && imgReceviedDate_Valid && reqReceviedDate_Valid && type_of_service_Valid) {
                 return true

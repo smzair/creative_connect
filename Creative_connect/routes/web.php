@@ -3,6 +3,7 @@
 use App\Http\Controllers\CatalogAllocationController;
 use App\Http\Controllers\CatalogClientARController;
 use App\Http\Controllers\CatalogSubmissionController;
+use App\Http\Controllers\CatalogWrcController;
 use App\Http\Controllers\CatlaogQcController;
 use Illuminate\Support\Facades\Route;
 /*
@@ -58,7 +59,7 @@ Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
 // rajesh wrc route start
 
 /****************catalog-wrc-create **************/
-Route::get('/Catalog-Wrc-Create', 'catalogWrcController@index')->name('CREATECATLOGWRC');
+Route::get('/Catalog-Wrc-Create', [CatalogWrcController::class, 'index'])->name('CREATECATLOGWRC');
 Route::get('/Catalog-viewWrcs', 'catalogWrcController@view')->name('viewCatalogWRC');
 Route::post('/Catalog-Wrc-Create', 'catalogWrcController@store')->name('STORECATLOGWRC');
 Route::get('/Catalog-Wrc-Create/{id}', 'catalogWrcController@edit');

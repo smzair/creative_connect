@@ -1,6 +1,7 @@
 <?php
 // project / vartical type
 
+use App\Models\Marketplace;
 use Illuminate\Support\Facades\DB;
 
 
@@ -187,22 +188,36 @@ if (!function_exists('kindOfWork')) {
     }
 }
 
+
+// Mode of Delivery-
+
+if (!function_exists('modeOfDelivary')) {
+    function modeOfDelivary()
+    {
+        $modeOfDelivary = array(
+            '1' => 'Uploading',
+            '2' => 'Excel Sheet',
+            '3' => 'Drive Link',
+            '4' => 'Doc',
+            '5' => 'Zip',
+        );
+        return $modeOfDelivary;
+    }
+}
+// Uploading
+// Excel Sheet
+// Drive Link
+// Doc
+// Zip
+
+
 // Marketplace
 if (!function_exists('getMarketPlace')) {
 
     function getMarketPlace() {
-        $getMarketPlace = array(
-            'Myntra' => 'Myntra',
-            'Amazon' => 'Amazon',
-            'Flipkart' => 'Flipkart',
-            'Ajio' => 'Ajio',
-            'Nykaa' => 'Nykaa',
-            'Tata Cliq' => 'Tata Cliq',
-            'First Cry' => 'First Cry',
-            'Brand Site' => 'Brand Site',
-            'Any Other Website' => 'Any Other Website',
-            'Shopify' => 'Shopify',
-        );
+
+        $getMarketPlace = Marketplace::
+            get(['id', 'marketPlace_name'])->toArray();
         return $getMarketPlace;
     }
 }

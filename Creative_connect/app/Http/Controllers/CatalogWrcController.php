@@ -29,39 +29,39 @@ class CatalogWrcController extends Controller
             'confirmation_date' => '',
             'sku_qty' => '',
             'work_brief' => '',
+            'modeOfDelivary' => '0', 
+            'generic_data_format' => '',
+            'img_as_per_guidelines' => '',
             'guidelines' => '',
             'document1' => '',
             'document2' => '',
+            'wrc_number' => '',
+            'alloacte_to_copy_writer' => 1,
             'button_name' => 'Create New Catlog WRC',
             'route' => 'STORECATLOGWRC'
         ];
         return view('Wrc.Catalog-wrc-create')->with('users_data', $users_data)->with('CatlogWrc', $CatlogWrc);
     }
 
-    // getBrand List 
-    public function getBrand(Request $request)
-    {
-
-        $brand_data = DB::table('brands_user')->where('user_id', $request->user_id)
-            ->leftJoin('brands', 'brands_user.brand_id', 'brands.id')
-            ->select('brands.name', 'brands_user.brand_id', 'brands.short_name')->get();
-
+    // getBrand List  
+    public function getBrand(Request $request){
+        $brand_data = DB::table('brands_user')->where('user_id' , $request->user_id)
+        ->leftJoin('brands', 'brands_user.brand_id' , 'brands.id')
+        ->select('brands.name', 'brands_user.brand_id', 'brands.short_name')->get();
         echo $brand_data;
     }
 
-    public function getLotNumber(Request $request)
-    {
-
+    public function getLotNumber(Request $request){
         $user_id = $request->user_id;
         $brand_id = $request->brand_id;
         $data = [];
 
-        $lot_number_data = DB::table('lots_catalog')->where('lots_catalog.user_id', $user_id)->where('lots_catalog.brand_id', $brand_id)
-            ->leftJoin('brands', 'lots_catalog.brand_id', 'brands.id')
-
-            ->select('lots_catalog.id', 'lots_catalog.lot_number', 'lots_catalog.user_id', 'lots_catalog.brand_id', 'brands.short_name')->get();
-        $commercial_data = DB::table('create_commercial_catalog')->where('user_id', $user_id)->where('brand_id', $brand_id)->select('id as create_commercial_catalog_id', 'market_place', 'type_of_service')->get();
-        $data = ["lot_number_data" => $lot_number_data, "commercial_data" => $commercial_data];
+        $lot_number_data = DB::table('lots_catalog')->where('lots_catalog.user_id' , $user_id)->where('lots_catalog.brand_id' , $brand_id)
+        ->leftJoin('brands', 'lots_catalog.brand_id' , 'brands.id')
+       
+        ->select('lots_catalog.id', 'lots_catalog.lot_number', 'lots_catalog.user_id', 'lots_catalog.brand_id', 'brands.short_name')->get();
+        $commercial_data = DB::table('create_commercial_catalog')->where('user_id',$user_id)->where('brand_id',$brand_id)->select('id as create_commercial_catalog_id', 'market_place', 'type_of_service')->get();
+        $data = [ "lot_number_data" => $lot_number_data, "commercial_data" => $commercial_data];
         echo json_encode($data);
     }
 
@@ -84,7 +84,7 @@ class CatalogWrcController extends Controller
         $project_name .= $project_name_array[$count - 1][0];
 
         $wrcNumber = $request->c_short . $request->short_name . $project_name . $request->lot_id . '-' . chr($wrcCount + 65);
-
+        $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
         $createWrc = new CatlogWrc();
         $createWrc->lot_id = $request->lot_id;
         $createWrc->wrc_number = $wrcNumber;
@@ -97,6 +97,7 @@ class CatalogWrcController extends Controller
         $createWrc->guidelines = $request->guide_lines;
         $createWrc->document1 = $request->document1;
         $createWrc->document2 = $request->document2;
+        $createWrc->alloacte_to_copy_writer = $alloacte_to_copy_writer;
         $createWrc->sku_qty = $request->sku_qty;
         $createWrc->status = 'Ready_for_allocation';
         $createWrc->save();

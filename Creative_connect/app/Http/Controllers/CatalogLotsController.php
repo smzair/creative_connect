@@ -34,7 +34,7 @@ class CatalogLotsController extends Controller
         $serviceType = $request->serviceType;
         $requestType = $request->requestType;
         $reqReceviedDate = dateFormet_ymd($request->reqReceviedDate);
-        $imgReceviedDate = dateFormet_ymd($request->imgReceviedDate);
+        $imgReceviedDate = $request->imgReceviedDate != '' ? dateFormet_ymd($request->imgReceviedDate) : "";
 
         $data = new LotsCatalog();
 
@@ -113,7 +113,7 @@ class CatalogLotsController extends Controller
         $serviceType = $request->serviceType;
         $requestType = $request->requestType;
         $reqReceviedDate = dateFormet_ymd($request->reqReceviedDate);
-        $imgReceviedDate = dateFormet_ymd($request->imgReceviedDate);
+        $imgReceviedDate = $request->imgReceviedDate != '' ? dateFormet_ymd($request->imgReceviedDate) : "";
 
         $data = LotsCatalog::find($id);
         $lot_number = getLotNo($c_short, $short_name, $serviceType) . $id;
