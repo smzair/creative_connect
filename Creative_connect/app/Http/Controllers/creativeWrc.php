@@ -198,8 +198,8 @@ class creativeWrc extends Controller
                 request()->session()->flash('error','Please try again!!');
             }
 
-            //    return $this->Index();
-            return $this->edit($request,$createWrc->id);
+            return $this->view();
+            // return $this->edit($request,$createWrc->id);// update in same page
             // all good
         } catch (\Exception $e) {
             DB::rollback();
@@ -398,7 +398,7 @@ class creativeWrc extends Controller
         //create
         $CreativeWrcs =  CreativeWrcModel::find($id);
         $CreativeWrcs->lot_id = $request->lot_id;
-        $CreativeWrcs->wrc_number = $wrcNumber;
+        // $CreativeWrcs->wrc_number = $wrcNumber;
         $CreativeWrcs->commercial_id = $request->commercial_id;
         $CreativeWrcs->order_qty = $request->order_qty;
         $CreativeWrcs->work_brief = $request->work_brief;

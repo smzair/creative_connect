@@ -5,6 +5,11 @@ Create New Commercial for Creative
 @section('content')
 <div class="lot-table mt-1">
     <div class="container-fluid">
+        @if (Session::has('success'))
+                        <div class="alert alert-success" id="msg_div" role="alert">
+                            {{ Session::get('success') }}
+                        </div>
+        @endif
         <div class="row">
             <div class="col-12">
                 <div class="card card-transparent">
@@ -128,5 +133,10 @@ Create New Commercial for Creative
         "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
         "buttons": ["copy", "csv", "excel", "pdf"]
     }).buttons().container().insertAfter('#masterData_wrapper .dataTables_length');
+</script>
+<script>
+    setTimeout(function(){
+        document.getElementById('msg_div').style.display = "none";
+    },3000)
 </script>
 @endsection
