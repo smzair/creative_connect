@@ -177,10 +177,17 @@
                                                     </a>
                                                 </li> --}}
 
-                                                 <li class="nav-item">
+                                            <li class="nav-item">
                                                 <a href="{{ route('CREATECATLOGWRC') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Create Catlog WRCs</p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('MarketPlace') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Marketplace Credentials</p>
                                                 </a>
                                             </li>
 

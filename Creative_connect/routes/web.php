@@ -57,11 +57,12 @@ Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
 
 // rajesh wrc route start
 
-/****************catalog-wrc-create **************/
+/****************catalog-wrc-create **************/ 
 Route::get('/Catalog-Wrc-Create', [CatalogWrcController::class, 'index'])->name('CREATECATLOGWRC');
 Route::post('/Catalog-Wrc-marketplace-Credentials-list', [CatalogWrcController::class, 'marketplace_Credentials_List'])->name('M-P-C-List');
 Route::post('/save-wrc-Credentials', [CatalogWrcController::class, 'save_wrc_Credentials'])->name('S-W-Credentials');
 
+Route::get('/Catalog-marketplace-list', [CatalogWrcController::class, 'MarketPlace'])->name('MarketPlace');
 
 Route::get('/Catalog-viewWrcs', [CatalogWrcController::class, 'view'])->name('viewCatalogWRC');
 Route::post('/Catalog-Wrc-Create', [CatalogWrcController::class, 'store'])->name('STORECATLOGWRC');

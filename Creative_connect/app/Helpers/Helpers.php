@@ -217,7 +217,7 @@ if (!function_exists('getMarketPlace')) {
     function getMarketPlace() {
 
         $getMarketPlace = Marketplace::
-            get(['id', 'marketPlace_name'])->toArray();
+            get(['id', 'marketPlace_name', 'link', 'username', 'password'])->toArray();
         return $getMarketPlace;
     }
 }

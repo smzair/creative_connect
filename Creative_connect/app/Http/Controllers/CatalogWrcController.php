@@ -44,6 +44,11 @@ class CatalogWrcController extends Controller
         return view('Wrc.Catalog-wrc-create')->with('users_data', $users_data)->with('CatlogWrc', $CatlogWrc);
     }
 
+
+    public function MarketPlace(){
+        return view('Wrc.Catalog-marketplace-list');
+
+    }
     // marketplace_Credentials_List 
     public function marketplace_Credentials_List(Request $request){
         $commercial_id = $request->commercial_id;

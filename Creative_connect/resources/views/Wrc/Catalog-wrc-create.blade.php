@@ -22,16 +22,38 @@ Create Catlog WRCs
             padding: 0.3em;
         }
     </style>
-    <div class="row mt-5"> 
-    </div>
-    <div class="row WrcNoShowHide" style="padding-bottom: 2rem">
-        <div class="col-12">
-            <div class="card card-transparent m-0" style="flex-direction:row;">
-                <h5 style="float: left;padding:2%">Catalog Wrc Number :- </h5>
-                <h5 class="WrcNo" style="float: right;padding-top:2%">{{$CatlogWrc->wrc_number }}</h5>
+
+    <div class="row ">
+        <div class="col-5">
+            <div class="card card-transparent m-0 " style="height: 100%;">
+                <div class="" style="height: 100%;display: flex;align-items: center;">
+                    <h5 style="float: left;padding:2%">Creative Wrc Number :- </h5>
+                    <h5 class="WrcNo" style="padding-top:2%">{{$CatlogWrc->wrc_number }}</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="card card-transparent m-0 " style="align-items:center; padding: 10px;" >
+                <div>
+                    <a download="sku_master_sheet" href="{{ asset('files/sku_master_sheet.csv') }}" class="btn" style="margin-bottom: 6px"><i class="fa fa-download"></i> Download Master Sheet</a>
+                </div>
+                <div>
+                    <label for="files" class="btn">Upload Sheet</label>
+                    <br>
+                </div>
+                <span class="file_name_field" style="color: white;" id="file_name_field"></span>
+            </div>
+        </div>    
+        <div class="col-4">
+            <div class="card card-transparent m-0 " style="height: 100%;">
+                <div></div>
+
             </div>
         </div>
     </div>
+
+    {{-- form row  --}}
     <div class="row">
         <div class="col-sm-12">
             <div class="card card-transparent card-info mt-3">
@@ -135,6 +157,18 @@ Create Catlog WRCs
                                                 </option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+
+                            <!-- Upload Sheet -->
+                            <div class="col-sm-6 col-12" style="margin-top: 3%; display: none" >
+                                <div class="form-group">
+                                    {{-- <label for="btn" class="btn">Download</label> --}}
+                                    {{-- <label for="files" class="btn">Upload Sheet</label>
+                                    <button class="btn" style="margin-bottom: 6px"><i class="fa fa-download"></i> Download Master Sheet</button>
+
+                                    <span class="file_name_field" style="color: white;" id="file_name_field"></span> --}}
+                                    <input id="files" style="visibility:hidden;" type="file" id="sku_sheet" name="sku_sheet" class="btn btn-success btn-xl btn-warning mb-2">
                                 </div>
                             </div>
                             
@@ -479,6 +513,16 @@ Create Catlog WRCs
             eleman.removeAttribute("disabled");;
         }
     }
+</script>
+
+<script>
+    // $(".file_name_field").css("display", "none");
+    $("#files").change(function() {
+    filename = this.files[0].name;
+    $("#file_name_field").html(filename);
+    document.getElementById("file_name_field").style.display = "flex";
+    console.log(filename);
+});
 </script>
 
 {{-- script for Save Credentials --}}
