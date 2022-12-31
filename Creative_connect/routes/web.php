@@ -23,7 +23,6 @@ Route::get('/', function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 //////////////// Creative Commercial AND Catalog  Routes /////////////////
-
 Route::get('/Creative-createComs','creativeCommercials@index')->name('CREATECOM');
 Route::post('/Creative-createComs', 'creativeCommercials@create')->name('SAVECOMS'); // for save Commercial
 Route::get('/Creative_commercialView', 'creativeCommercials@view')->name('viewCOM'); // for view Commercial
@@ -60,13 +59,19 @@ Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
 
 /****************catalog-wrc-create **************/
 Route::get('/Catalog-Wrc-Create', [CatalogWrcController::class, 'index'])->name('CREATECATLOGWRC');
-Route::get('/Catalog-viewWrcs', 'catalogWrcController@view')->name('viewCatalogWRC');
-Route::post('/Catalog-Wrc-Create', 'catalogWrcController@store')->name('STORECATLOGWRC');
-Route::get('/Catalog-Wrc-Create/{id}', 'catalogWrcController@edit');
-Route::post('/Catlog-updateWrc', 'catalogWrcController@update')->name('UPDATECATLOGWRC');
+Route::post('/Catalog-Wrc-marketplace-Credentials-list', [CatalogWrcController::class, 'marketplace_Credentials_List'])->name('M-P-C-List');
+Route::post('/save-wrc-Credentials', [CatalogWrcController::class, 'save_wrc_Credentials'])->name('S-W-Credentials');
+
+
+Route::get('/Catalog-viewWrcs', [CatalogWrcController::class, 'view'])->name('viewCatalogWRC');
+Route::post('/Catalog-Wrc-Create', [CatalogWrcController::class, 'store'])->name('STORECATLOGWRC');
+Route::get('/Catalog-Wrc-Create/{id}', [CatalogWrcController::class, 'edit']);
+Route::post('/Catlog-updateWrc', [CatalogWrcController::class, 'update'])->name('UPDATECATLOGWRC');
 #ajax
-Route::post('/get-catlog-brand', 'catalogWrcController@getBrand');
-Route::post('/get-catlog-lot-number', 'catalogWrcController@getLotNumber');
+Route::post('/get-catlog-brand', [CatalogWrcController::class, 'getBrand']);
+Route::post('/get-catlog-lot-number', [CatalogWrcController::class, 'getLotNumber']);
+
+
 
 // rajesh wrc route end
 
@@ -93,7 +98,6 @@ Route::get('catalog-qc', [CatlaogQcController::class, 'index'])->name('QcList');
 Route::post('get-catalog-users_list', [CatlaogQcController::class, 'userlist'])->name('userlist'); // Qc List 
 Route::post('qc-rework', [CatlaogQcController::class, 'set_qc_rework'])->name('QCREWORK'); // Qc List 
 Route:: post('completed-qc-wrc', [CatlaogQcController::class, 'completed_qc_wrc'])->name('QCCOMPWRC'); // completed-qc-wrc
-
 
 // Submission Route comp-submission catalog-submission-details CATA_CLIENT_AR
 Route::get('catalog-ready-for-submission', [CatalogSubmissionController::class, 'index'])->name('C_READYFORSUB'); // Qc List 

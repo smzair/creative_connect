@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CatlogWrc;
+use App\Models\Marketplace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -43,6 +44,28 @@ class CatalogWrcController extends Controller
         return view('Wrc.Catalog-wrc-create')->with('users_data', $users_data)->with('CatlogWrc', $CatlogWrc);
     }
 
+    // marketplace_Credentials_List 
+    public function marketplace_Credentials_List(Request $request){
+        $commercial_id = $request->commercial_id;
+        $market_place_ids = $request->market_place_ids;
+
+        $response = Marketplace::marketplace_Credentials_List($commercial_id , $market_place_ids);
+        echo json_encode($response);
+    }
+
+
+    public function save_wrc_Credentials(Request $request){
+        $data_arr = $request->data_arr;
+        $response = Marketplace::save_wrc_Credentials($data_arr);
+        
+        echo $response;
+        // dd($data_arr);
+
+    }
+
+
+
+
     // getBrand List  
     public function getBrand(Request $request){
         $brand_data = DB::table('brands_user')->where('user_id' , $request->user_id)
@@ -60,7 +83,23 @@ class CatalogWrcController extends Controller
         ->leftJoin('brands', 'lots_catalog.brand_id' , 'brands.id')
        
         ->select('lots_catalog.id', 'lots_catalog.lot_number', 'lots_catalog.user_id', 'lots_catalog.brand_id', 'brands.short_name')->get();
-        $commercial_data = DB::table('create_commercial_catalog')->where('user_id',$user_id)->where('brand_id',$brand_id)->select('id as create_commercial_catalog_id', 'market_place', 'type_of_service')->get();
+
+        $commercial_data = DB::table('create_commercial_catalog')->where('user_id',$user_id)->where('brand_id',$brand_id)->select('id as create_commercial_catalog_id', 'market_place', 'type_of_service', 'market_place  as market_place_ids')->get();
+        
+        $marketPlace_list = getMarketPlace();
+        $marketPlace_data = array_column($marketPlace_list, 'marketPlace_name', 'id');
+        foreach($commercial_data as $key => $data){
+            $market_place_str = $data->market_place;
+            $market_place_arr = explode(',', $market_place_str);
+            $market_place_new_str = "";
+            foreach($market_place_arr as $key => $val){
+                $market_place_new_str .= $marketPlace_data[$val].',';
+            }
+            $market_place_new_str = rtrim($market_place_new_str, ",");
+            $data->market_place = $market_place_new_str;
+            // echo "<br>". $market_place_str ." ". $market_place_new_str;
+        }
+
         $data = [ "lot_number_data" => $lot_number_data, "commercial_data" => $commercial_data];
         echo json_encode($data);
     }

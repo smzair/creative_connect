@@ -1,9 +1,7 @@
 @extends('layouts.admin')
 
 @section('title')
-Create Wrc
-
-<!--- if condition to be applied for update details of the page-->
+Create Catlog WRCs
 @endsection
 @section('content')
 <link rel="stylesheet" href="{{asset('plugins/datepicker-in-bootstrap-modal/css/datepicker.css')}}">
@@ -16,6 +14,12 @@ Create Wrc
             .modal-lg, .modal-xl{
                 max-width: 900px;
             }
+        }
+
+        .msg_box{
+            margin: 0.1em 0;
+            background: #928c8cfc;
+            padding: 0.3em;
         }
     </style>
     <div class="row mt-5"> 
@@ -102,8 +106,8 @@ Create Wrc
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
                                     <label class="control-label required">Work Bucket</label>
-                                    <select class="custom-select form-control-border " name="commercial_id" id="commercial_id">
-                                        <option value="" selected disabled>Select Commercial</option>
+                                    <select class="custom-select form-control-border " name="commercial_id" id="commercial_id" onchange="set_btn_action()">
+                                        <option value="" data-market_place_ids="" selected disabled>Select Commercial</option>
                                     </select>
                                     <script>
                                         document.querySelector("#commercial_id").value = "{{$CatlogWrc->commercial_id }}"
@@ -284,8 +288,7 @@ Create Wrc
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
                                     <label class="">Marketplace Credentials</label>
-                                    
-                                    <button type="button" class="btn btn-success btn-xl btn-warning mb-2 form-control" data-toggle="modal" data-target="#openModel">Add Credentials</button>
+                                    <button id="set_Credentials" type="button" class="btn btn-success btn-xl btn-warning mb-2 form-control" data-toggle="modal" data-target="#openModel"  onclick="set_Credentials_data()" disabled="true">Add Credentials</button>
                                 </div>
                             </div>
                         </div>
@@ -294,8 +297,8 @@ Create Wrc
                                 <button type="submit" class="btn btn-success btn-xl btn-warning mb-2" onclick="">{{$CatlogWrc->button_name}}</button>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -316,68 +319,43 @@ Create Wrc
                 </div>
                     
                 <div class="custom-dt-row">
-                    <form class="" method="POST" action="" id="workdetailsform">
-                        <div class="row">
-                            <div class="col-sm-3 col-12">
-                                <div class="col-ac-details">
-                                    <h6>Marketplace</h6>
-                                </div>
+                    <div class="row">
+                        <div class="col-sm-3 col-12">
+                            <div class="col-ac-details">
+                                <h6>Marketplace</h6>
                             </div>
-                            <div class="col-sm-3 col-6">
-                                <div class="col-ac-details">
-                                    <h6>Link</h6>
-                                </div>
-                            </div>
-                            <div class="col-sm-3 col-6">
-                                <div class="col-ac-details">
-                                    <h6>Username</h6>
-                                </div>
-                            </div>
-                            <div class="col-sm-3 col-6">
-                                <div class="col-ac-details">
-                                    <h6>Password</h6>
-                                </div>
-                            </div>                        
                         </div>
-
-                        @for ($i = 1; $i<= 10; $i++)
-                            <div class="row mt-3" id="Marketplace_data{{ $i }}">
-                                <div class="col-sm-3 col-12">
-                                    <div class="col-ac-details">
-                                        <h6>Marketplace{{ $i }}</h6>
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 col-6">
-                                    <div class="col-ac-details">
-                                        <input type="text" placeholder="Link{{ $i }}" name="Link{{ $i }}">
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 col-6">
-                                    <div class="col-ac-details">
-                                        <input type="text" placeholder="Username{{ $i }}" name="Username{{ $i }}">
-                                    </div>
-                                </div>
-                                <div class="col-sm-3 col-6">
-                                    <div class="col-ac-details">
-                                        <input type="password" placeholder="Password{{ $i }}" name="Password{{ $i }}">
-                                    </div>
-                                </div>              
+                        <div class="col-sm-3 col-6">
+                            <div class="col-ac-details">
+                                <h6>Link</h6>
                             </div>
-                        @endfor
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="col-ac-details">
+                                <h6>Username</h6>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="col-ac-details">
+                                <h6>Password</h6>
+                            </div>
+                        </div>                        
+                    </div>
+                    <form class="" method="POST" action="" id="saveCredentialsform" >
+                        <div class="row">
+                            <div class="col-12" id="marketplace_list_div">
+                            </div>
 
+                            <div class="col-12 p-3">
+                                <p class="msg_box" id="msg_box1" style="display: none;"> </p>
+                            </div>
+                        </div>
                         <div class="row float-right">
                             <div class="col-sm-12 col-12"  style="position: relative;" >
-                                <input type="hidden" name="allocation_id_is" id="allocation_id_is">
-                                {{-- <button type="button" id="btn_comp" class="btn btn-warning" name="comp_wrc" value="comp_wrc" style="float:right; margin: 0 5px;" onclick="formvalidate('comp')">Complete Wrc</button> --}}
-
-                                <button type="button" id="btn_save" class="btn btn-warning" style="float:right; margin: 0 5px;"  onclick="formvalidate('save')"  name="save_wrc" value="save_wrc">Save Credentials</button>
+                                <input type="hidden" name="market_place_id_is" id="market_place_id_is">
+                                <button type="button" id="btn_save" class="btn btn-warning" style="float:right; margin: 0 5px;" onclick="saveCredentials(event)">Save Credentials</button>
                                 
                             </div>
-
-                            <p class="msg_box" id="msg_box1" style="color: red; display: none;">
-                            </p>
-
-
                         </div>
                     </form>
                 </div>
@@ -423,7 +401,155 @@ Create Wrc
 </script>
 @endif
 
-<!-- script for setting short_name -->
+{{-- script for set_Credentials_data --}}
+<script>
+    function set_Credentials_data(){
+
+        $('#msg_box1').html("");
+        $("#msg_box1").css("display", "none");
+        const commercial_id = document.querySelector("#commercial_id").value;
+        // const market_place_ids = document.querySelector("#commercial_id").dataset.market_place_ids
+        const market_place_id_is = $("#commercial_id").find(':selected').data('market_place_ids');
+        document.querySelector("#market_place_id_is").value = market_place_id_is;
+        
+
+        if(!commercial_id > 0){
+            alert('Work Bucket Not selected');
+            return
+        }
+
+        let list = "";
+        $.ajax({
+            url: "{{ url('Catalog-Wrc-marketplace-Credentials-list') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                commercial_id,
+                market_place_ids:market_place_id_is,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                
+                // console.log(res)
+
+                res.map(data => {
+                    // console.log(data)
+
+                    list += 
+                    `<div class="row mt-3" id="marketplace_row${data.id}">
+                        <div class="col-sm-3 col-12">
+                            <div class="col-ac-details">
+                                <h6>${data.marketPlace_name}</h6>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="col-ac-details">
+                                <input type="hidden" name="marketPlace_id${data.id}" id="marketPlace_id${data.id}"  value="${data.id}">
+                                <input type="text" placeholder="Enter link" id="link${data.id}" name="link${data.id}" value="${data.link}">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="col-ac-details">
+                                <input type="text" placeholder="Enter username" id="username${data.id}" name="username${data.id}" value="${data.username}">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="col-ac-details">
+                                <input type="password" placeholder="Enter password"  id="password${data.id}" name="password${data.id}" value="${data.password}">
+                            </div>
+                        </div>              
+                    </div>`;
+                })
+
+                // console.log(list)
+                document.getElementById("marketplace_list_div").innerHTML = list;
+                // document.getElementById("commercial_id").innerHTML = options_work;
+            }
+        });
+    }
+</script>
+
+<script>
+    function set_btn_action(){
+        const commercial_id = document.querySelector("#commercial_id").value;
+        console.log(commercial_id)
+        var eleman = document.getElementById('set_Credentials');
+        eleman.setAttribute("disabled", true);
+        if(commercial_id > 0){
+            eleman.removeAttribute("disabled");;
+        }
+    }
+</script>
+
+{{-- script for Save Credentials --}}
+<script>
+
+   async function saveCredentials(event){
+        event.preventDefault();
+        
+        const market_place_id_is = document.querySelector('#market_place_id_is').value
+        const market_place_id_arr = market_place_id_is.split(",");
+        const data_arr = [];
+
+        market_place_id_arr.forEach(element_id => {
+            const marketPlace_id_id = "marketPlace_id"+element_id
+            const link_id = "link"+element_id
+            const username_id = "username"+element_id
+            const password_id = "password"+element_id
+            
+            const marketPlace_id = document.getElementById(marketPlace_id_id).value
+            const link = document.getElementById(link_id).value
+            const username = document.getElementById(username_id).value
+            const password = document.getElementById(password_id).value
+            // data_arr[''+marketPlace_id] = {
+            //     marketPlace_id,
+            //     link,
+            //     username,
+            //     password,
+            // }
+
+            data_arr.push({
+                marketPlace_id,
+                link,
+                username,
+                password,
+            })
+        });
+
+
+        data_arr_st = JSON.stringify(data_arr);
+        $('#msg_box1').html("");
+        $("#msg_box1").css("display", "none");
+        await $.ajax({
+            url: "{{ url('save-wrc-Credentials') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                market_place_id_is,
+                data_arr,
+                data_arr_st,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                console.log(res)
+                if(res == 1){
+                     $("#msg_box1").css("color", "green");
+                     document.querySelector("#msg_box1").innerHTML  = "Marketplace Credentials Saved!!!"
+
+                }else{
+                    $("#msg_box1").css("color", "red");
+                    document.querySelector("#msg_box1").innerHTML  = "Somthing went Wrong please try again!!!"
+                }
+                $("#msg_box1").css("display", "block");
+            }
+        });
+        setTimeout( () => {
+            $('#msg_box1').html("");
+            $("#msg_box1").css("display", "none");
+        }, 2000);
+        // return false
+    }
+</script>
 
 <!-- Select Brand Name -->
 <script>
@@ -469,7 +595,7 @@ Create Wrc
             const short_name = $("#brand_id").find(':selected').data('short_name');
             $("#short_name").val(short_name);
             let options = `<option value="" data-s_type="" > -- Select LOT Number -- </option>`;
-            let options_work = `<option value="" > -- Select Commercial -- </option>`;
+            let options_work = `<option value="0" data-market_place_ids=""  > -- Select Commercial -- </option>`;
             $.ajax({
                 url: "{{ url('get-catlog-lot-number') }}",
                 type: "POST",
@@ -485,9 +611,9 @@ Create Wrc
                         options +=
                             ` <option value="${lots.id}" data-s_type="${lots.project_name}"> ${lots.lot_number}</option>`;
                     })
-                    commercial_data.map(lots => {
+                    commercial_data.map(commercial => {
                             options_work +=
-                            ` <option value="${lots.create_commercial_catalog_id}" > ${lots.market_place} | ${lots.type_of_service}</option>`;
+                            ` <option value="${commercial.create_commercial_catalog_id}" data-market_place_ids="${commercial.market_place_ids}" > ${commercial.market_place} | ${commercial.type_of_service}</option>`;
                     })
                     document.getElementById("lot_id").innerHTML = options;
                     document.getElementById("commercial_id").innerHTML = options_work;
