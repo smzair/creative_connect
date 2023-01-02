@@ -32,7 +32,7 @@ Creative Qc Panel
             <div class="alert alert-danger" id="sub_msg_div" role="alert">
                 {{ Session::get('error') }}
             </div>
-            {{ Session::forget('success') }}
+            {{ Session::forget('error') }}
             @endif
         <div class="" id="msg_div" style="display: none" role="alert">
             <p id='msg_p'></p>

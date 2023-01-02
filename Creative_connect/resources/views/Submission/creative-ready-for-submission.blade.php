@@ -124,6 +124,18 @@ Creative - Submission
 <div class="container-fluid mt-5 plan-shoot">
     <div class="row">
         <div class="col-12">
+            @if (Session::has('success'))
+            <div class="alert alert-success" id="sub_msg_div" role="alert">
+                {{ Session::get('success') }}
+            </div>
+            {{ Session::forget('success') }}
+            @endif
+            @if (Session::has('error'))
+            <div class="alert alert-danger" id="sub_msg_div" role="alert">
+                {{ Session::get('error') }}
+            </div>
+            {{ Session::forget('error') }}
+            @endif
             <div class="card card-transparent">
                 <div class="card-header">
                     <h3 class="card-title" style="font-size: 2rem;">Creative - Ready For Submission</h3>
@@ -151,19 +163,10 @@ Creative - Submission
                                 // pre($creative_Wrc_list_for_Submission);
                             @endphp
                            
-                            @foreach($submissionList as $row)
+                            @foreach($submissionList as $skey=>$row)
                             @php
                                 $wrc_id = $row['wrc_id'];
-                                // $creative_link_list = $row['creative_link_list'];
-                                // $creative_link_arr = explode(",",$creative_link_list);
-
-                                // $copy_link_list = $row['copy_link_list'];
-                                // $copy_link_arr = explode(",",$copy_link_list);
-                                
-                                // $allocation_ids = $row['allocation_ids'];
-                                // $allocation_id_arr = explode(",",$allocation_ids);                                
-                                // $tot_allocation_ids = count($allocation_id_arr);
-                                
+                                $start_time = $row['start_time'];
                                 $ini_start_times = $row['ini_start_times'];
                                 $ini_start_times_arr = explode(",",$ini_start_times);
                                 $tot_times = count($ini_start_times_arr);
@@ -216,90 +219,24 @@ Creative - Submission
                                 $creative_allocation_ids = $row['creative_allocation_ids'];
                             @endphp
                             <tr>
-                                <td>{{ $wrc_id }}</td>
-                                <td>{{ $company }}</td>
-                                <td>{{ $brands_name .$wrc_id_is }}</td>
-                                <td>{{ $lot_number }}</td>
-                                <td>{{ $wrc_number }}</td>
-                                <td>{{ $batch_no }}</td>
+                                <td id="wrc_id{{$skey}}" data-start_time ="{{dateFormat($row['start_time'])}}<br><b>{{timeFormat($row['start_time'])}}" >{{ $wrc_id }}</td>
+                                <td id="company{{$skey}}">{{ $company }}</td>
+                                <td id="brands_name{{$skey}}">{{ $brands_name }}</td>
+                                <td id="lot_number{{$skey}}">{{ $lot_number }}</td>
+                                <td id="wrc_number{{$skey}}" data-copy_link = "{{$copy_links}}" data-creative_link = "{{$creative_links}}">{{ $wrc_number }}</td>
+                                <td id="batch_no{{$skey}}">{{ $batch_no }}</td>
                                 <?php 
                                 if($row['client_bucket'] == 'Retainer'){ ?>
-                                    <td id="order_qty{{$key}}">{{$row['batch_order_qty'] != null ? $row['batch_order_qty'] : 0}}</td>
-                                    <td id="sku_count{{$key}}">{{$row['batch_sku_count'] != null ? $row['batch_sku_count'] : 0}}</td>
+                                    <td id="order_qty{{$skey}}">{{$row['batch_order_qty'] != null ? $row['batch_order_qty'] : 0}}</td>
+                                    <td id="sku_count{{$skey}}">{{$row['batch_sku_count'] != null ? $row['batch_sku_count'] : 0}}</td>
                                 <?php }else { ?>
-                                    <td id="order_qty{{$key}}">{{$row['order_qty'] != null ? $row['order_qty'] : 0}}</td>
-                                    <td id="sku_count{{$key}}">{{$row['sku_count'] != null ? $row['sku_count'] : 0}}</td>
+                                    <td id="order_qty{{$skey}}">{{$row['order_qty'] != null ? $row['order_qty'] : 0}}</td>
+                                    <td id="sku_count{{$skey}}">{{$row['sku_count'] != null ? $row['sku_count'] : 0}}</td>
                                 <?php  } ?>
-                                <td>{{ $kind_of_work }}</td>
-                                {{-- <td>
-                                    <ul class="info-list">
-                                        @foreach ($creative_link_arr as $link)
-                                            @if ($link != '')
-                                                <li>
-                                                    <a href="{{ $link }}" class="cpy-textVal" id="creativetextVal">
-                                                    {{ $link }}
-                                                    <span><i class="fas fa-copy"></i></span>
-                                                    </a>
-                                                </li>
-                                            @endif  
-                                        @endforeach
-                                    </ul>
-                                    
-                                </td> --}}
-                                {{-- <td>
-                                    <ul class="info-list">
-                                        @foreach ($copy_link_arr as $link)
-                                            @if ($link != '')
-                                                <li>
-                                                    <a href="{{ $link }}" class="cpy-textVal" id="creativetextVal">
-                                                    {{ $link }}
-                                                    <span><i class="fas fa-copy"></i></span>
-                                                    </a>
-                                                </li>
-                                            @endif  
-                                        @endforeach
-                                    </ul>
-                                </td> --}}
-                                {{-- <td>
-                                    <div class="d-inline-block  switch">
-
-                                        @if ($allow_to_submit == 0)
-                                            <p style=" font-size: 1.1em; font-weight: 600; {{ $p_style }}">{{ $submit_msg }} 
-                                                
-                                            </p>
-                                        @else
-                                            <input  type="checkbox"  data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class" >
-                                            <button  id="btn{{ $wrc_id }}" class="{{ $btn_clsss }}" {{ $btn_disable }} onclick="submit_wrc('{{ $wrc_id }}')" >  {{ $submit_msg }} </button>
-                                            
-                                        @endif
-                                    </div>
-                                </td> --}}
+                                <td id="kind_of_work{{$skey}}">{{ $kind_of_work }}</td>
                                 <td>
                                     <div class="d-inline-block mt-1">
-                                        {{-- {{ $reworkbtn_disable }} --}}
-
-                                        <p class="d-none" id="data_id_{{ $wrc_id }}" 
-                                        data-wrc_id="{{ $wrc_id }}" 
-                                        data-company="{{ $company }}"  
-                                        data-brands_name="{{ $brands_name }}"  
-                                        data-lot_number="{{ $lot_number }}"  
-                                        data-wrc_number="{{ $wrc_number }}"  
-                                        data-sku_qty="{{ $sku_qty }}"  
-                                        data-work_start_date="{{ $work_start_date }}"  
-
-                                        data-creative_links="{{ $creative_links }}"  
-                                        data-copy_links="{{ $copy_links }}"  
-                                        data-allo_users_id="{{ $allo_users_id }}"  
-                                        data-allocated_users_name="{{ $allocated_users_name }}"  
-                                        data-creative_allocation_ids="{{ $creative_allocation_ids }}"  
-                                        
-                                        data-user_roles="{{ $user_roles }}"  
-                                        data-alloacte_to_copy_writer="{{ $alloacte_to_copy_writer }}" 
-                                        data-creativeer_allocated_qty="{{ $creativeer_allocated_qty }}" 
-                                        data-cp_allocated_qty="{{ $cp_allocated_qty }}" 
-                                        > </p>
-
-                                        <button data-company="{{ $wrc_id }}" onclick="setdata('{{ $wrc_id }}')" class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#CreativeCommnentModal">
+                                        <button data-company="{{ $wrc_id }}" onclick="setdata('{{ $skey }}')" class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#CreativeCommnentModal">
                                             To Submit
                                         </button>
                                     </div>
@@ -324,43 +261,26 @@ Creative - Submission
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="comment-form">
-                        {{-- <div class="form-group">
-                            <label class="control-label required">Category</label>
-                            <div class="group-inner d-flex" >
-                                <div class="radio-col w-25">
-                                    <span class="checkVal">
-                                        Catloger
-                                    </span>
-                                    <input onclick="get_list()" type="radio" name="role_id_is" id="check1" value="0" class="radio-check" checked>
-                                </div>
-                                <div class="radio-col">
-                                    <span class="checkVal">
-                                        Copy Writer
-                                    </span>
-                                    <input onclick="get_list()" type="radio" name="role_id_is" id="check2" value="1" class="radio-check">
-                                </div>
-                            </div>
-                        </div> --}}
-                        {{-- row 1 --}}
+                    <form method="POST" action="{{route('add_ready_for_submission')}}">
+                        @csrf
+                        <input type="hidden" name="wrc_id" id="wrc_id" value="">
+                        <input type="hidden" name="batch_no" class="batch_no" value="">
+
                         <div class="row">
                             <div class="col-3 form-group">
                                 <label for="wrc_number">Wrc number</label>
-                                <p id="wrc_number">Wrc number is</p>
+                                <p id="wrc_number"></p>
                             </div>
+                           
                             <div class="col-3 form-group">
-                                <label for="company">Company</label>
-                                <p id="company">Company</p>
-                            </div>
-                            <div class="col-2 form-group">
-                                <label for="brand_name">Brand</label>
+                                <label for="brand_name">Brand Name</label>
                                 <p id="brand_name"></p>
                             </div>
-                            <div class="col-2 form-group">
+                            <div class="col-3 form-group">
                                 <label for="tot_sku">Sku Qty</label>
                                 <p id="tot_sku"></p>
                             </div>
-                            <div class="col-2 form-group">
+                            <div class="col-3 form-group">
                                 <label for="order_qty">Order Qty</label>
                                 <p id="order_qty" class="order_qty"></p>
                             </div>
@@ -371,66 +291,46 @@ Creative - Submission
                                 <label for="work_start_date">Wrok Start Date</label>
                                 <p id="work_start_date">Start Date</p>
                             </div>
-                            <div class="col-3 form-group">
-                                <label for="work_initiate_date">Wrok Initiate Date</label>
-                                <p id="work_initiate_date">Initiate</p>
+                            {{-- <div class="col-3 form-group">
+                                <label for="work_initiate_date">Wrok initiated Date</label>
+                                <p id="work_initiate_date"></p>
                             </div>
                             <div class="col-3 form-group">
                                 <label for="work_commited_date">Wrok Committed Date</label>
-                                <p id="work_commited_date">Committed</p>
+                                <p id="work_commited_date"></p>
+                            </div> --}}
+                            <div class="col-3 form-group">
+                                <label for="batch_no">Batch Number</label>
+                                <p id="batch_no"></p>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-6 form-group">
-                                <label for="allo_qty_to_cata">Allocated to creativeure</label>
-                                <p id="allo_qty_to_cata">Dummy qty 2</p>
-                            </div>
-                            <div id="copy_qty_div" class="col-6 form-group d-none">
-                                <label for="allo_qty_to_copy">Allocated to Copy Writer</label>
-                                <p id="allo_qty_to_copy"> D qty 5</p>
-                            </div>
-                        </div>
 
                         <div class="row px-3">
                             <div class="col-12 form-group" style="background: #eee; color:#232323 ">
                                 <div class="row head_row"  >
                                     <div class="col-3">
-                                        <p class="m-0">Link To creativeure</p>
+                                        <p class="m-0">Link To GD</p>
                                     </div>
-                                    <div class="col-9" id="link_to_cata_logure">
+                                    <div class="col-9" id="link_to_gd">
                                     </div>
                                 </div>
                                 <div class="row head_row  "  id="link_copy_writer_row">
                                     <div class="col-3">
-                                        <p class="m-0">Link To Copy Writer</p>
+                                        <p class="m-0">Link To CW</p>
                                     </div>
-                                    <div class="col-9" id="link_to_copy_writer">
+                                    <div class="col-9" id="link_to_cw">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {{-- 
-                            <div class="form-group">
-                                <select name="creative_copy_user" id="creative_copy_user" >
-                                    <option value="0" data-creative_allocation_id="0" > -- Select User -- </option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <input type="hidden" name="wrc_id" id="wrc_id_is" value="">
-                                <label>Add a comment</label>
-                                <textarea class="form-control" rows="4" name="commentsec" id="commentsec" placeholder="Enter your comment..."></textarea>
-                            </div> 
-                        --}}
 
                         <div id="msg_div" style="display: none;">
                             <p class="msg_box" id="msg_box"></p>
                         </div>
                         <div class="form-group">
-                            <input type="hidden" name="wrc_id" id="wrc_id">
-                            <input type="hidden" name="creative_allocation_ids" id="creative_allocation_ids">
-                            {{-- <button id="submit_wrc" type="button" class="btn btn-warning"> Submit WRC</button> --}}
-                            <button onclick="save_data()" type="button" class="btn btn-warning">Submit WRC</button>
+                         
+                            <button  type="submit" class="btn btn-warning">Submit WRC</button>
                         </div>
                     </form>
                 </div>
@@ -481,90 +381,51 @@ Creative - Submission
 {{-- script for setdata into modal  --}}
 <script>
     function setdata(val){
-        $("#copy_row").addClass("d-none");
-        $("#copy_qty_div").addClass("d-none");
-        $("#link_copy_writer_row").addClass("d-none");
-
         // set wrc id
-        const order_qty_td = "order_qty"+id;
+        const wrc_id_td = "wrc_id"+val;
+        const wrc_id = document.getElementById(wrc_id_td).innerHTML;
+        document.querySelector('#wrc_id').value = wrc_id;
+
+        // set start time
+        const start_time = $("#"+wrc_id_td).data("start_time")
+        document.querySelector('#work_start_date').innerHTML = start_time;
+
+       
+
+        // set wrc no
+        const wrc_number_td = "wrc_number"+val;
+        const wrc_number = document.getElementById(wrc_number_td).innerHTML;
+        document.querySelector('#wrc_number').innerHTML = wrc_number;
+
+        // creative link
+        const creative_link = $("#"+wrc_number_td).data("creative_link")
+        document.querySelector('#link_to_gd').innerHTML = creative_link;
+
+        // copy link
+        const copy_link = $("#"+wrc_number_td).data("copy_link")
+        document.querySelector('#link_to_cw').innerHTML = copy_link;
+
+        // set brand name 
+        const brands_name_td = "brands_name"+val;
+        const brands_name = document.getElementById(brands_name_td).innerHTML;
+        document.querySelector('#brand_name').innerHTML = wrc_number;
+
+        // set sku qty
+        const sku_count_td = "sku_count"+val;
+        const sku_count = document.getElementById(sku_count_td).innerHTML;
+        document.querySelector('#tot_sku').innerHTML = sku_count;
+
+        // set order qty
+        const order_qty_td = "order_qty"+val;
         const order_qty = document.getElementById(order_qty_td).innerHTML;
-        document.querySelector('.order_qty').value = order_qty;
+        document.querySelector('#order_qty').innerHTML = order_qty;
 
-        const data_id = "data_id_"+val;
-        const creative_allocation_ids = $("#"+data_id).data("creative_allocation_ids")
+        // set batch number
+        const batch_no_td = "batch_no"+val;
+        const batch_no = document.getElementById(batch_no_td).innerHTML;
+        document.querySelector('#batch_no').innerHTML = batch_no;
+        document.querySelector('.batch_no').value = batch_no;
 
-        document.getElementById('creative_allocation_ids').value = creative_allocation_ids
-        document.getElementById('wrc_id').value = val
-        const wrc_id = $("#"+data_id).data("wrc_id")
-        const wrc_number = $("#"+data_id).data("wrc_number")
-        const brand_name = $("#"+data_id).data("brands_name")
-        const lot_number = $("#"+data_id).data("lot_number")
-        const company = $("#"+data_id).data("company")
-        const tot_sku = $("#"+data_id).data("sku_qty") 
-        const work_start_date = $("#"+data_id).data("work_start_date")
-        
-        const creative_links = $("#"+data_id).data("creative_links")
-        const copy_links = $("#"+data_id).data("copy_links")
-        const allo_users_id = $("#"+data_id).data("allo_users_id")
-        const allocated_users_name = $("#"+data_id).data("allocated_users_name")
-        const user_roles = $("#"+data_id).data("user_roles")+''
-
-        const alloacte_to_copy_writer = $("#"+data_id).data("alloacte_to_copy_writer")
-        const creativeer_allocated_qty = $("#"+data_id).data("creativeer_allocated_qty")
-        const cp_allocated_qty = $("#"+data_id).data("cp_allocated_qty")
-
-        const creative_link_arr = creative_links.split(',')
-        const copy_links_arr = copy_links.split(',')
-        const user_roles_arr = user_roles.split(',')
-        const allocated_users_arr = allocated_users_name.split(',')
-
-        
-
-        document.getElementById("wrc_number").innerHTML = wrc_number;
-        document.getElementById("brand_name").innerHTML = brand_name;
-        document.getElementById("company").innerHTML = company;
-        document.getElementById("tot_sku").innerHTML = tot_sku;
-        document.getElementById("work_start_date").innerHTML = work_start_date;
-        document.getElementById("allo_qty_to_cata").innerHTML = creativeer_allocated_qty;
-
-        let creative_li = "";
-        creative_link_arr.forEach((link , index) => {
-            console.log({link , index })
-            if(link != ''){
-                console.log(user_roles_arr[index])
-                creative_li +=   `<p class="pointer m-0" title="uploaded by ${allocated_users_arr[index]} ${ user_roles_arr[index] == 0 ? '' : ' (Copy Writer)'} "> ${link} <i class="fa fa-copy"></i></p>`
-            }
-        });
-        document.getElementById("link_to_cata_logure").innerHTML = creative_li;
-        
-        if(alloacte_to_copy_writer === 1){
-            let copy_li = "";
-            copy_links_arr.forEach((link , index) => {
-                console.log({link , index })
-                if(link != ''){
-                    console.log(user_roles_arr[index])
-                    copy_li +=   `<p class="pointer m-0" title="uploaded by ${allocated_users_arr[index]} ${ user_roles_arr[index] == 1 ? '' : ' (creativeure)'} ">${link} <i class="fa fa-copy"></i></p>`
-                }
-                document.getElementById("link_to_copy_writer").innerHTML = copy_li;
-            });
-            document.getElementById("allo_qty_to_copy").innerHTML = cp_allocated_qty;
-            $("#copy_row").removeClass("d-none");
-            $("#copy_qty_div").removeClass("d-none");
-            $("#link_copy_writer_row").removeClass("d-none");
-        }
-
-        // submit btn validation
-        let btn_disable = false;
-        if((tot_sku > creativeer_allocated_qty) || (alloacte_to_copy_writer === 1 && tot_sku >= cp_allocated_qty) ){
-            btn_disable = true;
-            $("#submit_wrc").attr("title", "Wrc quantity and allocated quantity not same");
-        }
-
-        $("#submit_wrc").attr("disabled", true);
-        if(btn_disable === false){
-             $("#submit_wrc").removeAttr("title");
-             $("#submit_wrc").removeAttr("disabled");
-        }
     }
 </script>
 
@@ -622,53 +483,10 @@ Creative - Submission
         document.getElementById("creative_copy_user").innerHTML = options;
     }
 </script>
-
-{{-- script for save data to rewrok   --}}
+<!-- msg div script -->
 <script>
-    async function save_data(){
-        const wrc_id = document.querySelector("#wrc_id").value  
-        const creative_allocation_ids = document.querySelector("#creative_allocation_ids").value  
-        console.warn({wrc_id})
-        // return
-
-        // if(creative_allocation_id == 0 || creative_allocation_id ==''){
-        //     alert('User Was Not Selected ');
-        //     $("#creative_copy_user").focus();
-        //     return
-        // }
-        await $.ajax({
-            url: "{{ url('comp-submission')}}",
-            type: "POST",
-            dataType: 'json',
-            data: {
-                wrc_id,
-                creative_allocation_ids,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(res) {
-                if(res.status == 1){
-                    $("#msg_box").css("color", "green");
-                }else if(res.status == 2){
-                    $("#msg_box").css("color", "Blue");
-                    
-                }else if(res.status == 3){
-                    $("#msg_box").css("color", "Blue");
-                    
-                }else if(res.status == 4){
-                    $("#msg_box").css("color", "Blue");
-                }else{
-                    $("#msg_box").css("color", "red");
-                }
-
-                // msg_div msg_box
-                document.querySelector("#msg_box").innerHTML = res.massage
-                $("#msg_div").css("display", "Block");
-            }
-        });
-        setTimeout( () => {
-            $("#msg_div").css("display", "none");
-            $('#msg_box').html("");
-        }, 3000);
-    }
+    setTimeout(function(){
+        document.getElementById('sub_msg_div').style.display = "none";
+    },3000)
 </script>
 @endsection

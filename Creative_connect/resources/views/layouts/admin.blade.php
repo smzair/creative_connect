@@ -211,6 +211,13 @@
                                                     <p>Ready for Submission</p>
                                                 </a>
                                             </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('CREATIVE_SUBMISSION_DONE') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Creative Submission Done</p>
+                                                </a>
+                                            </li>
                                            
                                         </ul>
                                     </li>

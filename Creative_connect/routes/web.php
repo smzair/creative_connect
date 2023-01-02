@@ -100,3 +100,14 @@ Route::post('/get-sku-list' , [CreativeAllocationController::class , 'getSkuList
 //get sku based on wrc id and batch no
 Route::get('/Creative-Submission' , [CreativeSubmissionController::class , 'getCreativeSubmission'])->name('CREATIVE_SUBMISSION_GET');
 
+//Add Ready For Submission
+Route::post('/Creative-Submission' , [CreativeSubmissionController::class , 'addCreativeSubmission'])->name('add_ready_for_submission');
+
+// CREATIVE_SUBMISSION_DONE
+
+// get wrc list for submission done 
+Route::get('/Creative-Submission-Done' , [CreativeSubmissionController::class , 'getDataForCreativeSubmissionDone'])->name('CREATIVE_SUBMISSION_DONE');
+
+//Add  Submission Done
+Route::post('/Creative-Submission-Done' , [CreativeSubmissionController::class , 'addCreativeSubmissionDone'])->name('add_submission_done');
+
