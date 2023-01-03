@@ -8,15 +8,13 @@ Create Catlog WRCs
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
 <!-- New WRC Creation (For Catalogue) -->
 <div class="container">
-
     <style>
         @media (min-width: 992px){
             .modal-lg, .modal-xl{
                 max-width: 900px;
             }
         }
-
-        .msg_box{
+         .msg_box{
             margin: 0.1em 0;
             background: #928c8cfc;
             padding: 0.3em;
@@ -75,7 +73,6 @@ Create Catlog WRCs
                              <!-- Company Name -->
                              <div class="col-sm-3 col-12">
                                 <div class="form-group">
-
                                     <input type="hidden" name="id" value="{{$CatlogWrc->id }}"> 
                                     <input type="hidden" name="c_short" id="c_short" value="">
                                     <input type="hidden" name="short_name" id="short_name" value="">
@@ -84,7 +81,6 @@ Create Catlog WRCs
                                     <label class="control-label required">Company Name</label>
                                     <select class="custom-select form-control-border" id="user_id" name="user_id"  aria-hidden="true" style="width: 100%;">
                                         <option value="" selected>Select Company Name</option>
-                                      
                                         @foreach ($users_data as $user)
                                                 <option value="{{ $user->id }}" data-c_short="{{ $user->c_short }}">
                                                     {{ $user->Company ." (" . $user->name.")" }}
@@ -129,7 +125,7 @@ Create Catlog WRCs
                                 <div class="form-group">
                                     <label class="control-label required">Work Bucket</label>
                                     <select class="custom-select form-control-border " name="commercial_id" id="commercial_id" onchange="set_btn_action()">
-                                        <option value="" data-market_place_ids="" selected disabled>Select Commercial</option>
+                                        <option value="" data-market_place_ids="" >Select Commercial</option>
                                     </select>
                                     <script>
                                         document.querySelector("#commercial_id").value = "{{$CatlogWrc->commercial_id }}"
@@ -140,9 +136,7 @@ Create Catlog WRCs
                             
                         </div>
                         <div class="row">
-                                
-                            
-                            {{-- Mode of Delivery --}}
+                            {{-- Mode of Delivery modeOfDelivary_err --}}
                             @php
                                 $delivary_mode = modeOfDelivary();
                             @endphp
@@ -157,6 +151,11 @@ Create Catlog WRCs
                                                 </option>
                                         @endforeach
                                     </select>
+
+                                    <script>
+                                        document.querySelector("#modeOfDelivary").value = "{{$CatlogWrc->modeOfDelivary }}"
+                                    </script>
+                                    <p class="input_err" style="color: red; display: none;" id="modeOfDelivary_err"></p>
                                 </div>
                             </div>
 
@@ -296,6 +295,7 @@ Create Catlog WRCs
                             </div>
                         </div> --}}
 
+                        {{-- Prerequisites --}}
                         <div class="row mt-2">
                             <div class="col-sm-12 col-12">
                                 <div class="cc-title">
@@ -318,7 +318,7 @@ Create Catlog WRCs
                                     <p class="input_err" style="color: red; display: none;" id="work_brief_err"></p>
                                 </div>
                             </div>
-
+                            {{-- Marketplace Credentials Btn --}}
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
                                     <label class="">Marketplace Credentials</label>
@@ -326,6 +326,7 @@ Create Catlog WRCs
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="row mt-2 float-right">
                             <div class="col-sm-12">
                                 <button type="submit" class="btn btn-success btn-xl btn-warning mb-2" onclick="">{{$CatlogWrc->button_name}}</button>
@@ -387,6 +388,7 @@ Create Catlog WRCs
                         <div class="row float-right">
                             <div class="col-sm-12 col-12"  style="position: relative;" >
                                 <input type="hidden" name="market_place_id_is" id="market_place_id_is">
+                                <input type="hidden" name="commercial_id_is" id="commercial_id_is">
                                 <button type="button" id="btn_save" class="btn btn-warning" style="float:right; margin: 0 5px;" onclick="saveCredentials(event)">Save Credentials</button>
                                 
                             </div>
@@ -409,201 +411,22 @@ Create Catlog WRCs
 </script>
 <script type="application/javascript" src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
 
-@if(isset($CatlogWrc->id))
-
 <script>
-    const brand_id_val = "<?= $CatlogWrc->brand_id ?>";
+    const user_id_val_is = "{{ $CatlogWrc->user_id }}";
+    const saved_brand_id_is = brand_id_val = "<?= $CatlogWrc->brand_id ?>";
     const lot_id_val = "<?= $CatlogWrc->lot_id ?>";
-    console.log({brand_id_val});
-    setTimeout(()=>{      
-    if(brand_id_val > 0){
-        $("#user_id").trigger("change");
-        setTimeout(()=>{      
-        $("#brand_id").trigger("change");
-        document.querySelector("#brand_id").value = "<?= $CatlogWrc->brand_id ?>"
-        setTimeout(()=>{      
-            if(lot_id_val > 0){
-                document.querySelector("#lot_id").value = "<?= $CatlogWrc->lot_id ?>"
-                document.querySelector("#commercial_id").value = "<?= $CatlogWrc->commercial_id ?>"
-                $("#lot_id").trigger("change");
-            }
-        },2000)
-
-    },2000)
-}
-},2000)
-</script>
-@endif
-
-{{-- script for set_Credentials_data --}}
-<script>
-    function set_Credentials_data(){
-
-        $('#msg_box1').html("");
-        $("#msg_box1").css("display", "none");
-        const commercial_id = document.querySelector("#commercial_id").value;
-        // const market_place_ids = document.querySelector("#commercial_id").dataset.market_place_ids
-        const market_place_id_is = $("#commercial_id").find(':selected').data('market_place_ids');
-        document.querySelector("#market_place_id_is").value = market_place_id_is;
-        
-
-        if(!commercial_id > 0){
-            alert('Work Bucket Not selected');
-            return
-        }
-
-        let list = "";
-        $.ajax({
-            url: "{{ url('Catalog-Wrc-marketplace-Credentials-list') }}",
-            type: "POST",
-            dataType: 'json',
-            data: {
-                commercial_id,
-                market_place_ids:market_place_id_is,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(res) {
-                
-                // console.log(res)
-
-                res.map(data => {
-                    // console.log(data)
-
-                    list += 
-                    `<div class="row mt-3" id="marketplace_row${data.id}">
-                        <div class="col-sm-3 col-12">
-                            <div class="col-ac-details">
-                                <h6>${data.marketPlace_name}</h6>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-6">
-                            <div class="col-ac-details">
-                                <input type="hidden" name="marketPlace_id${data.id}" id="marketPlace_id${data.id}"  value="${data.id}">
-                                <input type="text" placeholder="Enter link" id="link${data.id}" name="link${data.id}" value="${data.link}">
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-6">
-                            <div class="col-ac-details">
-                                <input type="text" placeholder="Enter username" id="username${data.id}" name="username${data.id}" value="${data.username}">
-                            </div>
-                        </div>
-                        <div class="col-sm-3 col-6">
-                            <div class="col-ac-details">
-                                <input type="password" placeholder="Enter password"  id="password${data.id}" name="password${data.id}" value="${data.password}">
-                            </div>
-                        </div>              
-                    </div>`;
-                })
-
-                // console.log(list)
-                document.getElementById("marketplace_list_div").innerHTML = list;
-                // document.getElementById("commercial_id").innerHTML = options_work;
-            }
-        });
-    }
+    const commercial_id_is =  "<?= $CatlogWrc->commercial_id; ?>";
 </script>
 
-<script>
-    function set_btn_action(){
-        const commercial_id = document.querySelector("#commercial_id").value;
-        console.log(commercial_id)
-        var eleman = document.getElementById('set_Credentials');
-        eleman.setAttribute("disabled", true);
-        if(commercial_id > 0){
-            eleman.removeAttribute("disabled");;
-        }
-    }
-</script>
-
-<script>
-    // $(".file_name_field").css("display", "none");
-    $("#files").change(function() {
-    filename = this.files[0].name;
-    $("#file_name_field").html(filename);
-    document.getElementById("file_name_field").style.display = "flex";
-    console.log(filename);
-});
-</script>
-
-{{-- script for Save Credentials --}}
-<script>
-
-   async function saveCredentials(event){
-        event.preventDefault();
-        
-        const market_place_id_is = document.querySelector('#market_place_id_is').value
-        const market_place_id_arr = market_place_id_is.split(",");
-        const data_arr = [];
-
-        market_place_id_arr.forEach(element_id => {
-            const marketPlace_id_id = "marketPlace_id"+element_id
-            const link_id = "link"+element_id
-            const username_id = "username"+element_id
-            const password_id = "password"+element_id
-            
-            const marketPlace_id = document.getElementById(marketPlace_id_id).value
-            const link = document.getElementById(link_id).value
-            const username = document.getElementById(username_id).value
-            const password = document.getElementById(password_id).value
-            // data_arr[''+marketPlace_id] = {
-            //     marketPlace_id,
-            //     link,
-            //     username,
-            //     password,
-            // }
-
-            data_arr.push({
-                marketPlace_id,
-                link,
-                username,
-                password,
-            })
-        });
-
-
-        data_arr_st = JSON.stringify(data_arr);
-        $('#msg_box1').html("");
-        $("#msg_box1").css("display", "none");
-        await $.ajax({
-            url: "{{ url('save-wrc-Credentials') }}",
-            type: "POST",
-            dataType: 'json',
-            data: {
-                market_place_id_is,
-                data_arr,
-                data_arr_st,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(res) {
-                console.log(res)
-                if(res == 1){
-                     $("#msg_box1").css("color", "green");
-                     document.querySelector("#msg_box1").innerHTML  = "Marketplace Credentials Saved!!!"
-
-                }else{
-                    $("#msg_box1").css("color", "red");
-                    document.querySelector("#msg_box1").innerHTML  = "Somthing went Wrong please try again!!!"
-                }
-                $("#msg_box1").css("display", "block");
-            }
-        });
-        setTimeout( () => {
-            $('#msg_box1').html("");
-            $("#msg_box1").css("display", "none");
-        }, 2000);
-        // return false
-    }
-</script>
-
-<!-- Select Brand Name -->
+<!-- Get Brand List -->
 <script>
     $(document).ready(function() {
-        $("#user_id").change(function() {
+        $("#user_id").change(async function() {
             const user_id_is = $("#user_id").val();
             const c_short = $("#user_id").find(':selected').data('c_short');
             $("#c_short").val(c_short);
             let options = `<option value="" data-short_name=""  > -- Select Brand Name -- </option>`;
-            $.ajax({
+            await $.ajax({
                 url: "{{ url('get-catlog-brand') }}",
                 type: "POST",
                 dataType: 'json',
@@ -617,14 +440,17 @@ Create Catlog WRCs
                         options +=
                             ` <option value="${brands.brand_id}" data-short_name="${brands.short_name}" > ${brands.name}</option>`;
                     })
-                    console.log(options)
                     document.getElementById("brand_id").innerHTML = options;
-
                 }
             });
-            setTimeout(()=>{
-                document.querySelector("#brand_id").value = "<?= $CatlogWrc->brand_id ?>"
-            },1000)
+
+            if(saved_brand_id_is > 0 && user_id_val_is === user_id_is){
+                document.getElementById("brand_id").value = saved_brand_id_is;
+            }
+            $("#brand_id").trigger("change");
+            setTimeout(() => {
+                set_btn_action();
+            }, 1000);
         });
     })
 </script>
@@ -633,14 +459,15 @@ Create Catlog WRCs
 <!-- Select LOT Number  -->
 <script>
     $(document).ready(function() {
-        $("#brand_id").change(function() {
+        $("#brand_id").change(async function() {
             const user_id_is = $("#user_id").val();
             const brand_id_is = $("#brand_id").val();
             const short_name = $("#brand_id").find(':selected').data('short_name');
             $("#short_name").val(short_name);
-            let options = `<option value="" data-s_type="" > -- Select LOT Number -- </option>`;
+            let options = `<option value="0" data-s_type="" > -- Select Lot Number -- </option>`;
             let options_work = `<option value="0" data-market_place_ids=""  > -- Select Commercial -- </option>`;
-            $.ajax({
+           
+            await $.ajax({
                 url: "{{ url('get-catlog-lot-number') }}",
                 type: "POST",
                 dataType: 'json',
@@ -663,9 +490,209 @@ Create Catlog WRCs
                     document.getElementById("commercial_id").innerHTML = options_work;
                 }
             });
-           
+
+            if(lot_id_val > 0 && saved_brand_id_is == brand_id_is){
+                document.querySelector("#lot_id").value = "<?= $CatlogWrc->lot_id ?>"
+                document.querySelector("#commercial_id").value = "<?= $CatlogWrc->commercial_id ?>"
+            }
+
+            setTimeout(() => {
+                set_btn_action();
+            }, 1000);
         });
     })
+</script>
+
+{{-- code for updation --}}
+<script>
+    $(document).ready(function() {
+        if(user_id_val_is > 0){
+            $("#user_id").trigger("change"); 
+        }
+    })
+</script>
+
+{{-- script for set_Credentials_data --}}
+<script>
+    function set_Credentials_data(){
+
+        $('#msg_box1').html("");
+        $("#msg_box1").css("display", "none");
+        const commercial_id = document.querySelector("#commercial_id").value;
+        // const market_place_ids = document.querySelector("#commercial_id").dataset.market_place_ids commercial_id_is
+        const market_place_id_is = $("#commercial_id").find(':selected').data('market_place_ids');
+        document.querySelector("#market_place_id_is").value = market_place_id_is;
+        document.querySelector("#commercial_id_is").value = commercial_id;
+        if(!commercial_id > 0){
+            alert('Work Bucket Not selected');
+            return
+        }
+
+        let list = "";
+        $.ajax({
+            url: "{{ url('Catalog-Wrc-marketplace-Credentials-list') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                commercial_id,
+                market_place_ids:market_place_id_is,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                // console.log(res)
+
+                res.map(data => {
+                    // console.log(data)
+                    const marketPlace_id = data.id
+                    const credentials_id = data.credentials_id == null ? 0 : data.credentials_id;
+                    const link = data.link == null ? '' : data.link;
+                    const password = data.password == null ? '' : data.password;
+                    const username = data.username == null ? '' : data.username;
+
+                    list += 
+                    `<div class="row mt-3" id="marketplace_row${data.id}">
+                        <div class="col-sm-3 col-12">
+                            <div class="col-ac-details">
+                                <h6>${data.marketPlace_name}</h6>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="col-ac-details">
+                                <input type="hidden" name="marketPlace_id${marketPlace_id}" id="marketPlace_id${marketPlace_id}"  value="${marketPlace_id}">
+                                
+                                <input type="hidden" name="credentials_id${marketPlace_id}" id="credentials_id${marketPlace_id}"  value="${credentials_id}">
+
+                                <input type="text" placeholder="Enter link" id="link${marketPlace_id}" name="link${marketPlace_id}" value="${link}">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="col-ac-details">
+                                <input type="text" placeholder="Enter username" id="username${marketPlace_id}" name="username${marketPlace_id}" value="${username}">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="col-ac-details">
+                                <input type="password" placeholder="Enter password"  id="password${marketPlace_id}" name="password${marketPlace_id}" value="${password}">
+                            </div>
+                        </div>              
+                    </div>`;
+                })
+
+                // console.log(list)
+                document.getElementById("marketplace_list_div").innerHTML = list;
+                // document.getElementById("commercial_id").innerHTML = options_work;
+            }
+        });
+    }
+</script>
+
+{{-- Marketplace Credentials btn validation --}}
+<script>
+    function set_btn_action(){
+        const commercial_id = document.querySelector("#commercial_id").value;
+        // console.log(commercial_id)
+        var eleman = document.getElementById('set_Credentials');
+        eleman.setAttribute("disabled", true);
+        if(commercial_id > 0){
+            eleman.removeAttribute("disabled");;
+        }
+    }
+</script>
+
+{{-- Sku file script --}}
+<script>
+    // $(".file_name_field").css("display", "none");
+    $("#files").change(function() {
+    filename = this.files[0].name;
+    $("#file_name_field").html(filename);
+    document.getElementById("file_name_field").style.display = "flex";
+    console.log(filename);
+});
+</script>
+
+{{-- script for Save Credentials document.querySelector("#commercial_id_is").value --}}
+<script>
+   async function saveCredentials(event){
+        event.preventDefault();
+        
+        const market_place_id_is = document.querySelector('#market_place_id_is').value
+        const commercial_id_is = document.querySelector("#commercial_id_is").value
+        const market_place_id_arr = market_place_id_is.split(",");
+        const data_arr = [];
+
+        market_place_id_arr.forEach(element_id => {
+            const marketPlace_id_id = "marketPlace_id"+element_id
+            const link_id = "link"+element_id
+            const username_id = "username"+element_id
+            const password_id = "password"+element_id
+            const credentials_id_id = "credentials_id"+element_id
+            
+            const marketPlace_id = document.getElementById(marketPlace_id_id).value
+            const link = document.getElementById(link_id).value
+            const username = document.getElementById(username_id).value
+            const password = document.getElementById(password_id).value
+            const credentials_id = document.getElementById(credentials_id_id).value
+            // data_arr[''+marketPlace_id] = {
+            //     marketPlace_id,
+            //     link,
+            //     username,
+            //     password,
+            // }
+
+            data_arr.push({
+                marketPlace_id,
+                link,
+                username,
+                password,
+                credentials_id,
+            })
+        });
+
+
+        data_arr_st = JSON.stringify(data_arr);
+        console.log(data_arr_st)
+        $('#msg_box1').html("");
+        $("#msg_box1").css("display", "none");
+        await $.ajax({
+            url: "{{ url('save-wrc-Credentials') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                market_place_id_is,
+                commercial_id_is,
+                data_arr,
+                // data_arr_st,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                console.log(res)
+
+
+                if(res.response == 1){
+                    $("#msg_box1").css("color", "green");
+                    document.querySelector("#msg_box1").innerHTML  = res.massage;
+                    resCredentials_id_arr = res.resCredentials_id_arr
+
+                    // console.log(resCredentials_id_arr)
+
+                    for (const id_is in resCredentials_id_arr) {
+                        const value_is  = resCredentials_id_arr[id_is]
+                        console.log({id_is ,value_is })
+                        document.getElementById(id_is).value = value_is
+                    }
+                }else{
+                    $("#msg_box1").css("color", "red");
+                    document.querySelector("#msg_box1").innerHTML  = "Somthing went Wrong please try again!!!"
+                }
+                $("#msg_box1").css("display", "block");
+            }
+        });
+        setTimeout( () => {
+            $('#msg_box1').html("");
+            $("#msg_box1").css("display", "none");
+        }, 2000);
+        // return false
+    }
 </script>
 
 <!-- Select Project Name -->
@@ -696,7 +723,7 @@ Create Catlog WRCs
         const check_document1 = $('#document1').val();
         const check_document2 = $('#document2').val();
         const check_sku_qty = $('#sku_qty').val();
-       
+        const check_modeOfDelivary = $('#modeOfDelivary').val();
 
         let user_id_is_Valid = true;
         let brand_id_Valid = true;
@@ -711,6 +738,7 @@ Create Catlog WRCs
         let document1_Valid = true;
         let document2_Valid = true;
         let sku_qty_Valid = true;
+        let modeOfDelivary_is_vaild = true;
 
         // if (check_sku_qty === '') {
         //     $("#sku_qty_err").html("SKU qty is required");
@@ -718,29 +746,35 @@ Create Catlog WRCs
         //     sku_qty_Valid = false;
         // }
 
-        if (check_confirmation_date === '') {
-            $("#confirmation_date_err").html("Details Confirmation Date is required");
-            document.getElementById("confirmation_date_err").style.display = "block";
-            order_qty_Valid = false;
+        if (check_modeOfDelivary == '' || check_modeOfDelivary == 0) {
+            $("#modeOfDelivary_err").html("Mode of Delivery not selected");
+            document.getElementById("modeOfDelivary_err").style.display = "block";
+            modeOfDelivary_is_vaild = false;
         }
 
-        if (check_missing_info_recived_date === '') {
-            $("#missing_info_recived_date_err").html("Missing Info Received Date is required");
-            document.getElementById("missing_info_recived_date_err").style.display = "block";
-            order_qty_Valid = false;
-        }
+        // if (check_img_recevied_date === '') {
+        //     $("#img_recevied_date_err").html("Image Receive Date is required");
+        //     document.getElementById("img_recevied_date_err").style.display = "block";
+        //     order_qty_Valid = false;
+        // }
+            
+        // if (check_missing_info_notify_date === '') {
+        //     $("#missing_info_notify_date_err").html("Missing Info Notify Date is required");
+        //     document.getElementById("missing_info_notify_date_err").style.display = "block";
+        //     order_qty_Valid = false;
+        // }
 
-        if (check_missing_info_notify_date === '') {
-            $("#missing_info_notify_date_err").html("Missing Info Notify Date is required");
-            document.getElementById("missing_info_notify_date_err").style.display = "block";
-            order_qty_Valid = false;
-        }
+        // if (check_missing_info_recived_date === '') {
+        //     $("#missing_info_recived_date_err").html("Missing Info Received Date is required");
+        //     document.getElementById("missing_info_recived_date_err").style.display = "block";
+        //     order_qty_Valid = false;
+        // }
 
-        if (check_img_recevied_date === '') {
-            $("#img_recevied_date_err").html("Image Receive Date is required");
-            document.getElementById("img_recevied_date_err").style.display = "block";
-            order_qty_Valid = false;
-        }
+        // if (check_confirmation_date === '') {
+        //     $("#confirmation_date_err").html("Details Confirmation Date is required");
+        //     document.getElementById("confirmation_date_err").style.display = "block";
+        //     order_qty_Valid = false;
+        // }
 
         if (check_document2 === '') {
             $("#document2_err").html("Add Document is required");
@@ -766,7 +800,7 @@ Create Catlog WRCs
             work_brief_Valid = false;
         }
 
-        if (check_commercial_id === '') {
+        if (check_commercial_id === '' || check_commercial_id == 0) {
             $("#commercial_id_err").html("Work Bucket is required");
             document.getElementById("commercial_id_err").style.display = "block";
             commercial_id_Valid = false;

@@ -47,29 +47,33 @@ class CatalogWrcController extends Controller
 
     public function MarketPlace(){
         return view('Wrc.Catalog-marketplace-list');
-
     }
+
     // marketplace_Credentials_List 
     public function marketplace_Credentials_List(Request $request){
         $commercial_id = $request->commercial_id;
         $market_place_ids = $request->market_place_ids;
-
-        $response = Marketplace::marketplace_Credentials_List($commercial_id , $market_place_ids);
+        // $response = Marketplace::marketplace_Credentials_List($commercial_id, $market_place_ids);
+        $response = Marketplace::catalog_marketplace_Credentials_List($commercial_id , $market_place_ids);
         echo json_encode($response);
+    }
+
+    // testing function marketplace_Credentials_List
+    public function catalog_marketplace_Credentials_List(Request $request){
+        $market_place_ids = '2,4,6';
+        $commercial_id = '2';
+        $response = Marketplace::catalog_marketplace_Credentials_List($commercial_id , $market_place_ids);
+        dd($response);
     }
 
 
     public function save_wrc_Credentials(Request $request){
         $data_arr = $request->data_arr;
-        $response = Marketplace::save_wrc_Credentials($data_arr);
-        
+        $market_place_id_is = $request->market_place_id_is;
+        $commercial_id_is = $request->commercial_id_is;
+        $response = Marketplace::save_wrc_Credentials($data_arr, $commercial_id_is , $market_place_id_is);
         echo $response;
-        // dd($data_arr);
-
     }
-
-
-
 
     // getBrand List  
     public function getBrand(Request $request){
