@@ -118,6 +118,7 @@ Create LOTS CATALOGS
                                         <option value="">Select Request Type</option>
                                         <option value="New">New</option>
                                         <option value="Existing">Existing</option>
+                                        <option value="Retainer">Retainer</option>
                                     </select>
                                      <script>
                                          document.getElementById("requestType").value = "{{ $lotInfo->requestType }}";
