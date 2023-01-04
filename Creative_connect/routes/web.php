@@ -111,3 +111,12 @@ Route::get('/Creative-Submission-Done' , [CreativeSubmissionController::class , 
 //Add  Submission Done
 Route::post('/Creative-Submission-Done' , [CreativeSubmissionController::class , 'addCreativeSubmissionDone'])->name('add_submission_done');
 
+
+//CREATIVE_WRC_CLIENT_APPROVAL_REJECTION
+Route::get('/Creative-WRC-Client-Approval-Rejection' , [CreativeSubmissionController::class , 'creativeWrcClientApprovalRejection'])->name('CREATIVE_WRC_CLIENT_APPROVAL_REJECTION');
+
+// approve action for wrc
+Route::post('/Creative-WRC-Client-Approval-Rejection' , [CreativeSubmissionController::class , 'creativeWrcApprove'])->name('creative_wrc_approve');
+
+// reject action for wrc
+Route::post('/Creative-WRC-Client-Rejection' , [CreativeSubmissionController::class , 'creativeWrcReject'])->name('creative_wrc_reject');

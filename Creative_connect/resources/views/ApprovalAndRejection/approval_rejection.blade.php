@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title')
-Creative - Submission Done
+WRC Client Approval & Rejection
 @endsection
 @section('content')
 
@@ -138,7 +138,7 @@ Creative - Submission Done
             @endif
             <div class="card card-transparent">
                 <div class="card-header">
-                    <h3 class="card-title" style="font-size: 2rem;">Creative - Submission Done</h3>
+                    <h3 class="card-title" style="font-size: 2rem;">WRC Client Approval & Rejection</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
@@ -150,11 +150,11 @@ Creative - Submission Done
                                 <th class="align-middle" style="text-align: center">Brand Name</th>
                                 <th class="align-middle" style="text-align: center">Lot Number</th>
                                 <th class="align-middle" style="text-align: center">WRC Number</th>
+                                <th class="align-middle">Feedback Received</th>
                                 <th class="align-middle" style="text-align: center">Batch Number</th>
                                 <th class="align-middle" style="text-align: center">Order Qty</th>
                                 <th class="align-middle" style="text-align: center">SKU Qty</th>
                                 <th class="align-middle" style="text-align: center">Kind of Work</th>
-                                <th class="align-middle">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -224,6 +224,16 @@ Creative - Submission Done
                                 <td id="brands_name{{$skey}}">{{ $brands_name }}</td>
                                 <td id="lot_number{{$skey}}">{{ $lot_number }}</td>
                                 <td id="wrc_number{{$skey}}" data-copy_link = "{{$copy_links}}" data-creative_link = "{{$creative_links}}" data-creative_submissions_id = "{{$row['creative_submissions_id']}}">{{ $wrc_number }}</td>
+                                <td>
+                                    <div class="d-inline-block mt-1">
+                                        <button data-company="{{ $wrc_id }}" onclick="setdata('{{ $skey }}')" class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#CreativeApprove">
+                                            Approve
+                                        </button>
+                                        <button data-company="{{ $wrc_id }}" onclick="setdata('{{ $skey }}')" class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#CreativeReject">
+                                            Reject
+                                        </button>
+                                    </div>
+                                </td>
                                 <td id="batch_no{{$skey}}">{{ $batch_no }}</td>
                                 <?php 
                                 if($row['client_bucket'] == 'Retainer'){ ?>
@@ -234,13 +244,7 @@ Creative - Submission Done
                                     <td id="sku_count{{$skey}}">{{$row['sku_count'] != null ? $row['sku_count'] : 0}}</td>
                                 <?php  } ?>
                                 <td id="kind_of_work{{$skey}}">{{ $kind_of_work }}</td>
-                                <td>
-                                    <div class="d-inline-block mt-1">
-                                        <button data-company="{{ $wrc_id }}" onclick="setdata('{{ $skey }}')" class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#CreativeCommnentModal">
-                                            Details
-                                        </button>
-                                    </div>
-                                </td>
+                                
                             </tr>  
                             @endforeach
                         </tbody>
@@ -251,87 +255,53 @@ Creative - Submission Done
     </div>
 
     {{-- Modal section --}}
-    <div class="modal fade" id="CreativeCommnentModal">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="CreativeApprove">
+        <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header py-2">
-                    <h4 class="modal-title">Submission Done</h4>
+                    <h4 class="modal-title">WRC Client Approval</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{route('add_submission_done')}}">
+                    <form method="POST" action="{{route('creative_wrc_approve')}}">
                         @csrf
                         <input type="hidden" name="wrc_id" id="wrc_id" value="">
                         <input type="hidden" name="batch_no" class="batch_no" value="">
                         <input type="hidden" name="creative_submissions_id" class="creative_submissions_id" value="">
+                        <div class="form-group">
+                            <button  type="submit" class="btn btn-warning">Approve</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="CreativeReject">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header py-2">
+                    <h4 class="modal-title">WRC Client Rejection</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="width: 50%">
+                    <form method="POST" action="{{route('creative_wrc_reject')}}">
+                        @csrf
+                        <input type="hidden" name="wrc_id" id="wrc_id_reject" value="">
+                        <input type="hidden" name="batch_no" class="batch_no_reject" value="">
+                        <input type="hidden" name="creative_submissions_id" class="creative_submissions_id" value="">
 
                         <div class="row">
-                            <div class="col-3 form-group">
-                                <label for="wrc_number">Wrc number</label>
-                                <p id="wrc_number"></p>
+                            <div class="col-12 form-group">
+                                <textarea rows="4" cols="60" name="reject_reason" id="reject_reason" placeholder="Enter Your Reason of rejection..."></textarea>
                             </div>
-                           
-                            <div class="col-3 form-group">
-                                <label for="brand_name">Brand Name</label>
-                                <p id="brand_name"></p>
-                            </div>
-                            <div class="col-3 form-group">
-                                <label for="tot_sku">Sku Qty</label>
-                                <p id="tot_sku"></p>
-                            </div>
-                            <div class="col-3 form-group">
-                                <label for="order_qty">Order Qty</label>
-                                <p id="order_qty" class="order_qty"></p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-3 form-group">
-                                <label for="work_start_date">Wrok Start Date</label>
-                                <p id="work_start_date">Start Date</p>
-                            </div>
-                            {{-- <div class="col-3 form-group">
-                                <label for="work_initiate_date">Wrok initiated Date</label>
-                                <p id="work_initiate_date"></p>
-                            </div>
-                            <div class="col-3 form-group">
-                                <label for="work_commited_date">Wrok Committed Date</label>
-                                <p id="work_commited_date"></p>
-                            </div> --}}
-                            <div class="col-3 form-group">
-                                <label for="batch_no">Batch Number</label>
-                                <p id="batch_no"></p>
-                            </div>
-                        </div>
-
-
-                        <div class="row px-3">
-                            <div class="col-12 form-group" style="background: #eee; color:#232323 ">
-                                <div class="row head_row"  >
-                                    <div class="col-3">
-                                        <p class="m-0">Link To GD</p>
-                                    </div>
-                                    <div class="col-9" id="link_to_gd">
-                                    </div>
-                                </div>
-                                <div class="row head_row  "  id="link_copy_writer_row">
-                                    <div class="col-3">
-                                        <p class="m-0">Link To CW</p>
-                                    </div>
-                                    <div class="col-9" id="link_to_cw">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="msg_div" style="display: none;">
-                            <p class="msg_box" id="msg_box"></p>
                         </div>
                         <div class="form-group">
                          
-                            <button disabled type="submit" class="btn btn-warning">WRC Marked Complete </button>
+                            <button  type="submit" class="btn btn-warning">Reject </button>
                         </div>
                     </form>
                 </div>
@@ -386,50 +356,13 @@ Creative - Submission Done
         const wrc_id_td = "wrc_id"+val;
         const wrc_id = document.getElementById(wrc_id_td).innerHTML;
         document.querySelector('#wrc_id').value = wrc_id;
-
-        // set start time
-        const start_time = $("#"+wrc_id_td).data("start_time")
-        document.querySelector('#work_start_date').innerHTML = start_time;
-
-        
-
-        // set wrc no
-        const wrc_number_td = "wrc_number"+val;
-        const wrc_number = document.getElementById(wrc_number_td).innerHTML;
-        document.querySelector('#wrc_number').innerHTML = wrc_number;
-
-        // set creative_submissions_id 
-        const creative_submissions_id = $("#"+wrc_number_td).data("creative_submissions_id")
-        document.querySelector('.creative_submissions_id').value = creative_submissions_id;
-
-        // creative link
-        const creative_link = $("#"+wrc_number_td).data("creative_link")
-        document.querySelector('#link_to_gd').innerHTML = creative_link;
-
-        // copy link
-        const copy_link = $("#"+wrc_number_td).data("copy_link")
-        document.querySelector('#link_to_cw').innerHTML = copy_link;
-
-        // set brand name 
-        const brands_name_td = "brands_name"+val;
-        const brands_name = document.getElementById(brands_name_td).innerHTML;
-        document.querySelector('#brand_name').innerHTML = wrc_number;
-
-        // set sku qty
-        const sku_count_td = "sku_count"+val;
-        const sku_count = document.getElementById(sku_count_td).innerHTML;
-        document.querySelector('#tot_sku').innerHTML = sku_count;
-
-        // set order qty
-        const order_qty_td = "order_qty"+val;
-        const order_qty = document.getElementById(order_qty_td).innerHTML;
-        document.querySelector('#order_qty').innerHTML = order_qty;
+        document.querySelector('#wrc_id_reject').value = wrc_id;
 
         // set batch number
         const batch_no_td = "batch_no"+val;
         const batch_no = document.getElementById(batch_no_td).innerHTML;
-        document.querySelector('#batch_no').innerHTML = batch_no;
         document.querySelector('.batch_no').value = batch_no;
+        document.querySelector('.batch_no_reject').value = batch_no;
 
     }
 </script>

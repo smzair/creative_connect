@@ -35,6 +35,16 @@
 
 </head>
 
+<style>
+    .sidenav {
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+</style>
+
 <body class="sidebar-mini layout-fixed accent-yellow " id="main-bdy" style="height: auto;">
 
     <div class="wrapper" id="">
@@ -73,7 +83,8 @@
 
             <!-- Sidebar -->
             <div
-                class="sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-transition os-host-scrollbar-horizontal-hidden">
+                class="sidenav sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-transition os-host-scrollbar-horizontal-hidden">
+                
                 <div class="os-resize-observer-host observed">
                     <div class="os-resize-observer" style="left: 0px; right: auto;"></div>
                 </div>
@@ -83,7 +94,7 @@
                 {{-- <div class="os-content-glue" style="margin: 0px -8px; width: 73px; height: 497px;"></div> --}}
                 <div class="os-padding">
                     <div class="os-viewport os-viewport-native-scrollbars-invisible os-viewport-native-scrollbars-overlaid"
-                        style="overflow-y: scroll;">
+                        >
                         <div class="os-content" style="padding: 0px 8px; height: 100%; width: 100%;">
                             <!-- Sidebar user panel (optional) -->
                             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -216,6 +227,13 @@
                                                 <a href="{{ route('CREATIVE_SUBMISSION_DONE') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
                                                     <p>Creative Submission Done</p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('CREATIVE_WRC_CLIENT_APPROVAL_REJECTION') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Creative WRC Client Approval & Rejection</p>
                                                 </a>
                                             </li>
                                            
