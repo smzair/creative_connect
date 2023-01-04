@@ -4,8 +4,42 @@
 Marketplace Credentials
 @endsection
 @section('content')
+
+
 <div class="lot-table mt-1">
     <div class="container-fluid">
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card card-transparent" >
+                    <form action="" method="POST">
+                        <div class="row p-2">
+                            @php
+                                $getUserCompanyData = getUserCompanyData();
+                            @endphp
+                            <div class="col-3 form-group">
+                                <label class="control-label" style="width: 100%;" for="user_id">Company Name</label>
+                                <select class="custom-select form-control-border" name="user_id" id="user_id">
+                                    <option value="0" selected>Select Company Name</option>
+                                        @foreach ($getUserCompanyData as $user)
+                                            @php
+                                                $company_name = ucfirst($user->Company)." (".ucfirst($user->c_short).")"
+                                            @endphp
+                                            <option  value="{{$user->id}}" data-client_id="{{$user->client_id}}" data-company="{{$company_name}}"  data-c_short="{{$user->c_short}}">{{$company_name}}</option>
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-3 form-group">
+                                <label class="control-label">Brand Name</label>
+                                <select class="custom-select form-control-border" name="brand_id"  id="brand_id" onchange="marketplace_c_list()">
+                                    <option value = "0">-- Select Brand Name --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-12">
                 <div class="card card-transparent">
@@ -52,32 +86,33 @@ Marketplace Credentials
                                 </div>
                             </div>
                         </div>
+
+                        
                     </div>
                     <div class="card-body table-responsive p-0"  style="max-height: 700px; height: 100%;">
-                        <table id="wrcTableCat" class="table table-head-fixed table-hover text-nowrap data-table">
+                        <table id="" class="table table-head-fixed table-hover text-nowrap">
                             <thead>
                             <tr class="wrc-tt">
                                 <th class="p-2">Marketplace</th>
                                 <th class="p-2">Link</th>
                                 <th class="p-2">Username</th>
                                 <th class="p-2">Password</th>
+                                <th class="p-2">Commercial Id</th>
                             </tr>
                             </thead>
                              @php
-                                $marketPlace = getMarketPlace();
+                                // $marketPlace = getMarketPlace();
                                 // pre($marketPlace);
                             @endphp
-                            <tbody>
-                                @foreach($marketPlace as $index => $row)
+                            <tbody id="marketPlace_body">
+                                {{-- @foreach($marketPlace as $index => $row)
                                 <tr class="row-tt">
-                                    {{-- <td class="p-sm-2 p-1">{{$index+1}}</td> --}}
                                     <td class="p-sm-2 p-1">{{$row['marketPlace_name']}}</td>
                                     <td class="p-sm-2 p-1">{{$row['link']}}</td>
                                     <td class="p-sm-2 p-1">{{$row['username']}}</td>
                                     <td class="p-sm-2 p-1">{{$row['password']}}</td>
-                                    
                                 </tr>
-                                @endforeach
+                                @endforeach --}}
                             </tbody>
                         </table>
 
@@ -116,5 +151,128 @@ Marketplace Credentials
         "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
         "buttons": ["copy", "csv", "excel", "pdf"]
   }).buttons().container().insertAfter('#masterData_wrapper .dataTables_length');
+</script>
+
+<script type="application/javascript" src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
+
+
+
+<!-- Get Brand List -->
+<script>
+    $(document).ready(function() {
+        $("#user_id").change(async function() {
+            const user_id_is = $("#user_id").val();
+            const c_short = $("#user_id").find(':selected').data('c_short');
+            $("#c_short").val(c_short);
+            let options = `<option value="" data-short_name=""  > -- Select Brand Name -- </option>`;
+            await $.ajax({
+                url: "{{ url('get-catlog-brand') }}",
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    user_id: user_id_is,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    console.log(res)
+                    res.map(brands => {
+                        options +=
+                            ` <option value="${brands.brand_id}" data-short_name="${brands.short_name}" > ${brands.name}</option>`;
+                    })
+                    document.getElementById("brand_id").innerHTML = options;
+                }
+            });
+            // marketplace_c_list();
+        });
+    })
+</script>
+
+{{-- Marketplace Credentials list --}}
+<script>
+
+    async function marketplace_c_list(){
+
+        const user_id_is = $("#user_id").val();
+        const brand_id_is = $("#brand_id").val();
+        let tr_list = '';
+        await $.ajax({
+            url: "{{ url('get-marketplace_c_list') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                user_id : user_id_is,
+                brand_id : brand_id_is,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                // console.log(res)
+                if(res.status == 1){
+                    const data_arr = res.data
+                    // console.log(data_arr)
+                    // const filtered = data_arr.filter(arr =>{
+                    //     const marketPlace_name = arr['marketPlace_name']
+                    //     const credentials_id = arr['credentials_id'] == null ? '' : arr['credentials_id'];
+                    //     const link = arr['link'] == null ? '' : arr['link'];
+                    //     const username = arr['username'] == null ? '' : arr['username'];
+                    //     const password = arr['password'] == null ? '' : arr['password'];
+                    // })
+                    const shown_data = []
+                    data_arr.map((arr , index) => {
+                        const marketPlace_name = arr['marketPlace_name']
+                        const credentials_id = arr['credentials_id'] == null ? '' : arr['credentials_id'];
+                        const commercial_id = arr['commercial_id'] == null ? '' : arr['commercial_id'];
+                        const link = arr['link'] == null ? '' : arr['link'];
+                        const username = arr['username'] == null ? '' : arr['username'];
+                        const password = arr['password'] == null ? '' : arr['password'];
+                        
+                        const f_arr = shown_data.filter(data => 
+                            data.marketPlace_name === marketPlace_name
+                            &&
+                            data.link === link
+                            &&
+                            data.username === username
+                            &&
+                            data.password === password
+                            &&
+                            data.commercial_id !== commercial_id
+                        )
+
+                        console.log( "index " +index +" f_arr.length ",f_arr.length)
+                        console.log({f_arr})
+                        if(f_arr.length === 0){
+                            shown_data.push({
+                                marketPlace_name,
+                                credentials_id,
+                                link,
+                                username,
+                                password,
+                                commercial_id,
+                            })
+                            tr_list += `<tr class="row-tt">
+                                <td class="p-sm-2 p-1">${marketPlace_name}</td>
+                                <td class="p-sm-2 p-1">${link}</td>
+                                <td class="p-sm-2 p-1">${username}</td>
+                                <td class="p-sm-2 p-1">${password}</td>
+                                <td class="p-sm-2 p-1">${commercial_id}</td>
+                            </tr>`;
+                        }
+                        console.log(shown_data)
+
+                    })
+
+
+                }else{
+                    alert(res.massage);
+                }
+                // res.map(brands => {
+                //     options +=
+                //         ` <option value="${brands.brand_id}" data-short_name="${brands.short_name}" > ${brands.name}</option>`;
+                // })
+                // console.log(tr_list)
+                document.getElementById("marketPlace_body").innerHTML = tr_list;
+            }
+        });
+    }
+    
 </script>
 @endsection

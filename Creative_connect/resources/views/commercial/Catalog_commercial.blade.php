@@ -104,7 +104,8 @@ Create New Commercial for Creative
                                         @php
 
                                         $commercial_id_is = $commercial_data->id;
-                                          $market_place_arr =  json_decode($commercial_data->market_place,true);
+                                          $market_place_arr =  explode(',',$commercial_data->market_place);
+                                        //   $market_place_arr =  json_decode($commercial_data->market_place,true);
                                         //   print_r($market_place_arr);
                                         @endphp
                                     <select class="custom-select select2bs4 form-control-border" placeholder="Select Marketplace" name="market_place[]" id="market_place" aria-hidden="true" style="width: 100%;" multiple="multiple">
@@ -125,11 +126,6 @@ Create New Commercial for Creative
                                         @endforeach
                                     </select>
                                     <p class="input_err" style="color: red; display: none;" id="market_place_err"></p>
-
-                                     <script>
-                                        console.log("{{ $commercial_data->market_place }}")
-                                        //  document.getElementById("market_place").value = "{{ $commercial_data->market_place }}";
-                                    </script>
                                 </div>
                             </div>
 

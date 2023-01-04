@@ -64,6 +64,8 @@ Route::post('/save-wrc-Credentials', [CatalogWrcController::class, 'save_wrc_Cre
 
 // Route::get( '/Catalog-marketplace-list', [CatalogWrcController::class, 'catalog_marketplace_Credentials_List'])->name('MarketPlace');
 Route::get('/Catalog-marketplace-list', [CatalogWrcController::class, 'MarketPlace'])->name('MarketPlace');
+Route::post('/get-marketplace_c_list', [CatalogWrcController::class, 'marketplace_Credentials_details']); // marketplace_Credentials_details list based on company and brand
+// get-marketplace_c_list
 
 Route::get('/Catalog-viewWrcs', [CatalogWrcController::class, 'view'])->name('viewCatalogWRC');
 Route::post('/Catalog-Wrc-Create', [CatalogWrcController::class, 'store'])->name('STORECATLOGWRC');

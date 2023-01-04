@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CatalogMarketplaceCredentials;
 use App\Models\CatlogWrc;
 use App\Models\Marketplace;
 use Illuminate\Http\Request;
@@ -45,11 +46,7 @@ class CatalogWrcController extends Controller
     }
 
 
-    public function MarketPlace(){
-        return view('Wrc.Catalog-marketplace-list');
-    }
-
-    // marketplace_Credentials_List 
+    // marketplace_Credentials_List for save and store in wrc panel
     public function marketplace_Credentials_List(Request $request){
         $commercial_id = $request->commercial_id;
         $market_place_ids = $request->market_place_ids;
@@ -58,13 +55,28 @@ class CatalogWrcController extends Controller
         echo json_encode($response);
     }
 
-    // testing function marketplace_Credentials_List
-    public function catalog_marketplace_Credentials_List(Request $request){
-        $market_place_ids = '2,4,6';
-        $commercial_id = '2';
-        $response = Marketplace::catalog_marketplace_Credentials_List($commercial_id , $market_place_ids);
-        dd($response);
+
+    public function MarketPlace()
+    {
+        return view('Wrc.Catalog-marketplace-list');
     }
+
+    // function for marketplace Credentials details in Marketplace Credentials panel 
+    public function marketplace_Credentials_details(Request $request){
+        $user_id = $request->user_id;
+        $brand_id = $request->brand_id;
+
+        $response = CatalogMarketplaceCredentials::get_c_data($user_id, $brand_id);
+        echo $response;
+    }
+
+    // testing function marketplace_Credentials_List
+    // public function catalog_marketplace_Credentials_List(Request $request){
+    //     $market_place_ids = '2,4,6';
+    //     $commercial_id = '2';
+    //     $response = Marketplace::catalog_marketplace_Credentials_List($commercial_id , $market_place_ids);
+    //     dd($response);
+    // }
 
 
     public function save_wrc_Credentials(Request $request){
