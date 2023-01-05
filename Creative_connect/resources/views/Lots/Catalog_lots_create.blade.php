@@ -67,11 +67,14 @@ Create LOTS CATALOGS
                             {{-- Company Name --}}
                             <div class="col-sm-6">
                                     <div class="form-group">
+                                        @php
+                                            // pre($users);
+                                        @endphp
                                     <label class="control-label required">Company Name</label>
                                     <select class="custom-select form-control-border " id="user_id" name="user_id"  aria-hidden="true" style="width: 100%;">
                                         <option value="" selected>Select Company Name</option>
                                         @foreach ($users as $user)
-                                        <option  value="{{$user->id}}" data-client_id="{{$user->client_id}}" data-c_short="{{$user->c_short}}">{{ucfirst($user->Company)}}</option>
+                                        <option  value="{{$user->id}}" data-client_id="{{$user->client_id}}" data-c_short="{{$user->c_short}}">{{ucfirst($user->Company)." (".ucfirst($user->c_short).")"}}</option>
                                         @endforeach
                                     </select>
                                     <p class="input_err" style="color: red; display: none;" id="user_id_err"></p>

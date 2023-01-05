@@ -3,6 +3,7 @@
 use App\Http\Controllers\CatalogAllocationController;
 use App\Http\Controllers\CatalogClientARController;
 use App\Http\Controllers\CatalogSubmissionController;
+use App\Http\Controllers\CatalogWrcBatchController;
 use App\Http\Controllers\CatalogWrcController;
 use App\Http\Controllers\CatlaogQcController;
 use Illuminate\Support\Facades\Route;
@@ -68,8 +69,12 @@ Route::post('/get-marketplace_c_list', [CatalogWrcController::class, 'marketplac
 
 Route::get('/Catalog-viewWrcs', [CatalogWrcController::class, 'view'])->name('viewCatalogWRC');
 Route::post('/Catalog-Wrc-Create', [CatalogWrcController::class, 'store'])->name('STORECATLOGWRC');
-Route::get('/Catalog-Wrc-Create/{id}', [CatalogWrcController::class, 'edit']);
+Route::get('/Catalog-Wrc-Create/{id}', [CatalogWrcController::class, 'edit'])->name('EDITCATLOGWRC');
 Route::post('/Catlog-updateWrc', [CatalogWrcController::class, 'update'])->name('UPDATECATLOGWRC');
+
+Route::get('/Catalog-wrc-batch', [CatalogWrcBatchController::class, 'index'])->name('CatalogWrcBatch'); // Catalog Wrc's Batch Panel 
+Route::post('/Catlog-wrc-inverd-new-batch', [CatalogWrcBatchController::class, 'storeNewBatch'])->name('WRC_INVERD_NEW_BATCH');
+
 #ajax
 Route::post('/get-catlog-brand', [CatalogWrcController::class, 'getBrand']);
 Route::post('/get-catlog-lot-number', [CatalogWrcController::class, 'getLotNumber']);

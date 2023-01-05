@@ -31,16 +31,26 @@ Create Catlog WRCs
             </div>
         </div>
 
+        @php
+            $cl_wrc_id = $CatlogWrc->id;
+            $dis_none = ""; 
+            if($cl_wrc_id > 0){
+                $disabled = "disabled";
+                $dis_none = "display: none"; 
+                
+            }
+        @endphp
+
         <div class="col-3">
-            <div class="card card-transparent m-0 " style="align-items:center; padding: 10px;" >
+            <div class="card card-transparent m-0 " style="align-items:center; padding: 10px; height: 100%;justify-content: center;" >
                 <div>
-                    <a download="catalog_sku" href="{{ asset('fiels/catalog_sku.csv') }}" class="btn" style="margin-bottom: 6px"><i class="fa fa-download"></i> Download Master Sheet</a>
+                    <a  download="catalog sku Master Sheet" href="{{ asset('fiels/catalog_sku.csv') }}" class="btn" style="margin-bottom: 6px"><i class="fa fa-download"></i> Download Master Sheet</a>
                 </div>
-                <div>
+                <div style="{{ $dis_none }}">
                     <label for="files" class="btn">Upload Sheet</label>
                     <br>
                 </div>
-                <span class="file_name_field" style="color: white;" id="file_name_field"></span>
+                <span  class="file_name_field" style="color: white;" id="file_name_field"></span>
             </div>
         </div>    
         <div class="col-4">
@@ -68,8 +78,8 @@ Create Catlog WRCs
             <div class="card card-transparent card-info mt-3">
                 <div class="card-header bg-warning">
                     <h3 class="card-title">Create New WRC</h3>
-                    <a href="javascript:;" class="btn btn-warning upld-action-btn float-right d-none" id="uploadActionBTN" data-toggle="modal" data-target="#skuUploaderModal">
-                        Click to open
+                    <a href="{{route('viewCatalogWRC')}}" class="btn btn-warning upld-action-btn float-right">
+                        Catlog WRCs List
                     </a>
                 </div>
                 <div class="card-body"> 
@@ -324,7 +334,7 @@ Create Catlog WRCs
                             <div class="col-sm-3 col-12">
                                 <div class="form-group">
                                     <label class="">Generic Data Format</label>
-                                    <input type="text" class="form-control" name="generic_data_format" id="generic_data_format" placeholder="Add Link" value="{{$CatlogWrc->generic_data_format }}">
+                                    <input type="text" class="form-control" name="generic_data_format_link" id="generic_data_format_link" placeholder="Add Link" value="{{$CatlogWrc->generic_data_format_link }}">
                                 </div>
                             </div>
                             {{-- Images as per guidelines --}}
@@ -495,6 +505,8 @@ Create Catlog WRCs
                 success: function(res) {
                     const {commercial_data,lot_number_data} = res;
                     lot_number_data.map(lots => {
+
+                        console.log(lots)
                         options +=
                             ` <option value="${lots.id}" data-s_type="${lots.project_name}"> ${lots.lot_number}</option>`;
                     })
@@ -510,6 +522,7 @@ Create Catlog WRCs
             if(lot_id_val > 0 && saved_brand_id_is == brand_id_is){
                 document.querySelector("#lot_id").value = "<?= $CatlogWrc->lot_id ?>"
                 document.querySelector("#commercial_id").value = "<?= $CatlogWrc->commercial_id ?>"
+                setStype();
             }
 
             setTimeout(() => {
@@ -591,7 +604,7 @@ Create Catlog WRCs
                         </div>
                         <div class="col-sm-3 col-6">
                             <div class="col-ac-details">
-                                <input type="password" placeholder="Enter password"  id="password${marketPlace_id}" name="password${marketPlace_id}" value="${password}">
+                                <input type="text" placeholder="Enter password"  id="password${marketPlace_id}" name="password${marketPlace_id}" value="${password}">
                             </div>
                         </div>              
                     </div>`;

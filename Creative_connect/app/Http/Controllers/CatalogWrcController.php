@@ -34,7 +34,7 @@ class CatalogWrcController extends Controller
             'sku_qty' => '',
             'work_brief' => '',
             'modeOfDelivary' => '0', 
-            'generic_data_format' => '',
+            'generic_data_format_link' => '',
             'img_as_per_guidelines' => '',
             'guidelines' => '',
             'document1' => '',
@@ -51,7 +51,6 @@ class CatalogWrcController extends Controller
         );
         return view('Wrc.Catalog-wrc-create')->with('users_data', $users_data)->with('CatlogWrc', $CatlogWrc)->with('sku_details', $sku_details);
     }
-
 
     // marketplace_Credentials_List for save and store in wrc panel
     public function marketplace_Credentials_List(Request $request){
@@ -107,10 +106,12 @@ class CatalogWrcController extends Controller
         $brand_id = $request->brand_id;
         $data = [];
 
-        $lot_number_data = DB::table('lots_catalog')->where('lots_catalog.user_id' , $user_id)->where('lots_catalog.brand_id' , $brand_id)
-        ->leftJoin('brands', 'lots_catalog.brand_id' , 'brands.id')
-       
-        ->select('lots_catalog.id', 'lots_catalog.lot_number', 'lots_catalog.user_id', 'lots_catalog.brand_id', 'brands.short_name')->get();
+        $lot_number_data = DB::table('lots_catalog')->
+        where('lots_catalog.user_id' , $user_id)->
+        where('lots_catalog.brand_id' , $brand_id)
+        ->leftJoin('brands', 'lots_catalog.brand_id' , 'brands.id')->
+        select('lots_catalog.id', 'lots_catalog.lot_number', 'lots_catalog.user_id', 'lots_catalog.brand_id', 'brands.short_name')->
+        get();
 
         $commercial_data = DB::table('create_commercial_catalog')->where('user_id',$user_id)->where('brand_id',$brand_id)->select('id as create_commercial_catalog_id', 'market_place', 'type_of_service', 'market_place  as market_place_ids')->get();
         
@@ -153,6 +154,18 @@ class CatalogWrcController extends Controller
 
             $modeOfDelivary = $request->modeOfDelivary;
 
+            $lot_id = $request->lot_id;
+            $catalog_requestType = DB::table('lots_catalog')->where('id', $lot_id)->get(['requestType'])->first();
+            $requestType = $catalog_requestType  != null ? $catalog_requestType->requestType : null;
+
+            $batch_no = 0;
+            $is_retainer = 0;
+            if ($requestType == 'Retainer') {
+                $batch_no = 1;
+                $is_retainer = 1;
+            }
+
+
             $createWrc = new CatlogWrc();
 
             $createWrc->lot_id = $request->lot_id;
@@ -168,23 +181,17 @@ class CatalogWrcController extends Controller
             $createWrc->guidelines = $request->guide_lines == null ? '' : $request->guide_lines;
             $createWrc->document1 = $request->document1 == null ? '' : $request->document1;
             $createWrc->document2 = $request->document2 == null ? '' : $request->document2;
+            $createWrc->generic_data_format_link = $request->generic_data_format_link == null ? '' : $request->generic_data_format_link;
+            $createWrc->img_as_per_guidelines = $request->img_as_per_guidelines == null ? '' : $request->img_as_per_guidelines;
 
             $sku_qty_is = $request->sku_qty == null ? '0' : $request->sku_qty;
             $createWrc->alloacte_to_copy_writer = $alloacte_to_copy_writer;
             $createWrc->sku_qty = $sku_qty_is;
+            $createWrc->is_retainer = $is_retainer;
             $createWrc->status = 'Ready_for_allocation';
             $createWrc->save();
 
             $wrc_id_is = $createWrc->id;
-
-
-            $lot_id = $request->lot_id;
-            $catalog_requestType = DB::table('lots_catalog')->where('id', $lot_id)->get(['requestType'])->first();
-            $requestType = $catalog_requestType  != null ? $catalog_requestType->requestType : null;
-            $batch_no = 0;
-            if($requestType == 'Retainer'){
-                $batch_no = 1;
-            }
 
             // code for save file
             $handle = fopen($_FILES['sku_sheet']['tmp_name'], "r");
@@ -201,6 +208,7 @@ class CatalogWrcController extends Controller
                     $count++;
                     continue;
                 }
+                $count++;
 
                 $sku_code = $csvLine[0];
                 $style = $csvLine[1];
@@ -224,13 +232,13 @@ class CatalogWrcController extends Controller
                 }
             }
 
-            if ($requestType == 'Retainer') {
-                $storeWrcBatch = new CatalogWrcBatch();
-                $storeWrcBatch->wrc_id = $wrc_id_is;
-                $storeWrcBatch->batch_no = $batch_no;
-                $storeWrcBatch->sku_count = $saved_rows;
-                $storeWrcBatch->save();
-            }
+            $storeWrcBatch = new CatalogWrcBatch();
+            $storeWrcBatch->wrc_id = $wrc_id_is;
+            $storeWrcBatch->batch_no = $batch_no;
+            $storeWrcBatch->sku_count = $saved_rows;
+            $storeWrcBatch->prequisites = '';
+
+            $storeWrcBatch->save();
 
             $tot_sku_qty_is = $saved_rows + $sku_qty_is;
             CatlogWrc::where('id', $wrc_id_is)->update(['sku_qty' => $tot_sku_qty_is]);
@@ -263,7 +271,7 @@ class CatalogWrcController extends Controller
                     'sku_qty' => $saved_rows,
                     'work_brief' => '',
                     'modeOfDelivary' => '0',
-                    'generic_data_format' => '',
+                    'generic_data_format_link' => '',
                     'img_as_per_guidelines' => '',
                     'guidelines' => '',
                     'document1' => '',
@@ -275,7 +283,7 @@ class CatalogWrcController extends Controller
                 ];
             return view('Wrc.Catalog-wrc-create')->with('users_data', $users_data)->with('CatlogWrc', $CatlogWrc)->with('sku_details', $sku_details);;
 
-            return $this->Index($request, $createWrc->id);
+            // return $this->Index($request, $createWrc->id);
         } catch (\Exception $e) {
             DB::rollback();
             request()->session()->flash('error', 'Please try again!!');
@@ -308,12 +316,25 @@ class CatalogWrcController extends Controller
 
         $user_id = $lot != null ? $lot->user_id : 0;
         $brand_id = $lot != null ? $lot->brand_id : 0;
-
+        
         $sku_details = array(
             'unique_Count' => 0,
             'variant_Count' => 0,
             'total_Count' => 0,
         );
+        $CatalogWrcSku =  CatalogWrcSku::where('wrc_id','=', $id)->get();
+
+        foreach($CatalogWrcSku as $sku_row){
+            // dd($sku_row);
+            $sku_details['total_Count']++;
+            if ($sku_row->style == 'parent') {
+                $sku_details['unique_Count']++;
+            } else {
+                $sku_details['variant_Count']++;
+            }
+        }
+        
+
 
         if ($CatlogWrcs) {
             $CatlogWrcs->button_name = 'Update WRC';
@@ -327,7 +348,7 @@ class CatalogWrcController extends Controller
 
     public function update(Request $request)
     {
-        // dd($request);
+        // dd($request->all());
         $id =  $request->id;
 
         $project_name_array = explode(" ", $request->s_type);
@@ -335,11 +356,7 @@ class CatalogWrcController extends Controller
         $project_name = "";
         $wrcs = CatlogWrc::where(['lot_id' => $request->lot_id])->get();
         $wrcCount = $wrcs->count();
-        //get first char of each word
-        // foreach( $project_name_array  as $key=>$val){
-        //     $project_name .= $val[0];
-        // }
-        //get first char of first and last word
+        
         $project_name .= $project_name_array[0][0];
         $project_name .= $project_name_array[$count - 1][0];
 
@@ -347,19 +364,41 @@ class CatalogWrcController extends Controller
 
         //update
 
+        $modeOfDelivary = $request->modeOfDelivary;
+        $lot_id = $request->lot_id;
+        $catalog_requestType = DB::table('lots_catalog')->where('id', $lot_id)->get(['requestType'])->first();
+        $requestType = $catalog_requestType  != null ? $catalog_requestType->requestType : null;
+        $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
+
+        $batch_no = 0;
+        $is_retainer = 0;
+        if ($requestType == 'Retainer') {
+            $batch_no = 1;
+            $is_retainer = 1;
+        }
+
+
         $createWrc = CatlogWrc::find($id);
         $createWrc->lot_id = $request->lot_id;
-        $createWrc->wrc_number = $wrcNumber;
+        // $createWrc->wrc_number = $wrcNumber;
+        $createWrc->modeOfDelivary = $modeOfDelivary;
         $createWrc->commercial_id = $request->commercial_id;
-        $createWrc->img_recevied_date = $request->img_recevied_date;
-        $createWrc->missing_info_notify_date = $request->missing_info_notify_date;
-        $createWrc->missing_info_recived_date = $request->missing_info_recived_date;
-        $createWrc->confirmation_date = $request->confirmation_date;
-        $createWrc->work_brief = $request->work_brief;
-        $createWrc->guidelines = $request->guide_lines;
-        $createWrc->document1 = $request->document1;
-        $createWrc->document2 = $request->document2;
-        $createWrc->sku_qty = $request->sku_qty;
+
+        $createWrc->img_recevied_date = $request->img_recevied_date == null ? '' : $request->img_recevied_date;
+        $createWrc->missing_info_notify_date = $request->missing_info_notify_date == null ? '' : $request->missing_info_notify_date;
+        $createWrc->missing_info_recived_date = $request->missing_info_recived_date == null ? '' : $request->missing_info_recived_date;
+        $createWrc->confirmation_date = $request->confirmation_date == null ? '' : $request->confirmation_date;
+        $createWrc->work_brief = $request->work_brief == null ? '' : $request->work_brief;
+        $createWrc->guidelines = $request->guide_lines == null ? '' : $request->guide_lines;
+        $createWrc->document1 = $request->document1 == null ? '' : $request->document1;
+        $createWrc->document2 = $request->document2 == null ? '' : $request->document2;
+        $createWrc->generic_data_format_link = $request->generic_data_format_link == null ? '' : $request->generic_data_format_link;
+        $createWrc->img_as_per_guidelines = $request->img_as_per_guidelines == null ? '' : $request->img_as_per_guidelines;
+
+        $sku_qty_is = $request->sku_qty == null ? '0' : $request->sku_qty;
+        $createWrc->alloacte_to_copy_writer = $alloacte_to_copy_writer;
+        // $createWrc->sku_qty = $sku_qty_is;
+        $createWrc->is_retainer = $is_retainer;
         $createWrc->status = 'Ready_for_allocation';
         $createWrc->update();
 
@@ -368,7 +407,7 @@ class CatalogWrcController extends Controller
         } else {
             request()->session()->flash('error', 'Please try again!!');
         }
-
-        return $this->edit($request, $id);
+        return redirect()->route('EDITCATLOGWRC', [$id]);
+        // return $this->edit($request, $id);
     }
 }

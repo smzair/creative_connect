@@ -184,6 +184,14 @@
                                                 </a>
                                             </li>
 
+                                            
+                                            <li class="nav-item">
+                                                <a href="{{ route('viewCatalogWRC') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>View Catlog WRCs</p>
+                                                </a>
+                                            </li>
+                                            
                                             <li class="nav-item">
                                                 <a href="{{ route('MarketPlace') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
@@ -192,12 +200,12 @@
                                             </li>
 
                                             <li class="nav-item">
-                                                <a href="{{ route('viewCatalogWRC') }}" class="nav-link">
+                                                <a href="{{ route('CatalogWrcBatch') }}" class="nav-link">
                                                     <i class="far fa-circle nav-icon"></i>
-                                                    <p>View Catlog WRCs</p>
+                                                    <p>Catalog Wrc's Batch Panel </p>
                                                 </a>
                                             </li>
-                                                
+
                                                 {{-- Allocation section {{route('CREATEWRC')}}  --}}
                                                 <li class="nav-item">
                                                     <a href="{{route('CATALOG_ALLOCT')}}" class="nav-link">
