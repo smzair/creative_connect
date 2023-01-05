@@ -28,7 +28,7 @@ Creative Create WRC
 
                 <div>
                     {{-- style="margin-left:45px" --}}
-                    <label for="files" class="btn">Upload Sheet</label>
+                    <label for="files" class="btn" >Upload Sheet</label>
                     <br>
                 </div>
                 <span class="file_name_field" style="color: white;" id="file_name_field"></span>
@@ -138,7 +138,7 @@ Creative Create WRC
                             
 
                             {{-- SKUs Required --}}
-                            <div class="col-sm-3 col-12 sku_div" style="display: none">
+                            <div class="col-sm-3 col-12 sku_div" style="display: block">
                                 <div class="form-group">
                                     <label class="required">SKUs Required</label>
                                     {{-- <input type="text" class="form-control" name="sku_req" id="sku_req" placeholder="Add Link" > --}}
@@ -231,54 +231,29 @@ Creative Create WRC
 
 <script type="application/javascript" src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
 
-@if(isset($CreativeWrc->id))
 
-<script>
-    const brand_id_val = "<?= $CreativeWrc->brand_id ?>";
-    const lot_id_val = "<?= $CreativeWrc->lot_id ?>";
-    console.log({brand_id_val});
-    setTimeout(()=>{      
-    if(brand_id_val > 0){
-        $("#user_id").trigger("change");
-        setTimeout(()=>{      
-        $("#brand_id").trigger("change");
-        document.querySelector("#brand_id").value = "<?= $CreativeWrc->brand_id ?>"
-        setTimeout(()=>{      
-            if(lot_id_val > 0){
-                document.querySelector("#lot_id").value = "<?= $CreativeWrc->lot_id ?>"
-                document.querySelector("#commercial_id").value = "<?= $CreativeWrc->commercial_id ?>"
-                $("#lot_id").trigger("change");
-            }
-        },2000)
 
-    },2000)
-}
-},2000)
-</script>
 
-<script defer>  
-    // setTimeout(()=>{
-    //     $("#brand_id").change();
-    //     document.querySelector("#lot_id").value = "<?= $CreativeWrc->lot_id ?>"
-    // },3000)
-    
-</script>
-@endif
 
 <!-- script for setting short_name -->
+<script>
+    const user_id_val_is = "{{ $CreativeWrc->user_id }}";
+    const saved_brand_id_is = brand_id_val = "<?= $CreativeWrc->brand_id ?>";
+    const lot_id_val = "<?= $CreativeWrc->lot_id ?>";
+    const commercial_id_is =  "<?= $CreativeWrc->commercial_id; ?>";
+</script>
 
 <!-- Select Brand Name -->
 <script>
     $(document).ready(function() {
 
-        $("#user_id").change(function() {
+        $("#user_id").change(async function() {
             const user_id_is = $("#user_id").val();
             const c_short = $("#user_id").find(':selected').data('c_short');
             $("#c_short").val(c_short);
 
-
             let options = `<option value="" data-short_name=""  > -- Select Brand Name -- </option>`;
-            $.ajax({
+            await $.ajax({
                 url: "{{ url('get-brand') }}",
                 type: "POST",
                 dataType: 'json',
@@ -297,8 +272,15 @@ Creative Create WRC
 
                 }
             });
+
+            if(saved_brand_id_is > 0 && user_id_val_is === user_id_is){
+                console.log(' djfgjhdsggfjdj dd');
+                document.getElementById("brand_id").value = saved_brand_id_is;
+            }
+            $("#brand_id").trigger("change");
+
             setTimeout(()=>{
-                document.querySelector("#brand_id").value = "<?= $CreativeWrc->brand_id ?>"
+                // document.querySelector("#brand_id").value = "<?= $CreativeWrc->brand_id ?>"
             },1000)
         });
     })
@@ -309,15 +291,19 @@ Creative Create WRC
 <script>
     $(document).ready(function() {
 
-        $("#brand_id").change(function() {
+        $("#brand_id").change(async function() {
+
             const user_id_is = $("#user_id").val();
             const brand_id_is = $("#brand_id").val();
             const short_name = $("#brand_id").find(':selected').data('short_name');
+            console.log('user_id_is changed', user_id_is)
+            console.log('brand_id_is changed', user_id_is)
+            console.log('user_id_is changed', user_id_is)
             $("#short_name").val(short_name);
 
             let options = `<option value="" data-s_type="" data-client_bucket="" > -- Select LOT Number -- </option>`;
             let options_work = `<option value="" > -- Select Commercial -- </option>`;
-            $.ajax({
+            await $.ajax({
                 url: "{{ url('get-lot-number') }}",
                 type: "POST",
                 dataType: 'json',
@@ -342,6 +328,14 @@ Creative Create WRC
                     document.getElementById("commercial_id").innerHTML = options_work;
                 }
             });
+
+            if(lot_id_val > 0 && saved_brand_id_is == brand_id_is){
+                
+                document.querySelector("#lot_id").value = "<?= $CreativeWrc->lot_id ?>"
+                document.querySelector("#commercial_id").value = "<?= $CreativeWrc->commercial_id ?>"
+                setStype();
+            }
+
             // setTimeout(()=>{
             //     var client_bucket = $("#lot_id").find(':selected').data('client_bucket');
             //     console.log('client_bucket', client_bucket)
@@ -349,39 +343,6 @@ Creative Create WRC
            
         });
     })
-</script>
-
-<!-- Select Project Name -->
-<script>
-
-    function setStype(){
-        console.log("-->");
-       const s_type = $("#lot_id").find(':selected').data('s_type');
-            $("#s_type").val(s_type);
-            console.log(s_type);
-
-        const client_bucket = $("#lot_id").find(':selected').data('client_bucket');
-        console.log('client_bucket', client_bucket)
-        // sku_div
-
-        if(client_bucket == 'Retainer'){
-            $(".sku_div").css("display", "block");
-        }else{
-            document.getElementById('guidelines_div').style.display ='flex';
-            document.getElementById('div1').style.display = 'block';
-            document.getElementById('div2').style.display ='none';
-            $(".sku_div").css("display", "block");
-            document.getElementById("sku_no").checked = true;
-            // const sku_checked_val = $('input[name="sku_required"]:checked').val();
-            // console.log('sku_checked_val', sku_checked_val)
-
-            // if(sku_checked_val == 'sku_yes'){
-            //     document.getElementById('div2').style.display = 'flex';
-            //     document.getElementById('div1').style.display ='none';
-            // }
-        }
-
-    }
 </script>
 
 
@@ -563,6 +524,88 @@ Creative Create WRC
      
 </script>
 
+{{-- get selected value for edit --}}
+@if(isset($CreativeWrc->id))
+<script>
+  const brandIdVal = "<?= $CreativeWrc->brand_id ?>";
+  const lotIdVal = "<?= $CreativeWrc->lot_id ?>";
 
+  $(document).ready(function() {
+    if (user_id_val_is > 0) {
+      $("#user_id").trigger("change");
+      
+    }
+  });
+//   setTimeout(() => {
+//     // Cache DOM elements that are accessed multiple times
+//     const brandId = document.querySelector("#brand_id");
+//     const lotId = document.querySelector("#lot_id");
+//     const commercialId = document.querySelector("#commercial_id");
+
+//     if (brandIdVal > 0) {
+//       $("#brand_id").trigger("change");
+
+//       brandId.value = brandIdVal;
+//       brandId.dispatchEvent(new Event("change"));
+
+//       if (lotIdVal > 0) {
+//         setTimeout(() => {
+//           lotId.value = lotIdVal;
+//           commercialId.value = "<?= $CreativeWrc->commercial_id ?>";
+//           lotId.dispatchEvent(new Event("change"));
+//         }, 2000);
+//       }
+//     }
+//   }, 3000);
+</script>
+@endif
+
+
+<!-- Select Project Name -->
+<script>
+
+    function setStype(){
+        console.log("-->");
+       const s_type = $("#lot_id").find(':selected').data('s_type');
+            $("#s_type").val(s_type);
+            console.log(s_type);
+
+        const client_bucket = $("#lot_id").find(':selected').data('client_bucket');
+        console.log('client_bucket', client_bucket)
+        // sku_div
+
+        if(client_bucket == 'Retainer'){
+            $(".sku_div").css("display", "block");
+        }else{
+            document.getElementById('guidelines_div').style.display ='flex';
+            document.getElementById('div1').style.display = 'block';
+            document.getElementById('div2').style.display ='none';
+            $(".sku_div").css("display", "block");
+            document.getElementById("sku_no").checked = true;
+            // const sku_checked_val = $('input[name="sku_required"]:checked').val();
+            // console.log('sku_checked_val', sku_checked_val)
+
+            // if(sku_checked_val == 'sku_yes'){
+            //     document.getElementById('div2').style.display = 'flex';
+            //     document.getElementById('div1').style.display ='none';
+            // }
+        }
+
+    }
+</script>
+
+@if(isset($CreativeWrc->sku_required))
+    @if($CreativeWrc->sku_required == 1)
+    <script>
+        document.getElementById('div2').style.display = 'flex';
+    </script>
+    @endif
+
+    @if($CreativeWrc->sku_required == 0)
+    <script>
+        document.getElementById('div2').style.display ='none';
+    </script>
+    @endif
+@endif
 
 @endsection
