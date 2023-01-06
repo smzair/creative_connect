@@ -42,6 +42,14 @@ Catalogin Allocation
             padding: 0.3em;
         }
     </style>
+
+    <style>
+        @media (min-width: 992px){
+            .modal-lg, .modal-xl {
+                min-width: 950px !important;
+            }
+        }
+    </style>
     <div class="row">
         <div class="col-12">
             <div class="card card-transparent">
@@ -56,7 +64,11 @@ Catalogin Allocation
                     @php
                         $getCataloguer = getCataloguer();
                         $getcopywriter = getcopywriter();
-                        // pre($wrcList);
+                        $MarketPlaces = getMarketPlace();
+                        $market_place_arr = array_column($MarketPlaces, 'marketPlace_name', 'id');
+                        // $wrcList_arr = array_column($wrcList, 'wrc_number', 'id');
+                        // pre($market_place_arr);
+                        // pre($wrcList_arr);
                     @endphp
                     <table id="allocTableC" class="table table-head-fixed text-nowrap data-table">
                         <thead>
@@ -65,72 +77,85 @@ Catalogin Allocation
                                 <th>LOT Numbers</th>
                                 <th>Company Name</th>
                                 <th>Brand Name</th>
+                                <th>Marketplace</th>
+                                <th>Type of Service</th>
+                                <th>WRC Created At</th>
+                                <th>Batch Number</th>
                                 <th>SKU Count</th>
                                 <th>Cata Allocated Qty</th>
                                 <th>Cata Pending Qty</th>
                                 <th>CW Allocated Qty</th>
                                 <th>CW Pending Qty</th>
-                                <th>WRC Created At</th>
-                                <th>Request Receive Date</th>
-                                <th>Raw Image Receive Date</th>
-                                <th>Marketplace</th>
-                                <th>Type of Service</th>
+                                {{-- <th>Request Receive Date</th> --}}
+                                {{-- <th>Raw Image Receive Date</th> --}}
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-
-                            @php
-                                // pre($wrcList);
-                            @endphp
+                           
                             @foreach($wrcList as $key => $row)
+                                @php
 
+                                    if($row['wrc_id'] == 8){
+                                        // pre($row);
+                                    }
+                                    // echo " key => $key "; batch_no
 
-                            @php
+                                    $sku_qty = $row['sku_qty'];
+                                    $cataloger_sum = $row['cataloger_sum'];
+                                    $cp_sum = $row['cp_sum'];
+                                    $batch_no = $row['batch_no'] > 0 ? $row['batch_no'] : 'None';
 
-                            $sku_qty = $row['sku_qty'];
-                            $cataloger_sum = $row['cataloger_sum'];
-                            $cp_sum = $row['cp_sum'];
+                                    if($cataloger_sum > 0 || $cp_sum > 0){
+                                        continue;
+                                    }
 
-                            if($cataloger_sum > 0 || $cp_sum > 0){
-                                continue;
-                            }
+                                    $alloacte_to_copy_writer = $row['alloacte_to_copy_writer'];
+                                    $market_place = $row['market_place'];
 
-                            $alloacte_to_copy_writer = $row['alloacte_to_copy_writer'];
+                                    $market_place_ids = explode(',',$market_place);
 
-                            if(($alloacte_to_copy_writer == 1 && ($sku_qty - $cp_sum) == 0)){
+                                    if(($alloacte_to_copy_writer == 1 && ($sku_qty - $cp_sum) == 0)){
 
-                            }
+                                    }
                                 
-                            @endphp
+                                @endphp
 
-                            <tr id="tr{{ $key }}" >
-                                <td data-value="wrc_number">
-                                    {{ $row['wrc_number'] }}
-                                </td>
-                                <td data-value="lot_number">{{ $row['lot_number'] }}</td>
-                                <td data-value="Company">{{ $row['Company'] }}</td>
-                                <td data-value="name">{{ $row['name'] }}
-                                    <input type="hidden" id="wrc_id{{ $key }}" data-alloacte_to_copy_writer="{{ $row['alloacte_to_copy_writer'] }}" value="{{ $row['id'] }}">
-                                </td>
+                                <tr id="tr{{ $key }}" >
+                                    <td data-value="wrc_number">
+                                        {{ $row['wrc_number'] }}
+                                    </td>
+                                    <td data-value="lot_number">{{ $row['lot_number'] }}</td>
+                                    <td data-value="Company">{{ $row['Company'] }}</td>
+                                    <td data-value="name">{{ $row['name'] }}
+                                        
+                                    </td>
+                                    <td data-value="market_place">
+                                        @foreach ($market_place_ids as $id)
+                                            <p class="m-0">{{ $market_place_arr[$id] }}</p>
+                                        @endforeach
+                                    </td>
+                                    <td data-value="type_of_service">{{ $row['type_of_service'] }}</td>
+                                    <td data-value="wrc_cr_at">{{ dateFormet_dmy($row['created_at']) }}</td>
+                                    <td data-value="batch_no">{{ $batch_no }}</td>
+                                    <td data-value="sku_qty">{{ $row['sku_qty'] }}</td>
 
-                                <td data-value="sku_qty">{{ $row['sku_qty'] }}</td>
-                                <td data-value="cataloger_sum">{{ $row['cataloger_sum'] }}</td>
-                                <td data-value="cataloger_pen">{{ $row['sku_qty'] - $row['cataloger_sum'] }}</td>
-                                <td data-value="cp_sum">{{ $row['cp_sum'] }}</td>
-                                <td data-value="cp_pen">{{ $row['alloacte_to_copy_writer'] == 1 ? $row['sku_qty'] - $row['cp_sum'] : 0 }}</td>
-                                <td data-value="wrc_cr_at">{{ dateFormet_dmy($row['created_at']) }}</td>
-                                <td data-value="img_recevied_date">{{ dateFormet_dmy($row['img_recevied_date']) }}</td>
-                                <td data-value="raw_img_date">{{ dateFormet_dmy($row['created_at']) }}</td>
-                                <td data-value="market_place">{{ $row['market_place'] }}</td>
-                                <td data-value="type_of_service">{{ $row['type_of_service'] }}</td>
-                                <td>
-                                    <button class="btn btn-warning" id="allocateBTnC" data-toggle="modal" 
-                                    data-target="#allocateWRCPopupCAt" onclick="setvalue({{ $key }})">
-                                        Allocate
-                                    </button>
-                                </td>
-                            </tr>
+                                    <td data-value="cataloger_sum">{{ $row['cataloger_sum'] }}</td>
+                                    <td data-value="cataloger_pen">{{ $row['sku_qty'] - $row['cataloger_sum'] }}</td>
+                                    <td data-value="cp_sum">{{ $row['cp_sum'] }}</td>
+                                    <td data-value="cp_pen">{{ $row['alloacte_to_copy_writer'] == 1 ? $row['sku_qty'] - $row['cp_sum'] : 0 }}</td>
+                                    {{-- <td data-value="img_recevied_date">{{ dateFormet_dmy($row['img_recevied_date']) }}</td> --}}
+                                    {{-- <td data-value="raw_img_date">{{ dateFormet_dmy($row['created_at']) }}</td> --}}
+                                    <td>
+
+                                        <input type="hidden" id="wrc_id{{ $key }}" data-alloacte_to_copy_writer="{{ $row['alloacte_to_copy_writer'] }}" value="{{ $row['id'] }}">
+                                        <input type="hidden" id="batch_no{{ $key }}"  value="{{ $row['batch_no'] }}">
+                                        <button class="btn btn-warning" id="allocateBTnC" data-toggle="modal" 
+                                        data-target="#allocateWRCPopupCAt" onclick="setvalue({{ $key }})">
+                                            Allocate
+                                        </button>
+                                    </td>
+                                </tr>
                             @endforeach 
                         </tbody>
                     </table>
@@ -152,21 +177,28 @@ Catalogin Allocation
             </div>
             <div class="modal-body">
                 {{-- <form class="" method="POST" action="" id="allocWRCform"> --}}
-                    <div class="custom-dt-row wrc-details">
-                        <div class="row">
-                            <div class="col-sm-4 col-12">
+                    <div class="custom-dt-row wrc-details mb-3">
+                        <div class="row mb-3">
+                            <div class="col-sm-3 col-6">
                                 <div class="col-ac-details">
                                     <h6>WRC Number</h6>
                                     <p id="wrcNo"></p>
                                 </div>
                             </div>
-                            <div class="col-sm-4 col-6">
+                            <div class="col-sm-3 col-6">
                                 <div class="col-ac-details">
                                     <h6>SKU Count</h6>
                                     <p id="sku_qty"></p>
                                 </div>
                             </div>
-                            <div class="col-sm-4 col-6">
+                            <div class="col-sm-3 col-6">
+                                <div class="col-ac-details">
+                                    <h6>Batch Number</h6>
+                                    <p id="batch_number"></p>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3 col-6">
                                 <div class="col-ac-details">
                                     <h6>Selected LOT</h6>
                                     <input id="lot_number" rows="3" cols="4" style="width: 100%;" disabled />
@@ -174,32 +206,35 @@ Catalogin Allocation
                             </div>
                         </div>
                         {{-- Cataloger Allocated SKU --}}
-                        <div class="row">
-                            <div class="col-sm-4 col-12">
+                        <div class="row ">
+                            <div class="col-sm-3 col-12">
                                 <div class="col-ac-details">
                                     <h6>Cataloger Allocated SKU</h6>
                                     <p id="cata_allocated_sku"></p>
                                 </div>
                             </div>
-                             <div class="col-sm-4 col-12">
+                             <div class="col-sm-3 col-12">
                                 <div class="col-ac-details">
                                     <h6>Cataloger Pending SKU</h6>
                                     <p id="cata_pending_sku">5</p>
                                 </div>
                             </div>
-                        </div>
-                        {{-- Copy Writer Allocated SKU --}}
-                        <div class="row" id="copywriter_sky_row">
-                            <div class="col-sm-4 col-12">
-                                <div class="col-ac-details">
-                                    <h6>Copy Writer Allocated SKU</h6>
-                                    <p id="cp_allocated_sku">15</p>
-                                </div>
-                            </div>
-                             <div class="col-sm-4 col-12">
-                                <div class="col-ac-details">
-                                    <h6>Copy Writer Pending SKU</h6>
-                                    <p id="cp_pending_sku">5</p>
+                            {{-- </div> --}}
+                            {{-- Copy Writer Allocated SKU  --}}
+                            <div class="col-sm-6">
+                                <div  id="copywriter_sky_row">
+                                    <div class="col-sm-6 col-12">
+                                        <div class="col-ac-details">
+                                            <h6>Copy Writer Allocated SKU</h6>
+                                            <p id="cp_allocated_sku">15</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-12">
+                                        <div class="col-ac-details">
+                                            <h6>Copy Writer Pending SKU</h6>
+                                            <p id="cp_pending_sku">5</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -245,8 +280,9 @@ Catalogin Allocation
                                 <p class="input_err" style="color: red; display: none;" id="copywriter_err"></p>
                             </div>
 
-                            <div class="col-sm-12 col-12">
+                            <div class="col-sm-12 col-12" style="text-align: end">
                                 <input id="wrc_id" name="wrcNo" type="hidden" value="">
+                                <input id="batch_no" name="batch_no" type="hidden" value="">
                                 <button class="btn btn-warning" onclick="saveData()" >Complete Allocation</button>
                                 <span class="msg_box" id="msg_box1" style="color: red; display: none;"></span>
                                 <span class="msg_box" id="msg_box2" style="color: red; display: none;"></span>
@@ -306,10 +342,13 @@ Catalogin Allocation
         })
         
         const wrc_id_is = document.querySelector("#wrc_id"+val).value
+        const batch_no_is = document.querySelector("#batch_no"+val).value
         const sku_qty = data.sku_qty
 
         document.querySelector("#wrc_id").value =  wrc_id_is
+        document.querySelector("#batch_no").value =  batch_no_is
         document.querySelector("#wrcNo").innerHTML = data.wrc_number
+        document.querySelector("#batch_number").innerHTML = data.batch_no > 0 ? data.batch_no : '-'
         document.querySelector("#sku_qty").innerHTML = sku_qty
         document.querySelector("#lot_number").value = data.lot_number
         const alloacte_to_copy_writer = $("#wrc_id"+val).data("alloacte_to_copy_writer") 
@@ -325,6 +364,7 @@ Catalogin Allocation
             dataType: 'json',
             data: {
                 wrc_id: wrc_id_is,
+                batch_no: batch_no_is,
                 _token: '{{ csrf_token() }}'
             },
             success: function(res) {
@@ -351,10 +391,7 @@ Catalogin Allocation
                 }
             }
         });
-
-        
     }
-   
 </script>
 
 {{-- save Data to allocation   --}}
@@ -362,6 +399,7 @@ Catalogin Allocation
     const saveData = async () => {
 
         const wrc_id =  document.querySelector("#wrc_id").value 
+        const batch_no =  document.querySelector("#batch_no").value 
         const user_id_is =  document.querySelector("#CataloguerName").value 
         const Cataloguer_Qty =  +document.querySelector("#Cataloguer_Qty").value 
         const CataloguerName = $("#CataloguerName").find(':selected').data('name');
@@ -374,6 +412,9 @@ Catalogin Allocation
         const cata_pending_sku   =   +document.querySelector("#cata_pending_sku").innerHTML 
         const cp_allocated_sku   =   +document.querySelector("#cp_allocated_sku").innerHTML 
         const cp_pending_sku     =   +document.querySelector("#cp_pending_sku").innerHTML 
+
+
+        console.log({user_id_is,Cataloguer_Qty,wrc_id,batch_no,copywriter_id_is,copywriter_Qty})
         
         // console.log({user_id_is,CataloguerName, Cataloguer_Qty ,copywriter_id_is,copywriterName , copywriter_Qty})
 
@@ -429,6 +470,7 @@ Catalogin Allocation
                 user_id: user_id_is,
                 Cataloguer_Qty,
                 wrc_id,
+                batch_no,
                 copywriter_id : copywriter_id_is,
                 copywriter_Qty,
                 _token: '{{ csrf_token() }}'

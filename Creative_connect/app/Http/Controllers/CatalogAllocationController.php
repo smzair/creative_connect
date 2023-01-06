@@ -28,14 +28,15 @@ class CatalogAllocationController extends Controller
 
     
 
-    // function for allocate wrc to user (save)
+    // function for allocate wrc to user (save) batch_no
     function save(Request $request){
-
+        // dd($request->all());
         $user_id = $request->user_id;
         $Cataloguer_Qty = $request->Cataloguer_Qty;
         $copywriter_id = $request->copywriter_id;
         $copywriter_Qty = $request->copywriter_Qty;
         $wrc_id = $request->wrc_id;
+        $batch_no = $request->batch_no;
 
         $res = [];
 
@@ -47,6 +48,7 @@ class CatalogAllocationController extends Controller
             $CatalogAllocation_list = CatalogAllocation::where([
                 ['user_id',  $user_id],
                 ['wrc_id',  $wrc_id],
+                ['batch_no',  $batch_no],
             ])->get()->toArray();
             $all_cnt = count($CatalogAllocation_list);
             if ($all_cnt > 0) {
@@ -55,6 +57,7 @@ class CatalogAllocationController extends Controller
                 $catalog_allocation_user = new CatalogAllocation();
                 $catalog_allocation_user->user_id = $user_id;
                 $catalog_allocation_user->wrc_id = $wrc_id;
+                $catalog_allocation_user->batch_no = $batch_no;
                 $catalog_allocation_user->allocated_qty = $Cataloguer_Qty;
                 $catalog_allocation_user->user_role = 0;
                 $status = $catalog_allocation_user->save();
@@ -70,6 +73,7 @@ class CatalogAllocationController extends Controller
             $CatalogAllocation_list = CatalogAllocation::where([
                 ['user_id',  $copywriter_id],
                 ['wrc_id',  $wrc_id],
+                ['batch_no',  $batch_no],
             ])->get()->toArray();
 
             $all_cnt = count($CatalogAllocation_list);
@@ -79,6 +83,7 @@ class CatalogAllocationController extends Controller
                 $catalog_allocation = new CatalogAllocation();
                 $catalog_allocation->user_id = $copywriter_id;
                 $catalog_allocation->wrc_id = $wrc_id;
+                $catalog_allocation->batch_no = $batch_no;
                 $catalog_allocation->allocated_qty = $copywriter_Qty;
                 $catalog_allocation->user_role = 1;
                 $status = $catalog_allocation->save();
@@ -100,8 +105,12 @@ class CatalogAllocationController extends Controller
 
     function alocated_sku_count(Request $request)
     {
+        // dd($request->all());
         $wrc_id = $request->wrc_id;
-        $data = CatalogAllocation::where('wrc_id', $wrc_id)->select(
+        $batch_no = $request->batch_no;
+        $data = CatalogAllocation::
+        where('wrc_id', $wrc_id)->where('batch_no', $batch_no)->
+        select(
             'wrc_id',
             DB::raw('SUM(CASE  	WHEN user_role = 0 THEN allocated_qty else 0 END)  as cataloger_sum'),
             DB::raw('SUM(CASE  	WHEN user_role = 1 THEN allocated_qty else 0 END)  as cp_sum'),
@@ -137,8 +146,8 @@ class CatalogAllocationController extends Controller
         $login_user_id_is = 26; // 26 sahil 29 Prerit 34 Rajesh
         $user_role = 'CW';
         // $login_user_id_is = 22; // neetu 7 , ZAIRRQW 8 , 22 SDGB 
-        // $login_user_id_is = 8; // neetu 7 , ZAIRRQW 8 , 22 SDGB 
-        // $user_role = 'Cataloguer';
+        $login_user_id_is = 7; // neetu 7 , ZAIRRQW 8 , 22 SDGB 
+        $user_role = 'Cataloguer';
         $allocationList = CatalogAllocation::getcatalog_allocation_list();
         $allocated_wrc_list_by_user = CatalogAllocation::allocated_wrc_list_by_user($login_user_id_is);
         return view('Allocation.upload_catalog_panel')->with('allocationList', $allocationList)->with('allocated_wrc_list_by_user', $allocated_wrc_list_by_user)->with('user_role', $user_role);

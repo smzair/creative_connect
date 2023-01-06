@@ -81,6 +81,7 @@ Allocation Details (For Catalogue)
                       $lot_info_array = $catalog_allocation_List_by_lot_numbers[$key];
                       // pre($lot_info_array);
                       $wrc_number_arr = explode(',',$lot_info_array['wrc_numbers']);
+                      $batch_no_arr = explode(',',$lot_info_array['batch_nos']);
                       $wrc_info_arr = explode(',',$lot_info_array['wrc_ids']);
                     @endphp
 
@@ -90,8 +91,11 @@ Allocation Details (For Catalogue)
                       <td class="align-middle position-relative">
                         <span class="dropdown-toggle d-inline-block ed-wrc-cnt" onclick="showhideli({{ $lot_info_array['lot_id'].$lot_info_array['user_id'] }})"  style="cursor: pointer;">{{ $lot_info_array['wrc_cnt'] }}</span>
                         <ol class="list-group mt-2 edt-sku-list" id="wrcInfo{{ $lot_info_array['lot_id'].$lot_info_array['user_id'] }}" style="display: none;">
-                          @foreach($wrc_info_arr as $wrc_key => $wrcInfo)
-                          <li class="list-group-item" style="color: #999">{{$wrc_number_arr[$wrc_key]}}</li>
+                          @foreach($wrc_number_arr as $wrc_key => $wrc_number)
+                          @php
+                          $batch_no_is = $batch_no_arr[$wrc_key] > 0 ? " (Batch No. ".$batch_no_arr[$wrc_key].")" : "";
+                          @endphp
+                          <li class="list-group-item" style="color: #999">{{$wrc_number_arr[$wrc_key].$batch_no_is}}</li>
                           @endforeach
                         </ol>
                       </td>
