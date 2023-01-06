@@ -120,3 +120,6 @@ Route::post('/Creative-WRC-Client-Approval-Rejection' , [CreativeSubmissionContr
 
 // reject action for wrc
 Route::post('/Creative-WRC-Client-Rejection' , [CreativeSubmissionController::class , 'creativeWrcReject'])->name('creative_wrc_reject');
+
+//cron api for update pause time when task is start
+Route::get('/set-creative-allocation-pause' , [CreativeAllocationController::class , 'setCreativeAllocationPause']);

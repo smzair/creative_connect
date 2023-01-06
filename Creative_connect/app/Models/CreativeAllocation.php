@@ -143,16 +143,20 @@ class CreativeAllocation extends Model
 
 			// $val['role'] = $role;
 
-			$creative_time_hash = CreativeTimeHash::where('allocation_id',$val['creative_allocation_id'])->get(['start_time','end_time','task_status','is_rework'])->first();
+			$creative_time_hash = CreativeTimeHash::where('allocation_id',$val['creative_allocation_id'])->get(['start_time','end_time','task_status','is_rework','pause_time','ini_start_time'])->first();
 
 			$start_time = $creative_time_hash != NULL ?  $creative_time_hash->start_time : '0000-00-00 00:00:00';
 			$end_time = $creative_time_hash != NULL ?  $creative_time_hash->end_time : '0000-00-00 00:00:00';
 			$task_status = $creative_time_hash != NULL ?  $creative_time_hash->task_status : 0;
 			$is_rework = $creative_time_hash != NULL ?  $creative_time_hash->is_rework : 'NULL';
+			$pause_time = $creative_time_hash != NULL ?  $creative_time_hash->pause_time : 'NULL';
+			$ini_start_time = $creative_time_hash != NULL ?  $creative_time_hash->ini_start_time : 'NULL';
 			$val['start_time'] = $start_time; 
 			$val['end_time'] = $end_time; 
 			$val['task_status'] = $task_status; 
 			$val['is_rework'] = $is_rework; 
+			$val['pause_time'] = $pause_time; 
+			$val['ini_start_time'] = $ini_start_time; 
 
 			// $interval = $end_time->diff($start_time);
 			// $elapsed = $interval->format('%y years %m months %a days %h hours %i minutes %s seconds');

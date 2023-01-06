@@ -119,39 +119,85 @@ class CreativeAllocationController extends Controller
     }
 
     public function setCreativeAllocationStart(Request $request){
-
+        // dd($request);
         $allocate_id = CreativeTimeHash::where('allocation_id',$request->allocation_id)->get(['id'])->first();
         $already_allocated_id = $allocate_id != null ?  $allocate_id->id : 0;
         $start_time = Carbon::now();
+        $pause_time = Carbon::now();
 
-        if( $already_allocated_id == 0){
-            $storeData = new CreativeTimeHash();
-            $storeData->start_time = $start_time;
-            $storeData->ini_start_time = $start_time;
-            $storeData->allocation_id = $request->allocation_id;
-            $storeData->is_rework = 0;
-            $storeData->end_time = '0000-00-00 00:00:00';
-            $storeData->save();
-            if($storeData){
-                echo json_encode([
-                    "message"=>"success",
-                    "start_time"=>$storeData->start_time,
-                    "start_time1"=>dateFormat($storeData->start_time),
-                    "start_time2"=>timeFormat($storeData->start_time)
-                ]);
+        $action = $request->action; // "pause"// "start"
+ 
+        if($action == "start"){
+
+            if( $already_allocated_id == 0){
+                $storeData = new CreativeTimeHash();
+                $storeData->start_time = $start_time;
+                $storeData->ini_start_time = $start_time;
+                $storeData->allocation_id = $request->allocation_id;
+                $storeData->is_rework = 0;
+                $storeData->end_time = '0000-00-00 00:00:00';
+                $storeData->pause_time = '0000-00-00 00:00:00';
+                $storeData->save();
+                if($storeData){
+                    echo json_encode([
+                        "message"=>"success",
+                        "start_time"=>$storeData->start_time,
+                        "start_time1"=>dateFormat($storeData->start_time),
+                        "start_time2"=>timeFormat($storeData->start_time)
+                    ]);
+                }
+                else{
+                    echo json_encode([
+                        "message"=>"error",
+                        "start_time"=>'',
+                        "start_time1"=>'',
+                        "start_time2"=>''
+                    ]);
+                }
+            }else{
+                $storeData = CreativeTimeHash::find($already_allocated_id);
+                $storeData->start_time = $start_time;
+                $storeData->ini_start_time = $start_time;
+                $storeData->allocation_id = $request->allocation_id;
+                $storeData->is_rework = 0;
+                $storeData->end_time = '0000-00-00 00:00:00';
+                $storeData->pause_time = '0000-00-00 00:00:00';
+                $storeData->update();
+                if($storeData){
+                    echo json_encode([
+                        "message"=>"success",
+                        "start_time"=>$storeData->start_time,
+                        "start_time1"=>dateFormat($storeData->start_time),
+                        "start_time2"=>timeFormat($storeData->start_time)
+                    ]);
+                }
+                else{
+                    echo json_encode([
+                        "message"=>"error",
+                        "start_time"=>'',
+                        "start_time1"=>'',
+                        "start_time2"=>''
+                    ]);
+                }
             }
-            else{
-                echo json_encode([
-                    "message"=>"error",
-                    "start_time"=>'',
-                    "start_time1"=>'',
-                    "start_time2"=>''
-                ]);
-            }
-        }else{
+        }
+
+        if($action == "pause"){
+
+            $timeHashData = CreativeTimeHash::where('allocation_id', $request->allocation_id)->get()->first();
+            $old_start_time = $timeHashData->start_time;
+            $old_spent_time = $timeHashData->spent_time;
+            $old_spent_time = ($old_spent_time == "" || $old_spent_time == 0) ? 0 : (int)$old_spent_time;
+           
+            $new_spent_time = (new Carbon($pause_time))->diffInSeconds(new Carbon($old_start_time));
+            //  echo strtotime($new_spent_time);
+            $tot_spent = $old_spent_time + $new_spent_time;
+
+
+            // dd($already_allocated_id);
             $storeData = CreativeTimeHash::find($already_allocated_id);
-            $storeData->start_time = $start_time;
-            $storeData->ini_start_time = $start_time;
+            $storeData->pause_time = $pause_time;
+            $storeData->spent_time = $tot_spent;
             $storeData->allocation_id = $request->allocation_id;
             $storeData->is_rework = 0;
             $storeData->end_time = '0000-00-00 00:00:00';
@@ -173,6 +219,58 @@ class CreativeAllocationController extends Controller
                 ]);
             }
         }
+        
+    }
+
+    // if task started then pause start tiem automatically
+    public function setCreativeAllocationPause(Request $request){
+
+        $start_time_data = CreativeTimeHash::where('start_time','!=','0000-00-00 00:00:00')
+        // ->where('pause_time','==','0000-00-00 00:00:00')
+        ->where('task_status','==','0')->get();
+
+        foreach($start_time_data as $key => $val){
+            // return $val->allocation_id;
+
+            $pause_time = Carbon::now();
+            $allocate_id = CreativeTimeHash::where('allocation_id',$val->allocation_id)->get(['id'])->first();
+            $already_allocated_id = $allocate_id != null ?  $allocate_id->id : 0;
+
+            $timeHashData = CreativeTimeHash::where('allocation_id', $val->allocation_id)->get()->first();
+            $old_start_time = $timeHashData->start_time;
+            $old_spent_time = $timeHashData->spent_time;
+            $old_spent_time = ($old_spent_time == "" || $old_spent_time == 0) ? 0 : (int)$old_spent_time;
+        
+            $new_spent_time = (new Carbon($pause_time))->diffInSeconds(new Carbon($old_start_time));
+            //  echo strtotime($new_spent_time);
+            $tot_spent = $old_spent_time + $new_spent_time;
+
+
+            // dd($already_allocated_id);
+            $storeData = CreativeTimeHash::find($already_allocated_id);
+            $storeData->pause_time = $pause_time;
+            $storeData->spent_time = $tot_spent;
+            $storeData->allocation_id = $val->allocation_id;
+            $storeData->is_rework = 0;
+            $storeData->end_time = '0000-00-00 00:00:00';
+            $storeData->update();
+            if($storeData){
+                echo json_encode([
+                    "message"=>"success",
+                    "start_time"=>$storeData->start_time,
+                    "start_time1"=>dateFormat($storeData->start_time),
+                    "start_time2"=>timeFormat($storeData->start_time)
+                ]);
+            }
+            else{
+                echo json_encode([
+                    "message"=>"error",
+                    "start_time"=>'',
+                    "start_time1"=>'',
+                    "start_time2"=>''
+                ]);
+            }
+        } 
         
     }
 

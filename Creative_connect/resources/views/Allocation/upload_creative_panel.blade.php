@@ -117,6 +117,7 @@
                                 <th>Guidelines Links</th>
                                 <th>Spent Time</th>
                                 <th>Task End Date</th>
+                                <th>Task Start Initial</th>
                                 <th>Task Start Date</th>
                                 <th>Action</th>
                             </tr>
@@ -199,6 +200,12 @@
                                 <?php } ?>
                                 <?php if(($allocationInfo['task_status'] != 1)){  ?>
                                     <td></td>
+                                    <td>
+                                        <div class="task-action task-start-timings" style="display:block;">
+                                            <span  class="start_time1{{$key}}">{{dateFormat($allocationInfo->ini_start_time)}}</span>
+                                            <span class="time">{{timeFormat($allocationInfo->ini_start_time)}}</span>
+                                          </div>
+                                    </td>
                                 <td>
                                 <?php } ?>
                                 
@@ -208,18 +215,35 @@
                                       Start
                                     </a>
                                   </div>
-                                <?php }?>
+
+                                  <?php } ?>
+                                  <?php if(($allocationInfo['pause_time'] != '0000-00-00 00:00:00')){  ?>
+                                    <div class="task-action task-start-button" style="display:bock;" id="start_btn">
+                                      <a href="javascript:;" class="btn btn-warning" onclick="start_task('{{ $allocationInfo->creative_allocation_id }}')" id="startBTN{{ $key }}" id="startBTN">
+                                        Continue
+                                      </a>
+                                    </div>
+  
+                                    <?php } ?>
+                                <?php if(($allocationInfo['start_time'] != '0000-00-00 00:00:00') &&  ($allocationInfo['pause_time'] == '0000-00-00 00:00:00')){?>
+                                    <div class="task-action task-start-button" style="display:bock;" id="start_btn">
+                                        <a href="javascript:;" class="btn btn-warning" onclick="pause_task('{{ $allocationInfo->creative_allocation_id }}')" id="startBTN{{ $key }}" id="startBTN">
+                                          Pause
+                                        </a>
+                                      </div>
+                                    <?php } ?>
                                 <?php if($allocationInfo['start_time'] != '0000-00-00 00:00:00'){  ?>
-                                  <div class="task-action task-start-timings" style="display:block;">
-                                    <span  class="start_time1{{$key}}">{{dateFormat($allocationInfo->start_time)}}</span>
-                                    <span class="time">{{timeFormat($allocationInfo->start_time)}}</span>
-                                  </div>
+                                  {{-- <div class="task-action task-start-timings" style="display:block;">
+                                    <span  class="start_time1{{$key}}">{{dateFormat($allocationInfo->ini_start_time)}}</span>
+                                    <span class="time">{{timeFormat($allocationInfo->ini_start_time)}}</span>
+                                  </div> --}}
                                 <?php }?>
                                 <div class="task-action task-start-timings" style="display:none;" id="start_time">
                                     <span id="start_time1" class="start_time1{{$key}}"></span><br>
                                     <span id="start_time2"></span>
                                   </div>
                                 </td>
+                                
                                 <?php if(($allocationInfo['start_time'] != 'NULL') || ($allocationInfo['end_time'] == null)){  ?>
                                     <td>
                                         <?php if($allocationInfo['start_time'] != '0000-00-00 00:00:00' && $allocationInfo['task_status'] == 0){  ?>
@@ -232,13 +256,13 @@
                                         </a> --}}
 
                                         <?php if($allocationInfo['batch_no'] == 0){  ?>
-                                            <button disabled href="#" class="btn btn-warning alloc-action-btn"  id="viewSkus"  style="display:block;" data-toggle="modal" data-target="#viewSkuPopup" onclick="view_sku('{{ $allocationInfo->wrc_id }}', '{{$allocationInfo->batch_no}}', '{{$key}}')" id="startBTN{{ $key }}">
+                                            <button disabled href="#" class="btn btn-warning alloc-action-btn"  id="viewSkus"  style="display:block;" data-toggle="modal" data-target="#viewSkuPopup" onclick="view_sku('{{ $allocationInfo->wrc_id }}', '{{$allocationInfo->batch_no}}', '{{$key}}')" >
                                                 View Skus
                                             </button>
                                         <?php } ?>
 
                                         <?php if($allocationInfo['batch_no'] != 0){  ?>
-                                            <a href="#" class="btn btn-warning alloc-action-btn" id="viewSkus" style="display:block;" data-toggle="modal" data-target="#viewSkuPopup" onclick="view_sku('{{ $allocationInfo->wrc_id }}', '{{$allocationInfo->batch_no}}', '{{$key}}')" id="startBTN{{ $key }}">
+                                            <a href="#" class="btn btn-warning alloc-action-btn" id="viewSkus" style="display:block;" data-toggle="modal" data-target="#viewSkuPopup" onclick="view_sku('{{ $allocationInfo->wrc_id }}', '{{$allocationInfo->batch_no}}', '{{$key}}')" >
                                                 View Skus
                                             </a>
                                         <?php } ?>
@@ -388,12 +412,14 @@
     async function start_task(id){
         console.log('id', id)
         allocation_id = id;
+        const action = 'start';
          await $.ajax({
             url: "{{ url('set-creative-allocation-start')}}",
             type: "POST",
             dataType: 'json',
             data: {
                 allocation_id,
+                action,
                 _token: '{{ csrf_token() }}'
             },
             success: function(res) {
@@ -421,7 +447,49 @@
         window.location.reload();
         },3000)
      }
- </script>
+</script>
+
+<!-- script for update pause time -->
+<script>
+    async function pause_task(id){
+        console.log('id', id)
+        allocation_id = id;
+        const action = 'pause';
+         await $.ajax({
+            url: "{{ url('set-creative-allocation-start')}}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                allocation_id,
+                action,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+               console.log('res', res.message)
+               if(res.message == 'success'){
+                   document.getElementById('msg_p').innerHTML  = 'Allocation successfully paushed';
+                   $("#msg_div").addClass("alert alert-success");
+                   document.getElementById('msg_div').style.display = 'block';
+                   document.getElementById('start_btn').style.display = 'none';
+                   document.getElementById('start_time').style.display = 'block';
+                   document.getElementById('uploadBTn').style.display = 'block';
+                   document.getElementById('start_time1').innerHTML = res.start_time1;
+                   document.getElementById('start_time2').innerHTML = res.start_time2;
+                
+               }else{
+                document.getElementById('msg_p').innerHTML  = 'something went wrong';
+                $("#msg_div").addClass("alert alert-danger");
+                document.getElementById('msg_div').style.display = 'block';
+               }
+            }
+        });
+        setTimeout(function(){
+        document.getElementById('msg_div').style.display = "none";
+        $("#msg_div").removeClass();
+        window.location.reload();
+        },3000)
+     }
+</script>
 
  <!-- script for update start time -->
 <script>
