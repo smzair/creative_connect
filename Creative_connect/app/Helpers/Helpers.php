@@ -1,6 +1,7 @@
 <?php
 // project / vartical type
 
+use App\Models\CatalogMarketplaceCredentials;
 use App\Models\Marketplace;
 use Illuminate\Support\Facades\DB;
 
@@ -221,6 +222,24 @@ if (!function_exists('getMarketPlace')) {
         return $getMarketPlace;
     }
 }
+
+if (!function_exists('commercial_wise_MarketplaceCredentials_list')) {
+
+    function commercial_wise_MarketplaceCredentials_list()
+    {
+        $data = CatalogMarketplaceCredentials::leftJoin('marketplaces', 'marketplaces.id', 'catalog_marketplace_credentials.marketplace_id')->select(
+                'catalog_marketplace_credentials.id',
+                'catalog_marketplace_credentials.commercial_id',
+                'catalog_marketplace_credentials.link',
+                'catalog_marketplace_credentials.username',
+                'catalog_marketplace_credentials.password',
+                'catalog_marketplace_credentials.marketplace_id',
+                'marketplaces.marketPlace_name',
+            )->get()->toArray();
+        return $data;
+    }
+}
+
 
 // Type of Service
 if (!function_exists('getTypeOfService')) {

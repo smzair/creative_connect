@@ -148,25 +148,38 @@ class CatalogAllocationController extends Controller
         // $login_user_id_is = 22; // neetu 7 , ZAIRRQW 8 , 22 SDGB 
         $login_user_id_is = 7; // neetu 7 , ZAIRRQW 8 , 22 SDGB 
         $user_role = 'Cataloguer';
-        $allocationList = CatalogAllocation::getcatalog_allocation_list();
+        
         $allocated_wrc_list_by_user = CatalogAllocation::allocated_wrc_list_by_user($login_user_id_is);
+
+        $allocationList = CatalogAllocation::getcatalog_allocation_list($login_user_id_is);
+        
         return view('Allocation.upload_catalog_panel')->with('allocationList', $allocationList)->with('allocated_wrc_list_by_user', $allocated_wrc_list_by_user)->with('user_role', $user_role);
     }
 
     // set_tast_start
-    function set_tast_start(Request $request){
+    function set_task_start(Request $request){
         $allocation_id = $request->allocation_id;
         $start_time = date('Y-m-d H:i:s');
-        $status = CatalogTimeHash::set_tast_start($allocation_id , $start_time);
+        $status = CatalogTimeHash::set_task_start($allocation_id , $start_time);
 
         $response = array(
             'status' => $status ,
             'start_time'=> date('Y-m-d h:i:s A',strtotime($start_time))
         );
-
         echo json_encode($response);
-
     }
+
+    // set_tast_pause
+    function set_task_pause(Request $request)
+    {
+        $allocation_id = $request->allocation_id;
+        $time = date('Y-m-d H:i:s');
+        $response = CatalogTimeHash::set_task_pause($allocation_id, $time);
+
+        
+        echo $response;
+    }
+
 
     // get catalog uploaded link 
 
@@ -197,13 +210,18 @@ class CatalogAllocationController extends Controller
 
         $storeData = CatalogTimeHash::where('allocation_id', $allocation_id_is)->get()->first();
         $old_spent_time = $storeData->spent_time;
+        $is_started = $storeData->is_started;
         $old_spent_time = $old_spent_time == "" ? 0 : (int)$old_spent_time;
 
+
+        // dd($storeData);
         $spent_time_is = ($old_spent_time != 0 && $old_spent_time != "") ? get_date_time($old_spent_time) : "";
 
         if ($status != 0 && $action == 'comp') {
             $old_start_time = $storeData->start_time;
             $end_time = date('Y-m-d H:i:s');
+
+            
             
             $ini_start_time = $storeData->ini_start_time;
             $ini_end_time = $storeData->ini_end_time;
@@ -221,6 +239,10 @@ class CatalogAllocationController extends Controller
             // $new_spent_time = (new Carbon($end_time))->diff(new Carbon($old_start_time))->format('%Y-%m-%d %H:%I:%s');
 
             $new_spent_time = (new Carbon($end_time))->diffInSeconds(new Carbon($old_start_time));
+
+            if ($is_started == 1) {
+                $new_spent_time = 0;
+            }
             $tot_spent = $old_spent_time + $new_spent_time;
             
             $up_status = CatalogTimeHash::where('allocation_id', $allocation_id_is)->update([
@@ -230,6 +252,7 @@ class CatalogAllocationController extends Controller
                 'spent_time' => $tot_spent,
                 'task_status' => 1,
                 'is_rework' => 0,
+                'is_started' => 0,
             ]);
             if($up_status){
                 $end_time_is = date('Y-m-d h:i:s A', strtotime($end_time));

@@ -73,4 +73,21 @@ class CatalogMarketplaceCredentials extends Model
             )
         );
     }
+
+
+    public static function commercial_wise_MarketplaceCredentials_list(){
+       $data = CatalogMarketplaceCredentials::
+        leftJoin('marketplaces', 'marketplaces.id', 'catalog_marketplace_credentials.marketplace_id')->
+        select(
+            'catalog_marketplace_credentials.id',
+            'catalog_marketplace_credentials.commercial_id',
+            'catalog_marketplace_credentials.link',
+            'catalog_marketplace_credentials.username',
+            'catalog_marketplace_credentials.password',
+            'catalog_marketplace_credentials.marketplace_id',
+            'marketplaces.marketPlace_name', 
+        )->
+        get()->toArray();
+        return $data;
+    }
 }

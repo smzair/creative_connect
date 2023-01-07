@@ -80,19 +80,7 @@ Cataloger Panel
         <div class="col-12">
             <div class="card card-transparent">
                 @php
-                    $getcopyWriter_array = getcopyWriter();
-                    $getcopyWriter = array_column($getcopyWriter_array, 'name','id');
-                    $getCataloguer = getCataloguer();
-                    $Cataloguers = array_column($getCataloguer, 'name','id');
-
-                    $allocated_wrc_user_list = array_column($allocated_wrc_list_by_user, 'wrc_id',  'id');
-                    $alloc_wrc_list_key = array_flip(array_column($allocated_wrc_list_by_user, 'wrc_id'));
-
-                    $allocated_id_arr = array_flip($allocated_wrc_user_list);
-
-                    // pre($allocated_wrc_list_by_user);
-                   
-                    // pre($getcopyWriter);
+                    
                     $show_td = 0;
                     if($user_role == 'Cataloguer'){
                         $show_td = 1;
@@ -119,79 +107,167 @@ Cataloger Panel
                         <thead>
                             <tr>
                                 <th>WRC Number</th>
+                                <th>Batch Number</th>
                                 <th>Company Name</th>
                                 <th>Brand Name</th>
-                                <th>SKU Count</th>
-                               
+                                <th>Marketplace</th>
+                                <th>Credentials</th>
+                                <th>Order Qty</th>
+                                {{-- <th>SKU Count</th> --}}
                                 <th>{{ $td_head }}</th>
                                 <th>Guidelines Links</th>
                                 <th>Time Spent</th>
-                                <th>Start Date</th>
                                 <th>Action</th>
+                                <th>Upload</th>
                             </tr>
                         </thead>
                         <tbody>
 
                             @php
                                 $second = 26584;
+                                $modeOfDelivary_arr = modeOfDelivary();
+                                $getMarketPlace = getMarketPlace();
+                                $MarketPlace_array_list = array_column($getMarketPlace, 'marketPlace_name','id');
                                 
+                                $commercial_wise_MarketplaceCredentials_list = commercial_wise_MarketplaceCredentials_list();
+                                $Mar_place_cre_array_1 = array_column($commercial_wise_MarketplaceCredentials_list, 'commercial_id');
+                                
+                                $getcopyWriter_array = getcopyWriter();
+                                $getcopyWriter = array_column($getcopyWriter_array, 'name','id');
+
+                                $getCataloguer = getCataloguer();
+                                $Cataloguers = array_column($getCataloguer, 'name','id');
+
+                                $allocated_wrc_batch = array_column($allocated_wrc_list_by_user, 'batch_no');
+                                $allocated_wrcs = array_column($allocated_wrc_list_by_user, 'wrc_id');
+
+                                // pre($allocated_wrc_list_by_user[6]);
+                                // pre($allocated_wrcs);
+                                // pre($allocated_wrc_batch);
                             @endphp
                              
                             @foreach($allocationList as $allocationkey => $row)
                             @php
-                                // pre($allocationList);
+                                $allocation_id =  $row['allocation_id_is'];
                                 $wrc_id =  $row['wrc_id'];
+                                $commercial_id =  $row['commercial_id'];
+                                $lot_id =  $row['lot_id'];
+                                $batch_no =  $row['batch_no'];
+
+                                $market_place_ids = explode(',',$row['market_place']);
+                                $modeOfDelivary =  $row['modeOfDelivary'];
+                                $modeOfDelivary_is = $modeOfDelivary_arr[$modeOfDelivary];
+
+                                $allocated_wrcs_is = array_intersect($allocated_wrcs,array($wrc_id));
                                 
+                                foreach ($allocated_wrcs_is as $key => $value) {
+                                    if($allocated_wrc_batch[$key] == $batch_no){
+                                        $ass_cataloger = $allocated_wrc_list_by_user[$key]['ass_cataloger'];
+                                        $user_roles = $allocated_wrc_list_by_user[$key]['user_roles'];
+                                        break ;
+                                    }
+                                }
                                 
-                                if(!array_search($wrc_id,$allocated_wrc_user_list,true)){
-                                    continue;
+                                $ass_cataloger_list = explode(',',$ass_cataloger);
+                                $user_roles_list = explode(',',$user_roles);
+                               
+                                $allocated_data_arr = $row;
+                                
+                                $time_hash_id  =  $row['time_hash_id'];
+                                $is_rework     =  $row['is_rework'];
+                                $task_status   =  $row['task_status'];
+                                $rework_count  =  $row['rework_count'];
+                                $start_time    =  $row['start_time'];
+                                $end_time      =  $row['end_time'];
+                                $is_started    =  $row['is_started'];
+
+                                $allocated_qty = $row['allocated_qty'];
+                                $end_time_is = $spent_time =  $row['spent_time'];
+
+                                $spent_time_is = ($spent_time != 0 && $spent_time != "") ? get_date_time($spent_time) : "";
+
+                                $start_time_is     = "";
+                                $display_date_time = "display:none;";
+                                $display_start     = "display:block;";
+                                $btn_disable       = "disabled";
+
+                                $extra = "";
+                                $display_start = "";
+                                $display_pause = "display:none;";
+                                $start_btn_text = "Start";
+                                
+                                if($time_hash_id > 0){
+                                    $start_btn_text = "continue";
                                 }
 
-                                $ass_cataloger_list = explode(',',$row['ass_cataloger']);
-                                $user_roles_list = explode(',',$row['user_roles']);
-                                $allocation_id = $allocated_id_arr[$wrc_id];
-                                
-                                $allocated_data_arr = $allocated_wrc_list_by_user[$alloc_wrc_list_key[$wrc_id]];
-                                
-                               $time_hash_id =  $allocated_data_arr['time_hash_id'];
-                               $is_rework =  $allocated_data_arr['is_rework'];
-                               $task_status =  $allocated_data_arr['task_status'];
-                               $rework_count =  $allocated_data_arr['rework_count'];
-                               $start_time =  $allocated_data_arr['start_time'];
-                               $end_time =  $allocated_data_arr['end_time'];
-                               $end_time_is = $spent_time =  $allocated_data_arr['spent_time'];
-
-                               $spent_time_is = ($spent_time != 0 && $spent_time != "") ? get_date_time($spent_time) : "";
-
-                            //    $spent_time_is = $
-
-                            //  echo $diff =   (new Carbon($end_time))->diff(new Carbon($start_time))->format('%h:%I');
-                            //   echo $diff =  date('G:i', strtotime($end_time) - strtotime($start_time)); 
-                               if($wrc_id == 16){
-                                    // pre($row);
-                                    // pre($allocated_data_arr);
+                                if($time_hash_id > 0 && $is_started == 0  ){
+                                    $display_pause = "";
+                                    $display_start = "display:none;";
                                 }
 
-                               $start_time_is = "";
-                               $display_date_time = "display:none;";
-                               $display_start = "display:block;";
-                               $btn_disable = "disabled";
 
-                               $extra = " ".$wrc_id;
+                                if($time_hash_id > 0 && $task_status == 1){
+                                    $display_pause = "display:none;";
+                                    $display_start = "display:none;";
+
+                                    if($is_rework == 1){
+                                        $display_start = "";
+                                    }
+                                }
+
+                                
+
 
 
                                if(($time_hash_id > 0 && (($task_status == 0 && $is_rework == 0) || ($task_status == 1 && $is_rework == 0) || $task_status == 2  )) ){
                                    $btn_disable = "";
-                                    $display_start = "display:none;";
-                                    $display_date_time = "display:block;";
+                                    // $display_start = "display:none;";
+                                    // $display_start = "display:none;";
+
+                                    // $display_pause = "";
+                                    
+                                    // $display_date_time = "display:block;";
                                     $start_time_is = date('d-m-Y h:i:s A' , strtotime($start_time));
                                }
+
+                               if($allocation_id == 1 || $allocation_id == 4){
+                                    // pre($row);
+                                }
                             @endphp
                             <tr>
                                 <td>{{ $row['wrc_number'] }}</td>
+                                <td>
+                                    <?php echo $row['batch_no'] > 0 ? $row['batch_no'] : 'None' ;?>
+                                </td>
                                 <td>{{ $row['Company'] }}</td>
                                 <td>{{ $row['brand_name'].$extra }}</td>
-                                <td>{{ $allocated_data_arr['allocated_qty'] }}</td>
+                                
+                                <td> 
+                                   <?php 
+                                    if($modeOfDelivary_is == 'Uploading'){
+                                        $Uploading_market_place_list = array_intersect($Mar_place_cre_array_1,array($commercial_id));
+                                        foreach ($Uploading_market_place_list as $key => $array_index) {
+                                            $Up_mar_cre_arr = $commercial_wise_MarketplaceCredentials_list[$key];
+                                            echo "<p class='m-0'>".$Up_mar_cre_arr['marketPlace_name']. " ( ".$Up_mar_cre_arr['link']." )</p>";
+                                        }
+                                    }else{  ?>
+                                        @foreach ($market_place_ids as $mp_id)
+                                            <p class="m-0">{{ $MarketPlace_array_list[$mp_id] }}</p>
+                                        @endforeach
+                                    <?php } ?> 
+                                </td>
+                                <td> 
+                                    <?php 
+                                        if($modeOfDelivary_is == 'Uploading'){
+                                            $Uploading_market_place_list = array_intersect($Mar_place_cre_array_1,array($commercial_id));
+                                            foreach ($Uploading_market_place_list as $key => $array_index) {
+                                                $Up_mar_cre_arr = $commercial_wise_MarketplaceCredentials_list[$key];
+                                                echo "<p class='m-0'>Username => ".$Up_mar_cre_arr['username']. " | password => ".$Up_mar_cre_arr['password']."</p>";
+                                            }
+                                        }
+                                    ?>    
+                                </td>
+                                <td>{{ $allocated_qty }}</td>
                                 {{-- Assigned Cataloguers --}}
                                 @if ($show_td == 2)
                                     <td>
@@ -230,22 +306,29 @@ Cataloger Panel
                                   </ul>
                                 </td>
 
+                                {{-- time_spant --}}
                                 <td >
                                     <p id="time_spant{{ $allocation_id }}">
                                         {{ $spent_time_is }}
                                     </p>
                                 </td>
+                                {{-- action --}}
                                 <td>
                                   <div class="task-action task-start-button" >
                                     <a href="javascript:;" style="{{ $display_start }}" class="btn btn-warning" onclick="start_task('{{ $allocation_id }}')" id="startBTN{{ $allocation_id }}" >
-                                      Start
+                                      {{ $start_btn_text }}
+                                    </a>
+
+                                    <a href="javascript:;" style="{{ $display_pause }}" class="btn btn-warning" onclick="Pause_task('{{ $allocation_id }}')" id="pauseBTN{{ $allocation_id }}" >
+                                      Pause
                                     </a>
                                   </div>
-                                  <div class="task-action task-start-timings" id="show_date_time{{ $allocation_id }}"  style="{{ $display_date_time }}"> {{ $start_time_is }}
-                                  </div>
+
+                                    <div class="task-action task-start-timings" id="show_date_time{{ $allocation_id }}"  style="{{$display_date_time}}"> {{ $start_time_is }}
+                                    
+                                    </div>
                                 </td>
-
-
+                                {{-- Upload --}}
                                 <td>
 
                                     <p id="data{{ $allocation_id }}" 
@@ -264,6 +347,7 @@ Cataloger Panel
                                         Edit
                                     </a> --}}
                                 </td>
+                                
                             </tr>
                             @endforeach
                         </tbody>
@@ -453,10 +537,11 @@ Cataloger Panel
 {{-- start_task --}}
 <script>
    async function start_task(id){
-        // console.log(id)
+        // console.log(id)pauseBTN
         allocation_id = id;
         const startBTN = 'startBTN'+allocation_id;
         const uploadBTn = 'uploadBTn'+allocation_id;
+        const pauseBTN = 'pauseBTN'+allocation_id;
         const show_date_time = 'show_date_time'+allocation_id;
          await $.ajax({
             url: "{{ url('set-catalog-allocation-start')}}",
@@ -477,10 +562,11 @@ Cataloger Panel
                     msg_div.classList.add("alert-success");
                     msg_box.innerHTML  = "Wrc Started!!";
                     $("#"+startBTN).css("display", "none");
-                    document.getElementById(show_date_time).innerHTML = res.start_time
+                    // document.getElementById(show_date_time).innerHTML = res.start_time
                     document.getElementById('data'+allocation_id).dataset.start_date = res.start_time
-                    $("#"+show_date_time).css("display", "block");
+                    // $("#"+show_date_time).css("display", "block");
                     $('#'+uploadBTn).prop('disabled', false);
+                    $('#'+pauseBTN).css('display', 'block');
                 }else{
                     msg_div.classList.add("alert-danger");
                     msg_box.innerHTML  = "Somthing went Wrong!! Try again!!";
@@ -494,6 +580,53 @@ Cataloger Panel
     }
 </script>
 
+{{-- start_task --}}
+<script>
+   async function Pause_task(id){
+        // console.log(id)pauseBTN
+        allocation_id = id;
+        const startBTN = 'startBTN'+allocation_id;
+        const uploadBTn = 'uploadBTn'+allocation_id;
+        const pauseBTN = 'pauseBTN'+allocation_id;
+        const show_date_time = 'show_date_time'+allocation_id;
+         await $.ajax({
+            url: "{{ url('set-catalog-allocation-pause')}}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                allocation_id,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                console.log(res)
+                // msg_div msg_box startBTN 
+                const msg_div = document.getElementById("msg_div");
+                const msg_box = document.getElementById("msg_box");
+                msg_div.classList.remove("alert-success");
+                msg_div.classList.remove("alert-danger");
+
+                if(res.status == true || res.status == 1){
+                    msg_div.classList.add("alert-success");
+                    msg_box.innerHTML  = "Wrc Paused!!";
+                    $("#"+startBTN).css("display", "block");
+                    $('#'+pauseBTN).css('display', 'none');
+                   
+                    document.querySelector("#"+startBTN).innerHTML = 'Continue';
+                    document.querySelector("#time_spant"+allocation_id).innerHTML = res.spent_time;
+                }else{
+                    msg_div.classList.add("alert-danger");
+                    msg_box.innerHTML  = "Somthing went Wrong!! Try again!!";
+                }
+                $("#msg_div").css("display", "block");
+            }
+        });
+        setTimeout( () => {
+            $("#msg_div").css("display", "none");
+        }, 2500);
+    }
+</script>
+
+{{-- formvalidate --}}
 <Script>
    async function formvalidate(action){
         // Cataloguer / CW
