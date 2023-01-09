@@ -196,10 +196,12 @@
 
                                 <?php if($allocationInfo['task_status'] == 1){  ?>
                                     <td>{{dateFormat($allocationInfo->end_time)}}<br><b>{{timeFormat($allocationInfo->end_time)}}</b></td>
-                                <td>
-                                <?php } ?>
-                                <?php if(($allocationInfo['task_status'] != 1)){  ?>
+                                <?php }else{ ?>
                                     <td></td>
+                                <?php } ?>
+                                {{-- <td></td> --}}
+
+                                {{-- <?php if(($allocationInfo['task_status'] != 1)){  ?> --}}
                                     <td>
                                         <div class="task-action task-start-timings" style="display:block;">
                                             <span  class="start_time1{{$key}}">{{dateFormat($allocationInfo->ini_start_time)}}</span>
@@ -207,7 +209,7 @@
                                           </div>
                                     </td>
                                 <td>
-                                <?php } ?>
+                                {{-- <?php } ?> --}}
                                 
                                 <?php if(($allocationInfo['start_time'] == '0000-00-00 00:00:00')){  ?>
                                   <div class="task-action task-start-button" style="display:bock;" id="start_btn">
@@ -332,13 +334,13 @@
                     <div class="custom-dt-row">
                         <form class="" method="POST" action="" id="workdetailsform">
                             <div class="row">
-                                <div class="col-sm-6 col-12">
+                                <div class="col-sm-8 col-12 gdopacity">
                                     <div class="form-group">
                                         <label class="" id="gd_link_required">GD Link</label>
                                         <input type="text" class="form-control creative_link" name="workLink1"  placeholder="Link" value="">
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-12">
+                                <div class="col-sm-8 col-12 cwopacity">
                                     <div class="form-group">
                                         <label class="" id="cw_link_required">CW Link</label>
                                         <input type="text" class="form-control copy_link" name="workLink2"  placeholder="Link" value="">
@@ -617,12 +619,14 @@
         if(user_role == 'CD'){
             $("#cw_link_required").addClass('control-label required');
             document.querySelector('#modal_title').innerHTML = 'Creatives Uploading Panel - Copy Writers';
+            document.querySelector('.gdopacity').style.display = 'none';
 
         }
 
         if(user_role == 'GD'){
             document.querySelector('#modal_title').innerHTML = 'Creatives Uploading Panel - Graphics Designers';
             $("#gd_link_required").addClass('control-label required');
+            document.querySelector('.cwopacity').style.display = 'none';
         }
 
     }

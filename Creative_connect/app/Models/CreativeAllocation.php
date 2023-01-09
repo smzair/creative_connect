@@ -88,7 +88,7 @@ class CreativeAllocation extends Model
 		,'creative_time_hash.spent_time as spent_time_data' 
 		,'creative_wrc_batch.batch_no','creative_wrc_batch.order_qty as batch_order_qty','creative_wrc_batch.sku_count as batch_sku_count' )
 		->where('creative_allocation.user_id',$login_user_id)
-		// ->groupBy('creative_allocation.wrc_id')
+		->groupBy(['creative_allocation.wrc_id','creative_allocation.batch_no'])
 		->get();
 
 		// Graphic Designer  list
@@ -149,7 +149,7 @@ class CreativeAllocation extends Model
 			$end_time = $creative_time_hash != NULL ?  $creative_time_hash->end_time : '0000-00-00 00:00:00';
 			$task_status = $creative_time_hash != NULL ?  $creative_time_hash->task_status : 0;
 			$is_rework = $creative_time_hash != NULL ?  $creative_time_hash->is_rework : 'NULL';
-			$pause_time = $creative_time_hash != NULL ?  $creative_time_hash->pause_time : 'NULL';
+			$pause_time = $creative_time_hash != NULL ?  $creative_time_hash->pause_time : '0000-00-00 00:00:00';
 			$ini_start_time = $creative_time_hash != NULL ?  $creative_time_hash->ini_start_time : 'NULL';
 			$val['start_time'] = $start_time; 
 			$val['end_time'] = $end_time; 

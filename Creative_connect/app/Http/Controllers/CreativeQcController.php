@@ -149,6 +149,7 @@ class CreativeQcController extends Controller
     public function checkCompletedWrc(Request $request){
         
         $wrc_id = $request->wrc_id;
+        $button_action =  $request->button_action;
 
         $all_creative_allocation = ModelsCreativeAllocation::where('wrc_id', $wrc_id)
         ->leftJoin('creative_time_hash', 'creative_time_hash.allocation_id', 'creative_allocation.id')
@@ -161,22 +162,33 @@ class CreativeQcController extends Controller
 
         // dd($all_creative_allocation);
 
-        foreach($all_creative_allocation as $key => $val){
-            $check_task_status = $val['task_status'];
-            if($check_task_status != 1){
-                $check = 0;
-            }
-        }
-
-        if($check == 1){
+        if($button_action == 'Pending'){
             foreach($all_creative_allocation as $key => $val){
-                $allocation_id = $val['allocation_id'];
-                CreativeTimeHash::where('allocation_id',$allocation_id)->update(['task_status'=>2]);
-
+                $check_task_status = $val['task_status'];
+                if($check_task_status != 1){
+                    $check = 0;
+                }
             }
-            CreativeWrcModel::where('id', $wrc_id )->update(['qc_status'=>1]);
+    
+            if($check == 1){
+                foreach($all_creative_allocation as $key => $val){
+                    $allocation_id = $val['allocation_id'];
+                    CreativeTimeHash::where('allocation_id',$allocation_id)->update(['task_status'=>2]);
+    
+                }
+                CreativeWrcModel::where('id', $wrc_id )->update(['qc_status'=>1]);
+            }
         }
 
+        if($button_action == 'Completed'){
+    
+                foreach($all_creative_allocation as $key => $val){
+                    $allocation_id = $val['allocation_id'];
+                    CreativeTimeHash::where('allocation_id',$allocation_id)->update(['task_status'=>1]);
+    
+                }
+                CreativeWrcModel::where('id', $wrc_id )->update(['qc_status'=>0]);
+        }
         echo $check;
     }
 }

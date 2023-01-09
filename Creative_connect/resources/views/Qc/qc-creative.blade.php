@@ -112,15 +112,15 @@ Creative Qc Panel
                                     <?php if($qc['qc_status'] == 0){ ?>
                                     <div class="d-inline-block mt-1">
                                         <input type="checkbox"  data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"  onclick='completeQcApproval(<?php echo $key;?>)' >
-                                        <button type="" style="border-radius: 4px" class="button btn-warning" onclick='completeQcApproval(<?php echo $key;?>)'>Pending</button>
+                                        <button type="" style="border-radius: 4px" class="button btn-warning Pending" onclick='completeQcApproval(<?php echo $key;?>)' name="Pending">Pending</button>
                                         {{-- <input data-id="{{$sku['sku_id']}}" type="checkbox" checked data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"   {{ $sku['qc'] ? 'checked' : '' }}> --}}
                                     </div>
                                     <?php } ?>
 
                                     <?php if($qc['qc_status'] == 1){ ?>
                                         <div class="d-inline-block mt-1">
-                                            <input type="checkbox" checked disabled data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"  onclick='completeQcApproval(<?php echo $key;?>)' >
-                                            <button type="" disabled style="border-radius: 4px" class="button btn-success" >Completed</button>
+                                            <input type="checkbox"  checked disabled data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"  onclick='completeQcApproval(<?php echo $key;?>)' >
+                                            <button type="" onclick='pendingQcApproval(<?php echo $key;?>)' style="border-radius: 4px" class="button btn-success Completed" name="Completed">Completed</button>
                                             {{-- <input data-id="{{$sku['sku_id']}}" type="checkbox" checked data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"   {{ $sku['qc'] ? 'checked' : '' }}> --}}
                                         </div>
                                         <?php } ?>
@@ -298,7 +298,10 @@ Creative Qc Panel
 
 <script>
     function completeQcApproval(id){
-        console.log('first', id)
+        var button = document.getElementsByClassName("Pending")[0];
+        var button_action = button.name;
+
+        console.log('button_action', button_action)
          // set wrc id
         const wrc_id_td = "wrc_id"+id;
         const wrc_id = document.getElementById(wrc_id_td).innerHTML;
@@ -310,6 +313,7 @@ Creative Qc Panel
             dataType: 'json',
             data: {
                 wrc_id,
+                button_action,
                 _token: '{{ csrf_token() }}'
             },
             success: function(res) {
@@ -320,6 +324,42 @@ Creative Qc Panel
                 }
                 if(res == 1){
                     alert('Qc Status Completed Successfully');
+                    window.location.reload();
+                }
+              console.log('check_completed_wrc', res)
+            }
+        });
+    }
+</script>
+
+<script>
+    function pendingQcApproval(id){
+        var button = document.getElementsByClassName("Completed")[0];
+        var button_action = button.name;
+
+        console.log('button_action', button_action)
+         // set wrc id
+        const wrc_id_td = "wrc_id"+id;
+        const wrc_id = document.getElementById(wrc_id_td).innerHTML;
+        console.log('complete Qc Approval_wrc_id', wrc_id)
+        var check_completed_wrc = 0;
+        $.ajax({
+            url: "{{ url('check_completed_wrc')}}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                wrc_id,
+                button_action,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                check_completed_wrc = res;
+                if(res == 0){
+                    alert('First, complete all tasks for all users');
+                    window.location.reload();
+                }
+                if(res == 1){
+                    alert('Qc Status Pending Successfully');
                     window.location.reload();
                 }
               console.log('check_completed_wrc', res)

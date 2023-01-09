@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CreativeAllocationController;
 use App\Http\Controllers\CreativeSubmissionController;
+use App\Http\Controllers\CreativeQcController;
 use Illuminate\Support\Facades\Route;
 /*
   |--------------------------------------------------------------------------
@@ -81,7 +82,7 @@ Route::post('/set-creative-allocation-start' , [CreativeAllocationController::cl
 Route::post('/Upload-Creative', 'CreativeAllocationController@storeUploaddata')->name('CREATIVE_ALLOCATION_UPLOAD_STORE');
 
 // creative qc get
-Route::get('/Creative-Qc', 'CreativeQcController@getDataForQcList')->name('CREATIVE_QC_GET');
+Route::get('/Creative-Qc', [CreativeQcController::class , 'getDataForQcList'])->name('CREATIVE_QC_GET');
 
 // get user list for rework in qc approval create// ajax api
 Route::post('/get-user-for-rework','CreativeQcController@getUserListForRework');

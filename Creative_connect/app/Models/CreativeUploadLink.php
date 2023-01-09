@@ -38,7 +38,7 @@ class CreativeUploadLink extends Model
 			$join->on('creative_wrc_batch.wrc_id', '=', 'creative_allocation.wrc_id');
 			$join->on('creative_wrc_batch.batch_no', '=', 'creative_allocation.batch_no');
 		})
-        // ->groupBy('creative_wrc.id')
+        ->groupBy(['creative_wrc_batch.wrc_id','creative_wrc_batch.batch_no'])
         // ->orderBy('creative_time_hash.id','DESC')
         ->select(
             // 'creative_allocation.*',
