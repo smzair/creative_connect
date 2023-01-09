@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CatalogAllocation;
 use App\Models\CatalogTimeHash;
+use App\Models\CatalogUploadedMarketplaceCount;
 use App\Models\CatalogUploadLinks;
 use App\Models\CatlogWrc;
 use Carbon\Carbon;
@@ -201,9 +202,10 @@ class CatalogAllocationController extends Controller
         $allocation_id_is = $request->allocation_id_is;
         $catalog_link = $request->catalog_link;
         $copy_link = $request->copy_link;
+        $final_link = $request->final_link;
         $action = $request->action;
 
-        $status = CatalogUploadLinks::upload_catalog_link($allocation_id_is, $catalog_link, $copy_link, $action );
+        $status = CatalogUploadLinks::upload_catalog_link($allocation_id_is, $final_link , $catalog_link, $copy_link, $action );
 
         $end_time_is = '';
         $up_status = '';

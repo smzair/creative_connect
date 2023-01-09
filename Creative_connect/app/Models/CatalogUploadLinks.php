@@ -11,14 +11,15 @@ class CatalogUploadLinks extends Model
 
     protected $table = 'catalog_upload_links';
     protected $fillable = [
-        'allocation_id', 'catalog_link', 'copy_link'
+        'allocation_id', 'final_link' , 'catalog_link', 'copy_link'
     ];
 
-    public static function upload_catalog_link($allocation_id_is, $catalog_link, $copy_link, $action)
+    public static function upload_catalog_link($allocation_id_is, $final_link , $catalog_link, $copy_link,  $action)
     {
         $allocation_id = $allocation_id_is ;
         $catalog_link = $catalog_link == null ? '' : $catalog_link;
         $copy_link = $copy_link == null ? '' : $copy_link;
+        $final_link = $final_link == null ? '' : $final_link;
 
         $link_id = CatalogUploadLinks::where('allocation_id', $allocation_id)->get(['id'])->first();
         $allocated_link_id = $link_id != null ?  $link_id->id : 0;
@@ -26,12 +27,14 @@ class CatalogUploadLinks extends Model
         if($allocated_link_id > 0){
             $storeData = CatalogUploadLinks::find($allocated_link_id);
             $storeData->allocation_id = $allocation_id;
+            $storeData->final_link = $final_link;
             $storeData->catalog_link = $catalog_link;
             $storeData->copy_link = $copy_link;
             $status = $storeData->update();            
         }else{
             $data = new CatalogUploadLinks();
             $data->allocation_id = $allocation_id;
+            $data->final_link = $final_link;
             $data->catalog_link = $catalog_link;
             $data->copy_link = $copy_link;
             $status = $data->save();
@@ -56,6 +59,7 @@ class CatalogUploadLinks extends Model
         leftJoin('catalog_time_hash', 'catalog_time_hash.allocation_id', 'catalog_upload_links.allocation_id')->
         select(
             'catalog_upload_links.id',
+            'catalog_upload_links.final_link',
             'catalog_upload_links.catalog_link',
             'catalog_upload_links.copy_link',
             'catalog_time_hash.end_time',

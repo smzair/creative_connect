@@ -3,6 +3,7 @@
 use App\Http\Controllers\CatalogAllocationController;
 use App\Http\Controllers\CatalogClientARController;
 use App\Http\Controllers\CatalogSubmissionController;
+use App\Http\Controllers\CatalogUploadedMarketplaceCountController;
 use App\Http\Controllers\CatalogWrcBatchController;
 use App\Http\Controllers\CatalogWrcController;
 use App\Http\Controllers\CatlaogQcController;
@@ -79,15 +80,10 @@ Route::post('/Catlog-wrc-inverd-new-batch', [CatalogWrcBatchController::class, '
 Route::post('/get-catlog-brand', [CatalogWrcController::class, 'getBrand']);
 Route::post('/get-catlog-lot-number', [CatalogWrcController::class, 'getLotNumber']);
 
-
-
-// rajesh wrc route end
-
 /********** Ajax calling /{id} ********/
 Route::post('/get-brand', 'AjaxController@getBrand');
 
 /****** Allocation Route  set-catalog-allocation  set-catalog-allocation-start *********/
-// Route::get('catalog-allocation' , 'CatalogAllocationController@index')->name('CATALOG_ALLOCT'); // 
 Route::get('catalog-allocation', [CatalogAllocationController::class, 'index'])->name('CATALOG_ALLOCT'); // 
 Route::get('catalog-re-allocation', [CatalogAllocationController::class, 'catalog_re_allocation'])->name('CATALOG_RE_ALLOCT'); // 
 Route::get('catalog-allocated-details', [CatalogAllocationController::class, 'details'])->name('CATALOG_ALLOCTED_DETAILS'); // 
@@ -100,9 +96,10 @@ Route::post('set-catalog-allocation-pause', [CatalogAllocationController::class,
 
 Route::post('catalog-upload-link', [CatalogAllocationController::class, 'upload_catalog_link']); // for upload catalog WRC link 
 Route::post('get-catalog_upload_links', [CatalogAllocationController::class, 'get_catalog_link']); // for get-catalog_upload_links 
+Route::post('get-uploaded_Marketplace_count', [CatalogUploadedMarketplaceCountController::class, 'get_uploaded_Marketplace_count']); // for get-uploaded_Marketplace_count   
+Route::post('save-Marketplace-approved-Count', [CatalogUploadedMarketplaceCountController::class, 'save_Marketplace_approved_Count']); // for get-uploaded_Marketplace_count   
 
-
-// QC route  get-catalog-users_list qc-rework completed-qc-wrc
+// QC route  get-catalog-users_list qc-rework completed-qc-wrc 
 
 Route::get('catalog-qc', [CatlaogQcController::class, 'index'])->name('QcList'); // Qc List 
 Route::post('get-catalog-users_list', [CatlaogQcController::class, 'userlist'])->name('userlist'); // Qc List 

@@ -8,6 +8,8 @@ Cataloger Panel
 <div class="container-fluid mt-5 plan-shoot new-allocation-table-main">
 
     <style type="text/css">
+
+  
     
 
     /* .info-list > li {
@@ -68,14 +70,24 @@ Cataloger Panel
 
 
 </style>
-    <style>
-         .msg_box{
-            margin: 0.1em 0;
-            background: #928c8cfc;
-            display: none;
-            padding: 0.3em;
+<style> 
+
+    .Credentials , .cls_wrc_number , .cls_comp_name , .cls_brand_name {
+        display: none;
+    }
+        .msg_box{
+        margin: 0.1em 0;
+        background: #928c8cfc;
+        display: none;
+        padding: 0.3em;
+    }
+
+    @media (min-width: 992px){
+        .modal-lg, .modal-xl{
+            max-width: 900px;
         }
-    </style>
+    }
+</style>
     <div class="row">
         <div class="col-12">
             <div class="card card-transparent">
@@ -106,12 +118,13 @@ Cataloger Panel
                     <table id="allocTableCat" class="table table-head-fixed text-nowrap data-table">
                         <thead>
                             <tr>
-                                <th>WRC Number</th>
+                                <th class="cls_wrc_number">WRC Number</th>
                                 <th>Batch Number</th>
-                                <th>Company Name</th>
-                                <th>Brand Name</th>
-                                <th>Marketplace</th>
-                                <th>Credentials</th>
+                                <th class="cls_comp_name">Company Name</th>
+                                <th class="cls_brand_name">Brand Name</th>
+                                <th>Mode Of Delivary</th>
+                                <th class="Marketplace">Marketplace</th>
+                                <th class="Credentials">Credentials</th>
                                 <th>Order Qty</th>
                                 {{-- <th>SKU Count</th> --}}
                                 <th>{{ $td_head }}</th>
@@ -153,6 +166,7 @@ Cataloger Panel
                                 $commercial_id =  $row['commercial_id'];
                                 $lot_id =  $row['lot_id'];
                                 $batch_no =  $row['batch_no'];
+                                $market_place = $row['market_place'];
 
                                 $market_place_ids = explode(',',$row['market_place']);
                                 $modeOfDelivary =  $row['modeOfDelivary'];
@@ -215,9 +229,6 @@ Cataloger Panel
                                     }
                                 }
 
-                                
-
-
 
                                if(($time_hash_id > 0 && (($task_status == 0 && $is_rework == 0) || ($task_status == 1 && $is_rework == 0) || $task_status == 2  )) ){
                                    $btn_disable = "";
@@ -235,28 +246,37 @@ Cataloger Panel
                                 }
                             @endphp
                             <tr>
-                                <td>{{ $row['wrc_number'] }}</td>
+                                <td class="cls_wrc_number">{{ $row['wrc_number'] }}</td>
                                 <td>
                                     <?php echo $row['batch_no'] > 0 ? $row['batch_no'] : 'None' ;?>
                                 </td>
-                                <td>{{ $row['Company'] }}</td>
-                                <td>{{ $row['brand_name'].$extra }}</td>
+                                <td class="cls_comp_name">{{ $row['Company'] }}</td>
+                                <td class="cls_brand_name">{{ $row['brand_name'].$extra }}</td>
+                                <td>{{ $modeOfDelivary_is }}</td>
                                 
-                                <td> 
+                                <td class="Marketplace"> 
                                    <?php 
+                                   $kind_of_work = "";
                                     if($modeOfDelivary_is == 'Uploading'){
                                         $Uploading_market_place_list = array_intersect($Mar_place_cre_array_1,array($commercial_id));
                                         foreach ($Uploading_market_place_list as $key => $array_index) {
                                             $Up_mar_cre_arr = $commercial_wise_MarketplaceCredentials_list[$key];
                                             echo "<p class='m-0'>".$Up_mar_cre_arr['marketPlace_name']. " ( ".$Up_mar_cre_arr['link']." )</p>";
+
+                                            $kind_of_work .= $Up_mar_cre_arr['marketPlace_name'].", ";
                                         }
                                     }else{  ?>
                                         @foreach ($market_place_ids as $mp_id)
                                             <p class="m-0">{{ $MarketPlace_array_list[$mp_id] }}</p>
+                                            @php
+                                                $kind_of_work .= $MarketPlace_array_list[$mp_id].", ";
+                                            @endphp
                                         @endforeach
-                                    <?php } ?> 
+                                    <?php } 
+                                    $kind_of_work = rtrim($kind_of_work,", ")
+                                    ?> 
                                 </td>
-                                <td> 
+                                <td class="Credentials"> 
                                     <?php 
                                         if($modeOfDelivary_is == 'Uploading'){
                                             $Uploading_market_place_list = array_intersect($Mar_place_cre_array_1,array($commercial_id));
@@ -268,35 +288,33 @@ Cataloger Panel
                                     ?>    
                                 </td>
                                 <td>{{ $allocated_qty }}</td>
-                                {{-- Assigned Cataloguers --}}
-                                @if ($show_td == 2)
-                                    <td>
+                                <td>
                                     <ul class="info-list">
-                                        @foreach ($ass_cataloger_list as $key => $user_id)
-                                        <?php 
-                                        $user_role_is = $user_roles_list[$key];
-                                        if($user_role_is == 0){   ?>
-                                            <li><span class="gd-name"><?=  $Cataloguers[$user_id] ?></span></li>
-                                        <?php }  ?>
-                                        @endforeach
-                                    </ul>
-                                    </td>
-                                @endif
+                                        {{-- Assigned Cataloguers --}}
+                                        @if ($show_td == 2)
+                                            @foreach ($ass_cataloger_list as $key => $user_id)
+                                                <?php 
+                                                $user_role_is = $user_roles_list[$key];
+                                                if($user_role_is == 0){   ?>
+                                                    <li><span class="gd-name"><?=  $Cataloguers[$user_id] ?></span></li>
+                                                <?php }  ?>
+                                            @endforeach
+                                        @endif
 
-                                {{--Assigned Copy Writers --}}
-                                @if ($show_td == 1)
-                                    <td>
-                                    <ul class="info-list">
-                                        @foreach ($ass_cataloger_list as $key => $user_id)
-                                        <?php 
-                                        $user_role_is = $user_roles_list[$key];
-                                        if($user_role_is == 1){   ?>
-                                            <li><span class="gd-name"><?=  $getcopyWriter[$user_id] ?></span></li>
-                                        <?php }  ?>
-                                        @endforeach
+                                        {{--Assigned Copy Writers --}}
+                                        @if ($show_td == 1)
+                                            @foreach ($ass_cataloger_list as $key => $user_id)
+                                                <?php 
+                                                $user_role_is = $user_roles_list[$key];
+                                                if($user_role_is == 1){   ?>
+                                                    <li><span class="gd-name"><?=  $getcopyWriter[$user_id] ?></span></li>
+                                                <?php }  ?>
+                                            @endforeach
+
+                                        @endif
                                     </ul>
-                                    </td>
-                                @endif
+                                </td>
+                                {{-- Guidelines Links --}}
                                 <td>
                                   <ul class="info-list">
                                     <li><a href="{{ $row['work_brief'] }}" class="work-link">Link</a></li>
@@ -328,24 +346,30 @@ Cataloger Panel
                                     
                                     </div>
                                 </td>
-                                {{-- Upload --}}
+                                {{-- Upload market_place --}}
                                 <td>
-
                                     <p id="data{{ $allocation_id }}" 
                                     data-project_type="{{$allocated_data_arr['project_type']}}" 
                                     data-wrc_number="{{$allocated_data_arr['wrc_number']}}"   
-                                    data-kind_of_work="{{$allocated_data_arr['kind_of_work']}}"   
+                                    data-kind_of_work="{{$kind_of_work}}"   
+                                    data-modeOfDelivary_is="{{$modeOfDelivary_is}}"   
+                                    data-market_place="{{$market_place}}"   
                                     data-company="{{$row['Company']}}"   
                                     data-brand_name="{{$row['brand_name']}}"   
                                     data-start_date="{{$start_time_is}}"   
                                     style="display: none"></p>
-                                    
+
+                                    @if ($modeOfDelivary_is == 'Uploading')
+                                        {{-- <button  class="btn btn-warning alloc-action-btn inactive" id="uploadBTn{{ $allocation_id }}" data-toggle="modal" data-target="#editpanelPopupCat" {{ $btn_disable }}  onclick="set_data('{{ $allocation_id }}')">
+                                            Upload Uploading
+                                        </button> --}}
+                                        
+                                    @else
+                                    @endif
                                     <button  class="btn btn-warning alloc-action-btn inactive" id="uploadBTn{{ $allocation_id }}" data-toggle="modal" data-target="#editpanelPopupCat" {{ $btn_disable }}  onclick="set_data('{{ $allocation_id }}')">
                                         Upload
                                     </button>
-                                    {{-- <a href="javascript:;" class="btn btn-warning alloc-action-btn inactive" id="editBTn" data-toggle="modal" data-target="#editpanelPopupCat">
-                                        Edit
-                                    </a> --}}
+                                    
                                 </td>
                                 
                             </tr>
@@ -374,50 +398,127 @@ Cataloger Panel
                         <div class="col-sm-4 col-12">
                             <div class="col-ac-details">
                                 <h6>WRC Number</h6>
-                                <p id="wrcNo">WRC-2345</p>
+                                <p id="wrcNo"></p>
                             </div>
                         </div>
                         <div class="col-sm-4 col-6">
                             <div class="col-ac-details">
                                 <h6>Brand Name</h6>
-                                <p id="brndName">ODN11jidfv23e4r</p>
+                                <p id="brndName"></p>
                             </div>
                         </div>
                         <div class="col-sm-4 col-6">
                             <div class="col-ac-details">
                                 <h6>Start Date</h6>
-                                <p id="startDate">11/11/1111</p>
+                                <p id="startDate"></p>
                             </div>
                         </div>
                         <div class="col-sm-4 col-6">
                             <div class="col-ac-details">
                                 <h6>Project Type</h6>
-                                <p id="projectType">fneivnsdvi;msdol;dvm</p>
+                                <p id="projectType"></p>
+                            </div>
+                        </div> 
+                        <div class="col-sm-4 col-6">
+                            <div class="col-ac-details">
+                                <h6>Kind of Work</h6>
+                                <p id="kindOfWork"></p>
                             </div>
                         </div>
                         <div class="col-sm-4 col-6">
                             <div class="col-ac-details">
-                                <h6>Kind of Work</h6>
-                                <p id="kindOfWork">vdssvdsvvds</p>
+                                <h6>Mode of Delivery</h6>
+                                <p id="mode_of_Delivery"></p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="custom-dt-row">
                     <form class="" method="POST" action="" id="workdetailsform">
-                        <div class="row">
+                        {{-- Link Row --}}
+                        <div class="row" id="link_row">
+
                             <div class="col-sm-6 col-12">
+                                <div class="form-group">
+                                    <label class="control-label required"> Final Link</label>
+                                    <input type="text" class="form-control" name="final_link" id="final_link" placeholder="Add Link ">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-12 d-none">
                                 <div class="form-group">
                                     <label class="control-label <?php echo $user_role == 'Cataloguer' ? 'required' : ''  ?>"> Cataloguer Link</label>
                                     <input type="text" class="form-control" name="workLink1" id="workLink1" placeholder="Link">
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-12">
+                            <div class="col-sm-6 col-12 d-none">
                                 <div class="form-group">
                                     <label class="control-label  <?php echo $user_role == 'CW' ? 'required' : ''  ?> "> CW Link</label>
                                     <input type="text" class="form-control" name="workLink2" id="workLink2" placeholder="Link">
                                 </div>
                             </div>
+                        </div>
+
+                        {{-- Marketplace row --}}
+                        <div class="row mt-3" id="market_place_row">
+                            <div class="col-sm-12">
+                                <div>
+                                    <h3>Marketplace</h3> 
+                                </div>
+                            </div>
+                            {{-- head --}}
+                            <div class="col-sm-3 col-12">
+                                <div class="col-ac-details">
+                                    <h6>Marketplace</h6>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-6">
+                                <div class="col-ac-details">
+                                    <h6>Approved Count</h6>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-6">
+                                <div class="col-ac-details">
+                                    <h6>Rejected Count</h6>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-6">
+                                <div class="col-ac-details">
+                                    <h6>Date</h6>
+                                </div>
+                            </div>                        
+                             
+                            {{-- Body innputs --}}
+                            <div class="col-12 mt-1" id="marketplace_list_div">
+                                @for ($i = 1; $i < 4; $i++)
+                                {{-- <div class="row mb-2" id="marketplace_row${data.id}">
+                                    <div class="col-sm-3 col-12">
+                                        <div class="col-ac-details">
+                                            <input type="hidden" name="marketPlace_id${marketPlace_id}" id="marketPlace_id${marketPlace_id}"  value="${marketPlace_id}">
+                                            <h6>${data.marketPlace_name}</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 col-6">
+                                        <div class="col-ac-details">
+                                            <input type="text" placeholder="Add Approved Count" id="link${marketPlace_id}" name="link${marketPlace_id}" value="${link}">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 col-6">
+                                        <div class="col-ac-details">
+                                            <input type="text" placeholder="Add Rejected Count" id="username${marketPlace_id}" name="username${marketPlace_id}" value="${username}">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 col-6">
+                                        <div class="col-ac-details">
+                                            <input type="date" placeholder="Select Date"  id="password${marketPlace_id}" name="password${marketPlace_id}" value="">
+                                        </div>
+                                    </div>              
+                                </div> --}}
+                                @endfor
+                            </div>
+                        </div>
+
+                        {{-- Save and complte Button row --}}
+                        <div class="row mt-4">
                             <div class="col-sm-6 col-12">
                                 <div class="custom-info">
                                   <p>Please mark the WRC as complete only after you have uploaded the corresponding documents.</p>
@@ -426,16 +527,14 @@ Cataloger Panel
 
                             <div class="col-sm-6 col-12"  style="position: relative;" >
                                 <input type="hidden" name="allocation_id_is" id="allocation_id_is">
+                                <input type="hidden" name="market_place_id_is" id="market_place_id_is">
+                                <input type="hidden" name="mode_of_Delivery_is" id="mode_of_Delivery_is">
                                 <button type="button" id="btn_comp" class="btn btn-warning" name="comp_wrc" value="comp_wrc" style="float:right; margin: 0 5px;" onclick="formvalidate('comp')">Complete Wrc</button>
 
                                 <button type="button" id="btn_save" class="btn btn-warning" style="float:right; margin: 0 5px;"  onclick="formvalidate('save')"  name="save_wrc" value="save_wrc">Save</button>
                                 
                             </div>
-
-                            <p class="msg_box" id="msg_box1" style="color: red; display: none;">
-                            </p>
-
-
+                             <p class="msg_box" id="msg_box1" style="color: red; display: none;"></p>
                         </div>
                     </form>
                 </div>
@@ -477,7 +576,15 @@ Cataloger Panel
 {{-- set_data --}}
 <script>
     async function set_data(params) {
-        console.log(params)
+        $("#link_row").addClass("d-none");
+        $("#market_place_row").addClass("d-none");
+        $("#btn_save").css("display", "block");
+        $("#btn_comp").css("display", "block");
+        document.getElementById("workdetailsform").reset()
+
+        // market_place_row  link_row 
+        // debugger 
+
         const data_id = 'data'+params;
         const time_spant = 'time_spant'+params;
         const project_type = $("#"+data_id).data('project_type');
@@ -486,51 +593,127 @@ Cataloger Panel
         const brand_name = $("#"+data_id).data('brand_name');
         const company = $("#"+data_id).data('company');
         const startDate = $("#"+data_id).data('start_date');
+        const modeofdelivary_is = $("#"+data_id).data('modeofdelivary_is');
+        const market_place = $("#"+data_id).data('market_place');
+        let api_url = "";
+        
+
+        console.log({data_id, modeofdelivary_is , kind_of_work }) 
 
         document.getElementById("allocation_id_is").value = params;
+        document.getElementById("market_place_id_is").value = market_place;
+        document.getElementById("mode_of_Delivery_is").value = modeofdelivary_is;
         document.querySelector("#projectType").innerHTML = project_type
         document.querySelector("#wrcNo").innerHTML = wrc_number 
         document.querySelector("#kindOfWork").innerHTML =  kind_of_work
         document.querySelector("#brndName").innerHTML = brand_name
         document.querySelector("#startDate").innerHTML = startDate
+        document.querySelector("#mode_of_Delivery").innerHTML =  modeofdelivary_is
 
-        // $("#btn_save").css("display", "none");
-        // $("#btn_comp").css("display", "none");
         document.querySelector("#workLink1").value = "";
         document.querySelector("#workLink2").value = "";
-        $("#btn_save").css("display", "block");
-        $("#btn_comp").css("display", "block");
 
-        await $.ajax({
-            url: "{{ url('get-catalog_upload_links')}}",
-            type: "POST",
-            dataType: 'json',
-            data: {
-                allocation_id : params,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(res) {
-                console.log(res)
-                if(res == 0){
-                    document.querySelector("#btn_save").innerHTML = "save";
-                }else{
-                    document.querySelector("#btn_save").innerHTML = "update";
-                    document.querySelector("#workLink1").value = res[0].catalog_link
-                    document.querySelector("#workLink2").value = res[0].copy_link
+        if(modeofdelivary_is == 'Uploading'){
+            $("#market_place_row").removeClass("d-none");
+            let list = "";
+            await $.ajax({
+                url: "{{ url('get-uploaded_Marketplace_count')}}",
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    allocation_id : params,
+                    market_place : market_place,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    const {response , time_has_data} = res;
+                    // console.log(response)
+                    // console.log(time_has_data)
+                    const uploaded_Marketplace_id = response[0]['uploaded_Marketplace_id'];
+                    let btn_save = 'save';
+                    if(uploaded_Marketplace_id > 0){
+                        btn_save = 'update';
+                    }
 
-                    end_time = res[0].end_time
-                    task_status = res[0].task_status
-                    spent_time_is = res[0].spent_time_is
+                    document.querySelector("#btn_save").innerHTML = btn_save;
 
-                    // if(end_time != '0000-00-00 00:00:00' && end_time != '' ||){  // task_status
-                    if(task_status > 0){
+                    response.map(data => {
+                        console.log(data)
+                        const marketPlace_id = data.marketplace_id
+
+                        const uploaded_Marketplace_id = data.uploaded_Marketplace_id == null ? 0 : data.uploaded_Marketplace_id;
+                        const marketPlace_name = data.marketPlace_name == null ? '' : data.marketPlace_name;
+                        const approved_Count = data.approved_Count == null ? '' : data.approved_Count;
+                        const rejected_Count = data.rejected_Count == null ? '' : data.rejected_Count;
+                        const upload_date = data.upload_date == null ? '' : data.upload_date;
+
+                        list += 
+                            `<div class="row mb-2" id="marketplace_row${data.id}">
+                                <div class="col-sm-3 col-12">
+                                    <div class="col-ac-details">
+                                        <input type="hidden" name="marketPlace_id${marketPlace_id}" id="marketPlace_id${marketPlace_id}"  value="${marketPlace_id}">
+                                        <input type="hidden" name="uploaded_Marketplace_id${marketPlace_id}" id="uploaded_Marketplace_id${marketPlace_id}"  value="${uploaded_Marketplace_id}">
+                                        <h6>${data.marketPlace_name}</h6>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <div class="col-ac-details">
+                                        <input type="text" placeholder="Add Approved Count" id="approved_Count${marketPlace_id}" name="approved_Count${marketPlace_id}" value="${approved_Count}" onKeyPress="return isNumber(event);">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <div class="col-ac-details">
+                                        <input type="text" placeholder="Add Rejected Count" id="rejected_Count${marketPlace_id}" name="rejected_Count${marketPlace_id}" value="${rejected_Count}" onKeyPress="return isNumber(event);">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 col-6">
+                                    <div class="col-ac-details">
+                                        <input type="date" placeholder="Select Date"  id="upload_date${marketPlace_id}" name="upload_date${marketPlace_id}" value="${upload_date}">
+                                    </div>
+                                </div>              
+                            </div>`;
+                    })
+
+                    document.getElementById("marketplace_list_div").innerHTML = list;
+
+                    if(time_has_data.task_status > 0){
                         $("#btn_save").css("display", "none");
                         $("#btn_comp").css("display", "none");
-                        // document.querySelector("#"+time_spant).innerHTML = spent_time_is;
                     }
                 }
-            }
-        });
+            });
+        }else{ // not a uploading
+            $("#link_row").removeClass("d-none");
+            await $.ajax({
+                url: "{{ url('get-catalog_upload_links')}}",
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    allocation_id : params,
+                    market_place : market_place,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    // console.log(res)
+                    if(res == 0){
+                        document.querySelector("#btn_save").innerHTML = "save";
+                    }else{
+                        document.querySelector("#btn_save").innerHTML = "update";
+                        document.querySelector("#final_link").value = res[0].final_link
+                        document.querySelector("#workLink1").value = res[0].catalog_link
+                        document.querySelector("#workLink2").value = res[0].copy_link
+
+                        end_time = res[0].end_time
+                        task_status = res[0].task_status
+                        spent_time_is = res[0].spent_time_is
+                        if(task_status > 0){
+                            $("#btn_save").css("display", "none");
+                            $("#btn_comp").css("display", "none");
+                        }
+                    }
+                }
+            });
+        }
     }
 </script>
 
@@ -580,7 +763,7 @@ Cataloger Panel
     }
 </script>
 
-{{-- start_task --}}
+{{-- Pause_task --}}
 <script>
    async function Pause_task(id){
         // console.log(id)pauseBTN
@@ -628,73 +811,166 @@ Cataloger Panel
 
 {{-- formvalidate --}}
 <Script>
-   async function formvalidate(action){
-        // Cataloguer / CW
-
+    async function formvalidate(action){
+        // Cataloguer / CW  
         const user_role = '{{ $user_role }}'
         const allocation_id_is  = $("#allocation_id_is").val()
-        const workLink1  = $("#workLink1").val()
-        const workLink2  = $("#workLink2").val()
+        const market_place_id_is  = $("#market_place_id_is").val()
+        const mode_of_Delivery_is  = $("#mode_of_Delivery_is").val()
+        const data_arr = [];
 
-        if(user_role == 'Cataloguer' && workLink1 == ''){
-            alert('Cataloguer Link in required ');
-            $( "#workLink1" ).focus();
-            return
-        }
+        const final_link  = $("#final_link").val()
+        let workLink1  = $("#workLink1").val()
+        let workLink2  = $("#workLink2").val()
 
-        if(user_role == 'CW' && workLink2 == ''){
-            alert('Copy Writer Link in required ');
-            $( "#workLink1" ).focus();
-            return
-        }
-        console.log({allocation_id_is , workLink1 , workLink2 , user_role })
+        console.log({allocation_id_is , market_place_id_is , mode_of_Delivery_is })
+
+        const market_place_id_arr = market_place_id_is.split(",");
+
+       
         console.warn(action)
 
-         await $.ajax({
-            url: "{{ url('catalog-upload-link') }}",
-            type: "POST",
-            dataType: 'json',
-            data: {
-                allocation_id_is: allocation_id_is,
-                catalog_link: workLink1,
-                copy_link: workLink2,
-                action,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(res) {
-                console.log(res)
-                if(res?.status > 0){
-                    const status = res.status
+        if(mode_of_Delivery_is == 'Uploading'){
+            market_place_id_arr.forEach(element_id => {
+                const model_marketPlace_id = "marketPlace_id"+element_id
+                const approved_Count_id = "approved_Count"+element_id
+                const marketPlace_name_id = "marketPlace_name"+element_id
+                const rejected_Count_id = "rejected_Count"+element_id
+                const upload_date_id = "upload_date"+element_id
+                const uploaded_Marketplace_id_id = "uploaded_Marketplace_id"+element_id
 
-                    if(status == 1){
-                        document.querySelector("#btn_save").innerHTML = "update";
-                        document.querySelector("#msg_box1").innerHTML = user_role +" link Saved Successfully";
-                    }else{
-                        document.querySelector("#btn_save").innerHTML = "update";
-                        document.querySelector("#msg_box1").innerHTML = user_role+" link Updated Successfully";
-                    }
-                    
-                    if(res.up_status == 1){
-                        document.querySelector("#msg_box1").innerHTML = user_role+" WRC Completed Successfully";
-                        // document.querySelector("#btn_save").innerHTML = "update";
-                        console.warn(res.end_time)
-                        document.querySelector("#time_spant"+allocation_id_is).innerHTML = res.spent_time_is;
-                        $("#btn_save").css("display", "none");
-                        $("#btn_comp").css("display", "none");
+                console.log({
+                    model_marketPlace_id,
+                    approved_Count_id,
+                    marketPlace_name_id,
+                    rejected_Count_id,
+                    upload_date_id,
+                    uploaded_Marketplace_id_id,
+                })
+                
+                // const marketPlace_name = document.getElementById(marketPlace_name_id).value
+                const uploaded_Marketplace_id = document.getElementById(uploaded_Marketplace_id_id).value
+                const marketPlace_id = document.getElementById(model_marketPlace_id).value
+                const approved_Count = document.getElementById(approved_Count_id).value
+                const rejected_Count = document.getElementById(rejected_Count_id).value
+                const upload_date = document.getElementById(upload_date_id).value
 
-                    }
-                }else{
+                data_arr.push({
+                    uploaded_Marketplace_id,
+                    marketPlace_id,
+                    approved_Count,
+                    rejected_Count,
+                    upload_date,
+                })
+            });
 
-                }
+            await $.ajax({
+                url: "{{ url('save-Marketplace-approved-Count') }}",
+                type: "POST",
+                dataType: 'json',
+                 data: {
+                    allocation_id_is,
+                    data_arr,
+                    market_place_id_is,
+                    action,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    console.log(res)
+
+
+                    // if(res.response == 1){
+                    //     $("#msg_box1").css("color", "green");
+                    //     document.querySelector("#msg_box1").innerHTML  = res.massage;
+                    //     resCredentials_id_arr = res.resCredentials_id_arr
+
+                    //     // console.log(resCredentials_id_arr)
+
+                    //     for (const id_is in resCredentials_id_arr) {
+                    //         const value_is  = resCredentials_id_arr[id_is]
+                    //         console.log({id_is ,value_is })
+                    //         document.getElementById(id_is).value = value_is
+                    //     }
+                    // }else{
+                    //     $("#msg_box1").css("color", "red");
+                    //     document.querySelector("#msg_box1").innerHTML  = "Somthing went Wrong please try again!!!"
+                    // }
                     $("#msg_box1").css("display", "block");
+                }
+            });
+            console.log(data_arr)
+        }else{
+
+            if(final_link == ''){
+                alert('Final Link in required ');
+                $( "#final_link" ).focus();
+                return
             }
-        });
+
+            if(workLink1 == ''){
+                workLink1 = final_link;
+            }
+            if(workLink2 == ''){
+                workLink2 = final_link;
+            }
+
+            if(user_role == 'Cataloguer' && workLink1 == ''){
+                alert('Cataloguer Link in required ');
+                $( "#workLink1" ).focus();
+                return
+            }
+
+            if(user_role == 'CW' && workLink2 == ''){
+                alert('Copy Writer Link in required ');
+                $( "#workLink1" ).focus();
+                return
+            }
+            await $.ajax({
+                url: "{{ url('catalog-upload-link') }}",
+                type: "POST",
+                dataType: 'json',
+                data: {
+                    allocation_id_is: allocation_id_is,
+                    final_link: final_link,
+                    catalog_link: workLink1,
+                    copy_link: workLink2,
+                    action,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(res) {
+                    console.log(res)
+                    if(res?.status > 0){
+                        const status = res.status
+
+                        if(status == 1){
+                            document.querySelector("#btn_save").innerHTML = "update";
+                            document.querySelector("#msg_box1").innerHTML = user_role +" link Saved Successfully";
+                        }else{
+                            document.querySelector("#btn_save").innerHTML = "update";
+                            document.querySelector("#msg_box1").innerHTML = user_role+" link Updated Successfully";
+                        }
+                        
+                        if(res.up_status == 1){
+                            document.querySelector("#msg_box1").innerHTML = user_role+" WRC Completed Successfully";
+                            // document.querySelector("#btn_save").innerHTML = "update";
+                            console.warn(res.end_time)
+                            document.querySelector("#time_spant"+allocation_id_is).innerHTML = res.spent_time_is;
+                            $("#btn_save").css("display", "none");
+                            $("#btn_comp").css("display", "none");
+                        }
+                    }else{
+
+                    }
+                        $("#msg_box1").css("display", "block");
+                }
+            });
+
+        }
+
+        
         setTimeout( () => {
             $(".msg_box").css("display", "none");
             $('#msg_box1').html("");
-        // $('#msg_box2').html("");
-        // $("#msg_box1").css("display", "none");
-        // $("#msg_box2").css("display", "none");
         }, 3000);
     }
 </Script>
