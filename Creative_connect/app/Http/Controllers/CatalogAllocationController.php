@@ -154,15 +154,18 @@ class CatalogAllocationController extends Controller
 
         $allocationList = CatalogAllocation::getcatalog_allocation_list($login_user_id_is);
         
-        return view('Allocation.upload_catalog_panel')->with('allocationList', $allocationList)->with('allocated_wrc_list_by_user', $allocated_wrc_list_by_user)->with('user_role', $user_role);
+        return view('Allocation.upload_catalog_panel')->with('allocationList', $allocationList)->with('allocated_wrc_list_by_user', $allocated_wrc_list_by_user)->with('user_role', $user_role)->with('login_user_id_is', $login_user_id_is);
     }
 
     // set_tast_start
     function set_task_start(Request $request){
         $allocation_id = $request->allocation_id;
-        $start_time = date('Y-m-d H:i:s');
-        $status = CatalogTimeHash::set_task_start($allocation_id , $start_time);
+        $login_user_id_is = $request->login_user_id_is;
 
+        $start_time = date('Y-m-d H:i:s');
+        $status = CatalogTimeHash::set_task_start($allocation_id , $start_time , $login_user_id_is);
+        
+        // dd($login_user_id_is);
         $response = array(
             'status' => $status ,
             'start_time'=> date('Y-m-d h:i:s A',strtotime($start_time))
@@ -176,8 +179,6 @@ class CatalogAllocationController extends Controller
         $allocation_id = $request->allocation_id;
         $time = date('Y-m-d H:i:s');
         $response = CatalogTimeHash::set_task_pause($allocation_id, $time);
-
-        
         echo $response;
     }
 

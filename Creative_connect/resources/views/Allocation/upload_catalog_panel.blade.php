@@ -77,8 +77,9 @@ Cataloger Panel
     }
         .msg_box{
         margin: 0.1em 0;
-        background: #928c8cfc;
+        background: #d2c9c9fc;
         display: none;
+        width: 100%;
         padding: 0.3em;
     }
 
@@ -103,22 +104,28 @@ Cataloger Panel
                     }
                 @endphp
 
+                    <div style="width: 100%"> 
+                       {{-- <div   id="msg_div" style="" class="alert alert-danger mb-0" role="alert"> --}}
+                       <div  id="msg_div" style="display: none" class="alert mb-0 p-4 " role="alert">
+                             <p id="msg_box"> </p>  
+                        </div>
+                    </div>
+                
+
                 <div class="card-header">
                     <h3 class="card-title">{{ $user_role }} Panel</h3>
                 </div>
                
                 <!-- /.card-header msg_div msg_box  -->
                 <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
-                    <div style="width: 100%"> 
-                       <div  id="msg_div" style="display: none" class="alert" role="alert">
-                             <p id="msg_box"></p>  
-                        </div>
-                    </div>
+                    
                     
                     <table id="allocTableCat" class="table table-head-fixed text-nowrap data-table">
                         <thead>
                             <tr>
-                                <th class="cls_wrc_number">WRC Number</th>
+                                <th class="cls_wrc_number">WRC Number
+                                    <input type="hidden" name="login_user_id_is" value="{{$login_user_id_is}}">
+                                </th>
                                 <th>Batch Number</th>
                                 <th class="cls_comp_name">Company Name</th>
                                 <th class="cls_brand_name">Brand Name</th>
@@ -434,26 +441,26 @@ Cataloger Panel
                     </div>
                 </div>
                 <div class="custom-dt-row">
-                    <form class="" method="POST" action="" id="workdetailsform">
+                    <form class="" method="POST" action="" id="workdetailsform" autocomplete="off">
                         {{-- Link Row --}}
                         <div class="row" id="link_row">
 
                             <div class="col-sm-6 col-12">
                                 <div class="form-group">
                                     <label class="control-label required"> Final Link</label>
-                                    <input type="text" class="form-control" name="final_link" id="final_link" placeholder="Add Link ">
+                                    <input autocomplete="off" type="text" class="form-control" name="final_link" id="final_link" placeholder="Add Link ">
                                 </div>
                             </div>
                             <div class="col-sm-6 col-12 d-none">
                                 <div class="form-group">
                                     <label class="control-label <?php echo $user_role == 'Cataloguer' ? 'required' : ''  ?>"> Cataloguer Link</label>
-                                    <input type="text" class="form-control" name="workLink1" id="workLink1" placeholder="Link">
+                                    <input type="text" class="form-control" name="workLink1" id="workLink1" placeholder="Link" autocomplete="off">
                                 </div>
                             </div>
                             <div class="col-sm-6 col-12 d-none">
                                 <div class="form-group">
                                     <label class="control-label  <?php echo $user_role == 'CW' ? 'required' : ''  ?> "> CW Link</label>
-                                    <input type="text" class="form-control" name="workLink2" id="workLink2" placeholder="Link">
+                                    <input type="text" class="form-control" name="workLink2" id="workLink2" placeholder="Link" autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -534,7 +541,7 @@ Cataloger Panel
                                 <button type="button" id="btn_save" class="btn btn-warning" style="float:right; margin: 0 5px;"  onclick="formvalidate('save')"  name="save_wrc" value="save_wrc">Save</button>
                                 
                             </div>
-                             <p class="msg_box" id="msg_box1" style="color: red; display: none;"></p>
+                             <p class="msg_box" id="msg_box1" style="display: none;"></p>
                         </div>
                     </form>
                 </div>
@@ -658,17 +665,17 @@ Cataloger Panel
                                 </div>
                                 <div class="col-sm-3 col-6">
                                     <div class="col-ac-details">
-                                        <input type="text" placeholder="Add Approved Count" id="approved_Count${marketPlace_id}" name="approved_Count${marketPlace_id}" value="${approved_Count}" onKeyPress="return isNumber(event);">
+                                        <input type="text" placeholder="Add Approved Count" id="approved_Count${marketPlace_id}" name="approved_Count${marketPlace_id}" value="${approved_Count}" onKeyPress="return isNumber(event);" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="col-sm-3 col-6">
                                     <div class="col-ac-details">
-                                        <input type="text" placeholder="Add Rejected Count" id="rejected_Count${marketPlace_id}" name="rejected_Count${marketPlace_id}" value="${rejected_Count}" onKeyPress="return isNumber(event);">
+                                        <input type="text" placeholder="Add Rejected Count" id="rejected_Count${marketPlace_id}" name="rejected_Count${marketPlace_id}" value="${rejected_Count}" onKeyPress="return isNumber(event);" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="col-sm-3 col-6">
                                     <div class="col-ac-details">
-                                        <input type="date" placeholder="Select Date"  id="upload_date${marketPlace_id}" name="upload_date${marketPlace_id}" value="${upload_date}">
+                                        <input type="date" placeholder="Select Date"  id="upload_date${marketPlace_id}" name="upload_date${marketPlace_id}" value="${upload_date}" autocomplete="off">
                                     </div>
                                 </div>              
                             </div>`;
@@ -726,40 +733,49 @@ Cataloger Panel
         const uploadBTn = 'uploadBTn'+allocation_id;
         const pauseBTN = 'pauseBTN'+allocation_id;
         const show_date_time = 'show_date_time'+allocation_id;
+        const login_user_id_is = '{{$login_user_id_is}}';
+        console.log(login_user_id_is);
          await $.ajax({
             url: "{{ url('set-catalog-allocation-start')}}",
             type: "POST",
             dataType: 'json',
             data: {
                 allocation_id,
+                login_user_id_is,
                 _token: '{{ csrf_token() }}'
             },
             success: function(res) {
                 console.log(res)
                 // msg_div msg_box startBTN 
+                btn_name = document.querySelector("#"+startBTN).innerHTML
+
                 const msg_div = document.getElementById("msg_div");
                 const msg_box = document.getElementById("msg_box");
                 msg_div.classList.remove("alert-success");
                 msg_div.classList.remove("alert-danger");
-                if(res.status == true || res.status == 1){
+                msg_div.classList.remove("alert-warning");
+                if(res?.status == true || res?.status == 1){
                     msg_div.classList.add("alert-success");
-                    msg_box.innerHTML  = "Wrc Started!!";
+                    msg_box.innerHTML  = "Wrc "+btn_name+"!!";
                     $("#"+startBTN).css("display", "none");
                     // document.getElementById(show_date_time).innerHTML = res.start_time
                     document.getElementById('data'+allocation_id).dataset.start_date = res.start_time
                     // $("#"+show_date_time).css("display", "block");
                     $('#'+uploadBTn).prop('disabled', false);
                     $('#'+pauseBTN).css('display', 'block');
+                }else if(res?.status == 2){
+                    msg_div.classList.add("alert-warning");
+                    msg_box.innerHTML  = "Wrc already started!! pause it first then "+btn_name+" this one";
                 }else{
                     msg_div.classList.add("alert-danger");
-                    msg_box.innerHTML  = "Somthing went Wrong!! Try again!!";
+                    msg_box.innerHTML  = "Somthing went Wrong !! Try again!!";
                 }
                 $("#msg_div").css("display", "block");
             }
         });
         setTimeout( () => {
             $("#msg_div").css("display", "none");
-        }, 2500);
+        }, 2000);
     }
 </script>
 
@@ -787,6 +803,7 @@ Cataloger Panel
                 const msg_box = document.getElementById("msg_box");
                 msg_div.classList.remove("alert-success");
                 msg_div.classList.remove("alert-danger");
+                msg_div.classList.remove("alert-warning");
 
                 if(res.status == true || res.status == 1){
                     msg_div.classList.add("alert-success");
@@ -839,14 +856,14 @@ Cataloger Panel
                 const upload_date_id = "upload_date"+element_id
                 const uploaded_Marketplace_id_id = "uploaded_Marketplace_id"+element_id
 
-                console.log({
-                    model_marketPlace_id,
-                    approved_Count_id,
-                    marketPlace_name_id,
-                    rejected_Count_id,
-                    upload_date_id,
-                    uploaded_Marketplace_id_id,
-                })
+                // console.log({
+                //     model_marketPlace_id,
+                //     approved_Count_id,
+                //     marketPlace_name_id,
+                //     rejected_Count_id,
+                //     upload_date_id,
+                //     uploaded_Marketplace_id_id,
+                // })
                 
                 // const marketPlace_name = document.getElementById(marketPlace_name_id).value
                 const uploaded_Marketplace_id = document.getElementById(uploaded_Marketplace_id_id).value
@@ -877,28 +894,36 @@ Cataloger Panel
                 },
                 success: function(res) {
                     console.log(res)
+                    const {resuploaded_Marketplace_id , response } = res
 
+                    console.log(resuploaded_Marketplace_id)
+                    if(res?.response == 1){
+                        $("#msg_box1").css("color", "green");
+                        document.querySelector("#btn_save").innerHTML = "update";
 
-                    // if(res.response == 1){
-                    //     $("#msg_box1").css("color", "green");
-                    //     document.querySelector("#msg_box1").innerHTML  = res.massage;
-                    //     resCredentials_id_arr = res.resCredentials_id_arr
+                        for (const id_is in resuploaded_Marketplace_id) {
+                            // console.log(id_is)
+                            const value_is  = resuploaded_Marketplace_id[id_is]
+                            console.log({id_is ,value_is })
+                            document.getElementById(id_is).value = value_is
+                        }
 
-                    //     // console.log(resCredentials_id_arr)
-
-                    //     for (const id_is in resCredentials_id_arr) {
-                    //         const value_is  = resCredentials_id_arr[id_is]
-                    //         console.log({id_is ,value_is })
-                    //         document.getElementById(id_is).value = value_is
-                    //     }
-                    // }else{
-                    //     $("#msg_box1").css("color", "red");
-                    //     document.querySelector("#msg_box1").innerHTML  = "Somthing went Wrong please try again!!!"
-                    // }
+                        if(res?.up_status == 1){
+                            document.querySelector("#time_spant"+allocation_id_is).innerHTML = res.spent_time_is;
+                            $("#btn_save").css("display", "none");
+                            $("#btn_comp").css("display", "none");
+                            $("#startBTN"+allocation_id_is).css("display", "none");
+                            $("#pauseBTN"+allocation_id_is).css("display", "none");
+                        }
+                        
+                    }else{
+                        $("#msg_box1").css("color", "red");
+                        res.massage  = "Somthing went Wrong please try again!!!"
+                    }
+                    document.querySelector("#msg_box1").innerHTML  = res.massage;
                     $("#msg_box1").css("display", "block");
                 }
             });
-            console.log(data_arr)
         }else{
 
             if(final_link == ''){
@@ -942,6 +967,7 @@ Cataloger Panel
                     if(res?.status > 0){
                         const status = res.status
 
+                        $("#msg_box1").css("color", "green");
                         if(status == 1){
                             document.querySelector("#btn_save").innerHTML = "update";
                             document.querySelector("#msg_box1").innerHTML = user_role +" link Saved Successfully";
@@ -957,21 +983,21 @@ Cataloger Panel
                             document.querySelector("#time_spant"+allocation_id_is).innerHTML = res.spent_time_is;
                             $("#btn_save").css("display", "none");
                             $("#btn_comp").css("display", "none");
+                            $("#startBTN"+allocation_id_is).css("display", "none");
+                            $("#pauseBTN"+allocation_id_is).css("display", "none");
                         }
                     }else{
+                            $("#msg_box1").css("color", "red");
 
                     }
                         $("#msg_box1").css("display", "block");
                 }
             });
-
         }
-
-        
         setTimeout( () => {
             $(".msg_box").css("display", "none");
             $('#msg_box1').html("");
-        }, 3000);
+        }, 2000);
     }
 </Script>
 @endsection

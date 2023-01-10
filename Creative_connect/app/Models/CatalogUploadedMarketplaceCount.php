@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -75,6 +76,9 @@ class CatalogUploadedMarketplaceCount extends Model
 
         $response = 0;
         $res_arr = [];
+        $end_time_is = '';
+        $up_status = '';
+        $spent_time_is = '';
         $massage = "Somthing went Wrong please try again!!!";
 
         $resuploaded_Marketplace_id = [];
@@ -96,9 +100,9 @@ class CatalogUploadedMarketplaceCount extends Model
                     $storeData->rejected_Count = $rejected_Count;
                     $storeData->upload_date = $upload_date;
                     $status = $storeData->update();
-                    $massage = "Marketplace Credentials updated!!!";
+                    $massage = "Marketplace Count updated!!!";
                 } else {
-                    $massage = "Marketplace Credentials Saved!!!";
+                    $massage = "Marketplace Count Saved!!!";
 
                     $saveData = new CatalogUploadedMarketplaceCount();
 
@@ -119,6 +123,54 @@ class CatalogUploadedMarketplaceCount extends Model
             }
 
             if (array_sum($res_arr) == count($res_arr)) {
+
+                
+
+                $timeHashData = CatalogTimeHash::where('allocation_id', $allocation_id_is)->get()->first();
+                $old_spent_time = $timeHashData->spent_time;
+                $is_started = $timeHashData->is_started;
+                $old_spent_time = $old_spent_time == "" ? 0 : (int)$old_spent_time;
+
+                $spent_time_is = ($old_spent_time != 0 && $old_spent_time != "") ? get_date_time($old_spent_time) : "";
+                // dd($timeHashData);
+                if ($status != 0 && $action == 'comp') {
+                    $old_start_time = $timeHashData->start_time;
+                    $end_time = date('Y-m-d H:i:s');
+                    $ini_start_time = $timeHashData->ini_start_time;
+                    $ini_end_time = $timeHashData->ini_end_time;
+
+                    if ($ini_start_time == '' || $ini_start_time == '0000-00-00 00:00:00') {
+                        $ini_start_time = $old_start_time;
+                    }
+
+                    if ($ini_end_time == '' || $ini_end_time == '0000-00-00 00:00:00') {
+                        $ini_end_time = $end_time;
+                    }
+                    $new_spent_time = (new Carbon($end_time))->diffInSeconds(new Carbon($old_start_time));
+
+                    if ($is_started == 1) {
+                        $new_spent_time = 0;
+                    }
+
+                    $tot_spent = $old_spent_time + $new_spent_time;
+
+                    $up_status = CatalogTimeHash::where('allocation_id', $allocation_id_is)->update([
+                        'end_time' => $end_time,
+                        'ini_start_time' => $ini_start_time,
+                        'ini_end_time' => $ini_end_time,
+                        'spent_time' => $tot_spent,
+                        'task_status' => 1,
+                        'is_rework' => 0,
+                        'is_started' => 0,
+                    ]);
+                    if ($up_status) {
+                        $end_time_is = date('Y-m-d h:i:s A', strtotime($end_time));
+                        $massage = "Marketplace Count Saved!! Wrc Completed";
+
+                        $spent_time_is = ($tot_spent != 0 && $tot_spent != "") ? get_date_time($tot_spent) : "";
+                    }
+
+                }
                 DB::commit();
                 $response = 1;
             } else {
@@ -128,9 +180,14 @@ class CatalogUploadedMarketplaceCount extends Model
             DB::rollback();
             throw $th;
         }
+        
         return json_encode(array(
+            'status' => $status,
+            'up_status' => $up_status,
             'response' => $response,
             'res_arr' => $res_arr,
+            'end_time' => $end_time_is,
+            'spent_time_is' => $spent_time_is,
             'resuploaded_Marketplace_id' => $resuploaded_Marketplace_id,
             'massage' => $massage,
         ));

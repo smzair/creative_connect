@@ -96,6 +96,7 @@ Route::post('set-catalog-allocation-pause', [CatalogAllocationController::class,
 
 Route::post('catalog-upload-link', [CatalogAllocationController::class, 'upload_catalog_link']); // for upload catalog WRC link 
 Route::post('get-catalog_upload_links', [CatalogAllocationController::class, 'get_catalog_link']); // for get-catalog_upload_links 
+
 Route::post('get-uploaded_Marketplace_count', [CatalogUploadedMarketplaceCountController::class, 'get_uploaded_Marketplace_count']); // for get-uploaded_Marketplace_count   
 Route::post('save-Marketplace-approved-Count', [CatalogUploadedMarketplaceCountController::class, 'save_Marketplace_approved_Count']); // for get-uploaded_Marketplace_count   
 
