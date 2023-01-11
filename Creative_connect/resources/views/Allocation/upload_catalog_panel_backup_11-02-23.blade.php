@@ -117,8 +117,8 @@ Cataloger Panel
                 </div>
                
                 <!-- /.card-header msg_div msg_box  -->
-                {{-- <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%; background: rgba(238, 232, 232, 0.816)"> --}}
                 <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
+                    
                     
                     <table id="allocTableCat" class="table table-head-fixed text-nowrap data-table">
                         <thead>
@@ -160,6 +160,10 @@ Cataloger Panel
 
                                 $allocated_wrc_batch = array_column($allocated_wrc_list_by_user, 'batch_no');
                                 $allocated_wrcs = array_column($allocated_wrc_list_by_user, 'wrc_id');
+
+                                // pre($allocated_wrc_list_by_user[6]);
+                                // pre($allocated_wrcs);
+                                // pre($allocated_wrc_batch);
                             @endphp
                              
                             @foreach($allocationList as $allocationkey => $row)
@@ -170,7 +174,7 @@ Cataloger Panel
                                 $lot_id =  $row['lot_id'];
                                 $batch_no =  $row['batch_no'];
                                 $market_place = $row['market_place'];
-                                
+
                                 $market_place_ids = explode(',',$row['market_place']);
                                 $modeOfDelivary =  $row['modeOfDelivary'];
                                 $modeOfDelivary_is = $modeOfDelivary_arr[$modeOfDelivary];
@@ -213,27 +217,40 @@ Cataloger Panel
                                 $display_pause = "display:none;";
                                 $start_btn_text = "Start";
                                 
-                                
-                                if($time_hash_id > 0 && $is_started == 0 && $is_rework == 0){
+                                if($time_hash_id > 0){
+                                    $start_btn_text = "continue";
+                                }
+
+                                if($time_hash_id > 0 && $is_started == 0  ){
                                     $display_pause = "";
                                     $display_start = "display:none;";
-                                   $btn_disable = "";
-
-                                }
-                                if($time_hash_id > 0 && $is_rework == 0){
-                                    $start_btn_text = "Continue";
-                                   $btn_disable = "";
-                                }else if( $time_hash_id > 0 && $is_rework == 1){
-                                    $start_btn_text = "Start Rework";
-                                    $display_pause = "display:none;";
-                                    $display_start = "";
                                 }
 
-                                if($time_hash_id > 0 && $task_status > 0){
+
+                                if($time_hash_id > 0 && $task_status == 1){
                                     $display_pause = "display:none;";
                                     $display_start = "display:none;";
+
+                                    if($is_rework == 1){
+                                        $display_start = "";
+                                    }
                                 }
-                               
+
+
+                               if(($time_hash_id > 0 && (($task_status == 0 && $is_rework == 0) || ($task_status == 1 && $is_rework == 0) || $task_status == 2  )) ){
+                                   $btn_disable = "";
+                                    // $display_start = "display:none;";
+                                    // $display_start = "display:none;";
+
+                                    // $display_pause = "";
+                                    
+                                    // $display_date_time = "display:block;";
+                                    $start_time_is = date('d-m-Y h:i:s A' , strtotime($start_time));
+                               }
+
+                               if($allocation_id == 1 || $allocation_id == 4){
+                                    // pre($row);
+                                }
                             @endphp
                             <tr>
                                 <td class="cls_wrc_number">{{ $row['wrc_number'] }}</td>
@@ -349,6 +366,13 @@ Cataloger Panel
                                     data-start_date="{{$start_time_is}}"   
                                     style="display: none"></p>
 
+                                    @if ($modeOfDelivary_is == 'Uploading')
+                                        {{-- <button  class="btn btn-warning alloc-action-btn inactive" id="uploadBTn{{ $allocation_id }}" data-toggle="modal" data-target="#editpanelPopupCat" {{ $btn_disable }}  onclick="set_data('{{ $allocation_id }}')">
+                                            Upload Uploading
+                                        </button> --}}
+                                        
+                                    @else
+                                    @endif
                                     <button  class="btn btn-warning alloc-action-btn inactive" id="uploadBTn{{ $allocation_id }}" data-toggle="modal" data-target="#editpanelPopupCat" {{ $btn_disable }}  onclick="set_data('{{ $allocation_id }}')">
                                         Upload
                                     </button>

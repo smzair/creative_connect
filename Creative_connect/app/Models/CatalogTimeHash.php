@@ -29,6 +29,7 @@ class CatalogTimeHash extends Model
             $CatalogTimeHash_list = CatalogTimeHash::
             where('is_started', '=' ,0)->
             where('task_status', '=', 0)->
+            where('is_rework', '=', 0)->
             whereIn('allocation_id', $allocation_id_list)->get(['allocation_id'])->toArray();
             // dd($CatalogTimeHash_list);
             $started_task_by_user = count($CatalogTimeHash_list);
