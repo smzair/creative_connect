@@ -93,19 +93,13 @@ Catalog Qc Panel
             background: transparent;
             border: 1px solid  #00ff00;
             border-radius: 10%;
-            
+            color: #000;
         }
 
-
-        .card-transparent #qaTableCat .switch .btn_success:hover{
-            background-color: #3de23d !important;
-            border: 1px solid #0d9c0d  !important;
-            border-radius: 10%;
-        }
-
-        .card-transparent #qaTableCat  .switch .btn_pending:hover{
-            background-color: #e2e045  !important;
-            border: 1px solid #fbf702; 
+        .switch .btn_pending{
+            background-color: #d1ff00 !important;
+            /* background: transparent; */
+            border: 1px solid #d1ff00; 
             border-radius: 10%;
         }
 
@@ -118,13 +112,12 @@ Catalog Qc Panel
                 <div class="card-header">
                     <h3 class="card-title" style="font-size: 2rem;">QC Approval - Catalogue</h3>
                 </div>
-                <!-- /.card-header background: #b6acac; -->
-                <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%; ">
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
                     <table id="qaTableCat" class="table table-head-fixed text-nowrap data-table">
                         <thead>
                             <tr>
                                 <th class="align-middle">WRC Number</th>
-                                <th class="align-middle">Batch Number</th>
                                 <th class="align-middle">Brand Name</th>
                                 {{-- <th class="align-middle">Alloted to</th> --}}
                                 <th class="align-middle">SKU Count</th>
@@ -136,127 +129,113 @@ Catalog Qc Panel
                             </tr>
                         </thead>
                         <tbody>
-                           
-                            @foreach($get_catalog_allocated_wrc_list as $qckey => $qc)
                             @php
-                                $wrc_id = $qc['wrc_id'];
-                                $wrc_number = $qc['wrc_number'];
-                                $batch_no = $qc['batch_no'];
-                                $batch_no_is = $batch_no > 0 ? $batch_no :'None';
-
-                                
+                                // pre($get_catalog_allocated_wrc_list);
+                            @endphp
+                           
+                            @foreach($get_catalog_allocated_wrc_list as $qc)
+                            @php
                                 $catalog_link_list = $qc['catalog_link_list'];
                                 $catalog_link_arr = explode(",",$catalog_link_list);
 
                                 $copy_link_list = $qc['copy_link_list'];
                                 $copy_link_arr = explode(",",$copy_link_list);
-                                
-                                $user_roles_list = $qc['user_roles'];
-                                $user_roles_arr = explode(",",$user_roles_list);
+                                $wrc_id = $qc['wrc_id'];
 
-                                $final_link_list = $qc['final_link_list'];
-                                $final_link_list_arr = explode(",",$final_link_list);
-                                
-                                $user_id_list = $qc['user_id_list'];
-                                $user_name_list = $qc['user_name_list'];
-                                $user_name_list_arr = explode(",",$user_name_list);
 
-                                if($wrc_number == 'O3jopdnuu6-A'){
-                                    // pre($qc);
-                                    // pre($user_roles_arr);
-                                    // pre($final_link_list_arr);
-                                }
-                                
-                               
-                                $alloacte_to_copy_writer = $qc['alloacte_to_copy_writer'];
-                                $copy_sum = $qc['copy_sum'];
-                                $cata_sum = $qc['cata_sum'];
-                                $sku_count = $qc['sku_count'];
+                                // code for validate submit qc
                                 
                                 $allocation_ids = $qc['allocation_ids'];
                                 $allocation_id_arr = explode(",",$allocation_ids);                                
                                 $tot_allocation_ids = count($allocation_id_arr);
                                 
-                                $task_status_list = $qc['task_status_list'];
-                                $task_status_arr = explode(",",$task_status_list);
-                                $tot_task_status = count($task_status_arr);
-                                $task_status_sum = array_sum($task_status_arr);
-                                
-                                $allow_to_submit = 0;
-
-                                if(($alloacte_to_copy_writer == 1 && $sku_count == $copy_sum && $sku_count == $cata_sum) || ($alloacte_to_copy_writer == 0 && $sku_count == $cata_sum) ){
-                                    if($task_status_sum == $tot_allocation_ids){
-                                        $allow_to_submit = 1;
-                                    }else if($task_status_sum == (2*$tot_allocation_ids)){
-                                        $allow_to_submit = 2;
-                                    }else{
-                                        $allow_to_submit = 3;
-                                    }
-                                }
-                                // echo "<br><br> wrc_number  $wrc_number => $batch_no_is , sku_count = $sku_count , cata_sum = $cata_sum , alloacte_to_copy_writer => $alloacte_to_copy_writer , copy_sum = $copy_sum    ,   tot_allocation_ids => $tot_allocation_ids , task_status_sum => $task_status_sum ,  ";
-                               
                                 $time_hash_ids = $qc['time_hash_ids'];
                                 $time_hash_id_arr = explode(",",$time_hash_ids);
                                 $tot_time_hash_id = count($time_hash_id_arr);
-                               
+
+                                
+                                $allow_to_submit = 0;
+
+                                
+                                if($tot_allocation_ids == $tot_time_hash_id){
+                                    
+                                    $task_status_is = $qc['task_status_is'];
+                                    $task_status_arr = explode(",",$task_status_is);
+                                    $tot_task_status = count($task_status_arr);
+                                    $task_status_sum = array_sum($task_status_arr);
+                                    
+                                    if($task_status_sum == $tot_task_status){
+                                        $allow_to_submit = 1;
+                                    }
+                                    
+                                    if($task_status_sum == ($tot_allocation_ids * 2)){
+                                        $allow_to_submit = 2;
+                                        // foreach ($task_status_arr as $key => $task_status) {
+                                            //     if($task_status );
+                                            // }
+                                        }
+                                        
+                                    if($wrc_id == 16){
+                                        // echo " <br> wrc_id => $wrc_id , tot_allocation_ids => $tot_allocation_ids ,
+                                        //  tot_time_hash_id => $tot_time_hash_id 
+                                        //  task_status_sum => $task_status_sum 
+                                        //  tot_task_status => $tot_task_status 
+                                        //  task_status_is => $task_status_is 
+                                        //  ";
+                                    }
+                                    // $wrc_id_is = " task_status_sum $task_status_sum , tot_task_status $tot_task_status";
+                                }
+
                                 $btn_disable = "disabled";
-                                $reworkbtn_disable = "disabled";
+                                $reworkbtn_disable = "";
                                 $submit_check_disable = "disabled"; // checked
                                 $submit_check_is_checked = ""; //
-                                $rework_title = "No need for Rework";
                                 
                                 $btn_clsss = "";
 
                                 $p_style = "color:red;";
-                                $task_is = 0;
-
-                                if($allow_to_submit == 0){
-                                    $submit_msg = "WRC Allocation Not completed!!";
-                                    $p_style = "color: #0bdec7";
-                                }else if($allow_to_submit == 1){
+                                // echo " allow_to_submit => $allow_to_submit";
+                                if($allow_to_submit == 1){
                                     $btn_disable = "";
                                     $submit_check_disable = "";
-                                    $reworkbtn_disable = "";
-                                    $rework_title = "Allot user to rework task";
                                     $submit_msg = "Pending";
                                     $p_style = "color:Yellow;";
                                     $btn_clsss = "btn_pending";
-                                    $title_msg = "Click for Submit Wrc!!";
+                                    
                                 }else if ($allow_to_submit == 2) {
-                                    $task_is = 1;
-
                                     $submit_check_disable = "disabled"; // checked
                                     $reworkbtn_disable = "disabled"; // checked
-                                    $rework_title = "Wrc submited unable to rework!! change task status to pendding!!";
-
                                     $submit_check_is_checked = "checked"; 
                                     $submit_msg = "Wrc submited";
                                     $p_style = "color:green;";
                                     $btn_clsss = "btn_success";
-                                    $title_msg = "Click for pending Wrc!!";
                                 }else{
-                                    $submit_msg = "WRC not completed by users!!";
-                                    $p_style = "color: red";
+                                    $submit_msg = "WRC not completed by users";
+                                    $p_style = "color:red;";
+
                                     // $btn_disable = "";
                                 }
                                
-                               
+                                if($wrc_id == 17) {
+                                    // pre($qc);
+                                    // echo "catalog_link_arr "; pre($catalog_link_arr);
+                                    // echo "copy_link_arr "; pre($copy_link_arr);
+                                }
                                 $wrc_id_is = $qc['wrc_id'];
                                 $wrc_id_is = ""; 
                             @endphp
                             <tr>
                                 <td>{{$qc['wrc_number']}}</td>
-                                <td>{{$batch_no_is}}</td>
                                 <td>{{$qc['brands_name'].$wrc_id_is }}</td>
-                                {{-- <td>{{$qc['user_id_list']." ".$qc['user_name_list'] }}</td> --}}
-                                <td>{{$qc['sku_count']}}</td>
+                                {{-- <td>{{$qc['user_list'] }}</td> --}}
+                                <td>{{$qc['sku_qty']}}</td>
                                 <td>
                                     <ul class="info-list">
-                                        @foreach ($final_link_list_arr as $link_key => $link)
-                                            @if ($link != ''  && $user_roles_arr[$link_key] == 0)
+                                        @foreach ($catalog_link_arr as $link)
+                                            @if ($link != '')
                                                 <li>
-                                                    <a title="<?php echo 'Uplodead By '.$user_name_list_arr[$link_key];?>" href="{{ $link }}" class="cpy-textVal" id="creativetextVal">
-                                                    link
+                                                    <a href="{{ $link }}" class="cpy-textVal" id="creativetextVal">
+                                                    {{ $link }}
                                                     <span><i class="fas fa-copy"></i></span>
                                                     </a>
                                                 </li>
@@ -267,11 +246,11 @@ Catalog Qc Panel
                                 </td>
                                 <td>
                                     <ul class="info-list">
-                                        @foreach ($final_link_list_arr as $link_key => $link)
-                                            @if ($link != '' && $user_roles_arr[$link_key] == 1)
+                                        @foreach ($copy_link_arr as $link)
+                                            @if ($link != '')
                                                 <li>
-                                                    <a title="<?php echo 'Uplodead By '.$user_name_list_arr[$link_key];?>" href="{{ $link }}"  class="cpy-textVal" id="creativetextVal">
-                                                    link
+                                                    <a href="{{ $link }}" class="cpy-textVal" id="creativetextVal">
+                                                    {{ $link }}
                                                     <span><i class="fas fa-copy"></i></span>
                                                     </a>
                                                 </li>
@@ -282,15 +261,17 @@ Catalog Qc Panel
                                 <td>
                                     <div class="d-inline-block  switch">
 
-                                        @if ($allow_to_submit != 1 && $allow_to_submit != 2)
-                                            <p style=" font-size: 1.1em; font-weight: 600; {{ $p_style }}">{{ $submit_msg }} </p>
+                                        @if ($allow_to_submit == 0)
+                                            <p style=" font-size: 1.1em; font-weight: 600; {{ $p_style }}">{{ $submit_msg }} 
+                                                
+                                            </p>
                                         @else
                                             <input  type="checkbox"  data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class" >
+                                            <button  id="btn{{ $wrc_id }}" class="{{ $btn_clsss }}" {{ $btn_disable }} onclick="submit_wrc('{{ $wrc_id }}')" >  {{ $submit_msg }} </button>
                                             
-                                            <button data-wrc_id="{{$wrc_id}}"  data-batch_no="{{$batch_no}}" data-allocation_ids="{{$allocation_ids}}" data-task_is="{{$task_is}}" id="btn{{ $wrc_id }}" class="btn {{ $btn_clsss }}" onclick="submit_wrc('{{ $wrc_id }}')" title="{{$title_msg}}" >  {{ $submit_msg }} </button>
                                         @endif
 
-                                       {{-- {{ $btn_disable }} --}}
+
                                         {{-- <input data-id="{{$sku['sku_id']}}" type="checkbox" checked data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"   {{ $sku['qc'] ? 'checked' : '' }}> --}}
                                     </div>
                                 </td>
@@ -299,11 +280,17 @@ Catalog Qc Panel
                                         {{-- <button onclick="setdata('{{ $wrc_id }}')"  class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal">
                                             <i class="fas fa-comment mr-1" ></i>Rework
                                         </button> --}}
-                                        <button  onclick="setdata('{{ $wrc_id }}')" title="{{$rework_title}}"  {{ $reworkbtn_disable }} class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal">
+                                        <button onclick="setdata('{{ $wrc_id }}')"  {{ $reworkbtn_disable }} class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal">
                                             <i class="fas fa-comment mr-1" ></i>Rework
                                         </button>
                                     </div>
                                 </td>
+
+                                {{-- <td>
+                                    <div class="d-inline-block mt-1">
+                                        <a href="javascript:;" class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal"><i class="fas fa-comment mr-1"></i>Comment</a>
+                                    </div>
+                                </td> --}}
                             </tr>  
                             @endforeach
                         </tbody>
@@ -350,7 +337,6 @@ Catalog Qc Panel
                         </div>
                         <div class="form-group">
                             <input type="hidden" name="wrc_id" id="wrc_id_is" value="">
-                            <input type="hidden" name="batch_no" id="batch_no_is" value="">
                             <label>Add a comment</label>
                             <textarea class="form-control" rows="4" name="commentsec" id="commentsec" placeholder="Enter your comment..."></textarea>
                         </div>
@@ -411,36 +397,22 @@ Catalog Qc Panel
 
 <script>
 
-    function submit_wrc(id){        
-        const btn_is = document.querySelector("#btn"+id);
-        // console.log(btn_is)task_is
-        const wrc_id = btn_is.dataset.wrc_id;
-        const task_is = btn_is.dataset.task_is;
-        const batch_no = btn_is.dataset.batch_no;
-        const allocation_ids = btn_is.dataset.allocation_ids;
-        // console.log({wrc_id , batch_no , allocation_ids})
-
-        let url_path = "{{ url('set-wrc-qc-completed')}}";
-        let massage = 'Qc Status Completed Successfully'
-        if(task_is == 1){
-            massage = 'Qc Status Successfully set to pending'
-            url_path = "{{ url('set-wrc-qc-pending')}}";
-        }
-        // console.log(url_path)
+    function submit_wrc(id){
+        console.log(id)
+        const wrc_id = id
         $.ajax({
-            url: url_path,
+            url: "{{ url('completed-qc-wrc')}}",
             type: "POST",
             dataType: 'json',
             data: {
                 wrc_id,
-                batch_no,
-                allocation_ids,
                 _token: '{{ csrf_token() }}'
             },
             success: function(res) {
                 res;
+
                 if(res == 1){
-                    alert(massage);
+                    alert('Qc Status Completed Successfully');
                     window.location.reload();
                 }else{
                     alert('Somthing Went Wrong!!!');
@@ -454,12 +426,8 @@ Catalog Qc Panel
 <script>
     async function setdata(val){
         const role_id_is = document.querySelector('input[name="role_id_is"]:checked').value;
-        const btn_is = document.querySelector("#btn"+val);
-        // console.log(btn_is)
-        const wrc_id = btn_is.dataset.wrc_id;
-        const batch_no = btn_is.dataset.batch_no;
+        const wrc_id = val
         document.querySelector("#wrc_id_is").value = wrc_id
-        document.querySelector("#batch_no_is").value = batch_no
         document.querySelector("#commentsec").value = ""
         get_list();
     }
@@ -469,9 +437,8 @@ Catalog Qc Panel
 <script>
     async function get_list(){
         const wrc_id = document.querySelector("#wrc_id_is").value  
-        const batch_no = document.querySelector("#batch_no_is").value  
         const role_id_is = document.querySelector('input[name="role_id_is"]:checked').value;
-        // console.log({role_id_is , wrc_id})
+        console.log({role_id_is , wrc_id})
         let options = `<option value="0" data-catalog_allocation_id="0" > -- Select User -- </option>`;
         await $.ajax({
             url: "{{ url('get-catalog-users_list')}}",
@@ -479,12 +446,11 @@ Catalog Qc Panel
             dataType: 'json',
             data: {
                 wrc_id : wrc_id,
-                batch_no : batch_no,
                 role_id_is : role_id_is,
                 _token: '{{ csrf_token() }}'
             },
             success: function(res) {
-                // console.log(res)
+                console.log(res)
                 res.map(user => {
                     // console.log(user)
                     options += `<option value="${user.user_id}" data-catalog_allocation_id="${user.catalog_allocation_id}" > ${user.user_name} </option>`;
@@ -503,7 +469,7 @@ Catalog Qc Panel
         const comments = document.querySelector("#commentsec").value  
         const role_id_is = document.querySelector('input[name="role_id_is"]:checked').value;
         const catalog_allocation_id = $("#catalog_copy_user").find(':selected').data('catalog_allocation_id')
-        // console.warn({wrc_id,role_id_is,catalog_allocation_id ,catalog_copy_user})
+        console.warn({wrc_id,role_id_is,catalog_allocation_id ,catalog_copy_user})
         if(catalog_allocation_id == 0 || catalog_allocation_id ==''){
             alert('User Was Not Selected ');
             $("#catalog_copy_user").focus();

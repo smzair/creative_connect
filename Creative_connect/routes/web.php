@@ -105,7 +105,8 @@ Route::post('save-Marketplace-approved-Count', [CatalogUploadedMarketplaceCountC
 Route::get('catalog-qc', [CatlaogQcController::class, 'index'])->name('QcList'); // Qc List 
 Route::post('get-catalog-users_list', [CatlaogQcController::class, 'userlist'])->name('userlist'); // Qc List 
 Route::post('qc-rework', [CatlaogQcController::class, 'set_qc_rework'])->name('QCREWORK'); // Qc List 
-Route:: post('completed-qc-wrc', [CatlaogQcController::class, 'completed_qc_wrc'])->name('QCCOMPWRC'); // completed-qc-wrc
+Route::post('set-wrc-qc-completed', [CatlaogQcController::class, 'completed_qc_wrc'])->name('QCCOMPWRC'); // completed-qc-wrc
+Route:: post('set-wrc-qc-pending', [CatlaogQcController::class, 'set_wrc_qc_pending'])->name('QCWRCPending'); // completed-qc-wrc
 
 // Submission Route comp-submission catalog-submission-details CATA_CLIENT_AR
 Route::get('catalog-ready-for-submission', [CatalogSubmissionController::class, 'index'])->name('C_READYFORSUB'); // Qc List 

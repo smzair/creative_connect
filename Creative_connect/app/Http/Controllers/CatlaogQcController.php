@@ -13,10 +13,7 @@ class CatlaogQcController extends Controller
     /*** Display a listing of the resource. */
     public function index()
     {
-        // dd('fdsfkg');
         $get_catalog_allocated_wrc_list = CatlaogQc::get_catalog_allocated_wrc_list();
-
-        // dd($get_catalog_allocated_wrc_list);
         return view('Qc.qc-catalog')->with('get_catalog_allocated_wrc_list', $get_catalog_allocated_wrc_list);
     }
 
@@ -25,8 +22,9 @@ class CatlaogQcController extends Controller
 
     public function userlist(Request $request){
         $wrc_id = $request->wrc_id;
+        $batch_no = $request->batch_no;
         $role_id_is = $request->role_id_is;
-        $get_userlist = CatlaogQc::get_userlist($wrc_id, $role_id_is);
+        $get_userlist = CatlaogQc::get_userlist($wrc_id, $role_id_is , $batch_no);
         echo $get_userlist;
     }
 
@@ -44,15 +42,15 @@ class CatlaogQcController extends Controller
 
 
     public function completed_qc_wrc(Request $request){
-     $wrc_id = $request->wrc_id;
-
-        $all_catalog_allocation = CatalogAllocation::where('wrc_id', $wrc_id)
-            ->leftJoin('catalog_time_hash', 'catalog_time_hash.allocation_id', 'catalog_allocation.id')
+        $wrc_id = $request->wrc_id;
+        $allocation_ids = $request->allocation_ids;
+        $market_place_id_arr = explode(',', $allocation_ids);
+        $all_catalog_allocation = CatalogAllocation::where('wrc_id', $wrc_id)->
+        whereIn('catalog_allocation.id', $market_place_id_arr)->
+        leftJoin('catalog_time_hash', 'catalog_time_hash.allocation_id', 'catalog_allocation.id')
             ->select('catalog_time_hash.task_status', 'catalog_time_hash.allocation_id')
-            ->get();
+            ->get()->toArray();
         $check = 1;
-
-        // dd($all_catalog_allocation);
 
         foreach ($all_catalog_allocation as $key => $val) {
             $check_task_status = $val['task_status'];
@@ -60,9 +58,8 @@ class CatlaogQcController extends Controller
                 $check = 0;
             }
         }
-
+        // dd($all_catalog_allocation , $check);
         if ($check == 1) {
-
             $res_arr = array();
             foreach ($all_catalog_allocation as $key => $val) {
                 $allocation_id = $val['allocation_id'];
@@ -79,7 +76,42 @@ class CatlaogQcController extends Controller
         echo $check;
     }
 
-    
+    // set_wrc_qc_pending
+    public function set_wrc_qc_pending(Request $request)
+    {
+        $wrc_id = $request->wrc_id;
+        $allocation_ids = $request->allocation_ids;
+        $market_place_id_arr = explode(',', $allocation_ids);
+        $all_catalog_allocation = CatalogAllocation::where('wrc_id', $wrc_id)->whereIn('catalog_allocation.id', $market_place_id_arr)->leftJoin('catalog_time_hash', 'catalog_time_hash.allocation_id', 'catalog_allocation.id')
+            ->select('catalog_time_hash.task_status', 'catalog_time_hash.allocation_id')
+            ->get()->toArray();
+        $check = 1;
+
+        foreach ($all_catalog_allocation as $key => $val) {
+            $check_task_status = $val['task_status'];
+            if ($check_task_status != 2
+            ) {
+                $check = 0;
+            }
+        }
+        // dd($all_catalog_allocation , $check);
+        if ($check == 1) {
+            $res_arr = array();
+            foreach ($all_catalog_allocation as $key => $val) {
+                $allocation_id = $val['allocation_id'];
+                $up_status = CatalogTimeHash::where('allocation_id', $allocation_id)->update(['task_status' => 1]);
+                array_push($res_arr, $up_status);
+            }
+
+            if (count($res_arr) == array_sum($res_arr) && array_sum($res_arr) ==  count($all_catalog_allocation)
+            ) {
+                $check = 1;
+            } else {
+                $check = 0;
+            }
+        }
+        echo $check;
+    }
 
     /** * Show the form for creating a new resource. */
     public function create()
