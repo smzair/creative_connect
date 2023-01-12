@@ -17,27 +17,20 @@ class CatlogWrc extends Model
 
     // AND catalog_allocation.batch_no
     public static function getcatalog_allocation_list(){   
-
-        // ->leftJoin(
-        //         'create_commercial_catalog as cc_catalog',
-        //         function ($join) {
-        //     $join->on('cc_catalog.user_id', '=', 'lots_catalog.user_id');
-        //     $join->on('cc_catalog.brand_id', '=', 'lots_catalog.brand_id');
-        // })
-
-        $wrcList = CatlogWrc::leftJoin('lots_catalog', 'lots_catalog.id', 'catlog_wrc.lot_id')
-        ->leftJoin('users', 'lots_catalog.user_id', 'users.id')
-        ->leftJoin('brands', 'brands.id', '=', 'lots_catalog.brand_id')
-        ->leftJoin('create_commercial_catalog as cc_catalog' , 'cc_catalog.id' , 'catlog_wrc.id')
-        ->leftJoin('catalog_wrc_batches', 'catalog_wrc_batches.wrc_id', 'catlog_wrc.id')
-        ->leftJoin(
-            'catalog_allocation',
-                function ($join) {
+        $wrcList = CatlogWrc::
+        leftJoin('catalog_wrc_batches', 'catalog_wrc_batches.wrc_id', 'catlog_wrc.id')->
+        leftJoin(
+        'catalog_allocation',
+        function ($join) {
             $join->on('catalog_allocation.wrc_id', '=', 'catalog_wrc_batches.wrc_id');
             $join->on('catalog_allocation.batch_no', '=', 'catalog_wrc_batches.batch_no');
-        })
-        ->leftJoin('users as u1', 'catalog_allocation.user_id', 'u1.id')
-        ->select(
+        })->
+        leftJoin('lots_catalog', 'lots_catalog.id', 'catlog_wrc.lot_id')->
+        leftJoin('create_commercial_catalog as cc_catalog' , 'cc_catalog.id' , 'catlog_wrc.commercial_id')->
+        leftJoin('users', 'lots_catalog.user_id', 'users.id')->
+        leftJoin('brands', 'brands.id', '=', 'lots_catalog.brand_id')->
+        leftJoin('users as u1', 'catalog_allocation.user_id', 'u1.id')->
+        select(
             'catlog_wrc.id',
             'catlog_wrc.sku_qty as tot_sku_qty',
             'catlog_wrc.lot_id',

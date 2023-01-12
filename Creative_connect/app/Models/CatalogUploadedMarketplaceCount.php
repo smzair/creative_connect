@@ -66,6 +66,58 @@ class CatalogUploadedMarketplaceCount extends Model
         return $data;
     }
 
+    // get_sub_Marketplace_count
+
+    public static function get_sub_Marketplace_count($allocation_ids, $market_place_ids)
+    {
+        $market_place_ids = explode(',', $market_place_ids);
+        $allocation_ids_list = explode(',', $allocation_ids);
+        $response = Marketplace::leftJoin(
+            'catalog_uploaded_marketplace_counts as cata_up_m_c',
+            function ($join) use ($allocation_ids_list) {
+                $join->on('cata_up_m_c.marketplace_id', '=', 'marketplaces.id');
+                $join->whereIn('cata_up_m_c.allocation_id', $allocation_ids_list)
+                ->orWhere('cata_up_m_c.allocation_id', '=', NULL);
+            }
+        )->whereIn('marketplaces.id', $market_place_ids)->select(
+            DB::raw('(CASE WHEN cata_up_m_c.id IS NULL THEN 0 ELSE cata_up_m_c.id END) AS uploaded_Marketplace_id'),
+            'marketplaces.id as marketplace_id',
+            'marketplaces.marketPlace_name',
+            DB::raw("(CASE WHEN cata_up_m_c.approved_Count IS NULL THEN 0 ELSE cata_up_m_c.approved_Count END) AS approved_Count"),
+            DB::raw("(CASE WHEN cata_up_m_c.rejected_Count IS NULL THEN 0 ELSE cata_up_m_c.rejected_Count END) AS rejected_Count"),
+            DB::raw("(CASE WHEN cata_up_m_c.upload_date IS NULL THEN '' WHEN cata_up_m_c.upload_date = '0000-00-00' THEN '' ELSE cata_up_m_c.upload_date END) AS upload_date"),
+            // DB::raw("(CASE WHEN cata_up_m_c.upload_date IS NULL THEN '' WHEN cata_up_m_c.upload_date = '0000-00-00' THEN '' ELSE DATE_FORMAT(cata_up_m_c.upload_date , '%d-%m-%Y') END) AS upload_date"),
+        )->
+        // groupBy(['marketplaces.id'])->
+        get()->toArray();
+        $data_arr = [];
+        foreach ($response as $key => $row) {
+            $marketplace_id = $row['marketplace_id'];
+            $marketPlace_name = $row['marketPlace_name'];
+            $marketPlace_name = $row['marketPlace_name'];
+            $approved_Count = $row['approved_Count'];
+            $rejected_Count = $row['rejected_Count'];
+            $upload_date = $row['upload_date'];
+            // echo " <br><br> marketPlace_name => $marketPlace_name ,approved_Count => $approved_Count ,rejected_Count => $rejected_Count ";
+            if (array_key_exists($marketPlace_name, $data_arr)) {
+                $data_arr[$marketPlace_name]['approved_Count'] =  $data_arr[$marketPlace_name]['approved_Count'] + $approved_Count;
+                $data_arr[$marketPlace_name]['rejected_Count'] = $data_arr[$marketPlace_name]['rejected_Count'] + $rejected_Count;
+                if ($data_arr[$marketPlace_name]['upload_date'] < $upload_date) {
+                    $data_arr[$marketPlace_name]['upload_date'] = $upload_date;
+                }
+            } else {
+                // $data_arr[$marketPlace_name] = [];
+                $data_arr[$marketPlace_name]['marketplace_id'] = $marketplace_id;
+                $data_arr[$marketPlace_name]['marketPlace_name'] = $marketPlace_name;
+                $data_arr[$marketPlace_name]['approved_Count'] = $approved_Count;
+                $data_arr[$marketPlace_name]['rejected_Count'] = $rejected_Count;
+                $data_arr[$marketPlace_name]['upload_date'] = $upload_date;
+            }
+        }
+
+        $data = json_encode($data_arr);
+        return $data;
+    }
 
     public static function save_Marketplace_approved_Count($request){
 

@@ -100,7 +100,8 @@ Route::post('get-catalog_upload_links', [CatalogAllocationController::class, 'ge
 Route::post('get-uploaded_Marketplace_count', [CatalogUploadedMarketplaceCountController::class, 'get_uploaded_Marketplace_count']); // for get-uploaded_Marketplace_count   
 Route::post('save-Marketplace-approved-Count', [CatalogUploadedMarketplaceCountController::class, 'save_Marketplace_approved_Count']); // for get-uploaded_Marketplace_count   
 
-// QC route  get-catalog-users_list qc-rework completed-qc-wrc 
+Route::POST('get-Sub-Marketplace-count', [CatalogUploadedMarketplaceCountController::class, 'get_sub_Marketplace_count']); // for get-uploaded_Marketplace_count   
+// QC route  get-catalog-users_list qc-rework completed-qc-wrc  
 
 Route::get('catalog-qc', [CatlaogQcController::class, 'index'])->name('QcList'); // Qc List 
 Route::post('get-catalog-users_list', [CatlaogQcController::class, 'userlist'])->name('userlist'); // Qc List 
