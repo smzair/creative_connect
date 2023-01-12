@@ -5,6 +5,7 @@ use App\Models\CreativeWrcModel;
 use App\Models\CreativeAllocation;
 use App\Models\CreativeUploadLink;
 use App\Models\CreativeTimeHash;
+use App\Models\CreativeWrcBatch;
 use App\Models\CreativeWrcSkus as ModelsCreativeWrcSkus;
 use Carbon\Carbon;
 use CreativeWrcSkus;
@@ -32,6 +33,13 @@ class CreativeAllocationController extends Controller
         // dd($request);
         $requestedData = $request->all();
         $msgCheck = false;
+
+        $wrc_id = $request->wrc_id;
+        $batch_no = $request->batch_no;
+        $int_date = $request->int_date;
+        $cmt_date = $request->cmt_date;
+
+        CreativeWrcBatch::where('wrc_id',$wrc_id)->where('batch_no',$batch_no)->update(['work_initiate_date'=>$int_date, 'work_committed_date'=>$cmt_date]);
         
         foreach($requestedData['copywriterName'] as $key =>  $copywriterNameData){
 

@@ -130,8 +130,8 @@ Creative Allocation
                                 <th>CW Allocated Qty</th>
                                 <th>CW Pending Qty</th>
                                 <th>WRC Created At</th>
-                                <th>Work Initiate Date</th>
-                                <th>Work Committed Date</th>
+                                {{-- <th>Work Initiate Date</th>
+                                <th>Work Committed Date</th> --}}
                                 <th>Project Type</th>
                                 <th>Kind of Work</th>
                                 <th>Action</th>
@@ -186,8 +186,8 @@ Creative Allocation
                                 
 
                                     <td id="created_at{{$key}}">{{dateFormat($lotinfo->created_at)}}<br><b>{{timeFormat($lotinfo->created_at)}}</td>
-                                    <td id="work_initiate_date{{$key}}">{{dateFormat($lotinfo->work_initiate_date)}}<br><b>{{timeFormat($lotinfo->work_initiate_date)}}</b></td>
-                                    <td id="Comitted_initiate_date{{$key}}">{{dateFormat($lotinfo->Comitted_initiate_date)}}<br><b>{{timeFormat($lotinfo->Comitted_initiate_date)}}</b></td>
+                                    {{-- <td id="work_initiate_date{{$key}}">{{dateFormat($lotinfo->work_initiate_date)}}<br><b>{{timeFormat($lotinfo->work_initiate_date)}}</b></td>
+                                    <td id="Comitted_initiate_date{{$key}}">{{dateFormat($lotinfo->Comitted_initiate_date)}}<br><b>{{timeFormat($lotinfo->Comitted_initiate_date)}}</b></td> --}}
                                     <td id="project_name{{$key}}">{{$lotinfo['project_name']}}</td>
                                     <td id="kind_of_work{{$key}}">{{$lotinfo['kind_of_work']}}</td>
                                     <td>
@@ -322,6 +322,36 @@ Creative Allocation
                                 </div>';
                             }
                         ?>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                  <div class="form-group">
+                                      <label class="control-label required">Work Initiate Date</label>
+                                      <div class="input-group">
+                                          <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                  <i class="far fa-calendar-alt"></i>
+                                              </span>
+                                          </div>
+                                          <input type="text" class="form-control" name="int_date" id="int_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
+                                      </div>
+                                      <p class="input_err" style="color: red; display: none;" id="int_date_err"></p>
+                                  </div>
+                          </div>
+                          <div class="col-sm-4">
+                                  <div class="form-group">
+                                      <label class="control-label required">Work Committed Date</label>
+                                      <div class="input-group">
+                                          <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                  <i class="far fa-calendar-alt"></i>
+                                              </span>
+                                          </div>
+                                          <input type="text" class="form-control" name="cmt_date" id="cmt_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
+                                      </div>
+                                      <p class="input_err" style="color: red; display: none;" id="cmt_date_err"></p>
+                                  </div>
+                          </div>
+                            </div>
                         <div class="row">
                             <?= $check ?>
                             <div class="col-sm-12 col-12">

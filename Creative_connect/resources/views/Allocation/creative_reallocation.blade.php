@@ -196,8 +196,12 @@ Creative Allocation
                                 
 
                                     <td id="created_at{{$key}}">{{dateFormat($lotinfo->created_at)}}<br><b>{{timeFormat($lotinfo->created_at)}}</td>
-                                    <td id="work_initiate_date{{$key}}">{{dateFormat($lotinfo->work_initiate_date)}}<br><b>{{timeFormat($lotinfo->work_initiate_date)}}</b></td>
-                                    <td id="Comitted_initiate_date{{$key}}">{{dateFormat($lotinfo->Comitted_initiate_date)}}<br><b>{{timeFormat($lotinfo->Comitted_initiate_date)}}</b></td>
+                                    <td id="work_initiate_date{{$key}}">{{dateFormat($lotinfo->work_initiate_date)}}
+                                        {{--<br> <b>{{timeFormat($lotinfo->work_initiate_date)}}</b> --}}
+                                    </td>
+                                    <td id="Comitted_initiate_date{{$key}}">{{dateFormat($lotinfo->Comitted_initiate_date)}}
+                                        {{--<br> <b>{{timeFormat($lotinfo->Comitted_initiate_date)}}</b> --}}
+                                    </td>
                                     <td id="project_name{{$key}}">{{$lotinfo['project_name']}}</td>
                                     <td id="kind_of_work{{$key}}">{{$lotinfo['kind_of_work']}}</td>
                                     <td>
@@ -331,6 +335,36 @@ Creative Allocation
                                 </div>';
                             }
                         ?>
+                          <div class="row">
+                          <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label required">Work Initiate Date</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control int_date" name="int_date" id="int_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
+                                    </div>
+                                    <p class="input_err" style="color: red; display: none;" id="int_date_err"></p>
+                                </div>
+                        </div>
+                        <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label required">Work Committed Date</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control cmt_date" name="cmt_date" id="cmt_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
+                                    </div>
+                                    <p class="input_err" style="color: red; display: none;" id="cmt_date_err"></p>
+                                </div>
+                        </div>
+                          </div>
                         <div class="row">
                             <?= $check ?>
                             <div class="col-sm-12 col-12">
@@ -453,7 +487,17 @@ Creative Allocation
         const wrc_id = document.getElementById(wrc_id_td).innerHTML;
         document.querySelector(".wrc_id").value = wrc_id
 
-         
+        // work_initiate_date
+        const work_initiate_date_td = "work_initiate_date"+id;
+        const work_initiate_date = document.getElementById(work_initiate_date_td).innerHTML;
+        document.querySelector(".int_date").value = work_initiate_date
+
+        cmt_date
+
+        // Comitted_initiate_date
+        const Comitted_initiate_date_td = "Comitted_initiate_date"+id;
+        const Comitted_initiate_date = document.getElementById(Comitted_initiate_date_td).innerHTML;
+        document.querySelector(".cmt_date").value = Comitted_initiate_date
 
         // set wrc id
         const alloacte_to_copy_writer_td = "alloacte_to_copy_writer"+id;
