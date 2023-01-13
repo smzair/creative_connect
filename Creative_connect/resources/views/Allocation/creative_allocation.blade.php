@@ -122,18 +122,21 @@ Creative Allocation
                                 <th>LOT Numbers</th>
                                 <th>Company Name</th>
                                 <th>Brand Name</th>
+                                <th>Project Type</th>
+                                <th>Kind of Work</th>
+                                <th>WRC Created At</th>
+                                <th>Batches No</th>
+
                                 <th>Order Qty</th>
                                 <th>Sku Qty</th>
-                                <th>Batches No</th>
+                               
                                 <th>GD Allocated Qty</th>
                                 <th>GD Pending Qty</th>
                                 <th>CW Allocated Qty</th>
                                 <th>CW Pending Qty</th>
-                                <th>WRC Created At</th>
                                 {{-- <th>Work Initiate Date</th>
                                 <th>Work Committed Date</th> --}}
-                                <th>Project Type</th>
-                                <th>Kind of Work</th>
+                                
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -149,6 +152,11 @@ Creative Allocation
                                     <td id="lot_number{{$key}}">{{$lotinfo['lot_number']}}</td>
                                     <td id="Company{{$key}}">{{$lotinfo['Company']}}</td>
                                     <td id="brand_name{{$key}}">{{$lotinfo['brand_name']}}</td>
+                                    <td id="project_name{{$key}}">{{$lotinfo['project_name']}}</td>
+                                    <td id="kind_of_work{{$key}}">{{$lotinfo['kind_of_work']}}</td>
+                                    <td id="created_at{{$key}}">{{dateFormat($lotinfo->created_at)}}<br><b>{{timeFormat($lotinfo->created_at)}}</td>
+                                    <td title="0 for not retainer and other for retainer" id="batch_batch_no{{$key}}">{{$lotinfo['batch_batch_no'] != null ? $lotinfo['batch_batch_no'] : 'None'}}</td>
+
                                     <!-- <td>{{--count($lotinfo['wrcs'])--}}</td> -->
 
 
@@ -162,7 +170,7 @@ Creative Allocation
                                         <td id="sku_count{{$key}}">{{$lotinfo['sku_count'] != null ? $lotinfo['sku_count'] : 0}}</td>
                                     <?php  } ?>
                                     {{-- add this logic for lot with Retainer client bucket --end--}}
-                                    <td title="0 for not retainer and other for retainer" id="batch_batch_no{{$key}}">{{$lotinfo['batch_batch_no'] != null ? $lotinfo['batch_batch_no'] : 'None'}}</td>
+                                   
 
                                     <td id="gd_allocated_qty{{$key}}">{{($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']}}</td>
 
@@ -185,11 +193,9 @@ Creative Allocation
                                     <?php  } ?>
                                 
 
-                                    <td id="created_at{{$key}}">{{dateFormat($lotinfo->created_at)}}<br><b>{{timeFormat($lotinfo->created_at)}}</td>
                                     {{-- <td id="work_initiate_date{{$key}}">{{dateFormat($lotinfo->work_initiate_date)}}<br><b>{{timeFormat($lotinfo->work_initiate_date)}}</b></td>
                                     <td id="Comitted_initiate_date{{$key}}">{{dateFormat($lotinfo->Comitted_initiate_date)}}<br><b>{{timeFormat($lotinfo->Comitted_initiate_date)}}</b></td> --}}
-                                    <td id="project_name{{$key}}">{{$lotinfo['project_name']}}</td>
-                                    <td id="kind_of_work{{$key}}">{{$lotinfo['kind_of_work']}}</td>
+                                   
                                     <td>
                                         <button class="btn btn-warning" id="allocateBTn" data-toggle="modal" data-target="#allocateWRCPopup" onclick='setdata(<?php echo $key;?>)'>
                                             Allocate
@@ -213,17 +219,39 @@ Creative Allocation
         <div class="modal-content">
             <div class="modal-header py-2">
                 <h4 class="modal-title">Creative - Allocate WRC</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick='resetdata()'> 
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="custom-dt-row wrc-details">
                     <div class="row">
+
+                        <div class="col-sm-4 col-6">
+                            <div class="col-ac-details">
+                                <h6>Selected LOT</h6>
+                                <p class="selLot">ODN11jidfv23e4r</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-12">
+                            <div class="col-ac-details">
+                                <h6>WRC Number</h6>
+                                <p class="wrcNo"></p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-12">
+                            <div class="col-ac-details">
+                                <h6>Batches No</h6>
+                                <p class="batchesNo"></p>
+                            </div>
+                        </div>
                         
                         <div class="col-sm-4 col-6">
                             <div class="col-ac-details">
-                                <h6>Order/Sku Quantity Count</h6>
+                                <h6 class="hideTotalOrderQtyLable">Order Quantity</h6>
+                                <h6 class="hideTotalSkuCountLable">Sku Count</h6>
                                 <p class="QuntyCount"></p>
                             </div>
                         </div>
@@ -251,24 +279,9 @@ Creative Allocation
                                 <p class="PendingCountCw"></p>
                             </div>
                         </div>
-                        <div class="col-sm-4 col-12">
-                            <div class="col-ac-details">
-                                <h6>WRC Number</h6>
-                                <p class="wrcNo"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 col-12">
-                            <div class="col-ac-details">
-                                <h6>Batches No</h6>
-                                <p class="batchesNo"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 col-6">
-                            <div class="col-ac-details">
-                                <h6>Selected LOT</h6>
-                                <p class="selLot">ODN11jidfv23e4r</p>
-                            </div>
-                        </div>
+                        
+                       
+                       
                     </div>
                 </div>
                 <div class="custom-dt-row allocater-selection">
@@ -302,7 +315,7 @@ Creative Allocation
                                         </div>
                                         <div class="group-inner input-wrapper">
                                             <label class="control-label">Qty</label>
-                                            <input type="number" class="form-control GDQTYSTYLE'.$data.'" id="GraphicDesignerQty" name="GraphicDesignerQty[]">
+                                            <input type="text"  onkeypress="return isNumber(event);" class="form-control GDQTYSTYLE'.$data.'" id="GraphicDesignerQty" name="GraphicDesignerQty[]">
                                         </div>  
                                     </div>
                                 </div>
@@ -316,7 +329,7 @@ Creative Allocation
                                         </div>
                                         <div class="group-inner input-wrapper">
                                             <label class="control-label">Qty</label>
-                                            <input type="number" class="form-control CWQTYSTYLE'.$data.'" name="copyWriterQty[]" id="copyWriterQty">
+                                            <input type="text"  onkeypress="return isNumber(event);" class="form-control CWQTYSTYLE'.$data.'" name="copyWriterQty[]" id="copyWriterQty">
                                         </div>  
                                     </div>
                                 </div>';
@@ -327,12 +340,12 @@ Creative Allocation
                                   <div class="form-group">
                                       <label class="control-label required">Work Initiate Date</label>
                                       <div class="input-group">
-                                          <div class="input-group-prepend">
+                                          {{-- <div class="input-group-prepend">
                                               <span class="input-group-text">
                                                   <i class="far fa-calendar-alt"></i>
                                               </span>
-                                          </div>
-                                          <input type="text" class="form-control" name="int_date" id="int_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
+                                          </div> --}}
+                                          <input type="date" class="form-control" name="int_date" id="int_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
                                       </div>
                                       <p class="input_err" style="color: red; display: none;" id="int_date_err"></p>
                                   </div>
@@ -341,12 +354,12 @@ Creative Allocation
                                   <div class="form-group">
                                       <label class="control-label required">Work Committed Date</label>
                                       <div class="input-group">
-                                          <div class="input-group-prepend">
+                                          {{-- <div class="input-group-prepend">
                                               <span class="input-group-text">
                                                   <i class="far fa-calendar-alt"></i>
                                               </span>
-                                          </div>
-                                          <input type="text" class="form-control" name="cmt_date" id="cmt_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
+                                          </div> --}}
+                                          <input type="date" class="form-control" name="cmt_date" id="cmt_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
                                       </div>
                                       <p class="input_err" style="color: red; display: none;" id="cmt_date_err"></p>
                                   </div>
@@ -418,10 +431,14 @@ Creative Allocation
         const sku_count = document.getElementById(sku_count_td).innerHTML; 
 
         if(order_qty == 0){
+            document.querySelector('.hideTotalOrderQtyLable').style.display = 'none';
+            document.querySelector('.hideTotalSkuCountLable').style.display = 'block';
             document.querySelector('.QuntyCount').innerHTML = sku_count;
         }
 
         if(sku_count == 0){
+            document.querySelector('.hideTotalSkuCountLable').style.display = 'none';
+            document.querySelector('.hideTotalOrderQtyLable').style.display = 'block';
             document.querySelector('.QuntyCount').innerHTML = order_qty;
         }
 
@@ -513,6 +530,19 @@ Creative Allocation
         $(".input_err").css("display", "none");
         $(".input_err").html("");
 
+        const int_date = document.getElementById('int_date').value;
+        const cmt_date = document.getElementById('cmt_date').value;
+        console.log('int_date', int_date)
+        console.log('cmt_date', cmt_date)
+
+        if(int_date == ''){
+            return alert("Work Initiate Date is required"),false; 
+        }
+
+        if(cmt_date == ''){
+            return alert("Work Committed Date is required"),false; 
+        }
+
         var GraphicDesignerQtyTotal = 0;
         var copyWriterQtyTotal = 0;
 
@@ -589,6 +619,18 @@ Creative Allocation
         }
         return true
         
+    }
+</script>
+
+
+{{-- reset enable disable of sku and order qty modal reset--}}
+<script type="application/javascript"> 
+    
+    function resetdata(){
+        $(".inverdnewPopup").on("hidden.bs.modal", function(){
+            document.querySelector('.hideTotalOrderQtyLable').style.display = 'block';
+            document.querySelector('.hideTotalSkuCountLable').style.display = 'block';
+        });
     }
 </script>
 @endsection

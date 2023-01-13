@@ -83,7 +83,7 @@ All WRCs Batch Panel
                                     <td id="lot_number{{$key}}" class="p-sm-2 p-1">{{$wrc->lot_number}}</td>
                                     <td id="sku_required{{$key}}" class="p-sm-2 p-1" style="display: none">{{$wrc->sku_required}}</td>
                                     <td id="wrc_id{{$key}}" class="p-sm-2 p-1" style="display: none">{{$wrc->id}}</td>
-                                    <td id="wrc_number{{$key}}" class="p-sm-2 p-1">{{$wrc->wrc_number}}  <span class="cpy-clipboardtable" id="copyBTnTable"><i class="fas fa-copy"></i></span> </td>
+                                    <td id="wrc_number{{$key}}" class="p-sm-2 p-1">{{$wrc->wrc_number}}  <span class="cpy-clipboardtable" id="copyBTnTable"></i></span> </td>
                                     <td id="company_name{{$key}}" class="p-sm-2 p-1">{{$wrc->Company_name}}</td>
                                     <td id="brand_name{{$key}}" class="p-sm-2 p-1">{{$wrc->name}}</td>
                                     <td id="project_name{{$key}}" class="p-sm-2 p-1">{{$wrc->project_name}}</td>
@@ -91,7 +91,7 @@ All WRCs Batch Panel
                                     <td id="createdAt" class="p-sm-2 p-1">{{dateFormat($wrc->created_at)}}<br><b>{{timeFormat($wrc->created_at)}}</b></td>
                                     <td id="orderQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->order_qty == null ? 0 : $wrc->order_qty}}</td>
                                     <td id="skuQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->sku_count}}</td>
-                                    <td id="batchQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->batch_no == 0 ? 'None' : $wrc->batch_no}}</td>
+                                    <td title="None for not retainer and other for retainer" id="batchQuantity{{$key}}" class="p-sm-2 p-1">{{$wrc->batch_no == 0 ? 'None' : $wrc->batch_no}}</td>
                                     <td class="p-sm-2 p-1">
                                     <div class="btn-group-vertical">
                                         <a href="#" class="btn btn-warning alloc-action-btn" data-toggle="modal" data-target="#inverdnewPopup" onclick='setdata(<?php echo $key;?>)'>
@@ -128,59 +128,63 @@ All WRCs Batch Panel
                                     <div class="custom-dt-row work-details">
                                         <div class="row">
 
-                                            <div class="col-sm-4 col-12">
+                                            <div class="col-sm-3 col-12">
                                                 <div class="col-ac-details">
                                                     <h6>Selected LOT</h6>
                                                     <p class="selectedLot"></p>
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-4 col-12">
+                                            <div class="col-sm-3 col-12">
                                                 <div class="col-ac-details">
                                                     <h6>WRC Number</h6>
                                                     <p class="wrcNo"> </p>
                                                 </div>
                                             </div>
+
+                                            <div class="col-sm-3 col-12">
+                                                <div class="col-ac-details">
+                                                    <h6>Total Batch Count</h6>
+                                                    <p class="totalBatchCount"></p>
+                                                </div>
+                                            </div>
                                             
-                                            <div class="col-sm-4 col-6">
+                                            <div class="col-sm-3 col-6" style="display: none">
                                                 <div class="col-ac-details">
                                                     <h6>Brand Name</h6>
                                                     <p class="brndName"></p>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4 col-6">
+                                            <div class="col-sm-3 col-6" style="display: none">
                                                 <div class="col-ac-details">
                                                     <h6>Project Type</h6>
                                                     <p class="projectType"></p>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-4 col-6">
+
+                                            <div class="col-sm-3 col-12 hideTotalSkuCount">
+                                                <div class="col-ac-details">
+                                                    <h6>Total SKU Count</h6>
+                                                    <p class="totalSkuCount"></p>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-3 col-12 hideTotalOrderQty">
+                                                <div class="col-ac-details">
+                                                    <h6>Order Qty</h6>
+                                                    <p class="totalOrderQty"></p>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-3 col-6">
                                                 <div class="col-ac-details">
                                                     <h6>Kind of Work</h6>
                                                     <p class="kindOfWork"></p>
                                                 </div>
                                             </div>
 
-                                            <div class="col-sm-4 col-12">
-                                                <div class="col-ac-details">
-                                                    <h6>Total Batch Count</h6>
-                                                    <p class="totalBatchCount"></p>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-4 col-12">
-                                                <div class="col-ac-details">
-                                                    <h6>Total SKU Count</h6>
-                                                    <p class="totalSkuCount"></p>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-4 col-12">
-                                                <div class="col-ac-details">
-                                                    <h6>Order Qty</h6>
-                                                    <p class="totalOrderQty"></p>
-                                                </div>
-                                            </div>
+                                            
 
                                            
                                         </div>
@@ -189,18 +193,19 @@ All WRCs Batch Panel
                                         <form class="" method="POST" action="" id="workdetailsform">
                                             <div class="row">
                                                
-                                                <div class="col-sm-6 col-12">
+                                                <div class="col-sm-6 col-12 hodeOrderQtyInput" >
                                                     <div class="custom-info">
                                                         <p><h3>Inwarding Batch Information</h3></p>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="" id="gd_link_required">SKU Count/ Order Qty</label>
-                                                        <input type="text" class="form-control creative_link" name="sku_order_count" id="sku_order_count"  placeholder="Enter SKU Count/ Order Qty" value="" onkeypress="return isNumber(event);">
+                                                        <label class="hideTotalSkuCountLable" id="gd_link_required" >SKU Count</label>
+                                                        <label class="hideTotalOrderQtyLable" id="gd_link_required">Order Qty</label>
+                                                        <input type="text" class="form-control creative_link" name="sku_order_count" id="sku_order_count"  placeholder="Enter Order Qty" value="" onkeypress="return isNumber(event);">
                                                     </div>
                                                 </div>
                                                 
                                                 
-                                                <div class="col-sm-6 col-12">
+                                                <div class="col-sm-6 col-12 hodeSkuFileInput">
                                                     <p><h3>Upload SKU Sheet</h3></p>
                                                     <div class="col-sm-2 col-12">
                                                         {{-- <label for="files" class="btn">Upload Sheet</label> --}}
@@ -286,10 +291,24 @@ All WRCs Batch Panel
         const orderQuantity = document.getElementById(orderQuantity_td).innerHTML;
         document.querySelector('.totalOrderQty').innerHTML = orderQuantity;
 
+        if(orderQuantity == 0){
+            document.querySelector('.hideTotalOrderQty').style.display = 'none';
+            document.querySelector('.hideTotalOrderQtyLable').style.display = 'none';
+            document.querySelector('.hodeOrderQtyInput').style.display = 'none';
+
+           
+        }
+
         // set sku qty
         const skuQuantity_td = "skuQuantity"+id;
         const skuQuantity = document.getElementById(skuQuantity_td).innerHTML;
         document.querySelector('.totalSkuCount').innerHTML = skuQuantity;
+
+        if(skuQuantity == 0){
+            document.querySelector('.hideTotalSkuCount').style.display = 'none';
+            document.querySelector('.hideTotalSkuCountLable').style.display = 'none';
+            document.querySelector('.hodeSkuFileInput').style.display = 'none';
+        }
 
         //set total Batch Count
         const batchQuantity_td = "batchQuantity"+id;
@@ -349,12 +368,21 @@ All WRCs Batch Panel
 </script>
 
 {{-- reset enable disable of sku and order qty modal reset--}}
-<script>
+<script> 
+    
     function resetdata(){
         $(".inverdnewPopup").on("hidden.bs.modal", function(){
             document.querySelector('#sku_order_count').disabled = false;
             document.querySelector('#sku_order_count').value = '';
             document.querySelector('#files').disabled = false;
+            document.querySelector('.hideTotalOrderQty').style.display = 'block';
+            document.querySelector('.hideTotalSkuCount').style.display = 'block';
+            document.querySelector('.hideTotalOrderQtyLable').style.display = 'block';
+            document.querySelector('.hideTotalSkuCountLable').style.display = 'block';
+            document.querySelector('.hodeOrderQtyInput').style.display = 'block';
+            document.querySelector('.hodeSkuFileInput').style.display = 'block';
+
+
         });
     }
 </script>

@@ -81,7 +81,7 @@ View WRC
                                     <td id="lotNum" class="p-sm-2 p-1">{{$wrc->lot_number}}</td>
                                     <td id="companyName" class="p-sm-2 p-1">{{$wrc->Company_name}}</td>
                                     <td id="brndName" class="p-sm-2 p-1">{{$wrc->name}}</td>
-                                    <td id="wrcNum" class="p-sm-2 p-1">{{$wrc->wrc_number}}  <span class="cpy-clipboardtable" id="copyBTnTable"><i class="fas fa-copy"></i></span> </td>
+                                    <td id="wrcNum" class="p-sm-2 p-1">{{$wrc->wrc_number}}  <span class="cpy-clipboardtable" id="copyBTnTable"></span> </td>
                                     <td id="createdAt" class="p-sm-2 p-1">{{dateFormat($wrc->created_at)}}<br><b>{{timeFormat($wrc->created_at)}}</b></td>
                                     <!-- <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->work_brief}}</td>
                                     <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->guidelines}}</td>

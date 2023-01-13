@@ -67,8 +67,11 @@ Create New Commercial for Creative
                                     <th class="p-2">Company Name</th>
                                     <th class="p-2">Brand Name</th>
                                     <th class="p-2">WRC Number</th>
+                                    <th class="p-2">Kind Of Work</th>
                                     <th class="p-2">WRC Created At</th>
                                     <th class="p-2">Order Quantity</th>
+                                    <th class="p-2">Sku Counts</th>
+                                    <th class="p-2">Batch No</th>
                                     <!-- <th class="p-2">Work Brief</th>
                                     <th class="p-2">Guidelines</th>
                                     <th class="p-2">Add Document 1 </th>
@@ -83,9 +86,12 @@ Create New Commercial for Creative
                                     <td id="lotNum" class="p-sm-2 p-1">{{$wrc->lot_number}}</td>
                                     <td id="companyName" class="p-sm-2 p-1">{{$wrc->Company_name}}</td>
                                     <td id="brndName" class="p-sm-2 p-1">{{$wrc->name}}</td>
-                                    <td id="wrcNum" class="p-sm-2 p-1">{{$wrc->wrc_number}}  <span class="cpy-clipboardtable" id="copyBTnTable"><i class="fas fa-copy"></i></span> </td>
+                                    <td id="wrcNum" class="p-sm-2 p-1">{{$wrc->wrc_number}}  <span class="cpy-clipboardtable" id="copyBTnTable"></span> </td>
+                                    <td id="kind_of_work{{$index}}" class="p-sm-2 p-1">{{$wrc->kind_of_work}}</td>
                                     <td id="createdAt" class="p-sm-2 p-1">{{dateFormat($wrc->created_at)}}<br><b>{{timeFormat($wrc->created_at)}}</b></td>
                                     <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->order_qty}}</td>
+                                    <td id="skuQuantity{{$index}}" class="p-sm-2 p-1">{{$wrc->sku_count}}</td>
+                                    <td title="None for not retainer and other for retainer" id="batchQuantity{{$index}}" class="p-sm-2 p-1">{{$wrc->batch_no == 0 ? 'None' : $wrc->batch_no}}</td>
                                     <!-- <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->work_brief}}</td>
                                     <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->guidelines}}</td>
                                     <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->document1}}</td>

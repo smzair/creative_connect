@@ -313,7 +313,16 @@ class creativeWrc extends Controller
        ->leftJoin('creative_lots', 'creative_lots.id', 'creative_wrc.lot_id')
        ->leftJoin('users', 'users.id', 'creative_lots.user_id')
        ->leftJoin('brands', 'brands.id', 'creative_lots.brand_id')
-       ->select('creative_wrc.*','creative_lots.user_id','creative_lots.brand_id','creative_lots.lot_number','users.Company as Company_name','brands.name')
+       ->leftJoin('creative_wrc_batch', 'creative_wrc_batch.wrc_id', 'creative_wrc.id')
+       ->orderBy('creative_wrc_batch.id', 'DESC')
+       ->groupBy('creative_wrc_batch.wrc_id')
+       ->groupBy('creative_wrc_batch.batch_no')
+       ->leftJoin('create_commercial as create_commercial',function($join)
+       {
+           $join->on('create_commercial.user_id','=','creative_lots.user_id');
+           $join->on('create_commercial.brand_id','=','creative_lots.brand_id');
+       })
+       ->select('creative_wrc.*','creative_lots.user_id','creative_lots.brand_id','creative_lots.lot_number','users.Company as Company_name','brands.name','create_commercial.kind_of_work',DB::raw('MAX(creative_wrc_batch.batch_no) as batch_no'))
        ->get();
         //    dd($wrcs);
         return view('Wrc.Creative-wrc-view')->with('wrcs',$wrcs);
@@ -329,6 +338,7 @@ class creativeWrc extends Controller
         ->leftJoin('creative_wrc_batch', 'creative_wrc_batch.wrc_id', 'creative_wrc.id')
         ->orderBy('creative_wrc_batch.id', 'DESC')
         ->groupBy('creative_wrc_batch.wrc_id')
+        ->groupBy('creative_wrc_batch.batch_no')
         ->leftJoin('create_commercial as create_commercial',function($join)
 			{
 				$join->on('create_commercial.user_id','=','creative_lots.user_id');

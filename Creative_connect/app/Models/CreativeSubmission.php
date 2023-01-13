@@ -58,7 +58,9 @@ class CreativeSubmission extends Model
 			'creative_wrc_batch.order_qty as batch_order_qty',
 			'creative_wrc_batch.sku_count as batch_sku_count'
 		)
-		->where('creative_submissions.wrc_id','!=','creative_allocation.wrc_id')
+		->where('creative_time_hash.task_status','=',2)
+		->groupBy(['creative_wrc_batch.wrc_id','creative_wrc_batch.batch_no'])
+		// ->where('creative_submissions.wrc_id','!=','creative_allocation.wrc_id')
 		->get();
 		// dd($resData);
 		return $resData;
@@ -151,6 +153,19 @@ class CreativeSubmission extends Model
 		
 		->get();
 		// dd($resData);
+		return $resData;
+	}
+
+	public static function getCreativeWrcDetails(){
+
+		$resData = [];
+		$resData =  CreativeWrcModel::OrderBy('creative_wrc.id','ASC')
+       ->leftJoin('creative_lots', 'creative_lots.id', 'creative_wrc.lot_id')
+       ->leftJoin('users', 'users.id', 'creative_lots.user_id')
+       ->leftJoin('brands', 'brands.id', 'creative_lots.brand_id')
+       ->select('creative_wrc.*','creative_lots.user_id','creative_lots.brand_id','creative_lots.lot_number','users.Company as Company_name','brands.name','creative_lots.client_bucket')
+       ->get();
+        // dd($resData);
 		return $resData;
 	}
 }

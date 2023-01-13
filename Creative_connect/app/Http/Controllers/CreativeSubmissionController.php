@@ -224,5 +224,11 @@ class CreativeSubmissionController extends Controller
         return $this->creativeWrcClientApprovalRejection($request);
     }
 
+
+    //GET  CREATIVE WRC DETAIL
+      public function getCreativeWrcDetail(Request $request){
+        $getCreativeWrcDetails = CreativeSubmission::getCreativeWrcDetails() ;
+        return view('CreativeWrcDetail.creative_wrc_detail')->with('getCreativeWrcDetails',$getCreativeWrcDetails);
+    }
     
 }

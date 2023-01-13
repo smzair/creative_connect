@@ -248,9 +248,16 @@
                                 
                                 <?php if(($allocationInfo['start_time'] != 'NULL') || ($allocationInfo['end_time'] == null)){  ?>
                                     <td>
-                                        <?php if($allocationInfo['start_time'] != '0000-00-00 00:00:00' && $allocationInfo['task_status'] == 0){  ?>
+                                        <?php if($allocationInfo['task_status'] == 0){  ?>
                                             <a href="#" class="btn btn-warning alloc-action-btn" data-toggle="modal" data-target="#editpanelPopup" onclick='setdata(<?php echo $key;?>)'>
-                                                Upload
+                                                <?php if($allocationInfo['creative_upload_links_allocation_id'] > 0){ ?> 
+                                                    Edit
+                                                    <?php }?> 
+
+                                                    <?php if(($allocationInfo['creative_upload_links_allocation_id'] == 0) || ($allocationInfo['creative_upload_links_allocation_id'] == null)) { ?> 
+                                                        Upload
+                                                        <?php }?> 
+                                                
                                             </a>
                                         <?php } ?>
                                         {{-- <a href="#" class="btn btn-warning alloc-action-btn" id="uploadBTn" data-toggle="modal" data-target="#editpanelPopup" style="display:none;" onclick='setdata(<?php echo $key;?>)'>
@@ -583,9 +590,11 @@
         if(creative_upload_links_allocation_id != null && creative_upload_links_allocation_id > 0){
             console.log('raj', creative_upload_links_allocation_id)
             document.getElementById('update_btn').style.display = "block";
+            document.getElementById('save_btn').style.display = "none";
         }else{
             console.log('umesh', creative_upload_links_allocation_id)
             document.getElementById('save_btn').style.display = "block";
+            document.getElementById('update_btn').style.display = "none";
 
         }
 
