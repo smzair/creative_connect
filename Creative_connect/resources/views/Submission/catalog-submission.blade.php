@@ -133,15 +133,16 @@ Catalogue - Submission
                     <table id="qaTableCat" class="table table-head-fixed text-nowrap data-table">
                         <thead>
                             <tr>
-                                <th class="align-middle">ID</th>
-                                <th class="align-middle" style="text-align: center">Company Name</th>
-                                <th class="align-middle" style="text-align: center">Brand Name</th>
-                                <th class="align-middle" style="text-align: center">Lot Number</th>
-                                <th class="align-middle" style="text-align: center">WRC Number</th>
-                                <th class="align-middle" style="text-align: center">Batch Number</th>
-                                <th class="align-middle" style="text-align: center">Total SKU</th>
-                                <th class="align-middle" style="text-align: center">Kind of Work</th>
-                                <th class="align-middle">Action</th>
+                                <th class="align-middle text-center">ID</th>
+                                <th class="align-middle text-center">Lot Number</th>
+                                <th class="align-middle text-center">Company Name</th>
+                                <th class="align-middle text-center">Brand Name</th>
+                                <th class="align-middle text-center">WRC Number</th>
+                                <th class="align-middle text-center">Batch Number</th>
+                                <th class="align-middle text-center">Wrc Created At</th>
+                                <th class="align-middle text-center">Total SKU</th>
+                                {{-- <th class="align-middle text-center">Kind of Work</th> --}}
+                                <th class="align-middle text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -200,6 +201,7 @@ Catalogue - Submission
                                 $brands_name = $row['brands_name'];
                                 $lot_number = $row['lot_number'];
                                 $wrc_number = $row['wrc_number'];
+                                $wrc_created_at =  $row['wrc_created_at'] != '0000-00-00 00:00:00' ? date('d-m-Y h:i A',strtotime($row['wrc_created_at'])) : '';
                                 $modeOfDelivary = $row['modeOfDelivary'];
                                 $modeofdelivary_is = $modeOfDelivary_arr[$modeOfDelivary];
                                 $kind_of_work = $row['kind_of_work']; 
@@ -220,14 +222,15 @@ Catalogue - Submission
                                 $catalog_allocation_ids = $row['catalog_allocation_ids'];
                             @endphp
                             <tr>
-                                <td>{{ $wrc_id }}</td>
-                                <td>{{ $company }}</td>
-                                <td>{{ $brands_name .$wrc_id_is }}</td>
-                                <td>{{ $lot_number }}</td>
-                                <td>{{ $wrc_number }}</td>
-                                <td>{{ $batch_no_is }}</td>
-                                <td>{{ $sku_qty }}</td>
-                                <td>{{ $kind_of_work }}</td>
+                                <td class="text-center">{{ $wrc_id }}</td>
+                                <td class="text-center">{{ $lot_number }}</td>
+                                <td class="text-center">{{ $company }}</td>
+                                <td class="text-center">{{ $brands_name .$wrc_id_is }}</td>
+                                <td class="text-center">{{ $wrc_number }}</td>
+                                <td class="text-center">{{ $batch_no_is }}</td>
+                                <td class="text-center">{{ $wrc_created_at }}</td>
+                                <td class="text-center">{{ $sku_qty }}</td>
+                                {{-- <td>{{ $kind_of_work }}</td> --}}
                                 <td>
                                     <div class="d-inline-block mt-1">
                                         {{-- {{ $reworkbtn_disable }} --}}
@@ -302,52 +305,55 @@ Catalogue - Submission
                         </div> --}}
                         {{-- row 1 --}}
                         <div class="row">
-                            <div class="col-3 form-group">
+                            <div class="col-4 form-group">
                                 <label for="wrc_number">Wrc number</label>
-                                <p id="wrc_number">Wrc number is</p>
+                                <p id="wrc_number"></p>
                             </div>
-                            <div class="col-3 form-group">
+                            <div class="col-4 form-group">
                                 <label for="company">Company</label>
                                 <p id="company">Company</p>
                             </div>
-                            <div class="col-3 form-group">
+                            <div class="col-4 form-group">
                                 <label for="brand_name">Brand</label>
-                                <p id="brand_name">Wrc number is</p>
+                                <p id="brand_name"></p>
                             </div>
-                            <div class="col-3 form-group">
-                                <label for="tot_sku">Total Sky</label>
-                                <p id="tot_sku">Wrc number is</p>
-                            </div>
+                            
                         </div>
-
+                        {{-- row 2 --}}
                         <div class="row" >
-                            <div class="col-3 form-group">
-                                <label for="work_start_date">Wrok Start Date</label>
-                                <p id="work_start_date">Start Date</p>
-                            </div>
-                            <div class="col-3 form-group">
+                            <div class="col-4 form-group">
                                 <label for="work_initiate_date">Wrok Initiate Date</label>
                                 <p id="work_initiate_date">Initiate</p>
                             </div>
-                            <div class="col-3 form-group">
+                            <div class="col-4 form-group">
                                 <label for="work_commited_date">Wrok Committed Date</label>
                                 <p id="work_commited_date">Committed</p>
+                            </div>
+                            <div class="col-4 form-group">
+                                <label for="work_start_date">Wrok Start Date</label>
+                                <p id="work_start_date">Start Date</p>
+                            </div>
+                        </div>
+
+                        {{-- row 3 --}}
+                        <div class="row">
+                            <div class="col-4 form-group">
+                                <label for="tot_sku">Total Sku</label>
+                                <p id="tot_sku"></p>
+                            </div>
+                            <div class="col-4">
+                                <label for="allo_qty_to_cata">Allocated to Catalogure</label>
+                                <p id="allo_qty_to_cata">Dummy qty 2</p>
+                            </div>
+                            <div id="copy_qty_div" class="col-4 d-none">
+                                <label for="allo_qty_to_copy">Allocated to Copy Writer</label>
+                                <p id="allo_qty_to_copy"> D qty 5</p>
                             </div>
                         </div>
 
                         {{-- link row --}}
-                        <div class="row" id="link_row">
+                        <div class="row px-3" id="link_row">
                             <div class="col-12">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label for="allo_qty_to_cata">Allocated to Catalogure</label>
-                                        <p id="allo_qty_to_cata">Dummy qty 2</p>
-                                    </div>
-                                    <div id="copy_qty_div" class="col-6 d-none">
-                                        <label for="allo_qty_to_copy">Allocated to Copy Writer</label>
-                                        <p id="allo_qty_to_copy"> D qty 5</p>
-                                    </div>
-                                </div>
                                 <div class="row px-3">
                                     <div class="col-12" style="background: #eee; color:#232323 ">
                                         <div class="row head_row"  >
@@ -370,7 +376,7 @@ Catalogue - Submission
                         </div>
 
                         {{-- Marketplace row --}}
-                        <div class="row mt-3" id="market_place_row">
+                        <div class="row" id="market_place_row">
                             <div class="col-sm-12">
                                 <div>
                                     <h3>Marketplace</h3> 
@@ -434,6 +440,7 @@ Catalogue - Submission
                             <input type="hidden" name="catalog_allocation_ids" id="catalog_allocation_ids">
                             {{-- <button id="submit_wrc" type="button" class="btn btn-warning"> Submit WRC</button> --}}
                             <button onclick="save_data()" type="button" class="btn btn-warning">Submit WRC</button>
+                            <p id="copy_msg" class="msg_box d-none">Link Copied</p>
                         </div>
                         <div id="msg_div" style="display: none;">
                             <p class="msg_box" id="msg_box"></p>
@@ -495,7 +502,7 @@ Catalogue - Submission
         $("#link_copy_writer_row").addClass("d-none");
         
         const data_id = "data_id_"+val; 
-        const allocation_ids = catalog_allocation_ids = $("#"+data_id).data("catalog_allocation_ids")
+        const allocation_ids = catalog_allocation_ids = $("#"+data_id).data("catalog_allocation_ids")+""
         const wrc_id = $("#"+data_id).data("wrc_id")
         const batch_no = $("#"+data_id).data("batch_no")
         
@@ -536,6 +543,7 @@ Catalogue - Submission
         document.getElementById("work_start_date").innerHTML = work_start_date;
         document.getElementById("allo_qty_to_cata").innerHTML = cataloger_allocated_qty;
 
+        const catalog_allocation_id_arr = catalog_allocation_ids.split(',')
         if(modeofdelivary_is == 'Uploading'){
             $("#market_place_row").removeClass("d-none");
             let list = "";
@@ -602,15 +610,15 @@ Catalogue - Submission
             let copy_li = "";
             final_link_list_arr.forEach((link , index) => {
                 if(link != ''){
-
                     const user_roles_is = user_roles_arr[index];
                     const allocated_users_is = allocated_users_arr[index];
+                    const catalog_allocation_id_is = catalog_allocation_id_arr[index];
                     console.log({user_roles_is , allocated_users_is , link })
 
                     if(alloacte_to_copy_writer === 1 && user_roles_is == 1){
-                        copy_li += `<p class="pointer m-0" title="uploaded by ${allocated_users_arr[index]} "> ${link} <i class="fa fa-copy"></i></p>`
+                        copy_li += `<p class="pointer m-0"> <span title="uploaded by ${allocated_users_arr[index]}" id="p_${catalog_allocation_id_is}">${link}  </span> <i class="fa fa-copy" id="i_p_${catalog_allocation_id_is}" onclick="copyToClipboard('p_${catalog_allocation_id_is}')"></i></p>`
                     }else{
-                        catalog_li += `<p class="pointer m-0" title="uploaded by ${allocated_users_arr[index]} "> ${link} <i class="fa fa-copy"></i></p>`
+                        catalog_li += `<p class="pointer m-0"> <span title="uploaded by ${allocated_users_arr[index]}" id="p_${catalog_allocation_id_is}">${link}  </span> <i class="fa fa-copy" id="i_p_${catalog_allocation_id_is}" onclick="copyToClipboard('p_${catalog_allocation_id_is}')"></i></p>`
                     }
                 }
             });
@@ -653,6 +661,19 @@ Catalogue - Submission
              $("#submit_wrc").removeAttr("title");
              $("#submit_wrc").removeAttr("disabled");
         }
+    }
+</script>
+
+{{-- script for copy to --}}
+<script>
+    function copyToClipboard(id_is) {
+        const element = document.getElementById(id_is);
+        const val_is = element.innerHTML;
+        navigator.clipboard.writeText(val_is);
+        $("#copy_msg").removeClass("d-none");
+        setTimeout(() => {
+            $("#copy_msg").addClass("d-none");
+        }, 1500)
     }
 </script>
 
