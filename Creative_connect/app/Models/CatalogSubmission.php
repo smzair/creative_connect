@@ -11,7 +11,7 @@ class CatalogSubmission extends Model
     use HasFactory;
     protected $table = 'catalog_submissions';
     protected $fillable = [
-        'id', 'wrc_id', 'submission_date'
+        'id', 'wrc_id', 'batch_no' , 'submission_date'
     ];
 
     // catalog Wrc list for Submission

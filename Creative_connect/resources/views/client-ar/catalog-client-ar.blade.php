@@ -126,7 +126,7 @@ Catalogue - client approval rejection
         <div class="col-12">
             <div class="card card-transparent">
                 <div class="card-header">
-                    <h3 class="card-title" style="font-size: 2rem;">Client approval rejection</h3>
+                    <h3 class="card-title" style="font-size: 2rem;">Client Approval Rejection</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
@@ -138,12 +138,13 @@ Catalogue - client approval rejection
                                 <th class="align-middle" style="text-align: center">Brand Name</th>
                                 <th class="align-middle" style="text-align: center">Company Name</th>
                                 <th class="align-middle" style="text-align: center">WRC Number</th>
+                                <th class="align-middle" style="text-align: center">Batch Number</th>
                                 <th class="align-middle" style="text-align: center">Invoice Number</th>
                                 <th class="align-middle" style="text-align: center">Feedback Action</th>
                                 <th class="align-middle" style="text-align: center">Created At</th>
                                 <th class="align-middle" style="text-align: center">Product Category</th>
-                                <th class="align-middle" style="text-align: center">Type Of Shoot</th>
-                                <th class="align-middle" style="text-align: center">Type of Clothing</th>
+                                {{-- <th class="align-middle" style="text-align: center">Type Of Shoot</th>
+                                <th class="align-middle" style="text-align: center">Type of Clothing</th> --}}
                                 {{-- <th class="align-middle">Action</th> --}}
                             </tr>
                         </thead>
@@ -159,6 +160,7 @@ Catalogue - client approval rejection
                                 $wrc_id_is = $row['wrc_id'];
                                 $wrc_id_is = ""; 
 
+                                $submission_id = $row['submission_id'];
                                 $wrc_id = $row['wrc_id'];
                                 $lot_number = $row['lot_number'];
                                 $brands_name = $row['brands_name'];
@@ -169,6 +171,9 @@ Catalogue - client approval rejection
                                 $kind_of_work = $row['kind_of_work']; 
                                 $requestType = $row['requestType']; 
                                 $ar_status = $row['ar_status'];
+
+                                $batch_no = $row['batch_no'];
+                                $batch_no_is = $batch_no > 0 ? $batch_no :'None';
 
                                 $sku_qty = $row['sku_qty'];
                                 $sku_qty = $row['sku_qty'];
@@ -188,24 +193,28 @@ Catalogue - client approval rejection
 
                             @endphp
                             <tr>
-                                <td>{{ $wrc_id }}</td>
+                                <td>{{ $submission_id }}</td>
                                 <td>{{ $lot_number }}</td>
                                 <td>{{ $brands_name .$wrc_id_is }}</td>
                                 <td>{{ $company }}</td>
                                 <td>{{ $wrc_number }}</td>
+                                <td>{{ $batch_no_is }}</td>
                                 <td>
                                    Invoice 
                                 </td>
                                 <td>
-                                    <button id="btn_Reject{{ $wrc_id }}"  title="{{ $btn_Reject }}" {{ $btn_disable }} onclick="setdata('{{ $wrc_id }}')" class="btn transpant py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal">
+
+                                    <span class="d-none" id="data_id_{{$submission_id}}" data-wrc_id="{{$wrc_id}}" data-batch_no="{{$batch_no}}" data-submission_id="{{$submission_id}}" ></span>
+
+                                    <button id="btn_Reject{{ $submission_id }}"  title="{{ $btn_Reject }}" {{ $btn_disable }} onclick="setdata('{{ $submission_id }}')" class="btn transpant py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal">
                                             Reject
                                         </button>
-                                   <button id="btn_Approve{{ $wrc_id }}" onclick="wrc_reject_approve_wrc('1','{{ $wrc_id }}')" title="{{ $btn_Approve }}" {{ $btn_disable }} class="btn transpant py-1 mt-1">Approve</button>
+                                   <button id="btn_Approve{{ $submission_id }}" onclick="setdata('{{ $submission_id }}') ; wrc_reject_approve_wrc('1')" title="{{ $btn_Approve }}" {{ $btn_disable }} class="btn transpant py-1 mt-1">Approve</button>
                                 </td>
                                 <td>{{ $submission_date }}</td>
                                 <td>{{ $kind_of_work }}</td>
-                                <td>{{ $requestType }}</td>
-                                <td>Type of Clothing</td>
+                                {{-- <td>{{ $requestType }}</td>
+                                <td>Type of Clothing</td> --}}
                             </tr>  
                             @endforeach
                         </tbody>
@@ -220,7 +229,7 @@ Catalogue - client approval rejection
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header py-2">
-                    <h4 class="modal-title">Enter your reason of rejection</h4>
+                    <h4 class="modal-title">Enter your Reason of Rejection</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -238,6 +247,8 @@ Catalogue - client approval rejection
                         </div>
                         <div class="form-group">
                             <input type="hidden" name="wrc_id" id="wrc_id">
+                            <input type="hidden" name="batch_no" id="batch_no">
+                            <input type="hidden" name="submission_id" id="submission_id">
                             <button onclick="wrc_reject_approve_wrc(2)" type="button" class="btn btn-warning">Submit WRC</button>
                         </div>
                     </form>
@@ -284,86 +295,87 @@ Catalogue - client approval rejection
 {{-- script for setdata into modal  --}}
 <script>
     function setdata(val){
-        const data_id = "data_id_"+val;
-        const catalog_allocation_ids = $("#"+data_id).data("catalog_allocation_ids")
-        document.getElementById('wrc_id').value = val
+        const data_id = "#data_id_"+val;
+        // const client_id = $("#user_id").find(':selected').data('client_id')
+        const wrc_id = $(data_id).data('wrc_id')
+        const batch_no = $(data_id).data('batch_no')
+        const submission_id = $(data_id).data('submission_id')
+        console.log({wrc_id, batch_no, submission_id})
+        document.getElementById('wrc_id').value = wrc_id
+        document.getElementById('batch_no').value = batch_no
+        document.getElementById('submission_id').value = submission_id
     }
 </script>
 
 
 {{-- script for save data to rewrok   --}}
 <script>
-    async function wrc_reject_approve_wrc(ar_status , wrc_id_is = 0){ 
-        let wrc_id
-        if(ar_status == 2){
-            wrc_id  = document.querySelector("#wrc_id").value  
-        }else{
-            wrc_id = wrc_id_is;
-        }
-
-        const btn_Reject_id = "btn_Reject"+wrc_id;
-        const btn_Approve_id = "btn_Approve"+wrc_id;
-        console.log({btn_Approve_id , btn_Reject_id})
-        
+    async function wrc_reject_approve_wrc(ar_status){
+        const wrc_id_is = wrc_id  = document.querySelector("#wrc_id").value  
+        const batch_no  = document.querySelector("#batch_no").value  
+        const submission_id  = document.querySelector("#submission_id").value  
         const rejection_reason = document.querySelector("#rejection_reason").value  
-        console.warn({wrc_id , rejection_reason , ar_status ,wrc_id_is})
+
+        const btn_Reject_id = "btn_Reject"+submission_id;
+        const btn_Approve_id = "btn_Approve"+submission_id;
+
+        console.log({btn_Approve_id , btn_Reject_id})
+        console.warn({wrc_id , batch_no , rejection_reason , ar_status ,wrc_id_is})
         
         await $.ajax({
             url: "{{ url('client-catalog-wrc-reject')}}",
             type: "POST",
             dataType: 'json',
             data: {
+                submission_id,
                 wrc_id,
+                batch_no,
                 ar_status,
                 rejection_reason,
                 _token: '{{ csrf_token() }}'
             },
             success: function(res) {
-
-                console.log({res})
+                // console.log({res})
                 let massage = "somthing went Wrong!!!"
                 let btn_Reject = '';
-                let btn_Approve = '';
-                
+                let btn_Approve = '';               
                 
                 if(res?.update_status == 1){
-                    // $(`#${btn_Reject_id}`).addAttr("disabled");
-                    // $(`#${btn_Approve_id}`).addAttr("disabled");
+                    $("#"+btn_Approve_id).attr("disabled" , true);
+                    $("#"+btn_Reject_id).attr("disabled" , true);
                     $("#msg_box").css("color", "green");
                     if(res?.ar_status == 1){
-                       massage  = "Wrc Approved";
+                        massage  = "Wrc Approved";
+                        if(res.massage){
+                            massage = res.massage
+                        }
                         btn_Reject = "Wrc Approved can't Reject!!";
-                        btn_Approve = "Wrc already Approved";
+                        btn_Approve = "Wrc already Approved"; 
                         alert(massage)
+
                     }else{
                         massage  = "Wrc rejected";
+                        if(res.massage){
+                            massage = res.massage
+                        }
                         btn_Reject = "Wrc already Rejected!!";
                         btn_Approve = "Wrc Rejected can't Approved!!";
                     }
-                     window.location.reload();
-
-
+                    // window.location.reload();
                 }else{
+                    massage = res.massage
                     $("#msg_box").css("color", "red");
+                    btn_Approve = document.getElementById(btn_Approve_id).title
+                    btn_Reject = document.getElementById(btn_Reject_id).title
+                    if(!res.massage == 2){
+                        alert(massage)
+                    }
                     // $("#btn_Approve"+wrc_id).removeAttr("disabled");
                     // $("#btn_Reject"+wrc_id).removeAttr("disabled");
                 }
 
                 document.getElementById(btn_Approve_id).title = btn_Approve;
                 document.getElementById(btn_Reject_id).title = btn_Reject;
-
-
-                // else if(res.status == 2){
-                //     $("#msg_box").css("color", "Blue");
-                    
-                // }else if(res.status == 3){
-                //     $("#msg_box").css("color", "Blue");
-                    
-                // }else if(res.status == 4){
-                //     $("#msg_box").css("color", "Blue");
-                // }
-
-                // msg_div msg_box
                 document.querySelector("#msg_box").innerHTML = massage
                 $("#msg_div").css("display", "Block");
             }
@@ -371,7 +383,7 @@ Catalogue - client approval rejection
         setTimeout( () => {
             $("#msg_div").css("display", "none");
             $('#msg_box').html("");
-        }, 3000);
+        }, 2000);
     }
 </script>
 @endsection
