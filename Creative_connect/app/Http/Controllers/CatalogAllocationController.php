@@ -6,6 +6,7 @@ use App\Models\CatalogAllocation;
 use App\Models\CatalogTimeHash;
 use App\Models\CatalogUploadedMarketplaceCount;
 use App\Models\CatalogUploadLinks;
+use App\Models\CatalogWrcBatch;
 use App\Models\CatlogWrc;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -38,6 +39,10 @@ class CatalogAllocationController extends Controller
         $copywriter_Qty = $request->copywriter_Qty;
         $wrc_id = $request->wrc_id;
         $batch_no = $request->batch_no;
+        $wrc_batch_id_is = $request->wrc_batch_id_is;
+        $work_initiate_date_is = $request->work_initiate_date_is;
+        $work_committed_date_is = $request->work_committed_date_is;
+        $allocation_type = $request->allocation_type;
 
         $res = [];
 
@@ -95,6 +100,16 @@ class CatalogAllocationController extends Controller
                 }
             }
         }
+        $updateData = CatalogWrcBatch::find($wrc_batch_id_is);
+
+        if ($allocation_type == 1 || $updateData->work_initiate_date == null || $updateData->work_initiate_date == '0000-00-00') {
+            $updateData->work_initiate_date = $work_initiate_date_is != null ? $work_initiate_date_is : $updateData->work_initiate_date;
+        }
+        if($allocation_type == 1 || $updateData->work_initiate_date == null || $updateData->work_initiate_date == '0000-00-00'){
+            $updateData->work_committed_date = $work_committed_date_is != null ? $work_committed_date_is : $updateData->work_committed_date;
+        }
+        $update_status = $updateData->update();
+        $res['update_status'] = $update_status;
         // echo "user_id => $user_id , Cataloguer_Qty => $Cataloguer_Qty , copywriter_id => $copywriter_id, copywriter_Qty => $copywriter_Qty , wrc_id => $wrc_id";
 
         // dd($res);

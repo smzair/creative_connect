@@ -146,6 +146,9 @@ Catalogin Re-Allocation
 
                                         <input type="hidden" id="wrc_id{{ $key }}" data-alloacte_to_copy_writer="{{ $row['alloacte_to_copy_writer'] }}" value="{{ $row['id'] }}">
                                         <input type="hidden" id="batch_no{{ $key }}"  value="{{ $row['batch_no'] }}">
+                                        <input type="hidden" id="wrc_batch_id{{ $key }}"  value="{{ $row['wrc_batch_id'] }}">
+                                        <input type="hidden" id="work_initiate_date{{ $key }}"  value="{{ $row['work_initiate_date'] }}">
+                                        <input type="hidden" id="work_committed_date{{ $key }}"  value="{{ $row['work_committed_date'] }}">
                                         <button class="btn btn-warning" id="allocateBTnC" data-toggle="modal" 
                                         data-target="#allocateWRCPopupCAt" onclick="setvalue({{ $key }})">
                                             Allocate
@@ -234,6 +237,30 @@ Catalogin Re-Allocation
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                 <div class="form-group">
+                                    <label class="control-label w-100 required" for="work_initiate_date_is">Work Initiate Date <span style="color: red">*</span></label>
+                                    <input class="form-control" type="date" name="work_initiate_date_is" id="work_initiate_date_is">
+                                </div>
+                                <p class="" style="color: red; display: none;"  id="work_initiate_date_is_err"></p>
+
+                            </div>
+                            <div class="col-sm-2">
+                            </div>
+
+                            <div class="col-sm-4">
+                                 <div class="form-group">
+                                    <label class="control-label  w-100 required" for="work_committed_date_is">Work Committed Date <span style="color: red">*</span></label>
+                                    <input class="form-control" type="date" name="work_committed_date_is" id="work_committed_date_is">
+                                </div>
+                                <p class="" style="color: red; display: none;"  id="work_committed_date_is_err"></p>
+
+                            </div>
+                             <div class="col-sm-2">
+                            </div>
+                        </div>
                     </div>
                     <div class="custom-dt-row allocater-selection"> 
                         {{-- Allocate users dropdwon row  --}}
@@ -279,6 +306,8 @@ Catalogin Re-Allocation
                             <div class="col-sm-12 col-12" style="text-align: end">
                                 <input id="wrc_id" name="wrcNo" type="hidden" value="">
                                 <input id="batch_no" name="batch_no" type="hidden" value="">
+                                <input id="wrc_batch_id_is" name="wrc_batch_id_is" type="hidden" value="">
+                                <input id="key_is" name="key" type="hidden" value="">
                                 <button class="btn btn-warning" onclick="saveData()" >Complete Allocation</button>
                                 <span class="msg_box" id="msg_box1" style="color: red; display: none;"></span>
                                 <span class="msg_box" id="msg_box2" style="color: red; display: none;"></span>
@@ -340,6 +369,15 @@ Catalogin Re-Allocation
         const wrc_id_is = document.querySelector("#wrc_id"+val).value
         const batch_no_is = document.querySelector("#batch_no"+val).value
         const sku_qty = data.sku_qty
+
+        const wrc_batch_id_is = document.querySelector("#wrc_batch_id"+val).value
+        const work_initiate_date_is = document.querySelector("#work_initiate_date"+val).value
+        const work_committed_date_is = document.querySelector("#work_committed_date"+val).value
+
+        document.querySelector("#wrc_batch_id_is").value =  wrc_batch_id_is
+        document.querySelector("#work_initiate_date_is").value =  work_initiate_date_is != '0000:00:00' ? work_initiate_date_is : ''
+        document.querySelector("#work_committed_date_is").value =  work_committed_date_is != '0000:00:00' ? work_committed_date_is : ''
+        document.querySelector("#key_is").value =  val
 
         document.querySelector("#wrc_id").value =  wrc_id_is
         document.querySelector("#batch_no").value =  batch_no_is
@@ -458,6 +496,19 @@ Catalogin Re-Allocation
             return
         }
 
+        const key_is =  document.querySelector("#key_is").value 
+        const wrc_batch_id_is =  document.querySelector("#wrc_batch_id_is").value 
+        const work_initiate_date_is =  document.querySelector("#work_initiate_date_is").value 
+        const work_committed_date_is =  document.querySelector("#work_committed_date_is").value 
+
+        console.log({work_initiate_date_is , work_committed_date_is })
+
+        // debugger
+        // if(work_initiate_date_is == ''){
+        //     document.querySelector("#work_initiate_date_is_err").innerHTML  = "Work Initiate Date not selected "
+        //     return
+        // }
+
         await $.ajax({
             url: "{{ url('set-catalog-allocation') }}",
             type: "POST",
@@ -467,14 +518,21 @@ Catalogin Re-Allocation
                 Cataloguer_Qty,
                 wrc_id,
                 batch_no,
+                wrc_batch_id_is,
+                work_initiate_date_is,
+                work_committed_date_is,
+                allocation_type : 2,
                 copywriter_id : copywriter_id_is,
                 copywriter_Qty,
                 _token: '{{ csrf_token() }}'
             },
             success: function(res) {
-                // {{--  cataloger_sum  cataloger_pen cp_sum cp_pen --}}
-                //  var target = $('[data-id="1123066248731271"]');
-                // alert(target.find('div').first().html());
+                    
+                if(res.update_status){
+                    document.querySelector("#work_initiate_date"+key_is).value = work_initiate_date_is
+                    document.querySelector("#work_committed_date"+key_is).value = work_initiate_date_is
+                }
+
                 console.log(res.user)
                 if(user_id_is > 0 && Cataloguer_Qty > 0){
                     if(res.user == 1){

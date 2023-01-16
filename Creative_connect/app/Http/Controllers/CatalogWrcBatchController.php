@@ -16,7 +16,7 @@ class CatalogWrcBatchController extends Controller
     {
         $catalog_Wrc_Batch_list = CatalogWrcBatch::catalog_Wrc_Batch_list();
         return view('Wrc.Catalog-wrc-batch')->with('data_arr', $catalog_Wrc_Batch_list);
-        echo "Catalog-wrc-batch";
+        // echo "Catalog-wrc-batch";
     }
 
 

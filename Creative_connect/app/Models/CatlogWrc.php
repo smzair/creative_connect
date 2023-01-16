@@ -56,6 +56,9 @@ class CatlogWrc extends Model
             DB::raw('GROUP_CONCAT(u1.name) as ass_users'),
             DB::raw('GROUP_CONCAT(catalog_allocation.user_id) as ass_cataloger'),
             'catalog_wrc_batches.batch_no',
+            'catalog_wrc_batches.id as wrc_batch_id',
+            'catalog_wrc_batches.work_initiate_date',
+            'catalog_wrc_batches.work_committed_date',
             'catalog_wrc_batches.sku_count as sku_qty',
             )
         ->groupBy('catlog_wrc.id')
