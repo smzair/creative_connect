@@ -26,7 +26,7 @@ class CatalogWrcMasterSheet extends Model
                 $join->on('catalog_submissions.batch_no', '=', 'catalog_wrc_batches.batch_no');
             }
         )->
-        leftJoin('catalog_time_hash', 'catalog_time_hash.allocation_id', 'catlog_wrc.lot_id')->
+        leftJoin('catalog_time_hash', 'catalog_time_hash.allocation_id', 'catalog_allocation.id')->
         leftJoin('lots_catalog', 'lots_catalog.id', 'catlog_wrc.lot_id')->
         leftJoin('create_commercial_catalog as cc_catalog', 'cc_catalog.id', 'catlog_wrc.commercial_id')->
         leftJoin('users', 'lots_catalog.user_id', 'users.id')->
@@ -51,6 +51,8 @@ class CatalogWrcMasterSheet extends Model
             'catalog_time_hash.allocation_id',
             'catalog_time_hash.task_status',
             'catalog_time_hash.rework_count',
+            DB::raw('GROUP_CONCAT(catalog_time_hash.allocation_id) as allocation_id_list'),
+            DB::raw('GROUP_CONCAT(catalog_time_hash.rework_count) as rework_count_list'),
             'catalog_time_hash.spent_time',
             'catalog_time_hash.ini_start_time',
             'catalog_time_hash.ini_end_time',

@@ -7,11 +7,11 @@
     <title>Catalog Wrc Master Sheet</title>
     <style>
         .td_class{
-            padding: 0px 15px;
+            padding: 0px 10px;
         }
         .td_class1{
             /* padding: 0px 20px; */
-
+            text-align: center;
         }
     </style>
 </head>
@@ -78,7 +78,6 @@
                         $wrc_skus_wrc_id_arr = array_column($wrc_skus_CountList, 'wrc_id');
                         $wrc_skus_batch_no_arr = array_column($wrc_skus_CountList, 'batch_no');
 
-                        // pre($commercial_wise_MarketplaceCredentials_list);
                         $MarketplaceCredentials_commercial_id_arr = array_column($commercial_wise_MarketplaceCredentials_list, 'commercial_id');
                         $Credentials_marketplace_id_arr = array_column($commercial_wise_MarketplaceCredentials_list, 'marketplace_id');
                         $Credentials_updated_at_arr = array_column($commercial_wise_MarketplaceCredentials_list, 'updated_at');
@@ -94,8 +93,21 @@
                             $missing_info_recived_date = $row['missing_info_recived_date'] != '' && $row['missing_info_recived_date'] != '0000-00-00' ?  date_dMY($row['missing_info_recived_date']) : '' ;
                             $confirmation_date = $row['confirmation_date'] != '' && $row['confirmation_date'] != '0000-00-00' ?  date_dMY($row['confirmation_date']) : '' ;
 
-                            $rework_count =$row['rework_count'];
-                            $fta_is = $rework_count > 0 ? 'NFTA' : 'FTA';
+                            $rework_count = 0;
+                            $fta_is = '';
+                            $rework_count_list = $row['rework_count_list'];
+                            $rework_count_arr = explode(',',$rework_count_list);
+
+                            foreach ($rework_count_arr as $key => $rework_count_val) {
+                                if($rework_count_val > 0){
+                                    $rework_count += 1;
+                                }
+                            }
+                            if($row['rework_count'] == ''){
+                                $fta_is = '';
+                            }else{
+                                $fta_is = $rework_count > 0 ? 'NFTA' : 'FTA';
+                            }
                             $submission_id =$row['submission_id'];
                             $submission_date =$row['submission_date'];
 
@@ -137,14 +149,12 @@
                                 $Submission_style_count =  $style_count;
                                 $tat_status = "";
                                 if($work_committed_date_is != '' && $submission_date_is != ''){
-                                    // echo "<br>". date('Y-m-d', strtotime($work_committed_date_is)) . date('Y-m-d', strtotime($submission_date_is));
                                     if(date('Y-m-d', strtotime($work_committed_date_is)) < date('Y-m-d', strtotime($submission_date_is)) ){
                                         $tat_status = "TAT Breached";
                                     }else{
                                         $tat_status = "Within TAT";
                                     }
                                 }
-                                // echo "<br> wrc_id = $wrc_id ,  batch_no = $batch_no , submission_date_is , $work_committed_date_is  , work_committed_date_is $submission_date_is , tat_status => $tat_status ";
                             }else{
                                 $Submission_style_count = $Submission_skuQty =  $tat_status = '' ;
                             }
@@ -156,14 +166,8 @@
                             if($modeOfDelivary_Is = 'Uploading'){
                                 $commercial_id =$row['commercial_id'];
                                 $comm_id_arr = array_intersect($MarketplaceCredentials_commercial_id_arr,array($commercial_id));
-                                // pre($comm_id_arr);
                             }
-
-                            if($row_key == 5){
-                                // pre($CatalogWrcMasterList[5]);
-                                // echo "work_initiate_date_is => $work_initiate_date_is ";
-                            }
-
+                            
                             if($work_initiate_date_is != '' && $work_committed_date_is != ''){
                                 $date1=date_create($work_initiate_date_is);
                                 $date2=date_create($work_committed_date_is);
@@ -178,7 +182,6 @@
                             $loginSharedDate = "";
                         @endphp
                         @foreach ($market_place_id_arr as $key => $id_val)
-
                             @php
                                 foreach ($comm_id_arr as $comm_id_key => $comm_id) {
                                     if($id_val == $Credentials_marketplace_id_arr[$comm_id_key]){
