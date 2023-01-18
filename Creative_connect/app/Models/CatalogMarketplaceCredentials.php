@@ -84,6 +84,8 @@ class CatalogMarketplaceCredentials extends Model
             'catalog_marketplace_credentials.link',
             'catalog_marketplace_credentials.username',
             'catalog_marketplace_credentials.password',
+            'catalog_marketplace_credentials.created_at',
+            'catalog_marketplace_credentials.updated_at',
             'catalog_marketplace_credentials.marketplace_id',
             'marketplaces.marketPlace_name', 
         )->

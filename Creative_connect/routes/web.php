@@ -6,6 +6,7 @@ use App\Http\Controllers\CatalogSubmissionController;
 use App\Http\Controllers\CatalogUploadedMarketplaceCountController;
 use App\Http\Controllers\CatalogWrcBatchController;
 use App\Http\Controllers\CatalogWrcController;
+use App\Http\Controllers\CatalogWrcMasterSheetController;
 use App\Http\Controllers\CatlaogQcController;
 use Illuminate\Support\Facades\Route;
 /*
@@ -120,5 +121,8 @@ Route::get('catalog-client-ar', [CatalogClientARController::class, 'index'])->na
 Route::post('client-catalog-wrc-reject', [CatalogClientARController::class, 'wrc_reject_approve_wrc'])->name('wrc_reject_approve_wrc'); // reject-wrc
 
 
+// catalog - wrc - master - sheet . blade
+
+Route::get('catalog-wrc-master-sheet', [CatalogWrcMasterSheetController::class , 'index'])->name('CatalogWrcMasterSheet');
 
 
