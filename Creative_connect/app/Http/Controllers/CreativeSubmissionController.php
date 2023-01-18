@@ -225,7 +225,7 @@ class CreativeSubmissionController extends Controller
     }
 
 
-    //GET  CREATIVE WRC DETAIL
+    //GET  CREATIVE WRC DETAIL (Master Sheet) 
       public function getCreativeWrcDetail(Request $request){
         $getCreativeWrcDetails = CreativeSubmission::getCreativeWrcDetails() ;
         return view('CreativeWrcDetail.creative_wrc_detail')->with('getCreativeWrcDetails',$getCreativeWrcDetails);

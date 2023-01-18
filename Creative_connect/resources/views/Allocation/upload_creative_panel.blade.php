@@ -125,7 +125,7 @@
                         <tbody>
                             @foreach($allocationList['resData'] as $key => $allocationInfo)
                             <tr>
-                                <td id="wrc_number{{$key}}">{{$allocationInfo['wrc_number']}}</td>
+                                <td id="wrc_number{{$key}}" data-allocates_qty = "{{$allocationInfo['allocated_qty']}}" data-lot_delivery_days = "{{$allocationInfo['lot_delivery_days']}}"   data-batches_no = "{{$allocationInfo['batch_no']}}" >{{$allocationInfo['wrc_number']}}</td>
                                 <td id="creative_allocation_id{{$key}}" style="display: none;">{{$allocationInfo['creative_allocation_id']}}</td>
                                 <td id="role{{$key}}" style="display: none;">{{$allocationList['role']}}</td>
                                 <td id="creative_upload_links_allocation_id{{$key}}" style="display: none;">{{$allocationInfo['creative_upload_links_allocation_id']}}</td>
@@ -306,34 +306,52 @@
                 <div class="modal-body">
                     <div class="custom-dt-row work-details">
                         <div class="row">
-                            <div class="col-sm-4 col-12">
+                            <div class="col-sm-3 col-12">
                                 <div class="col-ac-details">
                                     <h6>WRC Number</h6>
                                     <p class="wrcNo"></p>
                                 </div>
                             </div>
-                            <div class="col-sm-4 col-6">
+                            <div class="col-sm-3 col-6">
                                 <div class="col-ac-details">
                                     <h6>Brand Name</h6>
                                     <p class="brndName">ODN11jidfv23e4r</p>
                                 </div>
                             </div>
-                            <div class="col-sm-4 col-6">
+                            <div class="col-sm-3 col-6">
                                 <div class="col-ac-details">
                                     <h6>Start Date</h6>
                                     <p class="startDate"></p>
                                 </div>
                             </div>
-                            <div class="col-sm-4 col-6">
+                            <div class="col-sm-3 col-6">
+                                <div class="col-ac-details">
+                                    <h6>Allocated Qty </h6>
+                                    <p class="allocatedQty"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-6">
                                 <div class="col-ac-details">
                                     <h6>Project Type</h6>
                                     <p class="projectType">fneivnsdvi;msdol;dvm</p>
                                 </div>
                             </div>
-                            <div class="col-sm-4 col-6">
+                            <div class="col-sm-3 col-6">
                                 <div class="col-ac-details">
                                     <h6>Kind of Work</h6>
                                     <p class="kindOfWork">vdssvdsvvds</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-6">
+                                <div class="col-ac-details">
+                                    <h6>LOT Delivery Days</h6>
+                                    <p class="lotDeliveryDays">vdssvdsvvds</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 col-6">
+                                <div class="col-ac-details">
+                                    <h6>Batch Number</h6>
+                                    <p class="BatchesNo">vdssvdsvvds</p>
                                 </div>
                             </div>
                         </div>
@@ -345,13 +363,17 @@
                                     <div class="form-group">
                                         <label class="" id="gd_link_required">GD Link</label>
                                         <input type="text" class="form-control creative_link" name="workLink1"  placeholder="Link" value="">
+                                        {{-- <input type="text" style="width: 3rem; height: 3rem;> --}}
                                     </div>
                                 </div>
                                 <div class="col-sm-8 col-12 cwopacity">
                                     <div class="form-group">
                                         <label class="" id="cw_link_required">CW Link</label>
                                         <input type="text" class="form-control copy_link" name="workLink2"  placeholder="Link" value="">
+                                        {{-- <input type="text" style="width: 3rem; height: 3rem;> --}}
+
                                     </div>
+
                                 </div>
                                 <div class="col-sm-6 col-12">
                                     <div class="custom-info">
@@ -548,6 +570,22 @@
         const wrc_number_td = "wrc_number"+id;
         const wrc_number = document.getElementById(wrc_number_td).innerHTML;
         document.querySelector('.wrcNo').innerHTML = wrc_number;
+
+        //set Allocated Qty,
+        const allocated_qty = $("#"+wrc_number_td).data("allocates_qty")
+        console.log('allocated_qty', allocated_qty)
+        document.querySelector('.allocatedQty').innerHTML = allocated_qty;
+        
+        //LOT Delivery Days,
+        const lot_delivery_days = $("#"+wrc_number_td).data("lot_delivery_days")
+        console.log('lot_delivery_days', lot_delivery_days)
+        document.querySelector('.lotDeliveryDays').innerHTML = lot_delivery_days;
+        
+        //Batch Number
+        const batches_no = $("#"+wrc_number_td).data("batches_no")
+        console.log('batches_no', batches_no)
+        document.querySelector('.BatchesNo').innerHTML = batches_no;
+
 
         // set creative_allocation_id
         const creative_allocation_id_td = "creative_allocation_id"+id;

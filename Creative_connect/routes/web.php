@@ -126,5 +126,5 @@ Route::post('/Creative-WRC-Client-Rejection' , [CreativeSubmissionController::cl
 Route::get('/set-creative-allocation-pause' , [CreativeAllocationController::class , 'setCreativeAllocationPause']);
 
 
-//get creative wrc detail
-Route::get('/Creative-Wrc-Detail' , [CreativeSubmissionController::class , 'getCreativeWrcDetail'])->name('get_creative_wrc_detail');
+//get creative wrc detail ( master sheet)
+Route::get('/Creative-Wrc-Detail-Master-Sheet' , [CreativeSubmissionController::class , 'getCreativeWrcDetail'])->name('get_creative_wrc_detail');

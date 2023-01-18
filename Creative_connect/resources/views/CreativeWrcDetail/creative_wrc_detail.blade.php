@@ -2,82 +2,12 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
 <div class="wrc-cc-content table-responsive" >
     <table class="table table-head-fixed edt-table text-nowrap m-0" id="">
-        {{-- <thead>
-            <tr>
-                <th class="align-middle">Sr</th>
-                <th class="align-middle">Company</th>
-                <th class="align-middle">Brand Name</th>
-                <th class="align-middle">Sample Inward Date</th>
-                <th class="align-middle">Sample Inward Month</th>
-                <th class="align-middle">Ageing</th>
-                <th class="align-middle">LOT No</th>
-                <th class="align-middle">LOT Inward Quantity</th>
-                <th class="align-middle">WRC No</th>
-                <th class="align-middle">WRC Count</th>
-                <th class="align-middle">WRC Inward Quantity</th>
-                <th class="align-middle">WRC Pending At</th>
-                <th class="align-middle">Client ID</th>
-                <th class="align-middle">Location</th>
-                <th class="align-middle">Vertical Type</th>
-                <th class="align-middle">Client Bucket</th>
-                <th class="align-middle">Shoot Hand Over Date</th>
-                <th class="align-middle">Gender</th>
-                <th class="align-middle">Spoc Email</th>
-                <th class="align-middle">Type Of Shoot</th>
-                <th class="align-middle">Type Of Clothing</th>
-                <th class="align-middle">Shoot Guideline</th>
-                <th class="align-middle">Adaptation 1</th>
-                <th class="align-middle">Adaptation 2</th>
-                <th class="align-middle">Adaptation 3</th>
-                <th class="align-middle">Adaptation 4</th>
-                <th class="align-middle">PPT Approval Date</th>
-                <th class="align-middle">Model Approval Date</th>
-                <th class="align-middle">Inward Sheet Date</th>
-                <th class="align-middle">Special Approval Date</th>
-                <th class="align-middle">Model Available Date</th>
-                <th class="align-middle">Lot size</th>
-                <th class="align-middle">TAT Start Date</th>
-                <th class="align-middle">TAT Ageing</th>
-                <th class="align-middle">TAT End Date</th>
-                <th class="align-middle">TAT Status</th>
-                <th class="align-middle">Internal FTA</th>
-                <th class="align-middle">External FTA</th>
-                <th class="align-middle">Planning Date</th>
-                <th class="align-middle">Shoot Month</th>
-                <th class="align-middle">Shoot Date</th>
-                <th class="align-middle">Internal Rejections</th>
-                <th class="align-middle">Editing/QC Rejections</th>
-                <th class="align-middle">Client Rejection</th>
-                <th class="align-middle">SKU shoot pending</th>
-                <th class="align-middle">SKU shoot done</th>
-                <th class="align-middle">Wrc Status</th>
-                <th class="align-middle">Submission Date</th>
-                <th class="align-middle">Submission Qty</th>
-                <th class="align-middle">Shift</th>
-                <th class="align-middle">Studio</th>
-                <th class="align-middle">Model</th>
-                <th class="align-middle">Agency</th>
-                <th class="align-middle">Photographer</th>
-                <th class="align-middle">Makeup</th>
-                <th class="align-middle">Stylist</th>
-                <th class="align-middle">Assistant</th>
-                <th class="align-middle">Invoice Number</th>
-                <th class="align-middle">Photographer Commercial</th>
-                <th class="align-middle">Model Commercial</th>
-                <th class="align-middle">Extra Model Charges</th>
-                <th class="align-middle">Makeup Commercial</th>
-                <th class="align-middle">Stylist Commercial</th>
-                <th class="align-middle">Assistant Commercial</th>
-                <th class="align-middle">Per SKU Commercial</th>
-                <th class="align-middle">Expected Commercial</th>
-                <th class="align-middle">Actual Commercial</th>
-            </tr>
-        </thead> --}}
         <thead>
             <tr>
-                <th>WRC For Timesheet</th>
                 <th>Lot No</th>
-                <th>WRC	Client ID</th>
+                <th>WRC</th>
+                <th>Batch No</th>
+                <th>Client ID</th>
                 <th>Company</th>
                 <th>Client Bucket</th>
                 <th>SPOC</th>
@@ -85,9 +15,9 @@
                 <th>Kind of Work</th>
                 <th>Work Initiate Date</th>
                 <th>Committed Date</th>
-                <th>Committed Date</th>
                 <th>Task Type</th>
                 <th>Order QTY</th>
+                <th>Sku Counts</th>
                 <th>Number Delivered</th>
                 <th>Submission Date</th>
                 <th>Invoice Number</th>
@@ -104,30 +34,33 @@
         <tbody>
             @foreach($getCreativeWrcDetails as $data)
                 <tr>
-                    <td class="align-middle td-data index-tddata">{{$data['id']}}</td>
                     <td class="align-middle td-data">{{$data['lot_number']}}</td>
+                    <td class="align-middle td-data">{{$data['wrc_number']}}</td>
+                    <td class="align-middle td-data">{{$data['batch_no']}}</td>
                     <td class="align-middle td-data">{{$data['user_id']}}</td>
                     <td class="align-middle td-data">{{$data['Company_name']}}</td>
                     <td class="align-middle td-data">{{$data['client_bucket']}}</td>
+                    <td class="align-middle td-data">{{$data['am_email']}}</td>
+                    <td class="align-middle td-data">{{$data['project_name']}}</td>
+                    <td class="align-middle td-data">{{$data['kind_of_work']}}</td>
+                    <td class="align-middle td-data">{{$data['work_initiate_date']}}</td>
+                    <td class="align-middle td-data">{{$data['work_committed_date']}}</td>
+                    <td class="align-middle td-data">{{$data['client_bucket']}}</td>
+                    <td class="align-middle td-data">{{$data['order_qty']}}</td>
+                    <td class="align-middle td-data">{{$data['sku_count']}}</td>
+                    <td class="align-middle td-data">{{$data['sku_order_qty']}}</td>
+                    <td class="align-middle td-data">{{$data['submission_date']}}</td>
                     <td class="align-middle td-data">-----</td>
-                    <td class="align-middle td-data">ODN12012023-SKDDES3799</td>
-                    <td class="align-middle td-data">33</td>
-                    <td class="align-middle td-data">SKDDES3799-B</td>
-                    <td class="align-middle td-data">2</td>
-                    <td class="align-middle td-data">6</td>
-                    <td class="align-middle td-data">Planning Pending</td>
-                    <td class="align-middle td-data">Not Yet Generat</td>
-                    <td class="align-middle td-data">Delhi</td>
-                    <td class="align-middle td-data">New Shoot</td>
-                    <td class="align-middle td-data">Existing</td>
-                    <td class="align-middle td-data"></td>
-                    <td class="align-middle td-data">Female</td>
-                    <td class="align-middle td-data">anshuman.g@odndigital.com </td>
-                    <td class="align-middle td-data">Not Planned</td>
-                    <td class="align-middle td-data">Not Planned</td>
-                    <td class="align-middle td-data">No Information</td>
-                    <td class="align-middle td-data">No Information</td>
-                    <td class="align-middle td-data">No Information</td>
+                    <td class="align-middle td-data">-----</td>
+                    <td class="align-middle td-data">{{$data['per_qty_value']}}</td>
+                    <td class="align-middle td-data">{{ ($data['sku_count'] > 0 ? $data['sku_count'] :  $data['order_qty'] ) * $data['per_qty_value']}}</td>
+                    <td class="align-middle td-data">{{dateFormat($data['created_at'])}}</td>
+                    <td class="align-middle td-data">{{$data['fta']}}</td>
+                    <td class="align-middle td-data">{{$data['tat_status']}}</td>
+                    <td class="align-middle td-data">{{$data['ageing']}}</td>
+                    <td class="align-middle td-data">{{$data['lot_status']}}</td>
+                  
+                   
                 </tr>
             @endforeach
         </tbody>
