@@ -114,7 +114,7 @@
                             $am_emailIs = $row['am_email'] != '' ? explode('@',$row['am_email'])[0] : '';
                             
                             $submission_date_is = $submission_date != '' && $submission_date != null && $submission_date != '0000-00-00' ? date_dMY($submission_date) : '' ;
-                            $submission_month = $submission_date != '' && $submission_date != null && $submission_date != '0000-00-00' ? date('F' , strtotime($submission_date)) : '' ;
+                            $submission_month = $submission_date != '' && $submission_date != null && $submission_date != '0000-00-00' ? date('F' , strtotime($submission_date)) : 'Not Submitted' ;
                             
                             $work_initiate_date = $row['work_initiate_date'];
                             $work_committed_date =$row['work_committed_date'];
@@ -127,8 +127,16 @@
                                 $date2=date_create($work_initiate_date_is);
                                 $diff=date_diff($date1,$date2);
                                 $tatAgeing = $diff->format("%a");
+                                $tatStartDate = date_dMY($work_initiate_date_is);
                             }else{
-                                $tatAgeing = '';
+                                $tatAgeing = '-';
+                                $tatStartDate = "Not started";
+                            }
+
+                            if($work_committed_date_is != ''){
+                                $tatEndDate = date_dMY($work_committed_date_is);
+                            }else{
+                                $tatEndDate = "Not Ended";
                             }
 
                             $wrc_id = $row['wrc_id'];
@@ -143,6 +151,7 @@
                                     break;
                                 }
                             }
+                            // Style Count - Submission , SKU Count - Submission   ,TAT Status
                             $sku_qty = $row['sku_qty'];
                             if($submission_id > 0){
                                 $Submission_skuQty =  $sku_qty;
@@ -156,9 +165,9 @@
                                     }
                                 }
                             }else{
-                                $Submission_style_count = $Submission_skuQty =  $tat_status = '' ;
+                                $Submission_style_count = $Submission_skuQty =  "-";
+                                $tat_status = '-' ;
                             }
-
 
                             $modeOfDelivary = $row['modeOfDelivary'];
                             $modeOfDelivary_Is = $modeOfDelivary_arr[$modeOfDelivary];
@@ -177,7 +186,7 @@
                                 $TAT_CommitedDays = ''; 
                             }
 
-                            $tatStartMonth = $work_initiate_date != '' && $work_initiate_date != null && $work_initiate_date != '0000-00-00' ? date('F' , strtotime($work_initiate_date)) : '' ;
+                            $tatStartMonth = $work_initiate_date != '' && $work_initiate_date != null && $work_initiate_date != '0000-00-00' ? date('F' , strtotime($work_initiate_date)) : '-' ;
 
                             $loginSharedDate = "";
                         @endphp
@@ -198,11 +207,7 @@
                                 <td class="td_class1">{{ $batch_no_is}}</td>
                                 <td class="td_class1">{{ $row['Company']}}</td>
                                 <td class="td_class1">{{ $row['brand_name']}}</td>
-                                <td class="td_class1">
-                                    @php
-                                        echo $market_place_name_list[$id_val] ." ".$modeOfDelivary_Is;
-                                    @endphp
-                                </td>
+                                <td class="td_class1">{{ $market_place_name_list[$id_val] }}</td> {{-- Marketplace --}}
                                 <td class="td_class1">{{ $am_emailIs}}</td>
                                 <td class="td_class1">{{ $row['kind_of_service']}}</td>
                                 <td class="td_class1">{{ $sku_qty}}</td> {{-- Inward SKU Count --}}
@@ -212,13 +217,13 @@
                                 <td class="td_class1">{{ $rawimgReceviedDate}}</td>
                                 <td class="td_class1">{{$loginSharedDate}}</td>  {{-- Login Shared Date --}}
                                 <td class="td_class1">{{date('d-M-Y' , strtotime($row['wrc_created_at']))}}</td>  {{-- Content Master Rcvd Date --}}
-                                <td class="td_class1">{{ $img_recevied_date}}</td>
-                                <td class="td_class1">{{ $missing_info_notify_date}}</td>
-                                <td class="td_class1">{{ $missing_info_recived_date}}</td>
-                                <td class="td_class1">{{$TAT_CommitedDays}}</td>
-                                <td class="td_class1">{{$work_initiate_date_is}}</td>
-                                <td class="td_class1">{{$tatStartMonth}}</td>
-                                <td class="td_class1">{{$work_committed_date_is}}</td>
+                                <td class="td_class1">{{ $img_recevied_date}}</td> {{-- Images Rcvd Date (As per Guidelines) --}}
+                                <td class="td_class1">{{ $missing_info_notify_date}}</td> {{-- Missing Info Notified Date --}}
+                                <td class="td_class1">{{ $missing_info_recived_date}}</td> {{-- Missing Info Rcvd Date --}}
+                                <td class="td_class1">{{$TAT_CommitedDays}}</td> {{-- TAT Commited (No of Days) --}}
+                                <td class="td_class1">{{$tatStartDate}}</td> {{-- TAT Start Date --}}
+                                <td class="td_class1">{{$tatStartMonth}}</td>  {{-- TAT Start Month --}}
+                                <td class="td_class1">{{$tatEndDate}}</td>  {{-- TAT End Date --}}
                                 <td class="td_class1">{{$confirmation_date}}</td> {{-- // Details Confirmation Date From Cataloging Team --}}
                                 <td class="td_class1"></td>  {{-- Content Writing Source --}}
                                 <td class="td_class1"></td>  {{-- Content Writing Date - Sent --}}
@@ -226,7 +231,7 @@
                                 <td class="td_class1"></td>  {{-- Cataloger Remarks --}}
                                 <td class="td_class1">{{$Submission_skuQty}}</td>  {{-- SKU Count Submission --}}
                                 <td class="td_class1">{{$Submission_style_count}}</td>  {{-- Style Count Submission --}}
-                                <td class="td_class1">{{$submission_date_is}}</td>
+                                <td class="td_class1">{{$submission_date_is != '' ? $submission_date_is : 'Not Submitted'}}</td>  {{-- Upload Date (Submission) --}}
                                 <td class="td_class1"></td> {{-- Remarks --}}
                                 <td class="td_class1"></td>  {{-- Catalog Live Date --}}
                                 <td class="td_class1">{{ $fta_is}}</td>
@@ -234,7 +239,7 @@
                                 <td class="td_class1"></td>  {{-- Invoice No --}}
                                 <td class="td_class1">{{$tatAgeing}}</td>  {{-- TAT Ageing --}}
                                 <td class="td_class1">{{$tat_status}}</td>  {{-- TAT Status --}}
-                                <td class="td_class1">{{$submission_month}}</td>
+                                <td class="td_class1">{{$submission_month}}</td> {{-- Submission Month --}}
                             </tr>
                         @endforeach
                     @endforeach
