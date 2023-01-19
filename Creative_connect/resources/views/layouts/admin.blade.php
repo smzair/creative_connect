@@ -265,6 +265,13 @@
                                                     </a>
                                                 </li>
 
+                                                {{-- catalog-wrc-status --}}
+                                                <li class="nav-item">
+                                                    <a href="{{route('CatalogWrcStatus')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Catalog WRC Status</p>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </li>
                                   

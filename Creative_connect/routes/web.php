@@ -120,9 +120,8 @@ Route:: post('catalog-submission-details', [CatalogSubmissionController::class, 
 Route::get('catalog-client-ar', [CatalogClientARController::class, 'index'])->name('CATA_CLIENT_AR'); // Qc List 
 Route::post('client-catalog-wrc-reject', [CatalogClientARController::class, 'wrc_reject_approve_wrc'])->name('wrc_reject_approve_wrc'); // reject-wrc
 
-
 // catalog - wrc - master - sheet . blade
-
 Route::get('catalog-wrc-master-sheet', [CatalogWrcMasterSheetController::class , 'index'])->name('CatalogWrcMasterSheet');
 
-
+// New Panel for WRCs Status
+Route::get('catalog-wrc-status', [CatalogWrcController::class , 'CatalogWrcStatus'])->name('CatalogWrcStatus');

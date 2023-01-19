@@ -410,4 +410,13 @@ class CatalogWrcController extends Controller
         return redirect()->route('EDITCATLOGWRC', [$id]);
         // return $this->edit($request, $id);
     }
+
+    // CatalogWrcStatus
+    public function CatalogWrcStatus(){
+        $CatalogWrcList = CatlogWrc::CatalogWrcList();
+        // pre($CatalogWrcList);
+        return view('Wrc.catalog-wrc-status')->with('CatalogWrcList', $CatalogWrcList);
+
+
+    }
 }
