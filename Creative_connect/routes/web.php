@@ -3,6 +3,7 @@
 use App\Http\Controllers\CreativeAllocationController;
 use App\Http\Controllers\CreativeSubmissionController;
 use App\Http\Controllers\CreativeQcController;
+use App\Http\Controllers\creativeWrc;
 use Illuminate\Support\Facades\Route;
 /*
   |--------------------------------------------------------------------------
@@ -128,3 +129,6 @@ Route::get('/set-creative-allocation-pause' , [CreativeAllocationController::cla
 
 //get creative wrc detail ( master sheet)
 Route::get('/Creative-Wrc-Detail-Master-Sheet' , [CreativeSubmissionController::class , 'getCreativeWrcDetail'])->name('get_creative_wrc_detail');
+
+//creative wrc status view listing
+Route::get('/Creative-wrcs-status-view' , [creativeWrc::class , 'wrcStatusView'])->name('creative_wrc_status_view');

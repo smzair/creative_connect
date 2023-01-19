@@ -429,4 +429,11 @@ class creativeWrc extends Controller
 
         return $this->edit($request,$id);
     }
+
+    // get wrc status detail list 
+    public function wrcStatusView()
+    {
+        $wrcs = CreativeWrcModel::getWrcStatusDetailList();
+        return view('WrcStatus.Creative-wrc-status-view')->with('wrcs',$wrcs);
+    }
 }

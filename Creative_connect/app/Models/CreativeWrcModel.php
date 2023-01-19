@@ -159,4 +159,74 @@ class CreativeWrcModel extends Model
          
     }
 
+    // get wrc status detail list data 
+    public static function getWrcStatusDetailList(){
+
+        $wrcs =  CreativeWrcModel::OrderBy('creative_wrc.id','ASC')
+       ->leftJoin('creative_lots', 'creative_lots.id', 'creative_wrc.lot_id')
+       ->leftJoin('users', 'users.id', 'creative_lots.user_id')
+       ->leftJoin('brands', 'brands.id', 'creative_lots.brand_id')
+       ->leftJoin('creative_wrc_batch', 'creative_wrc_batch.wrc_id', 'creative_wrc.id')
+       ->orderBy('creative_wrc_batch.id', 'DESC')
+       ->groupBy('creative_wrc_batch.wrc_id')
+       ->groupBy('creative_wrc_batch.batch_no')
+       ->leftJoin('creative_allocation', 'creative_allocation.wrc_id','creative_wrc.id')
+       ->leftJoin('create_commercial as create_commercial',function($join)
+       {
+           $join->on('create_commercial.user_id','=','creative_lots.user_id');
+           $join->on('create_commercial.brand_id','=','creative_lots.brand_id');
+       })
+       ->leftJoin('creative_submissions', function($join){
+        $join->on('creative_submissions.wrc_id', '=', 'creative_allocation.wrc_id');
+        $join->on('creative_submissions.batch_no', '=', 'creative_allocation.batch_no');
+    })
+       ->select('creative_wrc.*','creative_lots.user_id','creative_lots.brand_id','creative_lots.id as lot_id','creative_lots.lot_number','users.Company as Company_name','brands.name','create_commercial.kind_of_work',DB::raw('MAX(creative_wrc_batch.batch_no) as batch_no'),'creative_wrc_batch.wrc_id as batch_wrc_id','creative_submissions.status as submission_status')
+       ->get();
+
+       foreach($wrcs as $key => $val){
+        $lot_id = $val['lot_id'];
+			$creative_wrc_count = DB::table('creative_wrc')->where('lot_id',$lot_id)->count();
+			$wrc_status = $creative_wrc_count > 0 ? 'Allocation Pending' : 'Inverd Pending';
+            $val['wrc_status']  = $wrc_status;
+
+            if($wrc_status == 'Allocation Pending'){
+                $creative_allocation_count = DB::table('creative_allocation')->where('wrc_id',$val['batch_wrc_id'])->where('batch_no',$val['batch_no'])->count();
+                // dd($creative_allocation_count);
+                $wrc_status = $creative_allocation_count > 0 ? 'Tasking Pending' : 'Allocation Pending';
+                // dd($wrc_status );
+                $val['wrc_status']  = $wrc_status;
+            }
+
+            if($wrc_status == 'Tasking Pending'){
+                // dd($val['qc_status']);
+				if($val['qc_status'] == 0){
+					$wrc_status = 'Qc Pending';
+					$val['wrc_status']  = 'Qc Pending';
+				}
+			}
+
+            if($wrc_status == 'Qc Pending'){
+				$submission_status = $val['submission_status'];
+
+				$wrc_status = $submission_status  == 0 ? 'Submission Pending' : 'Submitted';
+				$val['wrc_status']  = $wrc_status;
+			}
+
+            if($wrc_status == 'Submitted'){
+                $creative_wrc_client_approval = DB::table('creative_wrc_client_approval')->where('wrc_id',$val['batch_wrc_id'])->where('batch_no',$val['batch_no'])->first(['status']);
+
+                $client_status =  $creative_wrc_client_approval != null ?  $creative_wrc_client_approval->status : 0;
+
+                // dd($client_status);
+
+                $wrc_status = $client_status  == 0 ? 'Client Feedback Pending' : 'Completed';
+				$val['wrc_status']  = $wrc_status;
+            }
+
+       
+    }
+       return $wrcs;
+
+    }
+
 }

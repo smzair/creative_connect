@@ -172,8 +172,8 @@ class CreativeSubmission extends Model
 	   ->leftJoin('creative_allocation', 'creative_allocation.wrc_id','creative_wrc.id')
 	   ->leftJoin('create_commercial', 'create_commercial.id','creative_wrc.commercial_id')
 	   ->leftJoin('creative_wrc_batch', function($join){
-		$join->on('creative_wrc_batch.wrc_id', '=', 'creative_allocation.wrc_id');
-		$join->on('creative_wrc_batch.batch_no', '=', 'creative_allocation.batch_no');
+		$join->on('creative_wrc_batch.wrc_id', '=', 'creative_wrc.id');
+		// $join->on('creative_wrc_batch.batch_no', '=', 'creative_allocation.batch_no');
 		})
 		->leftJoin('creative_submissions', function($join){
 			$join->on('creative_submissions.wrc_id', '=', 'creative_allocation.wrc_id');
@@ -181,7 +181,9 @@ class CreativeSubmission extends Model
 		})
 		->leftJoin('creative_time_hash', 'creative_time_hash.allocation_id', 'creative_allocation.id')
        ->select('creative_wrc.*','creative_lots.user_id','creative_lots.brand_id','creative_lots.lot_number','users.Company as Company_name','brands.name','creative_lots.client_bucket','create_commercial.project_name','create_commercial.kind_of_work','create_commercial.per_qty_value','creative_wrc_batch.work_initiate_date','creative_wrc_batch.work_committed_date','creative_submissions.submission_date','creative_submissions.status as submission_status','creative_allocation.wrc_id as submission_wrc_id','creative_allocation.id as allocation_id','creative_allocation.batch_no as submission_batch_no','creative_wrc_batch.work_initiate_date', 'creative_wrc_batch.work_committed_date','creative_lots.lot_delivery_days','creative_lots.id as lot_id','creative_wrc_batch.wrc_id as batch_wrc_id','creative_wrc_batch.batch_no','creative_time_hash.task_status')
-	   ->groupBy(['creative_wrc_batch.wrc_id','creative_wrc_batch.batch_no'])
+	   ->groupBy('creative_wrc_batch.wrc_id')
+       ->groupBy('creative_wrc_batch.batch_no')
+	//    ->groupBy(['creative_wrc_batch.wrc_id','creative_wrc_batch.batch_no'])
        ->get();
         // dd($resData);
 
