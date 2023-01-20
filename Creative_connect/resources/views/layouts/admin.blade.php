@@ -242,6 +242,13 @@
                                                     <p>Creative-wrcs-status-view</p>
                                                 </a>
                                             </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('consolidated_lot_panel') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Consolidated-Lot-Panel</p>
+                                                </a>
+                                            </li>
                                            
                                         </ul>
                                     </li>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ConsolidatedLotController;
 use App\Http\Controllers\CreativeAllocationController;
 use App\Http\Controllers\CreativeSubmissionController;
 use App\Http\Controllers\CreativeQcController;
@@ -132,3 +133,9 @@ Route::get('/Creative-Wrc-Detail-Master-Sheet' , [CreativeSubmissionController::
 
 //creative wrc status view listing
 Route::get('/Creative-wrcs-status-view' , [creativeWrc::class , 'wrcStatusView'])->name('creative_wrc_status_view');
+
+//consolidated lot panel
+Route::get('/Consolidated-Lot' , [ConsolidatedLotController::class , 'view'])->name('consolidated_lot_panel');
+
+//create consolidated lot
+Route::post('/Consolidated-Lot' , [ConsolidatedLotController::class , 'create'])->name('create_consolidated_lot');
