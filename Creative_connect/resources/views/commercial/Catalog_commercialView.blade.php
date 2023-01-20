@@ -10,7 +10,7 @@ Create New Commercial for Creative
         <div class="card card-transparent">
           <div class="card-header">
             <div class="row">
-              <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="col-lg-8 col-md-8 col-sm-12">
                 <h3 class="card-title text-black text-bold">
                   <span class="d-inline-block align-middle">
               View Commercial's
@@ -45,6 +45,11 @@ Create New Commercial for Creative
                     </li>
                   </ul>
                 </div>
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-12">
+                  <div class="card-tools float-md-right float-sm-none ml-md-0 mr-0 ml-sm-0 mt-sm-1 float-none ml-xs-0 mt-1">
+                      <a class="btn btn-xs float-left align-middle mt-0 mr-2 py-1 px-2 mb-1" href="{{route('CREATECATALOG')}}" style="position: relative; top: 2px;">Add New Commercial</a>
+                  </div>
               </div>
               <!-- <div class="col-lg-5 col-md-6 col-sm-12">
                 <div class="card-tools float-md-right float-sm-none ml-md-0 mr-0 ml-sm-0 mt-sm-2 float-none ml-xs-0 mt-2">

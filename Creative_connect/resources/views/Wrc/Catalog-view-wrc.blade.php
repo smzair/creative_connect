@@ -2,8 +2,6 @@
 
 @section('title')
 View WRC
-
-<!--- if condition to be applied for update details of the page-->
 @endsection
 @section('content')
 <div class="lot-table mt-1">
@@ -16,7 +14,7 @@ View WRC
                             <div class="col-lg-7 col-md-6 col-sm-12">
                                 <h3 class="card-title text-black text-bold">
                                     <span class="d-inline-block align-middle">
-                                        All WRCs
+                                        All WRC
                                     </span>
                                     <span class="mr-2 ml-1 d-inline-block" style="position: relative; top: 1px;">|</span>
                                 </h3>
@@ -66,15 +64,20 @@ View WRC
                                     <th class="p-2">Brand Name</th>
                                     <th class="p-2">WRC Number</th>
                                     <th class="p-2">WRC Created At</th>
+                                    <th class="p-2">Batch Number</th>
                                     <!-- <th class="p-2">Work Brief</th>
-                                    <th class="p-2">Guidelines</th>
                                     <th class="p-2">Add Document 1 </th>
                                     <th class="p-2">Add Document 2</th> -->
-                                    <th class="p-2">SKU Qty</th>
+                                        <th class="p-2">SKU Count</th>
+                                    <th class="p-2">Generic Data Format Link</th>
+                                    <th class="p-2">Images as per guidelines</th>    
                                     <th class="p-2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    // pre($wrcs);
+                                @endphp
                                 @foreach($wrcs as $index => $wrc)
                                 <tr class="wrc-tt">
                                     <td class="p-sm-2 p-1">{{$index+1}}</td>
@@ -87,10 +90,15 @@ View WRC
                                     <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->guidelines}}</td>
                                     <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->document1}}</td>
                                     <td id="orderQuantity" class="p-sm-2 p-1">{{$wrc->document2}}</td> -->
+                                    <td id="brndName" class="p-sm-2 p-1">
+                                        {{ $wrc->batch_no > 0 ? $wrc->batch_no : 'None' }}
+                                    </td>
                                     <td id="brndName" class="p-sm-2 p-1">{{$wrc->sku_qty}}</td>
+                                    <td id="brndName" class="p-sm-2 p-1">{{$wrc->generic_data_format_link}}</td>
+                                    <td id="brndName" class="p-sm-2 p-1">{{$wrc->img_as_per_guidelines}}</td>
                                     <td class="p-sm-2 p-1">
                                     <div class="btn-group-vertical">
-                                        <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Catalog-Wrc-Create/'.$wrc->id) }}">Edit Catlog WRCs</a>
+                                        <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Catalog-Wrc-Create/'.$wrc->id) }}">Edit WRC</a>
                                     </div>
                                     </td>
                                 </tr>

@@ -25,7 +25,7 @@ Create Catlog WRCs
         <div class="col-5">
             <div class="card card-transparent m-0 " style="height: 100%;">
                 <div class="" style="height: 100%;display: flex;align-items: center;">
-                    <h5 style="float: left;padding:2%">Creative Wrc Number :- </h5>
+                    <h5 style="float: left;padding:2%">Wrc Number :- </h5>
                     <h5 class="WrcNo" style="padding-top:2%">{{$CatlogWrc->wrc_number }}</h5>
                 </div>
             </div>
@@ -78,9 +78,7 @@ Create Catlog WRCs
             <div class="card card-transparent card-info mt-3">
                 <div class="card-header bg-warning">
                     <h3 class="card-title">Create New WRC</h3>
-                    <a href="{{route('viewCatalogWRC')}}" class="btn btn-warning upld-action-btn float-right">
-                        Catlog WRCs List
-                    </a>
+                    <a href="{{route('viewCatalogWRC')}}" class="btn btn-warning upld-action-btn float-right">View All WRCs</a>
                 </div>
                 <div class="card-body"> 
                     @if (Session::has('success'))
@@ -412,8 +410,11 @@ Create Catlog WRCs
                                 <p class="msg_box" id="msg_box1" style="display: none;"> </p>
                             </div>
                         </div>
-                        <div class="row float-right">
-                            <div class="col-sm-12 col-12"  style="position: relative;" >
+                        <div class="row">
+                            <div class="col-9">
+                                <p class="d-none" style="padding: 0px; margin:0px; color:#fbf702; text-align: end;font-size: 20px;" id="last_updated_p">Last Updated : <span id="last_updated_span"></span> </p>
+                            </div>
+                            <div class="col-3 float-right"  style="position: relative;" >
                                 <input type="hidden" name="market_place_id_is" id="market_place_id_is">
                                 <input type="hidden" name="commercial_id_is" id="commercial_id_is">
                                 <button type="button" id="btn_save" class="btn btn-warning" style="float:right; margin: 0 5px;" onclick="saveCredentials(event)">Save Credentials</button>
@@ -544,7 +545,7 @@ Create Catlog WRCs
 {{-- script for set_Credentials_data --}}
 <script>
     function set_Credentials_data(){
-
+        $("#last_updated_p").addClass('d-none');
         $('#msg_box1').html("");
         $("#msg_box1").css("display", "none");
         const commercial_id = document.querySelector("#commercial_id").value;
@@ -572,7 +573,7 @@ Create Catlog WRCs
             },
             success: function(res) {
                 // console.log(res)
-
+                let updated_date_is = "";
                 res.map(data => {
                     // console.log(data)
                     const marketPlace_id = data.id
@@ -580,6 +581,12 @@ Create Catlog WRCs
                     const link = data.link == null ? '' : data.link;
                     const password = data.password == null ? '' : data.password;
                     const username = data.username == null ? '' : data.username;
+                    const created_date = data.created_date == null ? '' : data.created_date;
+                    const updated_date = data.updated_date == null ? '' : data.updated_date;
+
+                    if(updated_date != ''){
+                        updated_date_is = updated_date
+                    }
 
                     list += 
                     `<div class="row mt-3" id="marketplace_row${data.id}">
@@ -609,6 +616,12 @@ Create Catlog WRCs
                         </div>              
                     </div>`;
                 })
+
+                if(updated_date_is != ''){
+                    $("#last_updated_p").removeClass('d-none');
+                    document.getElementById("last_updated_span").innerHTML = updated_date_is;
+
+                }
 
                 // console.log(list)
                 document.getElementById("marketplace_list_div").innerHTML = list;

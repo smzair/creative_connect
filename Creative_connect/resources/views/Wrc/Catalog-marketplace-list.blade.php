@@ -97,7 +97,7 @@ Marketplace Credentials
                                 <th class="p-2">Link</th>
                                 <th class="p-2">Username</th>
                                 <th class="p-2">Password</th>
-                                <th class="p-2">Commercial Id</th>
+                                {{-- <th class="p-2">Commercial Id</th> --}}
                             </tr>
                             </thead>
                              @php
@@ -253,14 +253,10 @@ Marketplace Credentials
                                 <td class="p-sm-2 p-1">${link}</td>
                                 <td class="p-sm-2 p-1">${username}</td>
                                 <td class="p-sm-2 p-1">${password}</td>
-                                <td class="p-sm-2 p-1">${commercial_id}</td>
-                            </tr>`;
-                        }
-                        console.log(shown_data)
-
+                                </tr>`;
+                            }
+                            // <td class="p-sm-2 p-1">${commercial_id}</td>
                     })
-
-
                 }else{
                     alert(res.massage);
                 }

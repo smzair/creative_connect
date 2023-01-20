@@ -292,11 +292,21 @@ class CatalogWrcController extends Controller
     // for view
     public function view()
     {
-        $wrcs =  CatlogWrc::OrderBy('catlog_wrc.id', 'ASC')
+        $wrcs =  CatlogWrc::OrderBy('catlog_wrc.updated_at', 'DESC')
+            ->leftJoin('catalog_wrc_batches', 'catalog_wrc_batches.wrc_id', 'catlog_wrc.id')
             ->leftJoin('lots_catalog', 'lots_catalog.id', 'catlog_wrc.lot_id')
             ->leftJoin('users', 'users.id', 'lots_catalog.user_id')
             ->leftJoin('brands', 'brands.id', 'lots_catalog.brand_id')
-            ->select('catlog_wrc.*', 'lots_catalog.user_id', 'lots_catalog.brand_id', 'lots_catalog.lot_number', 'users.Company as Company_name', 'brands.name')
+            ->select(
+            'catlog_wrc.*',
+            'catalog_wrc_batches.batch_no',
+            'catalog_wrc_batches.updated_at',
+            'lots_catalog.user_id',
+            'lots_catalog.brand_id', 
+            'lots_catalog.lot_number', 
+            'users.Company as Company_name', 
+            'brands.name'
+            )
             ->get();
         //    dd($wrcs);
         return view('Wrc.Catalog-view-wrc')->with('wrcs', $wrcs);

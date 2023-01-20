@@ -51,6 +51,7 @@ class CatalogAllocation extends Model
                 'lots_catalog.lot_number',
                 DB::raw('GROUP_CONCAT(catalog_allocation.wrc_id) as wrc_ids'),
                 DB::raw('GROUP_CONCAT(catalog_allocation.batch_no) as batch_nos'),
+                DB::raw('GROUP_CONCAT(catalog_allocation.allocated_qty) as allocated_qtys'),
                 DB::raw('GROUP_CONCAT(catlog_wrc.wrc_number) as wrc_numbers'),
                 DB::raw('COUNT(catalog_allocation.wrc_id) as wrc_cnt'),
                 DB::raw('sum(catalog_allocation.allocated_qty) as tot_sku_qty')
@@ -143,6 +144,8 @@ class CatalogAllocation extends Model
             'catlog_wrc.guidelines',
             'catlog_wrc.document1',
             'catlog_wrc.document2',
+            'catlog_wrc.generic_data_format_link',
+            'catlog_wrc.img_as_per_guidelines',
             'catlog_wrc.sku_qty',
             'catlog_wrc.lot_id',
             'catlog_wrc.commercial_id',
@@ -172,7 +175,7 @@ class CatalogAllocation extends Model
         )->
         groupBy('catalog_allocation.wrc_id')->
         groupBy('catalog_allocation.batch_no')->
-        // groupBy('catalog_allocation.wrc_id')->    
+        orderBy('catalog_allocation.updated_at' , 'DESC')->
         get()->toArray();
         return $catalog_allocated_list;
     }

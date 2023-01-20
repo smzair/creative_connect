@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title')
-Create LOTS CATALOGS 
+Create Lot Catalogs
 
 {{-- Update LOT --}}
 @endsection
@@ -21,8 +21,8 @@ Create LOTS CATALOGS
         <div class="col-12">
             <div class="card card-transparent m-0">
                 <div class="card-header">
-                    <h3 class="card-title">Add Lots CaraLogs</h3>
-                    <a style="float: right;" class="btn btn-success swalDefaultSuccess" href="{{route('VIEWLOTCATALOG')}}">Lots CataLogs List</a>
+                    <h3 class="card-title">Add Lot CaraLogs</h3>
+                    <a style="float: right;" class="btn btn-success swalDefaultSuccess" href="{{route('VIEWLOTCATALOG')}}">View all Lots</a>
                 </div>
                 <div class="card-body">
                     <!-- New Create Lot  -->

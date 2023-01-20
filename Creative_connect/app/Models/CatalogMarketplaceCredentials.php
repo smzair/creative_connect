@@ -57,14 +57,17 @@ class CatalogMarketplaceCredentials extends Model
                 'catalog_marketplace_credentials.password',
             )->
             get()->toArray();
+            if (count($data) > 0) {
+                $status = 1;
+                $massage = "Marketplace Credentials List get!!";
+            }else{
+                $massage = "Marketplace Credentials Not Found!!";
+            }
         }else{
             $massage = "Somthing Went Wrong!!";
         }
         
-        if(count($data) > 0){
-            $status = 1;
-            $massage = "Marketplace Credentials List get!!";
-        }
+        
         return json_encode(
             array(
                 'status' => $status,

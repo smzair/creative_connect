@@ -81,7 +81,7 @@ class CatalogLotsController extends Controller
         
         $datas = LotsCatalog::leftJoin('brands', 'brands.id', '=', 'lots_catalog.brand_id')
         ->leftJoin('users', 'lots_catalog.user_id', 'users.id')
-        ->select('lots_catalog.id','lots_catalog.brand_id', 'lots_catalog.lot_number', 'lots_catalog.serviceType', 'lots_catalog.requestType', 'lots_catalog.reqReceviedDate', 'lots_catalog.imgReceviedDate', 'users.Company', 'brands.name')
+        ->select('lots_catalog.id','lots_catalog.brand_id', 'lots_catalog.lot_number', 'lots_catalog.serviceType', 'lots_catalog.requestType', 'lots_catalog.reqReceviedDate', 'lots_catalog.imgReceviedDate', 'users.Company', 'users.client_id', 'brands.name')
         ->get();
         $num = 1;
         return view('Lots.catalog_lots_view')->with('datas', $datas)->with('num', $num);

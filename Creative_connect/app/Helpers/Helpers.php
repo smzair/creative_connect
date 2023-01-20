@@ -21,9 +21,17 @@ if(!function_exists('get_date_time')){
         $hours = floor(($time_in_second /  (60*60)) % 24);
         
         if (($hours <= 9)) {
-            $hours = '0' . $hours;
+            $hours = $hours;
         }
-        return $mainDuration =  $hours . 'h ' . $minutes . 'min ' . $second.'sec';
+
+        $t_days = floor($time_in_second / 86400);
+
+        $days = $t_days."day ";
+        if($t_days > 1){
+            $days = $t_days."days ";
+        }
+
+        return $mainDuration =  $days . $hours . 'h ' . $minutes . 'min ' . $second.'sec';
     }
 }
 

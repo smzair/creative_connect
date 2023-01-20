@@ -46,6 +46,8 @@ class Marketplace extends Model
             'catalog_marketplace_credentials.link',
             'catalog_marketplace_credentials.username',
             'catalog_marketplace_credentials.password',
+            DB::raw("DATE_FORMAT(catalog_marketplace_credentials.created_at, '%d-%m-%Y') as created_date"),
+            DB::raw("DATE_FORMAT(catalog_marketplace_credentials.updated_at, '%d-%m-%Y') as updated_date")
             )->
         get()->toArray();
         // dd($response);

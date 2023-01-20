@@ -1,18 +1,12 @@
-
-
 @extends('layouts.admin')
-
 @section('title')
-
 Allocation Details (For Catalogue)
-
 @endsection
 @section('content')
 <!-- New Allocation Details (For Catalogue) -->
 
 <div class="container-fluid mt-5">
     <div class="row m-0" >
-
       <div style="background: #fff;">
         @php
               // pre($catalog_allocated_users_list);
@@ -38,7 +32,7 @@ Allocation Details (For Catalogue)
               <div class="card-body p-0 ">
                 <div class="editor-links card-transparent">
                   <div class="edit-upld-info">
-                    <h4 style="color: #333">Catloger</h4>
+                    <h4 style="color: #333">Team Members</h4>
                   </div>
                   <ul class="nav flex-column" style="margin-bottom: 10px;">
                     @foreach($catalog_allocated_users_list as $editorId => $value)
@@ -56,7 +50,7 @@ Allocation Details (For Catalogue)
          <div class="col-xl-8 col-md-8 col-sm-8 col-12 editor-table-grp card-transparent">
           <div class="editor-dtl card m-0 card-transparent">
             <div class="edit-upld-info">
-              <h4 style="color: #333">Select Name To View Allocations Details</h4>
+              <h4 style="">Select Team Member To View Allocation Details</h4>
             </div>
             <div class="edit-upld-pop">
               <div class="table-responsive p-0 editor-table-list tab-content" style="max-height: 350px; height: 100%;">
@@ -79,9 +73,10 @@ Allocation Details (For Catalogue)
                     @foreach($lot_info_keys as $key => $user_id)
                     @php
                       $lot_info_array = $catalog_allocation_List_by_lot_numbers[$key];
-                      // pre($lot_info_array);
+                      // pre($lot_info_array); // allocated_qtys
                       $wrc_number_arr = explode(',',$lot_info_array['wrc_numbers']);
                       $batch_no_arr = explode(',',$lot_info_array['batch_nos']);
+                      $allocated_qty_arr = explode(',',$lot_info_array['allocated_qtys']);
                       $wrc_info_arr = explode(',',$lot_info_array['wrc_ids']);
                     @endphp
 
@@ -95,7 +90,7 @@ Allocation Details (For Catalogue)
                           @php
                           $batch_no_is = $batch_no_arr[$wrc_key] > 0 ? " (Batch No. ".$batch_no_arr[$wrc_key].")" : "";
                           @endphp
-                          <li class="list-group-item" style="color: #999">{{$wrc_number_arr[$wrc_key].$batch_no_is}}</li>
+                          <li class="list-group-item" style="color: #999">{{$wrc_number_arr[$wrc_key].$batch_no_is . " ( Allocated Qty ".$allocated_qty_arr[$wrc_key].")"}}</li>
                           @endforeach
                         </ol>
                       </td>

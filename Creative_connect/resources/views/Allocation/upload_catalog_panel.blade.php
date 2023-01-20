@@ -113,7 +113,8 @@ Cataloger Panel
                 
 
                 <div class="card-header">
-                    <h3 class="card-title">{{ $user_role }} Panel</h3>
+                    {{-- <h3 class="card-title">{{ $user_role }} Panel</h3> --}}
+                    <h3 class="card-title">Editor's Panel</h3>
                 </div>
                
                 <!-- /.card-header msg_div msg_box  -->
@@ -126,16 +127,17 @@ Cataloger Panel
                                 <th class="cls_wrc_number">WRC Number
                                     <input type="hidden" name="login_user_id_is" value="{{$login_user_id_is}}">
                                 </th>
-                                <th>Batch Number</th>
                                 <th class="cls_comp_name">Company Name</th>
                                 <th class="cls_brand_name">Brand Name</th>
                                 <th>Mode Of Delivary</th>
                                 <th class="Marketplace">Marketplace</th>
                                 <th class="Credentials">Credentials</th>
+                                <th>Batch Number</th>
                                 <th>Order Qty</th>
                                 {{-- <th>SKU Count</th> --}}
                                 <th>{{ $td_head }}</th>
-                                <th>Guidelines Links</th>
+                                {{-- <th>Guidelines Links</th> --}}
+                                <th>Prerequisites Links</th>
                                 <th>Time Spent</th>
                                 <th>Action</th>
                                 <th>Upload</th>
@@ -160,6 +162,8 @@ Cataloger Panel
 
                                 $allocated_wrc_batch = array_column($allocated_wrc_list_by_user, 'batch_no');
                                 $allocated_wrcs = array_column($allocated_wrc_list_by_user, 'wrc_id');
+                                // pre($allocationList[8]);
+                                // pre($Mar_place_cre_array_1);
                             @endphp
                              
                             @foreach($allocationList as $allocationkey => $row)
@@ -195,6 +199,7 @@ Cataloger Panel
                                 $task_status   =  $row['task_status'];
                                 $rework_count  =  $row['rework_count'];
                                 $start_time    =  $row['start_time'];
+                                $ini_start_time    =  $row['ini_start_time'];
                                 $end_time      =  $row['end_time'];
                                 $is_started    =  $row['is_started'];
 
@@ -202,8 +207,9 @@ Cataloger Panel
                                 $end_time_is = $spent_time =  $row['spent_time'];
 
                                 $spent_time_is = ($spent_time != 0 && $spent_time != "") ? get_date_time($spent_time) : "";
+                                
 
-                                $start_time_is     = "";
+                                $start_time_is    = ($ini_start_time != '0000-00-00 00:00:00') ? dateFormet_dmy($ini_start_time) : "";
                                 $display_date_time = "display:none;";
                                 $display_start     = "display:block;";
                                 $btn_disable       = "disabled";
@@ -237,9 +243,7 @@ Cataloger Panel
                             @endphp
                             <tr>
                                 <td class="cls_wrc_number">{{ $row['wrc_number'] }}</td>
-                                <td>
-                                    <?php echo $row['batch_no'] > 0 ? $row['batch_no'] : 'None' ;?>
-                                </td>
+                                
                                 <td class="cls_comp_name">{{ $row['Company'] }}</td>
                                 <td class="cls_brand_name">{{ $row['brand_name'].$extra }}</td>
                                 <td>{{ $modeOfDelivary_is }}</td>
@@ -277,6 +281,9 @@ Cataloger Panel
                                         }
                                     ?>    
                                 </td>
+                                <td>
+                                    <?php echo $row['batch_no'] > 0 ? $row['batch_no'] : 'None' ;?>
+                                </td>
                                 <td>{{ $allocated_qty }}</td>
                                 <td>
                                     <ul class="info-list">
@@ -307,10 +314,12 @@ Cataloger Panel
                                 {{-- Guidelines Links --}}
                                 <td>
                                   <ul class="info-list">
-                                    <li><a href="{{ $row['work_brief'] }}" class="work-link">Link</a></li>
-                                    <li><a href="{{ $row['guidelines'] }}" class="work-link">Link</a></li>
-                                    <li><a href="{{ $row['document1'] }}" class="work-link">Link</a></li>
-                                    <li><a href="{{ $row['document2'] }}" class="work-link">Link</a></li>
+                                    {{-- <li><a target="_blank" href="{{ $row['work_brief'] }}" class="work-link">Link</a></li>
+                                    <li><a target="_blank" href="{{ $row['guidelines'] }}" class="work-link">Link</a></li>
+                                    <li><a target="_blank" href="{{ $row['document1'] }}" class="work-link">Link</a></li>
+                                    <li><a target="_blank" href="{{ $row['document2'] }}" class="work-link">Link</a></li> --}}
+                                    <li><a target="_blank" href="{{ $row['generic_data_format_link'] }}" class="work-link">Link</a></li>
+                                    <li><a target="_blank" href="{{ $row['img_as_per_guidelines'] }}" class="work-link">Link</a></li>
                                   </ul>
                                 </td>
 
@@ -347,6 +356,7 @@ Cataloger Panel
                                     data-company="{{$row['Company']}}"   
                                     data-brand_name="{{$row['brand_name']}}"   
                                     data-start_date="{{$start_time_is}}"   
+                                    data-allocated_qty_is="{{$allocated_qty}}"   
                                     style="display: none"></p>
 
                                     <button  class="btn btn-warning alloc-action-btn inactive" id="uploadBTn{{ $allocation_id }}" data-toggle="modal" data-target="#editpanelPopupCat" {{ $btn_disable }}  onclick="set_data('{{ $allocation_id }}')">
@@ -510,6 +520,7 @@ Cataloger Panel
 
                             <div class="col-sm-6 col-12"  style="position: relative;" >
                                 <input type="hidden" name="allocation_id_is" id="allocation_id_is">
+                                <input type="hidden" name="allocated_qty_is" id="allocated_qty_is">
                                 <input type="hidden" name="market_place_id_is" id="market_place_id_is">
                                 <input type="hidden" name="mode_of_Delivery_is" id="mode_of_Delivery_is">
                                 <button type="button" id="btn_comp" class="btn btn-warning" name="comp_wrc" value="comp_wrc" style="float:right; margin: 0 5px;" onclick="formvalidate('comp')">Complete Wrc</button>
@@ -556,6 +567,32 @@ Cataloger Panel
     });
 </script>
 
+{{-- validation for input counts --}}
+
+<script>
+
+function isvailidcount(m_id){
+    console.log(m_id)
+    const allocated_qty_is = +document.getElementById("allocated_qty_is").value;
+    const approved_Count = +document.getElementById("approved_Count"+m_id).value;
+    const rejected_Count = +document.getElementById("rejected_Count"+m_id).value;
+
+    if(approved_Count > allocated_qty_is ){            
+        document.getElementById("approved_Count"+m_id).value = ''
+    }
+    if(rejected_Count > allocated_qty_is ){
+        document.getElementById("rejected_Count"+m_id).value = ''
+    }
+    
+    if((approved_Count+rejected_Count) > allocated_qty_is){
+        document.getElementById("rejected_Count"+m_id).value = ''
+    }
+    
+    console.log({m_id , allocated_qty_is ,approved_Count, rejected_Count})
+
+}
+</script>
+
 {{-- set_data --}}
 <script>
     async function set_data(params) {
@@ -578,6 +615,7 @@ Cataloger Panel
         const startDate = $("#"+data_id).data('start_date');
         const modeofdelivary_is = $("#"+data_id).data('modeofdelivary_is');
         const market_place = $("#"+data_id).data('market_place');
+        const allocated_qty_is = $("#"+data_id).data('allocated_qty_is');
         let api_url = "";
         
 
@@ -586,6 +624,7 @@ Cataloger Panel
         document.getElementById("allocation_id_is").value = params;
         document.getElementById("market_place_id_is").value = market_place;
         document.getElementById("mode_of_Delivery_is").value = modeofdelivary_is;
+        document.getElementById("allocated_qty_is").value = allocated_qty_is;
         document.querySelector("#projectType").innerHTML = project_type
         document.querySelector("#wrcNo").innerHTML = wrc_number 
         document.querySelector("#kindOfWork").innerHTML =  kind_of_work
@@ -641,12 +680,12 @@ Cataloger Panel
                                 </div>
                                 <div class="col-sm-3 col-6">
                                     <div class="col-ac-details">
-                                        <input type="text" placeholder="Add Approved Count" id="approved_Count${marketPlace_id}" name="approved_Count${marketPlace_id}" value="${approved_Count}" onKeyPress="return isNumber(event);" autocomplete="off">
+                                        <input type="text" placeholder="Add Approved Count" id="approved_Count${marketPlace_id}" name="approved_Count${marketPlace_id}" value="${approved_Count}" onKeyPress="return isNumber(event);" onkeyup="isvailidcount('${marketPlace_id}')"  autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="col-sm-3 col-6">
                                     <div class="col-ac-details">
-                                        <input type="text" placeholder="Add Rejected Count" id="rejected_Count${marketPlace_id}" name="rejected_Count${marketPlace_id}" value="${rejected_Count}" onKeyPress="return isNumber(event);" autocomplete="off">
+                                        <input type="text" placeholder="Add Rejected Count" id="rejected_Count${marketPlace_id}" name="rejected_Count${marketPlace_id}" value="${rejected_Count}" onKeyPress="return isNumber(event);"  onkeyup="isvailidcount('${marketPlace_id}')" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="col-sm-3 col-6">

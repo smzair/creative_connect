@@ -18,8 +18,8 @@ Create New Commercial for Creative
         <div class="col-sm-12">
             <div class="card card-transparent card-info mt-3">
                 <div class="card-header">
-                    <h3 class="card-title">Add Commercial Logs</h3>
-                    <a style="float: right;" class="btn btn-success swalDefaultSuccess" href="{{route('viewCommercial')}}">Commercial Logs List</a>
+                    <h3 class="card-title">Add Commercial</h3>
+                    <a style="float: right;" class="btn btn-success swalDefaultSuccess" href="{{route('viewCommercial')}}">View All Commercials</a>
                 </div>
                 <div class="card-body">
                     {{-- sucsses and false msg div --}}
