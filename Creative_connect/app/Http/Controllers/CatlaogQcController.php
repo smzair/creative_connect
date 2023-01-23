@@ -51,6 +51,7 @@ class CatlaogQcController extends Controller
             ->select('catalog_time_hash.task_status', 'catalog_time_hash.allocation_id')
             ->get()->toArray();
         $check = 1;
+        $response = 0;
 
         foreach ($all_catalog_allocation as $key => $val) {
             $check_task_status = $val['task_status'];
@@ -68,12 +69,12 @@ class CatlaogQcController extends Controller
             }
 
             if(count($res_arr) == array_sum($res_arr) && array_sum($res_arr) ==  count($all_catalog_allocation)){
-                $check = 1;
+                $response = 1;
             }else{
-                $check = 0;
+                $response = 0;
             }
         }
-        echo $check;
+        echo $response;
     }
 
     // set_wrc_qc_pending
@@ -86,11 +87,11 @@ class CatlaogQcController extends Controller
             ->select('catalog_time_hash.task_status', 'catalog_time_hash.allocation_id')
             ->get()->toArray();
         $check = 1;
+        $response = 0;
 
         foreach ($all_catalog_allocation as $key => $val) {
             $check_task_status = $val['task_status'];
-            if ($check_task_status != 2
-            ) {
+            if ($check_task_status != 2) {
                 $check = 0;
             }
         }
@@ -105,12 +106,12 @@ class CatlaogQcController extends Controller
 
             if (count($res_arr) == array_sum($res_arr) && array_sum($res_arr) ==  count($all_catalog_allocation)
             ) {
-                $check = 1;
+                $response = 1;
             } else {
-                $check = 0;
+                $response = 0;
             }
         }
-        echo $check;
+        echo $response;
     }
 
     /** * Show the form for creating a new resource. */

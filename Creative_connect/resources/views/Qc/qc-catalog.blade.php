@@ -75,7 +75,7 @@ Catalog Qc Panel
         }
 
 
-        .switch {
+        /* .switch {
             position: relative; 
             display: inline-block;
             min-width: 60px;
@@ -107,7 +107,7 @@ Catalog Qc Panel
             background-color: #e2e045  !important;
             border: 1px solid #fbf702; 
             border-radius: 10%;
-        }
+        } */
 
 
 </style>
@@ -124,9 +124,9 @@ Catalog Qc Panel
                         <thead>
                             <tr>
                                 <th class="align-middle">WRC Number</th>
-                                <th class="align-middle">Batch Number</th>
                                 <th class="align-middle">Brand Name</th>
                                 {{-- <th class="align-middle">Alloted to</th> --}}
+                                <th class="align-middle">Batch Number</th>
                                 <th class="align-middle">SKU Count</th>
                                 <th class="align-middle" style="text-align: center">Catalogure</th>
                                 <th class="align-middle" style="text-align: center">Copy</th>
@@ -161,13 +161,6 @@ Catalog Qc Panel
                                 $user_name_list = $qc['user_name_list'];
                                 $user_name_list_arr = explode(",",$user_name_list);
 
-                                if($wrc_number == 'O3jopdnuu6-A'){
-                                    // pre($qc);
-                                    // pre($user_roles_arr);
-                                    // pre($final_link_list_arr);
-                                }
-                                
-                               
                                 $alloacte_to_copy_writer = $qc['alloacte_to_copy_writer'];
                                 $copy_sum = $qc['copy_sum'];
                                 $cata_sum = $qc['cata_sum'];
@@ -189,11 +182,19 @@ Catalog Qc Panel
                                         $allow_to_submit = 1;
                                     }else if($task_status_sum == (2*$tot_allocation_ids)){
                                         $allow_to_submit = 2;
-                                    }else{
+                                    }else if($task_status_sum == (3*$tot_allocation_ids)){
                                         $allow_to_submit = 3;
+                                    }else{
+                                        $allow_to_submit = 4;
                                     }
                                 }
-                                // echo "<br><br> wrc_number  $wrc_number => $batch_no_is , sku_count = $sku_count , cata_sum = $cata_sum , alloacte_to_copy_writer => $alloacte_to_copy_writer , copy_sum = $copy_sum    ,   tot_allocation_ids => $tot_allocation_ids , task_status_sum => $task_status_sum ,  ";
+
+                                if($wrc_number == 'MSLVuu5-C' && $batch_no == 1){
+                                    // pre($qc);
+                                    // pre($user_roles_arr);
+                                    // pre($final_link_list_arr);
+                                    // echo "<br><br> wrc_number  $wrc_number => $batch_no_is , sku_count = $sku_count , cata_sum = $cata_sum , alloacte_to_copy_writer => $alloacte_to_copy_writer , copy_sum = $copy_sum    ,   tot_allocation_ids => $tot_allocation_ids , task_status_sum => $task_status_sum , allow_to_submit => $allow_to_submit  ";
+                                }
                                
                                 $time_hash_ids = $qc['time_hash_ids'];
                                 $time_hash_id_arr = explode(",",$time_hash_ids);
@@ -224,17 +225,20 @@ Catalog Qc Panel
                                     $title_msg = "Click for Submit Wrc!!";
                                 }else if ($allow_to_submit == 2) {
                                     $task_is = 1;
-
                                     $submit_check_disable = "disabled"; // checked
                                     $reworkbtn_disable = "disabled"; // checked
                                     $rework_title = "Wrc submited unable to rework!! change task status to pendding!!";
-
+                                    
                                     $submit_check_is_checked = "checked"; 
                                     $submit_msg = "Wrc submited";
                                     $p_style = "color:green;";
                                     $btn_clsss = "btn_success";
                                     $title_msg = "Click for pending Wrc!!";
-                                }else{
+                                }else if ($allow_to_submit == 3) {
+                                    $rework_title = "Wrc submited unable to rework!! change task status to pendding!!";
+                                    $submit_msg = "Wrc Submission Done";
+                                    $p_style = "color: #00ff00";
+                                } else{
                                     $submit_msg = "WRC not completed by users!!";
                                     $p_style = "color: red";
                                     // $btn_disable = "";
@@ -246,16 +250,16 @@ Catalog Qc Panel
                             @endphp
                             <tr>
                                 <td>{{$qc['wrc_number']}}</td>
-                                <td>{{$batch_no_is}}</td>
                                 <td>{{$qc['brands_name'].$wrc_id_is }}</td>
                                 {{-- <td>{{$qc['user_id_list']." ".$qc['user_name_list'] }}</td> --}}
+                                <td>{{$batch_no_is}}</td>
                                 <td>{{$qc['sku_count']}}</td>
                                 <td>
                                     <ul class="info-list">
                                         @foreach ($final_link_list_arr as $link_key => $link)
                                             @if ($link != ''  && $user_roles_arr[$link_key] == 0)
                                                 <li>
-                                                    <a title="<?php echo 'Uplodead By '.$user_name_list_arr[$link_key];?>" href="{{ $link }}" class="cpy-textVal" id="creativetextVal">
+                                                    <a  target="_blank"  title="<?php echo 'Uploaded by '.$user_name_list_arr[$link_key];?>" href="{{ $link }}" class="cpy-textVal" id="creativetextVal">
                                                     link
                                                     <span><i class="fas fa-copy"></i></span>
                                                     </a>
@@ -270,7 +274,7 @@ Catalog Qc Panel
                                         @foreach ($final_link_list_arr as $link_key => $link)
                                             @if ($link != '' && $user_roles_arr[$link_key] == 1)
                                                 <li>
-                                                    <a title="<?php echo 'Uplodead By '.$user_name_list_arr[$link_key];?>" href="{{ $link }}"  class="cpy-textVal" id="creativetextVal">
+                                                    <a target="_blank" title="<?php echo 'Uploaded By '.$user_name_list_arr[$link_key];?>" href="{{ $link }}"  class="cpy-textVal" id="creativetextVal">
                                                     link
                                                     <span><i class="fas fa-copy"></i></span>
                                                     </a>
@@ -280,14 +284,18 @@ Catalog Qc Panel
                                     </ul>
                                 </td>
                                 <td>
-                                    <div class="d-inline-block  switch">
+                                    <div class="d-inline-block">
 
-                                        @if ($allow_to_submit != 1 && $allow_to_submit != 2)
-                                            <p style=" font-size: 1.1em; font-weight: 600; {{ $p_style }}">{{ $submit_msg }} </p>
+                                        @if ($allow_to_submit == 1 || $allow_to_submit == 2)
+                                        
+                                            {{-- For toggle btn  --}}
+                                            <input   type="checkbox" {{ $task_is == 1 ? 'checked' : '' }}  data-wrc_id="{{$wrc_id}}" data-id="{{$wrc_id}}" data-batch_no="{{$batch_no}}" data-allocation_ids="{{$allocation_ids}}" data-task_is="{{$task_is}}" id="btn{{ $wrc_id }}"  title="{{$title_msg}}"  data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm"  data-width="100" class="toggle-class" onchange="submit_wrc('{{ $wrc_id }}')"  >
+                                        
+                                            {{-- old  --}}
+                                            {{-- <input  type="checkbox"  data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class" > --}}
+                                            {{-- <button data-wrc_id="{{$wrc_id}}"  data-batch_no="{{$batch_no}}" data-allocation_ids="{{$allocation_ids}}" data-task_is="{{$task_is}}" id="btn{{ $wrc_id }}" class="btn {{ $btn_clsss }}" onclick="submit_wrc('{{ $wrc_id }}')" title="{{$title_msg}}" >  {{ $submit_msg }} </button> --}}
                                         @else
-                                            <input  type="checkbox"  data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class" >
-                                            
-                                            <button data-wrc_id="{{$wrc_id}}"  data-batch_no="{{$batch_no}}" data-allocation_ids="{{$allocation_ids}}" data-task_is="{{$task_is}}" id="btn{{ $wrc_id }}" class="btn {{ $btn_clsss }}" onclick="submit_wrc('{{ $wrc_id }}')" title="{{$title_msg}}" >  {{ $submit_msg }} </button>
+                                            <p style=" font-size: 1.1em; font-weight: 600; {{ $p_style }}">{{ $submit_msg }} </p>
                                         @endif
 
                                        {{-- {{ $btn_disable }} --}}
@@ -411,14 +419,14 @@ Catalog Qc Panel
 
 <script>
 
-    function submit_wrc(id){        
+    async function submit_wrc(id){        
         const btn_is = document.querySelector("#btn"+id);
-        // console.log(btn_is)task_is
+        const btn_id_is = "btn"+id
         const wrc_id = btn_is.dataset.wrc_id;
         const task_is = btn_is.dataset.task_is;
         const batch_no = btn_is.dataset.batch_no;
         const allocation_ids = btn_is.dataset.allocation_ids;
-        // console.log({wrc_id , batch_no , allocation_ids})
+        console.log({btn_id_is,wrc_id , batch_no , allocation_ids,task_is})
 
         let url_path = "{{ url('set-wrc-qc-completed')}}";
         let massage = 'Qc Status Completed Successfully'
@@ -427,7 +435,7 @@ Catalog Qc Panel
             url_path = "{{ url('set-wrc-qc-pending')}}";
         }
         // console.log(url_path)
-        $.ajax({
+        await $.ajax({
             url: url_path,
             type: "POST",
             dataType: 'json',
