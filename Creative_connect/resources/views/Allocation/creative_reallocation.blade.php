@@ -135,6 +135,8 @@ Creative Allocation
                                 <th>CW Pending Qty</th>
                                 <th>Work Initiate Date</th>
                                 <th>Work Committed Date</th>
+                                <th style="display: none;"></th>
+                                <th style="display: none;"></th>
                               
                                 <th>Action</th>
                             </tr>

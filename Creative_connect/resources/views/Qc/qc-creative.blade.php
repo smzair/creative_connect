@@ -53,7 +53,8 @@ Creative Qc Panel
                                 <th class="align-middle">Sku Qty</th>
                                 <th class="align-middle">Creative Link</th>
                                 <th class="align-middle">Copy Link</th>
-                                <th class="align-middle">Qc Status</th>
+                                <th class="align-middle">QC Copy Status</th>
+                                <th class="align-middle">Qc Overall Status</th>
                                 <th class="align-middle">Action</th>
                                 {{-- <th class="align-middle">Commented</th> --}}
                             </tr>
@@ -62,9 +63,9 @@ Creative Qc Panel
                             @foreach($QcList as $key => $qc)
                             <tr>
                                 <td>{{$qc['wrc_number']}}</td>
-                                <td id="wrc_id{{$key}}" style="display: none;">{{$qc['wrc_id']}}</td>
-                                <td style="display: none">{{$qc['allocation_id']}}</td>
-                                <td>{{$qc['brands_name']}}</td>
+                                {{-- <td id="wrc_id{{$key}}" style="display: none;">{{$qc['wrc_id']}}</td>
+                                <td style="display: none">{{$qc['allocation_id']}}</td> --}}
+                                <td id="wrc_id{{$key}}" data-wrc_id = "{{$qc['wrc_id']}}" data-allocation_id = "{{$qc['allocation_id']}}" >{{$qc['brands_name']}}</td>
 
                                 {{-- <td>
                                     <ul class="info-list">
@@ -106,8 +107,34 @@ Creative Qc Panel
                                       @endforeach
                                     </ul>
                                 </td> --}}
-                                <td>{{$qc['creative_link']}}</td>
-                                <td>{{$qc['copy_link']}}</td>
+                                <td ><a href="{{$qc['creative_link']}}" class="cpy-textVal" target="_blank">{{$qc['creative_link']}} <span><i class="fas fa-copy"></i></span></a></td>
+                                <td><a href="{{$qc['copy_link']}}" class="cpy-textVal" target="_blank">{{$qc['copy_link']}} <span><i class="fas fa-copy"></i></span></a></td>
+
+
+
+                                <td >
+                                    <?php if($qc['alloacte_to_copy_writer'] == 1){ ?>
+                                        <?php if($qc['cw_qc_status'] == 0){ ?>
+                                            <div class="d-inline-block mt-1">
+                                                <input type="checkbox"  data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"  onclick='CwCompleteQcApproval(<?php echo $key;?>)' >
+                                                <button type="" style="border-radius: 4px" class="button btn-warning Pending" onclick='CwCompleteQcApproval(<?php echo $key;?>)' name="Pending">Pending</button>
+                                            </div>
+                                        <?php } ?>
+
+                                        <?php if($qc['cw_qc_status'] == 1){ ?>
+                                            <div class="d-inline-block mt-1">
+                                                <input type="checkbox"  checked disabled data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"  onclick='CwPendingQcApproval(<?php echo $key;?>)' >
+                                                <button type="" onclick='CwPendingQcApproval(<?php echo $key;?>)' style="border-radius: 4px" class="button btn-success Completed" name="Completed">Completed</button>
+                                            </div>
+                                        <?php } ?>
+                                    <?php } ?>
+
+                                    <?php if($qc['alloacte_to_copy_writer'] == 0){ ?>
+                                        <span> Not allocated to CW</span>
+                                    <?php } ?>
+
+                                </td>
+
                                 <td >
                                     <?php if($qc['qc_status'] == 0){ ?>
                                     <div class="d-inline-block mt-1">
@@ -119,7 +146,7 @@ Creative Qc Panel
 
                                     <?php if($qc['qc_status'] == 1){ ?>
                                         <div class="d-inline-block mt-1">
-                                            <input type="checkbox"  checked disabled data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"  onclick='completeQcApproval(<?php echo $key;?>)' >
+                                            <input type="checkbox"  checked disabled data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"  onclick='pendingQcApproval(<?php echo $key;?>)' >
                                             <button type="" onclick='pendingQcApproval(<?php echo $key;?>)' style="border-radius: 4px" class="button btn-success Completed" name="Completed">Completed</button>
                                             {{-- <input data-id="{{$sku['sku_id']}}" type="checkbox" checked data-toggle="toggle" data-on="Submitted" data-off="Pending" data-onstyle="success" data-offstyle="warning" data-size="sm" data-width="100" class="toggle-class"   {{ $sku['qc'] ? 'checked' : '' }}> --}}
                                         </div>
@@ -289,9 +316,9 @@ Creative Qc Panel
         console.log('first', id)
          // set wrc id
         const wrc_id_td = "wrc_id"+id;
-        const wrc_id = document.getElementById(wrc_id_td).innerHTML;
+        const wrc_id =  $("#"+wrc_id_td).data("wrc_id")
         document.querySelector('.wrc_id').value = wrc_id;
-        console.log('wrc_id', wrc_id)
+        console.log('wrc_id_check', wrc_id)
     }
 </script>
 
@@ -304,7 +331,7 @@ Creative Qc Panel
         console.log('button_action', button_action)
          // set wrc id
         const wrc_id_td = "wrc_id"+id;
-        const wrc_id = document.getElementById(wrc_id_td).innerHTML;
+        const wrc_id = $("#"+wrc_id_td).data("wrc_id")
         console.log('complete Qc Approval_wrc_id', wrc_id)
         var check_completed_wrc = 0;
         $.ajax({
@@ -340,7 +367,7 @@ Creative Qc Panel
         console.log('button_action', button_action)
          // set wrc id
         const wrc_id_td = "wrc_id"+id;
-        const wrc_id = document.getElementById(wrc_id_td).innerHTML;
+        const wrc_id = $("#"+wrc_id_td).data("wrc_id");
         console.log('complete Qc Approval_wrc_id', wrc_id)
         var check_completed_wrc = 0;
         $.ajax({
@@ -360,6 +387,78 @@ Creative Qc Panel
                 }
                 if(res == 1){
                     alert('Qc Status Pending Successfully');
+                    window.location.reload();
+                }
+              console.log('check_completed_wrc', res)
+            }
+        });
+    }
+</script>
+
+<script>
+    function CwCompleteQcApproval(id){
+        var button = document.getElementsByClassName("Pending")[0];
+        var button_action = button.name;
+
+        console.log('button_action', button_action)
+         // set wrc id
+        const wrc_id_td = "wrc_id"+id;
+        const wrc_id = $("#"+wrc_id_td).data("wrc_id")
+        console.log('complete Qc Approval_wrc_id', wrc_id)
+        var check_completed_wrc = 0;
+        $.ajax({
+            url: "{{ url('cw_check_completed_wrc')}}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                wrc_id,
+                button_action,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                check_completed_wrc = res;
+                if(res == 0){
+                    alert('First, complete all tasks for CW users ');
+                    window.location.reload();
+                }
+                if(res == 1){
+                    alert('QC for Copy completed successfully for this WRC');
+                    window.location.reload();
+                }
+              console.log('check_completed_wrc', res)
+            }
+        });
+    }
+</script>
+
+<script>
+    function CwPendingQcApproval(id){
+        var button = document.getElementsByClassName("Completed")[0];
+        var button_action = button.name;
+
+        console.log('button_action', button_action)
+         // set wrc id
+        const wrc_id_td = "wrc_id"+id;
+        const wrc_id = $("#"+wrc_id_td).data("wrc_id");
+        console.log('complete Qc Approval_wrc_id', wrc_id)
+        var check_completed_wrc = 0;
+        $.ajax({
+            url: "{{ url('cw_check_completed_wrc')}}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                wrc_id,
+                button_action,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(res) {
+                check_completed_wrc = res;
+                if(res == 0){
+                    alert('First, complete all tasks for CW users');
+                    window.location.reload();
+                }
+                if(res == 1){
+                    alert('CW users Qc Status Pending Successfully');
                     window.location.reload();
                 }
               console.log('check_completed_wrc', res)

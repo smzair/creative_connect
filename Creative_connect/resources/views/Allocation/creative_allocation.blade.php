@@ -129,6 +129,8 @@ Creative Allocation
 
                                 <th>Order Qty</th>
                                 <th>Sku Qty</th>
+                                <th style="display: none;"></th>
+                                <th style="display: none;"></th>
                                
                                 <th>GD Allocated Qty</th>
                                 <th>GD Pending Qty</th>

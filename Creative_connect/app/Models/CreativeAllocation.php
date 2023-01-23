@@ -86,7 +86,7 @@ class CreativeAllocation extends Model
 		->leftJoin('brands', 'brands.id','creative_lots.brand_id')
 		->select('creative_allocation.*','creative_allocation.id as  creative_allocation_id','creative_wrc.wrc_number','creative_wrc.lot_id','creative_wrc.work_brief','creative_wrc.guidelines','creative_wrc.document1','creative_wrc.document2','creative_wrc.order_qty','creative_wrc.sku_count','creative_wrc.alloacte_to_copy_writer','creative_lots.lot_number','creative_lots.lot_delivery_days','users.name','users.Company as company_name','brands.name as brand_name','create_commercial.project_name', 'create_commercial.kind_of_work','creative_upload_links.allocation_id as creative_upload_links_allocation_id','creative_upload_links.creative_link','creative_upload_links.copy_link'
 		,'creative_time_hash.spent_time as spent_time_data' 
-		,'creative_wrc_batch.batch_no','creative_wrc_batch.order_qty as batch_order_qty','creative_wrc_batch.sku_count as batch_sku_count' )
+		,'creative_wrc_batch.batch_no','creative_wrc_batch.order_qty as batch_order_qty','creative_wrc_batch.sku_count as batch_sku_count','creative_wrc_batch.work_committed_date' )
 		->where('creative_allocation.user_id',$login_user_id)
 		->groupBy(['creative_allocation.wrc_id','creative_allocation.batch_no'])
 		->get();

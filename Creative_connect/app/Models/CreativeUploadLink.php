@@ -51,6 +51,8 @@ class CreativeUploadLink extends Model
             'creative_wrc.order_qty',
             'creative_wrc.sku_count',
             'creative_wrc.qc_status',
+            'creative_wrc.cw_qc_status',
+            'creative_wrc.alloacte_to_copy_writer',
             'brands.name as brands_name',
             'creative_upload_links.creative_link as creative_link',
             'creative_upload_links.copy_link as copy_link',

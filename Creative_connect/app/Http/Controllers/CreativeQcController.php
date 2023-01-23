@@ -165,9 +165,11 @@ class CreativeQcController extends Controller
         if($button_action == 'Pending'){
             foreach($all_creative_allocation as $key => $val){
                 $check_task_status = $val['task_status'];
-                if($check_task_status != 1){
+                if(($check_task_status != 1) && ($check_task_status != 2)){
                     $check = 0;
                 }
+
+                
             }
     
             if($check == 1){
@@ -188,6 +190,68 @@ class CreativeQcController extends Controller
     
                 }
                 CreativeWrcModel::where('id', $wrc_id )->update(['qc_status'=>0]);
+        }
+        echo $check;
+    }
+
+    public function cwCheckCompletedWrc(Request $request){
+        // dd($request);
+        $wrc_id = $request->wrc_id;
+        $button_action =  $request->button_action;
+
+
+        $cw_role_data = DB::table('roles')->where('name','=','CW')->first(['id']);
+        $cw_id = $cw_role_data != null ? $cw_role_data->id : 0;   
+
+        $copy_writer_users_data = DB::table('users')
+        ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
+        ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
+        ->where([['model_has_roles.role_id','=', $cw_id]])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+
+        // dd(dump($copy_writer_users_data));
+
+        $cw_user_id_data = [];
+        foreach($copy_writer_users_data as $ckey => $cval){
+            array_push($cw_user_id_data,$cval->id);
+        }
+
+        $all_creative_allocation = ModelsCreativeAllocation::where('wrc_id', $wrc_id)
+        ->leftJoin('creative_time_hash', 'creative_time_hash.allocation_id', 'creative_allocation.id')
+        // ->where('creative_time_hash.task_status', '!=', null)
+        // ->where('creative_time_hash.task_status', '!=', 2)
+        ->whereIn('creative_allocation.user_id',$cw_user_id_data)
+        ->select('creative_time_hash.task_status','creative_time_hash.allocation_id')
+        ->get();
+        $check = 1;
+
+        // dd($all_creative_allocation);
+
+        if($button_action == 'Pending'){
+            foreach($all_creative_allocation as $key => $val){
+                $check_task_status = $val['task_status'];
+                if(($check_task_status != 1) && ($check_task_status != 2)){
+                    $check = 0;
+                }
+            }
+    
+            if($check == 1){
+                foreach($all_creative_allocation as $key => $val){
+                    $allocation_id = $val['allocation_id'];
+                    CreativeTimeHash::where('allocation_id',$allocation_id)->update(['task_status'=>2]);
+    
+                }
+                CreativeWrcModel::where('id', $wrc_id )->update(['cw_qc_status'=>1]);
+            }
+        }
+
+        if($button_action == 'Completed'){
+    
+                foreach($all_creative_allocation as $key => $val){
+                    $allocation_id = $val['allocation_id'];
+                    CreativeTimeHash::where('allocation_id',$allocation_id)->update(['task_status'=>1]);
+    
+                }
+                CreativeWrcModel::where('id', $wrc_id )->update(['cw_qc_status'=>0, 'qc_status'=>0]);
         }
         echo $check;
     }

@@ -105,8 +105,11 @@
                                 <th>WRC Number</th>
                                 <th>Company Name</th>
                                 <th>Brand Name</th>
-                                <th>Order Qty</th>
-                                <th>Sku Qty</th>
+                                <th>Kind of Work</th>
+                                <th>Work Committed Date</th>
+                                <th style="display: none;">Order Qty</th>
+                                <th style="display: none;">Sku Qty</th>
+                                <th>Allocated Qty</th>
                                 <th>Batch No</th>
                                 <?php if($allocationList['role'] == 'CD'){  ?>
                                 <th>Assigned Graphics Designers</th>
@@ -120,30 +123,58 @@
                                 <th>Task Start Initial</th>
                                 <th>Task Start Date</th>
                                 <th>Action</th>
+                                <th style="display: none">--</th>
+                                <th style="display: none">--</th>
+                                <th style="display: none">--</th>
+                                <th style="display: none">--</th>
+                                <th style="display: none">--</th>
+                                <th style="display: none">--</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($allocationList['resData'] as $key => $allocationInfo)
                             <tr>
                                 <td id="wrc_number{{$key}}" data-allocates_qty = "{{$allocationInfo['allocated_qty']}}" data-lot_delivery_days = "{{$allocationInfo['lot_delivery_days']}}"   data-batches_no = "{{$allocationInfo['batch_no']}}" >{{$allocationInfo['wrc_number']}}</td>
+                                <td>{{$allocationInfo['company_name']}}</td>
+                                <td id="brand_name{{$key}}">{{$allocationInfo['brand_name']}}</td>
+                                <td id="kind_of_work{{$key}}">{{$allocationInfo['kind_of_work']}}</td>
+                                <td>
+                                    <div class="task-action task-start-timings">
+                                        <span class="work_committed_date{{$key}}">
+                                            <?php
+                                                $date = new DateTime($allocationInfo->work_committed_date);
+                                                $date->setTimezone(new DateTimeZone('Asia/Kolkata'));
+                                                echo $date->format('Y-m-d');
+                                            ?>
+                                        </span>
+                                        <span class="time">
+                                            <?php
+                                                echo $date->format('H:i:s');
+                                            ?>
+                                        </span>
+                                    </div>
+                                </td>
+
                                 <td id="creative_allocation_id{{$key}}" style="display: none;">{{$allocationInfo['creative_allocation_id']}}</td>
                                 <td id="role{{$key}}" style="display: none;">{{$allocationList['role']}}</td>
                                 <td id="creative_upload_links_allocation_id{{$key}}" style="display: none;">{{$allocationInfo['creative_upload_links_allocation_id']}}</td>
                                 <td id="creative_link{{$key}}" style="display: none;">{{$allocationInfo['creative_link']}}</td>
                                 <td id="copy_link{{$key}}" style="display: none;">{{$allocationInfo['copy_link']}}</td>
                                 <td id="project_name{{$key}}" style="display: none;">{{$allocationInfo['project_name']}}</td>
-                                <td id="kind_of_work{{$key}}" style="display: none;">{{$allocationInfo['kind_of_work']}}</td>
-                                <td>{{$allocationInfo['company_name']}}</td>
-                                <td id="brand_name{{$key}}">{{$allocationInfo['brand_name']}}</td>
+                                
+                                <td>{{$allocationInfo['allocated_qty']}}</td>
+                                
                                 {{-- <td>{{$allocationInfo['order_qty']}}</td> --}}
                                 <?php 
                                 if($allocationInfo['client_bucket'] == 'Retainer'){ ?>
-                                    <td id="order_qty{{$key}}">{{$allocationInfo['batch_order_qty'] != null ? $allocationInfo['batch_order_qty'] : 0}}</td>
-                                    <td id="sku_count{{$key}}">{{$allocationInfo['batch_sku_count'] != null ? $allocationInfo['batch_sku_count'] : 0}}</td>
+                                    <td  style="display: none;" id="order_qty{{$key}}">{{$allocationInfo['batch_order_qty'] != null ? $allocationInfo['batch_order_qty'] : 0}}</td>
+                                    <td  style="display: none;" id="sku_count{{$key}}">{{$allocationInfo['batch_sku_count'] != null ? $allocationInfo['batch_sku_count'] : 0}}</td>
                                 <?php }else { ?>
-                                    <td id="order_qty{{$key}}">{{$allocationInfo['order_qty'] != null ? $allocationInfo['order_qty'] : 0}}</td>
-                                    <td id="sku_count{{$key}}">{{$allocationInfo['sku_count'] != null ? $allocationInfo['sku_count'] : 0}}</td>
+                                    <td style="display: none;" id="order_qty{{$key}}">{{$allocationInfo['order_qty'] != null ? $allocationInfo['order_qty'] : 0}}</td>
+                                    <td style="display: none;" id="sku_count{{$key}}">{{$allocationInfo['sku_count'] != null ? $allocationInfo['sku_count'] : 0}}</td>
                                 <?php  } ?>
+
+
                                 <td id="batch_no{{$key}}" title="0 for not retainer and other for retainer">{{$allocationInfo['batch_no'] == 0 ? 'None' : $allocationInfo['batch_no']}}</td>
                                 <?php if($allocationList['role'] == 'CD'){  ?>
                                 <td>
@@ -208,6 +239,8 @@
                                             <span class="time">{{timeFormat($allocationInfo->ini_start_time)}}</span>
                                           </div>
                                     </td>
+                                   
+                                    
                                 <td>
                                 {{-- <?php } ?> --}}
                                 
