@@ -8,6 +8,7 @@ use App\Http\Controllers\CatalogWrcBatchController;
 use App\Http\Controllers\CatalogWrcController;
 use App\Http\Controllers\CatalogWrcMasterSheetController;
 use App\Http\Controllers\CatlaogQcController;
+use App\Http\Controllers\NewCommercial;
 use Illuminate\Support\Facades\Route;
 /*
   |--------------------------------------------------------------------------
@@ -41,7 +42,7 @@ Route::post('/Creative-updateCatalog', 'catalogCommercials@update')->name('UPDAT
 
 
 
-//////////////// Creative Lots Routes VIEWLOTCATALOG /////////////////
+//////////////// Creative Lots Routes VIEWLOTCATALOG ///////////////// 
 Route::get('/Creative-createLots','creativeLot@index')->name('CREATELOT');
 Route::get('/Creative-viewLots','creativeLot@view')->name('viewLOT');
 
@@ -125,3 +126,10 @@ Route::get('catalog-wrc-master-sheet', [CatalogWrcMasterSheetController::class ,
 
 // New Panel for WRCs Status
 Route::get('catalog-wrc-status', [CatalogWrcController::class , 'CatalogWrcStatus'])->name('CatalogWrcStatus');
+
+// NewCommercial Routing
+Route::get( '/newCommercial', [NewCommercial::class, 'index'])->name('NewCommercial'); // NewCommercial Form 
+Route::POST('/newCommercial', [NewCommercial::class, 'create'])->name('SaveNewCommercial'); // Save NewCommercial And genrating data
+Route::get('/newCommercial/{id}', [NewCommercial::class, 'index'])->name('EditNewCommercial'); // NewCommercial Form 
+Route::get('/newCommercialList', [NewCommercial::class, 'view'])->name('ViewNewCommercial'); // NewCommercial Form 
+
