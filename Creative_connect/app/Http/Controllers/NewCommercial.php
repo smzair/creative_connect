@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CatalogCommercial;
+use App\Models\create_commercial;
 use App\Models\NewCommercialModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -13,11 +14,19 @@ class NewCommercial extends Controller
 
     public function Index()
     {
-        $newCommercial = (object) [
+        $newCommercial = [
             'id' => 0,
-            'user_id' => '0',
-            'brand_id' => '0',
-            'commClientID' => ''
+            'commCompanyId' => '0',
+            'commBrandId' => '0',
+            'commClientID' => '',
+            'c_short' => '',
+            'short_name' => '',
+            'commshootcheck' => '0',
+            'commcgcheck' => '0',
+            'commcatcheck' => '0',
+            'shootCheckIsDone' => '0',
+            'cgCheckIsDone' => '0',
+            'catCheckIsDone' => '0',
         ];
         return view('commercial.newCommercial-panel')->with('newCommercial', $newCommercial);
     }
@@ -38,15 +47,94 @@ class NewCommercial extends Controller
         // dd($createNewCommercialIdIs , $request->all());
     }
 
-    // listing newCommercialList
+    // save newCommercial into db
+    public function update(Request $request)
+    {
+        $id = $request->id;
+        $createNewCommercialIdIs = NewCommercialModel::updateNewCommercial($request);
+        if ($createNewCommercialIdIs == 0) {
+            $createNewCommercialIdIs = $id;
+        } else {
+            // return Redirect::route('NewCommercial');
+        }
+        return Redirect::route('EditNewCommercial', ['id' => $createNewCommercialIdIs]);
+
+        // dd($createNewCommercialIdIs , $request->all());
+    }
+
+    // listing newCommercialList 
     public function view(){
 
         $commercial_list = NewCommercialModel::leftJoin('brands', 'brands.id', '=', 'new_commercials.commBrandId')
             ->leftJoin('users', 'new_commercials.commCompanyId', 'users.id')
-            ->select('new_commercials.id', 'new_commercials.*', 'users.Company as company', 'brands.name')
+            ->select(
+            'new_commercials.id',
+            'new_commercials.commCompanyId',
+            'new_commercials.commBrandId',
+            'new_commercials.commClientID',
+            'new_commercials.commshootcheck',
+            'new_commercials.commcgcheck',
+            'new_commercials.commcatcheck',
+            'new_commercials.shootCheckIsDone',
+            'new_commercials.cgCheckIsDone',
+            'new_commercials.catCheckIsDone', 
+            'users.Company as company', 
+            'brands.name'
+            )
             ->get();
         $num = 1;
         return view('commercial.newCommercialList')->with('com', $commercial_list)->with('num', $num);
 
     }
+
+    public function Edit($id)
+    {
+        $newCommercial = NewCommercialModel::where('new_commercials.id',$id)->
+        leftJoin('brands', 'brands.id', '=', 'new_commercials.commBrandId')
+        ->leftJoin('users', 'new_commercials.commCompanyId', 'users.id')
+        ->select('new_commercials.id', 'new_commercials.*', 'users.Company as company', 'brands.name')
+        ->get()->toArray();
+
+        // dd($newCommercial);
+
+        return view('commercial.newCommercial-panel')->with('newCommercial', $newCommercial[0]);
+    }
+
+    // Function for store new Shoot Commercial
+    public function saveShootCommercial(Request $request)
+    {
+        dd($request->all());
+    }
+    
+    // Function for store new Creative Commercial
+    public function SaveCreativeCommercial(Request $request)
+    {
+        // dd($request->all());
+        $newCommercialId = $request->newCommercialId;
+        $create_commercial_Id = NewCommercialModel::SaveCreativeCommercial($request);
+
+        if ($create_commercial_Id > 0) {
+            request()->session()->flash('success', 'Creative Commercial  Successfully Added!!');
+        } else {
+            request()->session()->flash('false', 'Somthing went wrong try again!!!');
+        }
+        return Redirect::route('EditNewCommercial', ['id' => $newCommercialId]);
+    }
+    
+    // Function for store new Cataloging Commercial
+    public function SaveCatalogingCommercial(Request $request)
+    {
+        $newCommercialId = $request->newCommercialId;
+        $create_Cataloging_Id = NewCommercialModel::SaveCatalogingCommercial($request);
+
+        if ($create_Cataloging_Id > 0) {
+            request()->session()->flash('success', 'Creative Cataloging  Successfully Added!!');
+        } else {
+            request()->session()->flash('false', 'Somthing went wrong try again!!!');
+        }
+        return Redirect::route('EditNewCommercial', ['id' => $newCommercialId]);
+    }
+
+
+
 }

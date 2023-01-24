@@ -70,7 +70,14 @@
 
                             @php
                                 $users = getUserCompanyData();
-                                // pre($users);
+                                $kindOfWork = kindOfWork();
+                                $marketPlace = getMarketPlace();
+                                $typeOfService = getTypeOfService();
+                                $getTypeOfShootList = getTypeOfShootList();
+                                $getProductList = getProductList();
+                                $AdaptationsList = getAdaptationsList();
+                                
+                                // pre($AdaptationsList);
                             @endphp
                             <div class="card-body">
                                 {{-- sucsses and false msg div --}}
@@ -87,15 +94,43 @@
                                         </div>
                                     @endif
                                 </div>
+
+                                @php
+                                    // pre($newCommercial);
+                                    $shootCheckIsDone = $newCommercial['shootCheckIsDone'];
+                                    $cgCheckIsDone = $newCommercial['cgCheckIsDone'];
+                                    $catCheckIsDone = $newCommercial['catCheckIsDone'];
+                                    $check_disabled = '';
+                                    $show_submit = 1;
+                                    if($shootCheckIsDone == 2 || $cgCheckIsDone == 2 || $catCheckIsDone == 2){
+                                        $show_submit = 0;
+                                        $check_disabled = "disabled";
+                                    }
+                                    $formRoute = 'SaveNewCommercial';
+                                    $btn_Name = 'Create Commercial';
+                                    $btn_title = "Commercial Not Created";
+                                    $btn_disabled = "disabled";
+
+                                    if($newCommercial['id'] > 0){
+                                        $formRoute = 'UpdateNewCommercial';
+                                        $btn_Name = 'Update Commercial';
+                                        $btn_disabled = "";
+                                        $btn_title = "Fill All Required fields";
+                                    }
+
+                                    
+                                @endphp
                                 <div class="custom-panel-form-group">
-                                    <form action="{{route('SaveNewCommercial')}}" method="post" class="comm-panel-form" id="panelForm2">
+                                    <form action="{{route($formRoute)}}" method="post" class="comm-panel-form" id="panelForm2">
                                         @csrf
                                         <div class="row">
                                             <div class="col-sm-4 col-12">
                                                 <div class="form-group">
-                                                    <input type="hidden" name="c_short" id="c_short" value="">
-                                                    <input type="hidden" name="short_name" id="short_name" value="">
+                                                    <input type="hidden" name="id" value="{{$newCommercial['id']}}">
+                                                    <input type="hidden" name="c_short" id="c_short" value="{{$newCommercial['c_short']}}">
+                                                    <input type="hidden" name="short_name" id="short_name" value="{{$newCommercial['short_name']}}">
                                                     <label class="control-label required">Company Name</label>
+
                                                     <select class="custom-select form-control-border"
                                                         name="commCompanyId" id="commcompanyNameP">
                                                         <option value="0">Select Company Name</option>
@@ -106,6 +141,9 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                    <script>
+                                                    document.querySelector("#commcompanyNameP").value = "{{$newCommercial['commCompanyId'] }}"
+                                                </script>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4 col-12">
@@ -122,7 +160,7 @@
                                                     <label class="control-label required">Client ID</label>
                                                     <input readonly type="text" class="form-control" name="commClientID"
                                                         id="commClientID" placeholder="Client ID"
-                                                        value="{{ $newCommercial->commClientID }}">
+                                                        value="{{$newCommercial['commClientID']}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -133,17 +171,17 @@
                                                         Commercial</label>
                                                     <div class="custom-two-check">
                                                         <div class="checkcontainer">
-                                                            <input type="checkbox" class="panel-checkbox" name="commshootcheck" id="commshootcheck" value="1">
+                                                            <input {{$check_disabled}} type="checkbox"  {{$newCommercial['commshootcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commshootcheck" id="commshootcheck" value="1">
                                                             <span class="checkmark"></span>
                                                             Shoot
                                                         </div>
                                                         <div class="checkcontainer">
-                                                            <input type="checkbox" class="panel-checkbox" name="commcgcheck" id="commcgcheck" value="1">
+                                                            <input {{$check_disabled}}  type="checkbox" {{$newCommercial['commcgcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commcgcheck" id="commcgcheck" value="1">
                                                             <span class="checkmark"></span>
                                                             Creative Graphics
                                                         </div>
                                                         <div class="checkcontainer">
-                                                            <input type="checkbox" class="panel-checkbox" name="commcatcheck" id="commcatcheck" value="1">
+                                                            <input {{$check_disabled}} type="checkbox" {{$newCommercial['commcatcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commcatcheck" id="commcatcheck" value="1">
                                                             <span class="checkmark"></span>
                                                             Cataloging
                                                         </div>
@@ -153,9 +191,9 @@
                                             <div class="col-sm-6 col-12">
                                                 <div class="btn-form-group">
                                                     <div class="custom-action-btn-wrapper">
-                                                        <button type="submit" class="btn btn-warning" id="genCommBTN">
-                                                            Create Commercial
-                                                        </button>
+                                                        @if ($show_submit == 1)
+                                                            <button type="submit" class="btn btn-warning" id="genCommBTN">{{$btn_Name}}</button>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -165,8 +203,11 @@
                             </div>
                         </div>
                     </div>
+
+                    {{-- Other Forms --}}
                     <div class="panel-accrodian-wrapper">
                         <div class="accordian-item-wrapper" id="commaccordionPanel">
+                            {{-- Shoot secction  --}}
                             <div class="accordian-item" id="commshoot-accor-item" style="display:none;">
                                 <div class="card card-transparent">
                                     <div class="card-header acc-card-header" id="commshootAccor" data-toggle="collapse"
@@ -182,18 +223,26 @@
                                     <div id="commshootcollapse" class="collapse" aria-labelledby="commshootAccor"
                                         data-parent="#commaccordionPanel">
                                         <div class="card-body">
-                                            <form action="" method="post" id="commshootForm">
+                                            <form action="{{route('saveShootCommercial')}}" method="post" id="commshootForm">
+                                                @csrf
                                                 <div class="row">
                                                     <div class="col-sm-3 col-12">
                                                         <div class="form-group">
                                                             <label class="control-label required">Product Category</label>
+
+                                                            <input type="hidden" name="newCommercialId" value="{{$newCommercial['id']}}">
+                                                            <input type="hidden" name="user_id" value="{{$newCommercial['commCompanyId']}}">
+                                                            <input type="hidden" name="brand_id" value="{{$newCommercial['commBrandId']}}">
+
                                                             <select class="custom-select form-control-border"
                                                                 name="commproductCat" id="commproductCat">
-                                                                <option selected>Select Product Category</option>
-                                                                <option value="Product 1">Product 1</option>
-                                                                <option value="Product 2">Product 2</option>
-                                                                <option value="Product 3">Product 3</option>
-                                                                <option value="Product 4">Product 4</option>
+                                                                <option value="">Select Product Category</option>
+                                                                 @foreach($getProductList as $index => $getProduct)
+                                                                    @php
+                                                                        $selected = "";
+                                                                    @endphp
+                                                                    <option {{ $selected }} value="{{$getProduct}}">{{$getProduct}}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -202,11 +251,13 @@
                                                             <label class="control-label required">Type of Shoot</label>
                                                             <select class="custom-select form-control-border"
                                                                 name="commshootType" id="commshootType">
-                                                                <option selected>Select Type of Shoot</option>
-                                                                <option value="Shoot 1">Shoot 1</option>
-                                                                <option value="Shoot 2">Shoot 2</option>
-                                                                <option value="Shoot 3">Shoot 3</option>
-                                                                <option value="Shoot 4">Shoot 4</option>
+                                                                <option value="">Select Type of Shoot</option>
+                                                                 @foreach($getTypeOfShootList as $index => $typeOfShoot)
+                                                                    @php
+                                                                        $selected = "";
+                                                                    @endphp
+                                                                    <option {{ $selected }} value="{{$typeOfShoot}}">{{$typeOfShoot}}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -215,15 +266,12 @@
                                                             <label class="control-label required">Type of Clothing</label>
                                                             <select class="custom-select form-control-border"
                                                                 name="commclothingType" id="commclothingType">
-                                                                <option selected>Select Type of Clothing</option>
-                                                                <option value="Type of Clothing 1">Type of Clothing 1
-                                                                </option>
-                                                                <option value="Type of Clothing 2">Type of Clothing 2
-                                                                </option>
-                                                                <option value="Type of Clothing 3">Type of Clothing 3
-                                                                </option>
-                                                                <option value="Type of Clothing 4">Type of Clothing 4
-                                                                </option>
+                                                                <option>Select Type of Clothing</option>
+                                                                <option value="Sets">Sets</option>
+                                                                <option value="Mix">Mix</option>
+                                                                <option value="Combo">Combo</option>
+                                                                <option value="Topwear">Topwear</option>
+                                                                <option value="Bottom Wear">Bottom Wear</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -247,17 +295,13 @@
                                                                 Adaptation</label>
                                                             <select class="custom-select form-control-border"
                                                                 name="commPAdpt" id="commPAdpt">
-                                                                <option selected>Select Primary Adaptation</option>
-                                                                <option value="Primary Adaptation 1">Primary Adaptation 1
-                                                                </option>
-                                                                <option value="Primary Adaptation 2">Primary Adaptation 2
-                                                                </option>
-                                                                <option value="Primary Adaptation 3">Primary Adaptation 3
-                                                                </option>
-                                                                <option value="Primary Adaptation 4">Primary Adaptation 4
-                                                                </option>
-                                                                <option value="Primary Adaptation 5">Primary Adaptation 5
-                                                                </option>
+                                                                <option value="">Select Primary Adaptation</option>
+                                                                @foreach($AdaptationsList as $index => $adaptations)
+                                                                    @php
+                                                                        $selected = "";
+                                                                    @endphp
+                                                                    <option {{ $selected }} value="{{$adaptations}}">{{$adaptations}}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -266,12 +310,13 @@
                                                             <label class="control-label required">Adaptation 1</label>
                                                             <select class="custom-select form-control-border"
                                                                 name="commAdpt1" id="commAdpt1">
-                                                                <option selected>Select Adaptation 1</option>
-                                                                <option value="Adaptation 1">Adaptation 1</option>
-                                                                <option value="Adaptation 2">Adaptation 2</option>
-                                                                <option value="Adaptation 3">Adaptation 3</option>
-                                                                <option value="Adaptation 4">Adaptation 4</option>
-                                                                <option value="Adaptation 5">Adaptation 5</option>
+                                                                <option value="">Select Adaptation 1</option>
+                                                                @foreach($AdaptationsList as $index => $adaptations)
+                                                                    @php
+                                                                        $selected = "";
+                                                                    @endphp
+                                                                    <option {{ $selected }} value="{{$adaptations}}">{{$adaptations}}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -280,12 +325,13 @@
                                                             <label class="control-label required">Adaptation 2</label>
                                                             <select class="custom-select form-control-border"
                                                                 name="commAdpt2" id="commAdpt2">
-                                                                <option selected>Select Adaptation 2</option>
-                                                                <option value="Adaptation 1">Adaptation 1</option>
-                                                                <option value="Adaptation 2">Adaptation 2</option>
-                                                                <option value="Adaptation 3">Adaptation 3</option>
-                                                                <option value="Adaptation 4">Adaptation 4</option>
-                                                                <option value="Adaptation 5">Adaptation 5</option>
+                                                                <option value="">Select Adaptation 2</option>
+                                                                @foreach($AdaptationsList as $index => $adaptations)
+                                                                    @php
+                                                                        $selected = "";
+                                                                    @endphp
+                                                                    <option {{ $selected }} value="{{$adaptations}}">{{$adaptations}}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -294,12 +340,13 @@
                                                             <label class="control-label required">Adaptation 3</label>
                                                             <select class="custom-select form-control-border"
                                                                 name="commAdpt3" id="commAdpt3">
-                                                                <option selected>Select Adaptation 3</option>
-                                                                <option value="Adaptation 1">Adaptation 1</option>
-                                                                <option value="Adaptation 2">Adaptation 2</option>
-                                                                <option value="Adaptation 3">Adaptation 3</option>
-                                                                <option value="Adaptation 4">Adaptation 4</option>
-                                                                <option value="Adaptation 5">Adaptation 5</option>
+                                                                <option value="">Select Adaptation 3</option>
+                                                                @foreach($AdaptationsList as $index => $adaptations)
+                                                                    @php
+                                                                        $selected = "";
+                                                                    @endphp
+                                                                    <option {{ $selected }} value="{{$adaptations}}">{{$adaptations}}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -308,12 +355,13 @@
                                                             <label class="control-label required">Adaptation 4</label>
                                                             <select class="custom-select form-control-border"
                                                                 name="commAdpt4" id="commAdpt4">
-                                                                <option selected>Select Adaptation 4</option>
-                                                                <option value="Adaptation 1">Adaptation 1</option>
-                                                                <option value="Adaptation 2">Adaptation 2</option>
-                                                                <option value="Adaptation 3">Adaptation 3</option>
-                                                                <option value="Adaptation 4">Adaptation 4</option>
-                                                                <option value="Adaptation 5">Adaptation 5</option>
+                                                                <option value="">Select Adaptation 4</option>
+                                                                @foreach($AdaptationsList as $index => $adaptations)
+                                                                    @php
+                                                                        $selected = "";
+                                                                    @endphp
+                                                                    <option {{ $selected }} value="{{$adaptations}}">{{$adaptations}}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -330,10 +378,11 @@
                                                     <div class="col-12">
                                                         <div class="btn-form-group">
                                                             <div class="custom-action-btn-wrapper">
-                                                                <a href="javascript:;" class="btn btn-warning"
-                                                                    id="commshsaveBTN">
-                                                                    Save
-                                                                </a>
+                                                                 @if ($catCheckIsDone != 2)
+                                                                    <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commshsaveBTN">  Save  </button>
+                                                                @else
+                                                                    <p style="color: #00ff00">Shoot Commercial Already Saved</p>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
@@ -343,6 +392,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {{--  Creative Graphics secction  --}}
                             <div class="accordian-item" id="commcg-accor-item" style="display:none;">
                                 <div class="card card-transparent">
                                     <div class="card-header acc-card-header" id="commcgAccor" data-toggle="collapse"
@@ -358,14 +408,18 @@
                                     <div id="commcgcollapse" class="collapse" aria-labelledby="commcgAccor"
                                         data-parent="#commaccordionPanel">
                                         <div class="card-body">
-                                            <form action="" method="post" id="commcgForm">
+                                            <form action="{{route('SaveCreativeCommercial')}}" method="post" id="commcgForm">
+                                                @csrf
                                                 <div class="row">
                                                     <div class="col-sm-4 col-12">
                                                         <div class="form-group">
                                                             <label class="control-label required">Project Name</label>
-                                                            <input type="text" class="form-control"
-                                                                name="commProjectName" id="commProjectName"
-                                                                placeholder="Enter Project Name">
+                                                           
+                                                            <input type="hidden" name="newCommercialId" value="{{$newCommercial['id']}}">
+                                                            <input type="hidden" name="user_id" value="{{$newCommercial['commCompanyId']}}">
+                                                            <input type="hidden" name="brand_id" value="{{$newCommercial['commBrandId']}}">
+
+                                                            <input type="text" class="form-control" name="commProjectName" id="commProjectName" placeholder="Enter Project Name">
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 col-12">
@@ -373,11 +427,10 @@
                                                             <label class="control-label required">Kind of Work</label>
                                                             <select class="custom-select form-control-border"
                                                                 name="commWorkType" id="commWorkType">
-                                                                <option selected>Select Kind of Work</option>
-                                                                <option value="Work Type 1">Work Type 1</option>
-                                                                <option value="Work Type 2">Work Type 2</option>
-                                                                <option value="Work Type 3">Work Type 3</option>
-                                                                <option value="Work Type 4">Work Type 4</option>
+                                                                <option value="">Select Kind of Work</option>
+                                                                @foreach ($kindOfWork as $row)
+                                                                    <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -394,10 +447,11 @@
                                                     <div class="col-12">
                                                         <div class="btn-form-group">
                                                             <div class="custom-action-btn-wrapper">
-                                                                <a href="javascript:;" class="btn btn-warning"
-                                                                    id="commcgsaveBTN">
-                                                                    Save
-                                                                </a>
+                                                                @if ($cgCheckIsDone != 2)
+                                                                    <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commcgsaveBTN">Save</button>
+                                                                 @else
+                                                                    <p  style="color: #00ff00">Creative Commercial Already Saved</p>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
@@ -407,6 +461,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {{-- Cataloging secction  --}}
                             <div class="accordian-item" id="comm-ct-accor-item" style="display:none;">
                                 <div class="card card-transparent">
                                     <div class="card-header acc-card-header" id="commctAccor" data-toggle="collapse"
@@ -422,18 +477,33 @@
                                     <div id="commctcollapse" class="collapse" aria-labelledby="commctAccor"
                                         data-parent="#commaccordionPanel">
                                         <div class="card-body">
-                                            <form action="" method="post" id="commctForm">
+                                            <form action="{{route('SaveCatalogingCommercial')}}" method="post" id="commctForm">
+                                                @csrf
                                                 <div class="row">
                                                     <div class="col-sm-4 col-12">
                                                         <div class="form-group">
+
+                                                            <input type="hidden" name="newCommercialId" value="{{$newCommercial['id']}}">
+                                                            <input type="hidden" name="user_id" value="{{$newCommercial['commCompanyId']}}">
+                                                            <input type="hidden" name="brand_id" value="{{$newCommercial['commBrandId']}}">
+
                                                             <label class="control-label required">Marketplace</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commMarketplace" id="commMarketplace">
-                                                                <option selected>Select Marketplace</option>
-                                                                <option value="Marketplace 1">Marketplace 1</option>
-                                                                <option value="Marketplace 2">Marketplace 2</option>
-                                                                <option value="Marketplace 3">Marketplace 3</option>
-                                                                <option value="Marketplace 4">Marketplace 4</option>
+                                                                name="market_place[]" id="commMarketplace" multiple="multiple">
+                                                               <option value="">Select Marketplace</option>
+                                                                @foreach($marketPlace as $index => $getProduct)
+                                                                    @php
+                                                                        $marketPlace_id =  $getProduct['id'];
+                                                                        $marketPlace_name =  $getProduct['marketPlace_name'];
+                                                                        $selected = "";
+                                                                        // if($commercial_id_is > 0){
+                                                                        //     if(in_array($marketPlace_id , $market_place_arr)){
+                                                                        //     $selected = "selected";
+                                                                        //     }
+                                                                        // }
+                                                                    @endphp
+                                                                    <option {{ $selected }} value="{{$marketPlace_id}}">{{$marketPlace_name}}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -442,11 +512,10 @@
                                                             <label class="control-label required">Type of Service</label>
                                                             <select class="custom-select form-control-border"
                                                                 name="commctseviceType" id="commctseviceType">
-                                                                <option selected>Select Type of Service</option>
-                                                                <option value="Service 1">Service 1</option>
-                                                                <option value="Service 2">Service 2</option>
-                                                                <option value="Service 3">Service 3</option>
-                                                                <option value="Service 4">Service 4</option>
+                                                                <option value="">Select Type of Service</option>
+                                                                @foreach($typeOfService as $index => $service)
+                                                                    <option value="{{$service}}">{{$service}}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
@@ -463,10 +532,11 @@
                                                     <div class="col-12">
                                                         <div class="btn-form-group">
                                                             <div class="custom-action-btn-wrapper">
-                                                                <a href="javascript:;" class="btn btn-warning"
-                                                                    id="commctsaveBTN">
-                                                                    Save
-                                                                </a>
+                                                                @if ($catCheckIsDone != 2)
+                                                                    <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commctsaveBTN">  Save  </button>
+                                                                @else
+                                                                    <p style="color: #00ff00">Cataloging Commercial Already Saved</p>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
@@ -490,7 +560,7 @@
     <script type="application/javascript" src="{{asset('plugins/datepicker-in-bootstrap-modal/js/datepicker.js')}}"></script>
 
     <script src="https://mdbcdn.b-cdn.net/wp-content/themes/mdbootstrap4/js/plugins/mdb-file-upload.min.js"></script>
-
+    {{-- Check box actiion Script --}}
     <script>
         // Commercial Panel
 
@@ -522,17 +592,28 @@
         });
     </script>
 
-    {{-- data for update --}}
+    {{-- data for update $newCommercial['commcatcheck'] --}}
     <script>
-        const user_id_val_is = "{{ $newCommercial->user_id }}";
-        const saved_brand_id_is = "{{ $newCommercial->brand_id }}";
+        const commshootcheck_is = +"{{ $newCommercial['commshootcheck'] }}";
+        const commcgcheck_is = +"{{ $newCommercial['commcgcheck'] }}";
+        const commcatcheck_is = +"{{ $newCommercial['commcatcheck'] }}";
+        const user_id_val_is = +"{{ $newCommercial['commCompanyId'] }}";
+        const saved_brand_id_is = +"{{ $newCommercial['commBrandId'] }}";
+    </script>
+
+    <!-- script for setting short_name -->
+    <script type="text/javascript">
+        $("#commbrandNameP").change(function() { 
+            const short_name = $("#commbrandNameP").find(':selected').data('short_name');
+                $("#short_name").val(short_name);
+        });
     </script>
 
     {{-- get-brand List --}}
     <script>
         $(document).ready(function() {
             $("#commcompanyNameP").change(async function() {
-                const user_id_is = $("#commcompanyNameP").val();
+                const user_id_is = +$("#commcompanyNameP").val();
                 const client_id = $("#commcompanyNameP").find(':selected').data('client_id')
                 const c_short = $("#commcompanyNameP").find(':selected').data('c_short')
 
@@ -559,20 +640,35 @@
                 document.getElementById("commbrandNameP").innerHTML = options;
                 if (saved_brand_id_is > 0 && user_id_val_is === user_id_is) {
                     document.getElementById("commbrandNameP").value = saved_brand_id_is;
+                    console.log({saved_brand_id_is, user_id_val_is , user_id_is})
+                    $("#commbrandNameP").trigger("change"); 
                 }
             });
         })
     </script>
 
-    <!-- script for setting short_name -->
+    {{-- code for updation --}}
+    <script>
+        $(document).ready(function() {
+            setTimeout(() => {
+                $('#msg_div').attr("style", "display:none")
+            }, 2000);
+            if(user_id_val_is > 0){
+                $("#commcompanyNameP").trigger("change"); 
+                if(commshootcheck_is == 1){
+                    $('#commshoot-accor-item').css('display', 'block');
+                }
 
-    <script type="text/javascript">
-        $("#commbrandNameP").change(function() { 
-            const short_name = $("#commbrandNameP").find(':selected').data('short_name');
-                $("#short_name").val(short_name);
-        });
+                if(commcgcheck_is == 1){
+                    $('#commcg-accor-item').css('display', 'block');
+                }
+
+                if(commcatcheck_is == 1){
+                    $('#comm-ct-accor-item').css('display', 'block');
+                }
+            }
+        })
     </script>
-
 
     <!-- End of Commercial Panel -->
 @endsection

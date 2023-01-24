@@ -35,6 +35,189 @@ if(!function_exists('get_date_time')){
     }
 }
 
+if (!function_exists('getTypeOfShootList')) {
+
+    function getTypeOfShootList($id = '')
+    {
+        $typeOfShootList =
+        array(
+            'Apparel model with ghost shots' => 'Apparel model with ghost shots',
+            'Apparel model' => 'Apparel Model',
+            'Model Shoot' => 'Model Shoot',
+            'Product Shoot' => 'Product Shoot',
+            'Table-Top shoot' => 'Table-Top Shoot',
+            'Apparel mannequin' => 'Apparel mannequin',
+            'Flat lay shoot' => 'Flat lay shoot',
+            'Flat Lay shoot Large Size Apparels' => 'Flat Lay shoot Large Size Apparels',
+            'Ghost Mannequin Shoot' => 'Ghost Mannequin Shoot',
+            'Hanger_Table Top_Flat Lay Shoot' => 'Hanger_Table Top_Flat Lay Shoot',
+            'Apparel Model_Flat Lay Shoot' => 'Apparel Model_Flat Lay Shoot',
+            'Creative Shoot' => 'Creative Shoot',
+            'Editing' => 'Editing',
+            'Product Shoot with Model' => 'Product Shoot with Model',
+            'Hanger Shoot' => 'Hanger Shoot',
+            'Extra Mood Shot' => 'Extra Mood Shot',
+            'Lifestyle Non-Model Shoot for Products' => 'Lifestyle Non-Model Shoot for Products',
+            'Catalog Videos' => 'Catalog Videos',
+            '360 Videos' => '360 Videos',
+            '360 Degree' => '360 Degree',
+            '360 Videos without model' => '360 Videos without model',
+            'Stylized Videos' => 'Stylized Videos',
+            'Banner Shoot' => 'Banner Shoot',
+            'Texture Shot' => 'Texture Shot',
+            'Catalog videos + Catalog shoot' => 'Catalog videos + Catalog shoot',
+            'Detail Angles' => 'Detail Angles',
+            'Utility Shot' => 'Utility Shot',
+            'Catalog shoot' => 'Catalog shoot',
+            'Filling shot' => 'Filling shot',
+            'Group shot' => 'Group shot',
+            'High Resolution Images' => 'High Resolution Images'
+        );
+
+
+
+        if (!empty($id) && isset($typeOfShootList[$id])) {
+            $typeOfShootList = $typeOfShootList[$id];
+        }
+        return $typeOfShootList;
+    }
+}
+
+if (!function_exists('getProductList')) {
+
+    function getProductList($id = '')
+    {
+        $productList =
+        array(
+            'Athleisure' => 'Athleisure',
+            'Bags/Wallets/Facemask/Socks & Other Accessories' => 'Bags/Wallets/Face Mask/Socks & Other Accessories',
+            'Bags/Wallets/Other Accessories' => 'Bags/Wallets/Other Accessories',
+            'Bags/Wallets/Other Accessories(Facemasks)' => 'Bags/Wallets/Other Accessories (Face Masks)',
+            'Bags/Wallets/Other Accessories (Socks)' => 'Bags/Wallets/Other Accessories (Socks)',
+            'Briefs (Lingerie/ Innerwear)' => 'Briefs (Lingerie/ Innerwear)',
+            'Dupattas' => 'Dupattas',
+            'Food Products' => 'Food Products',
+            'Footwear' => 'Footwear',
+            'kidswear' => 'Kidswear',
+            'Kidswear (Hanger Shoot)' => 'Kidswear ( Hanger Shoot)',
+            'Kidswear Mask / Mask on Mannequin' => 'Kidswear Mask / Mask on Mannequin',
+            'Food Products' => 'Food Products',
+            'Footwear' => 'Footwear',
+            'Gift Sets' => 'Gift Sets',
+            'Gym Equipments' => 'Gym Equipments',
+            'Home/Personal Care Products' => 'Home/Personal Care Products',
+            'Infographics' => 'Infographics',
+            'Men Casual' => 'Men Casual',
+            'Men Suits' => 'Men Suits',
+            'Mens Undergarments (briefs and trunks)' => 'Mens Undergarments (briefs and trunks)',
+            'Mens Undergarments' => 'Mens Undergarments',
+            'Other Accessories - Stoles & Scarves' => 'Other Accessories - Stoles & Scarves',
+            'Sarees/Lehangas' => 'Sarees/Lehangas',
+            'Sets' => 'Sets',
+            'Sports Equipments' => 'Sports Equipments',
+            'Stylised Video' => 'Stylised Video',
+            'Unisex Casual / Formal' => 'Unisex Casual / Formal',
+            'Watches/Jewellery (non reflective)' => 'Watches/Jewellery (non reflective)',
+            'Watches/Jewellery (reflective)' => 'Watches/Jewellery (reflective)',
+            'Stylised Video' => 'Stylised Video',
+            'Combo Sets' => 'Combo Sets',
+            'Electronics' => 'Electronics',
+            'Extra Mood Shot' => 'Extra Mood Shot',
+            'Flat Lay Creative Shoot' => 'Flat Lay Creative Shoot',
+            'Kidswear Sets' => 'Kidswear Sets',
+            'Kids Toys' => 'Kids Toys',
+            'Kidswear Singles' => 'Kidswear Singles',
+            'Lingerie/Innerwear - Singles' => 'Lingerie/Innerwear - Singles',
+            'Lingerie/Innerwear - Sets' => 'Lingerie/Innerwear - Sets',
+            'Loungewear/Nightwear' => 'Loungewear/Nightwear',
+            'Men Accessories - Bracelets, Cufflinks, Pocket Squares,Ties' => 'Men Accessories - Bracelets, Cufflinks, Pocket Squares,Ties',
+            'Men Casual - Table top' => 'Men Casual - Table top',
+            'Men Casual - Product Functionality' => 'Men Casual - Product Functionality',
+            'Men Casual Model shoot' => 'Men Casual Model shoot',
+            'Men Formal' => 'Men Formal',
+            'Women Casual / Kurtis - Premium Shoot' => 'Women Casual / Kurtis - Premium Shoot',
+            'Watches / Jewellery - reflective' => 'Watches / Jewellery - reflective',
+            'Women Casual / Kurtis' => 'Women Casual / Kurtis',
+            'Women Formal' => 'Women Formal',
+            'Mens Western Wear' => 'Mens Western Wear',
+            'Women Western Wear' => 'Women Western Wear',
+            'Mens Ethnic Wear' => 'Mens Ethnic Wear',
+            'Women Ethnic Wear' => 'Women Ethnic Wear',
+            'Footwear & Lifestyle Accessories' => 'Footwear & Lifestyle Accessories',
+            'Handbags-Backpacks' => 'Handbags-Backpacks',
+            'Jewellery, Watches, Personal Care & Other Metal/Glass Accessories (Non-Reflective)' => 'Jewellery, Watches, Personal Care & Other Metal/Glass Accessories (Non-Reflective)',
+            'Jewellery, Watches, Personal Care & Other Metal/Glass Accessories (Reflective)' => 'Jewellery, Watches, Personal Care & Other Metal/Glass Accessories (Reflective)',
+            '7-Stripe Doormat 40*60 cm' => '7-Stripe Doormat 40*60 cm',
+            '7-Stripe Doormat 45*90 cm' => '7-Stripe Doormat 45*90 cm',
+            'PVC S-mat 90*60 cm' => 'PVC S-mat 90*60 cm',
+            'PVC S-mat 90*90 cm' => 'PVC S-mat 90*90 cm',
+            '7-Stripe Doormat 60*120 cm' => '7-Stripe Doormat 60*120 cm',
+            'PVC S-mat 90*150 cm' => 'PVC S-mat 90*150 cm',
+            'Grab bar 30/50/60 cm' => 'Grab bar 30/50/60 cm',
+            'Grab bar flip-up' => 'Grab bar flip-up',
+            '7-stripe 45x75' => '7stripe 45x75',
+            'Home Decor' => 'Home Decor',
+            'Home Essentials' => 'Home Essentials',
+            'Bed Sheets' => 'Bed Sheets'
+        );
+
+        if (!empty($id) && isset($productList[$id])) {
+            $productList = $productList[$id];
+        }
+        return $productList;
+    }
+}
+
+if (!function_exists('getAdaptationsList')) {
+
+    function getAdaptationsList($id = '')
+    {
+        $adaptationsList =
+            array(
+                'Brand-Site' => 'Brand-Site',
+                'Noon' => 'Noon',
+                'Noon-Athletiq' => 'Noon-Athletiq',
+                'Noon-DRIP' => 'Noon-DRIP',
+                'Noon-QUWA' => 'Noon-QUWA',
+                'Noon-OFFROAD' => 'Noon-OFFROAD',
+                'Noon-AILA' => 'Noon-AILA',
+                'Noon-NEON' => 'Noon-NEON',
+                'Noon-SHIVCRAFT' => 'Noon-SHIVCRAFT',
+                'Noon-ZARAFA' => 'Noon-ZARAFA',
+                'Tata Cliq' => 'Tata Cliq',
+                'Tata cliq luxury' => 'Tata cliq luxury',
+                'Flipkart' => 'Flipkart',
+                'Snapdeal' => 'Snapdeal',
+                'Amazon' => 'Amazon',
+                'Myntra' => 'Myntra',
+                'Myntra_premium' => 'Myntra Premium',
+                'Ajio' => 'Ajio',
+                'Nykaa' => 'Nykaa',
+                'Nykaa Fashion' => 'Nykaa Fashion',
+                'First Cry' => 'First Cry',
+                'Meesho' => 'Meesho',
+                'NA' => 'NA',
+                'STATE 8' => 'STATE 8',
+                'High Resolution' => 'High Resolution',
+                'Low White' => 'Low White',
+                'Low Grey' => 'Low Grey',
+                'Myntra OMNI' => 'Myntra OMNI',
+                'Purple' => 'Purple',
+                'Netmeds' => 'Netmeds',
+                'Lime road' => 'Lime road',
+                'Namashi' => 'Namashi'
+
+            );
+
+
+        if (!empty($id) && isset($adaptationsList[$id])) {
+            $adaptationsList = $adaptationsList[$id];
+        }
+        return $adaptationsList;
+    }
+}
+
+
 
 // getcopywriter
 if (!function_exists('getcopywriter')) {

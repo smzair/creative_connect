@@ -119,6 +119,19 @@
                                         <li class="nav-item">
                                            
                                             <ul class="nav nav-treeview">
+                                                <li class="nav-item">
+                                                    <a href="{{route('NewCommercial')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Add New Commercials</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('ViewNewCommercial')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>View All New Commercials</p>
+                                                    </a>
+                                                </li>
 
                                                 <li class="nav-item">
                                                     <a href="{{route('CREATECOM')}}" class="nav-link">

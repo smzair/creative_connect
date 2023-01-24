@@ -65,6 +65,9 @@
                   <th class="p-2">Company Name</th>
                   <th class="p-2">Brand Name</th>
                   <th class="p-2">Client Id</th>
+                  <th class="p-2">Shoot</th>
+                  <th class="p-2">Creative Graphics</th>
+                  <th class="p-2">Cataloging</th>
                   <th class="p-2">Action</th>
                 </tr>
               </thead>
@@ -76,6 +79,25 @@
                 @php
                 // pre($row);
                     $createNewCommercialIdIs = $row->id;
+                    $createNewCommercialIdIs = $row->id;
+                    $shootCheckIsDone = $row->shootCheckIsDone;
+                    $cgCheckIsDone = $row->cgCheckIsDone;
+                    $catCheckIsDone = $row->catCheckIsDone;
+                    $commshootcheck = $commcgcheck = $commcatcheck = "No Need to generate";
+
+                    if($shootCheckIsDone > 0){
+                      // $commshootcheck = $shootCheckIsDone == 1 ? 'Generate New commercial Pending' : 'New commercial Generated';
+                      $commshootcheck = $shootCheckIsDone == 1 ? 'Pending' : 'Generated';
+                    }
+
+                    if($cgCheckIsDone > 0){
+                      $commcgcheck = $cgCheckIsDone == 1 ? 'Pending' : 'Generated';
+                    }
+
+                    if($catCheckIsDone > 0){
+                      $commcatcheck = $catCheckIsDone == 1 ? 'Pending' : 'Generated';
+                    }
+
                 @endphp
                 
                 <tr class="wrc-tt">
@@ -83,8 +105,11 @@
                   <td class="p-sm-2 p-1">{{$row->company}}</td>
                   <td class="p-sm-2 p-1">{{$row->name}}</td>
                   <td class="p-sm-2 p-1">{{$row->commClientID}}</td>
+                  <td class="p-sm-2 p-1">{{$commshootcheck}}</td>
+                  <td class="p-sm-2 p-1">{{$commcgcheck}}</td>
+                  <td class="p-sm-2 p-1">{{$commcatcheck}}</td>
                   <td>
-                   <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{ route('EditNewCommercial', ['id' => $createNewCommercialIdIs]) }}">Edit</a>  
+                   <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{ route('EditNewCommercial', ['id' => $createNewCommercialIdIs]) }}">Continue Task</a>  
                   </td>               
                 </tr>
                 @endforeach

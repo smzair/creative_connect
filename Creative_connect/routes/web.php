@@ -130,6 +130,12 @@ Route::get('catalog-wrc-status', [CatalogWrcController::class , 'CatalogWrcStatu
 // NewCommercial Routing
 Route::get( '/newCommercial', [NewCommercial::class, 'index'])->name('NewCommercial'); // NewCommercial Form 
 Route::POST('/newCommercial', [NewCommercial::class, 'create'])->name('SaveNewCommercial'); // Save NewCommercial And genrating data
-Route::get('/newCommercial/{id}', [NewCommercial::class, 'index'])->name('EditNewCommercial'); // NewCommercial Form 
-Route::get('/newCommercialList', [NewCommercial::class, 'view'])->name('ViewNewCommercial'); // NewCommercial Form 
+Route::get('/newCommercialList', [NewCommercial::class, 'view'])->name('ViewNewCommercial'); // Listing For NewCommercial
+Route::get('/newCommercial/{id}', [NewCommercial::class, 'Edit'])->name('EditNewCommercial'); // Edit   
+
+Route::POST('/UpdateNewCommercial', [NewCommercial::class, 'update'])->name('UpdateNewCommercial'); // Save NewCommercial And genrating data
+Route::POST('/saveShootCommercial', [NewCommercial::class, 'saveShootCommercial'])->name('saveShootCommercial'); // Save SaveShootCommercial And genrating data
+Route::POST('/saveCreativeCommercial', [NewCommercial::class, 'SaveCreativeCommercial'])->name('SaveCreativeCommercial'); // Save SaveCreativeCommercial And genrating data
+Route::POST('/saveCatalogingCommercial', [NewCommercial::class, 'SaveCatalogingCommercial'])->name('SaveCatalogingCommercial'); // Save SaveCatalogingCommercial And genrating data
+
 
