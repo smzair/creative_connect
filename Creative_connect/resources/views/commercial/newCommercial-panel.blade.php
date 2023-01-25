@@ -123,7 +123,7 @@
                                     
                                 @endphp
                                 <div class="custom-panel-form-group">
-                                    <form action="{{route($formRoute)}}"  method="post" class="comm-panel-form" id="panelForm2">
+                                    <form action="{{route($formRoute)}}" method="post" class="comm-panel-form" id="panelForm2">
                                         @csrf
                                         <div class="row">
                                             <div class="col-sm-4 col-12">
@@ -232,12 +232,12 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Product Category</label>
 
-                                                            <input type="hidden" name="newCommercialId" value="{{$newCommercial['id']}}">
+                                                            <input type="hidden" id="newCommercialId" name="newCommercialId" value="{{$newCommercial['id']}}">
                                                             <input type="hidden" name="user_id" value="{{$newCommercial['commCompanyId']}}">
                                                             <input type="hidden" name="brand_id" value="{{$newCommercial['commBrandId']}}">
 
                                                             <select class="custom-select form-control-border"
-                                                                name="product_category" id="commproductCat">
+                                                                name="product_category" id="commproductCat" onchange="validateShootForm()">
                                                                 <option value="">Select Product Category</option>
                                                                  @foreach($getProductList as $index => $getProduct)
                                                                     @php
@@ -252,7 +252,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Type of Shoot</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="type_of_shoot" id="commshootType">
+                                                                name="type_of_shoot" id="commshootType" onchange="validateShootForm()">
                                                                 <option value="">Select Type of Shoot</option>
                                                                  @foreach($getTypeOfShootList as $index => $typeOfShoot)
                                                                     @php
@@ -267,8 +267,8 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Type of Clothing</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="type_of_clothing" id="commclothingType">
-                                                                <option>Select Type of Clothing</option>
+                                                                name="type_of_clothing" id="commclothingType" onchange="validateShootForm()">
+                                                                <option value="">Select Type of Clothing</option>
                                                                 <option value="Sets">Sets</option>
                                                                 <option value="Mix">Mix</option>
                                                                 <option value="Combo">Combo</option>
@@ -281,8 +281,8 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Gender</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="gender" id="commGender">
-                                                                <option selected>Select Gender</option>
+                                                                name="gender" id="commGender" onchange="validateShootForm()">
+                                                                <option value="">Select Gender</option>
                                                                 <option value="Male">Male</option>
                                                                 <option value="Female">Female</option>
                                                                 <option value="Others">Others</option>
@@ -296,7 +296,7 @@
                                                             <label class="control-label required">Primary
                                                                 Adaptation</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="adaptation_1" id="commPAdpt">
+                                                                name="adaptation_1" id="commPAdpt" onchange="validateShootForm()">
                                                                 <option value="">Select Primary Adaptation</option>
                                                                 @foreach($AdaptationsList as $index => $adaptations)
                                                                     @php
@@ -311,7 +311,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Adaptation 1</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="adaptation_2" id="commAdpt1">
+                                                                name="adaptation_2" id="commAdpt1" onchange="validateShootForm()">
                                                                 <option value="">Select Adaptation 1</option>
                                                                 @foreach($AdaptationsList as $index => $adaptations)
                                                                     @php
@@ -326,7 +326,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Adaptation 2</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="adaptation_3" id="commAdpt2">
+                                                                name="adaptation_3" id="commAdpt2" onchange="validateShootForm()">
                                                                 <option value="">Select Adaptation 2</option>
                                                                 @foreach($AdaptationsList as $index => $adaptations)
                                                                     @php
@@ -341,7 +341,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Adaptation 3</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="adaptation_4" id="commAdpt3">
+                                                                name="adaptation_4" id="commAdpt3" onchange="validateShootForm()">
                                                                 <option value="">Select Adaptation 3</option>
                                                                 @foreach($AdaptationsList as $index => $adaptations)
                                                                     @php
@@ -356,7 +356,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Adaptation 4</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="adaptation_5" id="commAdpt4">
+                                                                name="adaptation_5" id="commAdpt4" onchange="validateShootForm()">
                                                                 <option value="">Select Adaptation 4</option>
                                                                 @foreach($AdaptationsList as $index => $adaptations)
                                                                     @php
@@ -372,7 +372,7 @@
                                                             <label class="control-label required">Commercial per
                                                                 SKU</label>
                                                             <input type="text" class="form-control" name="commercial_value_per_sku"
-                                                                id="commSKU" placeholder="Enter Commercial per SKU">
+                                                                id="commSKU" placeholder="Enter Commercial per SKU"  onkeypress="return isNumber(event);" onchange="validateShootForm()">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -421,14 +421,14 @@
                                                             <input type="hidden" name="user_id" value="{{$newCommercial['commCompanyId']}}">
                                                             <input type="hidden" name="brand_id" value="{{$newCommercial['commBrandId']}}">
 
-                                                            <input type="text" class="form-control" name="commProjectName" id="commProjectName" placeholder="Enter Project Name">
+                                                            <input type="text" class="form-control" name="commProjectName" id="commProjectName" placeholder="Enter Project Name" onkeypress="return isAlphabet(event);"  onchange="validateCreativeForm()">
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 col-12">
                                                         <div class="form-group">
                                                             <label class="control-label required">Kind of Work</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commWorkType" id="commWorkType">
+                                                                name="commWorkType" id="commWorkType"  onchange="validateCreativeForm()">
                                                                 <option value="">Select Kind of Work</option>
                                                                 @foreach ($kindOfWork as $row)
                                                                     <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
@@ -441,7 +441,7 @@
                                                             <label class="control-label required">Commercial Per
                                                                 Qty</label>
                                                             <input type="text" class="form-control" name="commQty"
-                                                                id="commQty" placeholder="Enter Commercial Per Qty">
+                                                                id="commQty" placeholder="Enter Commercial Per Qty" onkeypress="return isNumber(event);" onkeyup="validateCreativeForm()">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -491,8 +491,8 @@
 
                                                             <label class="control-label required">Marketplace</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="market_place[]" id="commMarketplace" multiple="multiple">
-                                                               <option value="">Select Marketplace</option>
+                                                                name="market_place[]" id="commMarketplace" multiple="multiple" onchange="validateCatalogingForm()" >
+                                                               <option value="" disabled>Select Marketplace</option>
                                                                 @foreach($marketPlace as $index => $getProduct)
                                                                     @php
                                                                         $marketPlace_id =  $getProduct['id'];
@@ -513,7 +513,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Type of Service</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commctseviceType" id="commctseviceType">
+                                                                name="commctseviceType" id="commctseviceType" onchange="validateCatalogingForm()">
                                                                 <option value="">Select Type of Service</option>
                                                                 @foreach($typeOfService as $index => $service)
                                                                     <option value="{{$service}}">{{$service}}</option>
@@ -526,7 +526,7 @@
                                                             <label class="control-label required">Commercial Per
                                                                 Unit</label>
                                                             <input type="text" class="form-control" name="commUnit"
-                                                                id="commUnit" placeholder="Enter Commercial Per Unit">
+                                                                id="commUnit" placeholder="Enter Commercial Per Unit" onkeypress="return isNumber(event);" onkeyup="validateCatalogingForm()">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -603,7 +603,7 @@
         const saved_brand_id_is = +"{{ $newCommercial['commBrandId'] }}";
     </script>
 
-    {{-- Validation for  --}}
+    {{-- Validation for Add NewCommercial Commercial Form  --}}
     <script>
         function validateNewCommercialForm(){
             const eleman = document.getElementById('genCommBTN');
@@ -620,6 +620,84 @@
         }
         validateNewCommercialForm()
     </script>
+   
+    {{-- Validation for Shoot Form   --}}
+    <script>
+        function validateShootForm(){
+            const commshsaveBTN = document.getElementById('commshsaveBTN');
+            commshsaveBTN.setAttribute("disabled", true);
+
+            const newCommercialId = +$('#newCommercialId').val();
+            const commproductCat = $('#commproductCat').val();
+            const commshootType = $('#commshootType').val();
+            const commclothingType = $('#commclothingType').val();
+            const commGender = $('#commGender').val();
+            const commPAdpt = $('#commPAdpt').val();
+            const commAdpt1 = $('#commAdpt1').val();
+            const commAdpt2 = $('#commAdpt2').val();
+            const commAdpt3 = $('#commAdpt3').val();
+            const commAdpt4 = $('#commAdpt4').val();
+            const commSKU = +$('#commSKU').val();
+
+            if( newCommercialId > 0 && commproductCat != ""  &&  commshootType != ""  &&  commclothingType != ""  &&  commGender != ""  &&  commPAdpt != ""  &&  commAdpt1 != ""  &&  commAdpt2 != ""  &&  commAdpt3 != ""  &&  commAdpt4 != ""  &&  commSKU > 0){
+                commshsaveBTN.removeAttribute("disabled");
+            }
+        }
+        validateShootForm()
+    </script>
+
+    {{-- Validation for Creative Graphics Form   --}}
+    <script>
+        function validateCreativeForm(){
+            const saveBtn = document.getElementById('commcgsaveBTN');
+            saveBtn.setAttribute("disabled", true);
+
+            const newCommercialId = +$('#newCommercialId').val();
+            const commProjectName = $('#commProjectName').val();
+            const commWorkType = $('#commWorkType').val();
+            const commQty = +$('#commQty').val();
+           
+            if( newCommercialId > 0 && commProjectName != ""  &&  commWorkType != "" &&  commQty > 0){
+                saveBtn.removeAttribute("disabled");
+            }
+        }
+        validateCreativeForm()
+    </script>
+
+    {{-- Validation for Cataloging Form   --}}
+    <script>
+        function validateCatalogingForm(){
+            const saveBtn = document.getElementById('commctsaveBTN');
+            saveBtn.setAttribute("disabled", true);
+
+            const newCommercialId = +$('#newCommercialId').val();
+            const commMarketplace = $('#commMarketplace').val();
+            const commctseviceType = $('#commctseviceType').val();
+            const commUnit = +$('#commUnit').val();
+            // console.log(commMarketplace)
+            // console.log({commctseviceType , commUnit , newCommercialId })
+            if( newCommercialId > 0 && commMarketplace.length > 0  &&  commctseviceType != "" &&  commUnit > 0){
+                saveBtn.removeAttribute("disabled");
+            }
+        }
+        validateCatalogingForm()
+    </script>
+
+    {{-- 
+    // console.log({
+            //     newCommercialId,
+            //     commproductCat,
+            //     commshootType,
+            //     commclothingType,
+            //     commGender,
+            //     commPAdpt,
+            //     commAdpt1,
+            //     commAdpt2,
+            //     commAdpt3,
+            //     commAdpt4,
+            //     commSKU,
+            // })    
+    --}}
    
 
 
