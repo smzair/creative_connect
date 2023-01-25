@@ -169,3 +169,22 @@ if(!function_exists('get_date_time')){
         return $mainDuration =  $hours . 'h ' . $minutes . 'min ' . $second.'sec';
     }
 }
+
+// Type of Service
+if (!function_exists('getTypeOfService')) {
+
+    function getTypeOfService()
+    {
+        $getTypeOfService = array(
+            'Fossil Master Sheet' => 'Fossil Master Sheet',
+            'Creative Descriptions' => 'Creative Descriptions',
+            'GHC Content + Descriptions + Images Scraping' => 'GHC Content + Descriptions + Images Scraping',
+            'Content Sheet Creation' => 'Content Sheet Creation',
+            'Content Sheet Creation & Uploading' => 'Content Sheet Creation & Uploading',
+            'Uploading' => 'Uploading',
+            'Image Scraping' => 'Image Scraping',
+            'Fossil Carryover SKUs' => 'Fossil Carryover SKUs'
+        );
+        return $getTypeOfService;
+    }
+}

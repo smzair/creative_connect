@@ -70,10 +70,25 @@ Consolidated-Lot Create
                     <div class="card card-transparent">
                         <div class="card-header">
                             <h3 class="card-title">LOT Creation</h3>
+                           
+                            <div class="col-sm-12 col-12">
+                                <div class="btn-form-group">
+                                    <div class="custom-action-btn-wrapper">
+                                        <a class="btn btn-warning px-1 py-1 btn-xs mt-0" href="{{ route('consolidated_lot_view') }}">All Consolidated LOTs</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        
+                        @if (Session::has('success'))
+                        <div class="alert alert-success" id="msg_div" role="alert">
+                            {{ Session::get('success') }}
+                        </div>
+                        {{ Session::forget('success') }}
+                        @endif
                         <div class="card-body">
                             <div class="custom-panel-form-group">
-                                <form action="{{ route('create_consolidated_lot') }}" method="post" class="lot-panel-form" id="panelForm">
+                                <form action="{{ route('create_consolidated_lot') }}" onsubmit="return validateFormGenerateLot(event)" method="post" class="lot-panel-form" id="panelForm">
                                     @csrf
                                     <div class="row">
                                         <!-- Company Name -->
@@ -124,20 +139,21 @@ Consolidated-Lot Create
                                                 <label class="control-label required">Select Services to generate LOT*</label>
                                                 <div class="custom-two-check">
                                                     <div class="checkcontainer">
-                                                        <input type="checkbox" class="" name="shootcheck" id="shootcheck">
+                                                        <input type="checkbox" class="" name="shootcheck" id="shootcheck" <?php if($CreativeLots->shoot == 1)echo 'checked'?>>
                                                         <span class="checkmark"></span>
                                                         Shoot
                                                     </div>
                                                     <div class="checkcontainer">
-                                                        <input type="checkbox" class="" name="cgcheck" id="cgcheck">
+                                                        <input type="checkbox" class="" name="cgcheck" id="cgcheck" <?php if($CreativeLots->creative_graphic == 1)echo 'checked'?>>
                                                         <span class="checkmark"></span>
                                                         Creative Graphics
                                                     </div>
                                                     <div class="checkcontainer">
-                                                        <input type="checkbox" class="" name="catcheck" id="catcheck">
+                                                        <input type="checkbox" class="" name="catcheck" id="catcheck" <?php if($CreativeLots->cataloging == 1)echo 'checked'?>>
                                                         <span class="checkmark"></span>
                                                         Cataloging
                                                     </div>
+                                                    <p class="input_err" style="color: red; display: none;" id="select_service_err"></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -147,7 +163,11 @@ Consolidated-Lot Create
                                                     {{-- <a href="javascript:;" class="btn btn-warning" id="genLotBTN">
                                                         Generate LOT
                                                     </a> --}}
-                                                    <button type="submit" class="btn btn-sm btn-warning md-2" id="genLotBTN">Generate LOT</button>
+                                                    <?php if(($CreativeLots->id == 0)){?> 
+                                                    <button type="submit" class="btn btn-sm btn-warning md-2" id="genLotBTN">Generate LOT No.</button>
+                                                    <?php }else{ ?>
+                                                        <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="genLotBTN">Generate LOT</button>
+                                                        <?php } ?>
                                                 </div>
                                             </div>
                                         </div>
@@ -159,7 +179,7 @@ Consolidated-Lot Create
                 </div>
                 <div class="panel-accrodian-wrapper">
                     <div class="accordian-item-wrapper" id="accordionPanel">
-                        <div class="accordian-item" id="shoot-accor-item" style="display:block;">
+                        <div class="accordian-item" id="shoot-accor-item" style="display:none;">
                             <div class="card card-transparent">
                                 <div class="card-header acc-card-header" id="shootAccor" data-toggle="collapse" data-target="#shootcollapse" aria-expanded="true" aria-controls="shootcollapse">
                                     <h3 class="card-title">
@@ -171,64 +191,71 @@ Consolidated-Lot Create
                                 </div>
                                 <div id="shootcollapse" class="collapse" aria-labelledby="shootAccor" data-parent="#accordionPanel">
                                     <div class="card-body">
-                                        <form action="" method="post" id="shootForm">
+                                        <form action="{{ route('create_consolidated_shoot') }}" onsubmit="return validateFormShoot(event)" method="post" id="shootForm">
+                                            <input type="hidden" name="consolidated_lot_id" value="{{$CreativeLots->id}}">
+                                            @csrf
                                             <div class="row">
                                                 <div class="col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <label class="control-label required">Type of Service</label>
                                                         <select class="custom-select form-control-border" name="servicesType" id="servicesType">
-                                                            <option selected>Select Type of Service</option>
-                                                            <option value="Service 1">Service 1</option>
-                                                            <option value="Service 2">Service 2</option>
-                                                            <option value="Service 3">Service 3</option>
-                                                            <option value="Service 4">Service 4</option>
+                                                            <option value="" selected>Select Type of Service</option>
+                                                            <option value="E-commerce Shoo">E-commerce Shoot</option>
+                                                            <option value="Cataloging">Cataloging</option>
+                                                            <option value="Marketing Creatives">Marketing Creatives</option>
+                                                            <option value="ODN Verse">ODN Verse</option>
+                                                            <option value="GO Live">GO Live</option>
                                                         </select>
                                                     </div>
+                                                    <p class="input_err" style="color: red; display: none;" id="servicesType_err"></p>
                                                 </div>
                                                 <div class="col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <label class="control-label required">Location</label>
                                                         <select class="custom-select form-control-border" name="locationType" id="locationType">
-                                                            <option selected>Select Location</option>
-                                                            <option value="Location 1">Location 1</option>
-                                                            <option value="Location 2">Location 2</option>
-                                                            <option value="Location 3">Location 3</option>
-                                                            <option value="Location 4">Location 4</option>
+                                                            <option selected value="">Select Location</option>
+                                                            <option value="Delhi">Delhi</option>
+                                                            <option value="Bangalore">Bangalore</option>
                                                         </select>
                                                     </div>
+                                                    <p class="input_err" style="color: red; display: none;" id="locationType_err"></p>
                                                 </div>
                                                 <div class="col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <label class="control-label required">Vertical Type</label>
                                                         <select class="custom-select form-control-border" name="verticalType" id="verticalType">
-                                                            <option selected>Select Vertical Type</option>
-                                                            <option value="Vertical Type 1">Vertical Type 1</option>
-                                                            <option value="Vertical Type 2">Vertical Type 2</option>
-                                                            <option value="Vertical Type 3">Vertical Type 3</option>
-                                                            <option value="Vertical Type 4">Vertical Type 4</option>
+                                                            <option selected value="">Select Vertical Type</option>
+                                                            <option value="Reshoot">Reshoot</option>
+                                                            <option value="New Shoot">New Shoot</option>
+                                                            <option value="Editing">Editing</option>
                                                         </select>
                                                     </div>
+                                                    <p class="input_err" style="color: red; display: none;" id="verticalType_err"></p>
                                                 </div>
                                                 <div class="col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <label class="control-label required">Client Bucket</label>
                                                         <select class="custom-select form-control-border" name="clientBucket" id="clientBucket">
-                                                            <option selected>Select Client Bucket</option>
-                                                            <option value="Client Bucket 1">Client Bucket 1</option>
-                                                            <option value="Client Bucket 2">Client Bucket 2</option>
-                                                            <option value="Client Bucket 3">Client Bucket 3</option>
-                                                            <option value="Client Bucket 4">Client Bucket 4</option>
+                                                            <option selected value="">Select Client Bucket</option>
+                                                            <option value="New">New</option>
+                                                            <option value="Existing">Existing</option>
                                                         </select>
                                                     </div>
+                                                    <p class="input_err" style="color: red; display: none;" id="clientBucket_err"></p>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="btn-form-group">
                                                         <div class="custom-action-btn-wrapper">
-                                                            <a href="javascript:;" class="btn btn-warning" id="shsaveBTN">
+                                                            {{-- <a href="javascript:;" class="btn btn-warning" id="shsaveBTN">
                                                                 Save
-                                                            </a>
+                                                            </a> --}}
+                                                            <?php if($CreativeLots->shoot_form_data == 0){ ?>
+                                                                <button type="submit" class="btn btn-sm btn-warning md-2" id="saveShootBtn">Save</button>
+                                                            <?php }else{ ?>
+                                                                <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="saveShootBtn">Shoot Already Saved</button>
+                                                            <?php } ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -238,7 +265,7 @@ Consolidated-Lot Create
                                 </div>
                             </div>
                         </div>
-                        <div class="accordian-item" id="cg-accor-item" style="display:block;">
+                        <div class="accordian-item" id="cg-accor-item" style="display:none;">
                             <div class="card card-transparent">
                                     <div class="card-header acc-card-header" id="cgAccor" data-toggle="collapse" data-target="#cgcollapse" aria-expanded="true" aria-controls="cgcollapse">
                                         <h3 class="card-title">
@@ -250,64 +277,78 @@ Consolidated-Lot Create
                                     </div>
                                     <div id="cgcollapse" class="collapse" aria-labelledby="cgAccor" data-parent="#accordionPanel">
                                         <div class="card-body">
-                                            <form action="" method="post" id="cgForm">
+                                            <form action="{{ route('create_consolidated_creative_graphics') }}" onsubmit="return validateFormCreativeGraphics(event)" method="post" id="cgForm">
+                                                <input type="hidden" name="consolidated_lot_id" value="{{$CreativeLots->id}}">
+                                                @csrf
                                                 <div class="row">
+                                                    <!-- Project Name -->
                                                     <div class="col-sm-6 col-12">
                                                         <div class="form-group">
                                                             <label class="control-label required">Project Name</label>
-                                                            <select class="custom-select form-control-border" name="projectName" id="projectName">
-                                                                <option selected>Enter Project Name</option>
-                                                                <option value="Project Name 1">Project Name 1</option>
-                                                                <option value="Project Name 2">Project Name 2</option>
-                                                                <option value="Project Name 3">Project Name 3</option>
-                                                                <option value="Project Name 4">Project Name 4</option>
-                                                            </select>
+                                                            <input type="text" value="" class="form-control" name="project_name" id="project_name" placeholder="Enter Project Name" onKeyPress="return isAlphabet(event);">
                                                         </div>
+                                                        <p class="input_err" style="color: red; display: none;" id="project_name_err"></p>
                                                     </div>
+                                                    <!-- Vertical Type -->
                                                     <div class="col-sm-6 col-12">
                                                         <div class="form-group">
+                                                            @php
+                                                                $projectType = projectType();
+                                                            @endphp
                                                             <label class="control-label required">Vertical Type</label>
-                                                            <select class="custom-select form-control-border" name="verticalType" id="verticalType">
-                                                                <option selected>Select Vertical Type</option>
-                                                                <option value="Vertical Type 1">Vertical Type 1</option>
-                                                                <option value="Vertical Type 2">Vertical Type 2</option>
-                                                                <option value="Vertical Type 3">Vertical Type 3</option>
-                                                                <option value="Vertical Type 4">Vertical Type 4</option>
+                                                            <select class="custom-select form-control-border" name="verticalType" id="verticalType_c">
+                                                                <option selected value="">Select Vertical Type</option>
+                                                                @foreach ($projectType as $row)
+                                                                    <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
+                                                                @endforeach
                                                             </select>
                                                         </div>
+                                                        <p class="input_err" style="color: red; display: none;" id="verticalType_err_c"></p>
                                                     </div>
                                                     <div class="col-sm-6 col-12">
                                                         <div class="form-group">
+                                                            @php
+                                                                $clientBucketStatic = (object) array(
+                                                                                                array( 'id' => "1",'value' => 'Existing',),
+                                                                                                array('id' => "2",'value' => 'Upselling'),
+                                                                                                array('id' => "3",'value' => 'New'),
+                                                                                                array('id' => "4",'value' => 'Retainer')
+                                                                                            );
+                                                            @endphp
                                                             <label class="control-label required">Client Bucket</label>
-                                                            <select class="custom-select form-control-border" name="clientBucket" id="clientBucket">
-                                                                <option selected>Select Client Bucket</option>
-                                                                <option value="Client Bucket 1">Client Bucket 1</option>
-                                                                <option value="Client Bucket 2">Client Bucket 2</option>
-                                                                <option value="Client Bucket 3">Client Bucket 3</option>
-                                                                <option value="Client Bucket 4">Client Bucket 4</option>
+                                                            <select class="custom-select form-control-border" name="clientBucket" id="clientBucket_c">
+                                                                <option selected value="">Select Client Bucket</option>
+                                                                @foreach ($clientBucketStatic as $row)
+                                                                    <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
+                                                                @endforeach
                                                             </select>
+                                                            <p class="input_err" style="color: red; display: none;" id="clientBucket_err_c"></p>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-6 col-12">
                                                         <div class="form-group">
                                                             <label class="control-label required">LOT Delivery Days</label>
-                                                            <select class="custom-select form-control-border" name="deliveryDays" id="deliveryDays">
-                                                                <option selected>Enter LOT Delivery Days</option>
-                                                                <option value="23">10</option>
-                                                                <option value="12">12</option>
-                                                                <option value="34">34</option>
-                                                                <option value="67">67</option>
-                                                            </select>
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" name="lot_delevery_days" id="lot_delevery_days" value="" placeholder="Enter LOT Delivery Days" onkeypress="return isNumber(event);">
+                                                            </div>
                                                         </div>
+                                                        <p class="input_err" style="color: red; display: none;" id="lot_delevery_days_err"></p>
+
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <div class="btn-form-group">
                                                             <div class="custom-action-btn-wrapper">
-                                                                <a href="javascript:;" class="btn btn-warning" id="cgsaveBTN">
+                                                                {{-- <a href="javascript:;" class="btn btn-warning" id="cgsaveBTN">
                                                                     Save
-                                                                </a>
+                                                                </a> --}}
+                                                               
+                                                                <?php if($CreativeLots->creative_graphic_form_data == 0){ ?>
+                                                                    <button type="submit" class="btn btn-sm btn-warning md-2" id="saveCreativeBtn">Save</button>
+                                                                <?php }else{ ?>
+                                                                    <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="saveCreativeBtn">Creative Graphics Already Saved</button>
+                                                                <?php } ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -317,7 +358,7 @@ Consolidated-Lot Create
                                     </div>
                             </div>
                         </div>
-                        <div class="accordian-item" id="ct-accor-item" style="display:block;">
+                        <div class="accordian-item" id="ct-accor-item" style="display:none;">
                             <div class="card card-transparent">
                                 <div class="card-header acc-card-header" id="ctAccor" data-toggle="collapse" data-target="#ctcollapse" aria-expanded="true" aria-controls="ctcollapse">
                                     <h3 class="card-title">
@@ -329,30 +370,35 @@ Consolidated-Lot Create
                                 </div>
                                 <div id="ctcollapse" class="collapse" aria-labelledby="ctAccor" data-parent="#accordionPanel">
                                     <div class="card-body">
-                                        <form action="" method="post" id="ctForm">
+                                        <form action="{{ route('create_consolidated_catlog') }}" onsubmit="return validateFormCatloging(event)"  method="post" id="ctForm">
+                                            <input type="hidden" name="consolidated_lot_id" value="{{$CreativeLots->id}}">
+                                            @csrf
                                             <div class="row">
                                                 <div class="col-sm-6 col-12">
+                                                    @php
+                                                        $typeOfService = getTypeOfService();
+                                                    @endphp
                                                     <div class="form-group">
                                                         <label class="control-label required">Type of Service</label>
-                                                        <select class="custom-select form-control-border" name="servicesType" id="servicesType">
-                                                            <option selected>Select Type of Service</option>
-                                                            <option value="Service 1">Service 1</option>
-                                                            <option value="Service 2">Service 2</option>
-                                                            <option value="Service 3">Service 3</option>
-                                                            <option value="Service 4">Service 4</option>
+                                                        <select class="custom-select form-control-border" name="servicesType" id="servicesType_c">
+                                                            <option selected value="">Select Type of Service</option>
+                                                            @foreach($typeOfService as $index => $service)
+                                                                <option value="{{$index}}">{{$service}}</option>
+                                                            @endforeach
                                                         </select>
+                                                        <p class="input_err" style="color: red; display: none;" id="servicesType_c_err"></p>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6 col-12">
                                                     <div class="form-group">
                                                         <label class="control-label required">Request Type</label>
-                                                        <select class="custom-select form-control-border" name="requestType" id="requestType">
-                                                            <option selected>Select Request Type</option>
-                                                            <option value="Request Type 1">Request Type 1</option>
-                                                            <option value="Request Type 2">Request Type 2</option>
-                                                            <option value="Request Type 3">Request Type 3</option>
-                                                            <option value="Request Type 4">Request Type 4</option>
+                                                        <select class="custom-select form-control-border" name="requestType" id="requestType_c">
+                                                            <option value="">Select Request Type</option>
+                                                            <option value="New">New</option>
+                                                            <option value="Existing">Existing</option>
+                                                            <option value="Retainer">Retainer</option>
                                                         </select>
+                                                        <p class="input_err" style="color: red; display: none;" id="requestType_c_err"></p>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6 col-12">
@@ -365,8 +411,11 @@ Consolidated-Lot Create
                                                                     <i class="far fa-calendar-alt"></i>
                                                                 </span>
                                                             </div>
+
                                                         </div>
                                                     </div>
+                                                    <p class="input_err" style="color: red; display: none;" id="reqDate_err"></p>
+
                                                 </div>
                                                 <div class="col-sm-6 col-12">
                                                     <div class="form-group">
@@ -380,15 +429,21 @@ Consolidated-Lot Create
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <p class="input_err" style="color: red; display: none;" id="rawimgDate_err"></p>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="btn-form-group">
                                                         <div class="custom-action-btn-wrapper">
-                                                            <a href="javascript:;" class="btn btn-warning" id="ctsaveBTN">
+                                                            {{-- <a href="javascript:;" class="btn btn-warning" id="ctsaveBTN">
                                                                 Save
-                                                            </a>
+                                                            </a> --}}
+                                                            <?php if($CreativeLots->cataloging_form_data == 0){ ?>
+                                                                <button type="submit" class="btn btn-sm btn-warning md-2" id="saveCatlogBtn">Save</button>
+                                                            <?php }else{ ?>
+                                                                <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="saveCatlogBtn">Cataloging Already Saved</button>
+                                                            <?php } ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -433,7 +488,7 @@ Consolidated-Lot Create
     });
 
     // Display Shoot Accodian
-    $("#shootcheck").change(function () {
+    /*$("#shootcheck").change(function () {
         if (this.checked) {
             $('#shoot-accor-item').css('display', 'block');
         } else if (!this.checked) {
@@ -457,8 +512,32 @@ Consolidated-Lot Create
         } else if (!this.checked) {
             $('#ct-accor-item').css('display', 'none');
         }
-    });
+    });*/
 	
+</script>
+
+{{-- show selected form based on checkbox --}}
+<script type="text/javascript">
+    $(document).ready(function() {
+        if ($("#shootcheck").is(":checked")) {
+            $('#shoot-accor-item').css('display', 'block');
+        } else {
+            $('#shoot-accor-item').css('display', 'none');
+        }
+
+        if ($("#cgcheck").is(":checked")) {
+            $('#cg-accor-item').css('display', 'block');
+        } else {
+            $('#cg-accor-item').css('display', 'none');
+        }
+
+        if ($("#catcheck").is(":checked")) {
+            $('#ct-accor-item').css('display', 'block');
+        } else {
+            $('#ct-accor-item').css('display', 'none');
+        }
+    });
+
 </script>
 
 <!-- script for setting short_name -->
@@ -469,7 +548,15 @@ Consolidated-Lot Create
             $("#short_name").val(short_name);
     });
 </script>
-
+@if(isset($CreativeLots->id))
+<script defer>  
+    setTimeout(()=>{
+        $("#user_id").change();
+        document.querySelector("#brand_id").value = "<?= $CreativeLots->brand_id ?>"
+    },2000)
+    
+</script>
+@endif
 
 
 <!-- Select Brand Name -->
@@ -510,4 +597,226 @@ Consolidated-Lot Create
         });
     })
 </script>
+
+<!-- msg div script -->
+<script type="text/javascript">
+    setTimeout(function(){
+        document.getElementById('msg_div').style.display = "none";
+    },3000)
+</script>
+
+<script type="text/javascript">
+// validate generate lot
+    function validateFormGenerateLot(event) {
+        $(".input_err").css("display", "none");
+        $(".input_err").html("");
+        const check_user_id = $('#user_id').val();
+        const check_brand_id = $('#brand_id').val();
+
+        let user_id_is_Valid = true;
+        let brand_id_Valid = true;
+        let select_service_to_generate_lot_valid = true;
+
+        if (check_user_id === '') {
+            $("#user_id_err").html("Company Name is required");
+            document.getElementById("user_id_err").style.display = "block";
+            user_id_is_Valid = false;
+        }
+
+        if (check_brand_id === '') {
+            $("#brand_id_err").html("Brand Name is required");
+            document.getElementById("brand_id_err").style.display = "block";
+            brand_id_Valid = false;
+        }
+
+        let shootcheck = false;
+        if ($("#shootcheck").is(":checked")) {
+            console.log("The checkbox is checked.");
+            shootcheck = true;
+        } else {
+            console.log("The checkbox is not checked.");
+            shootcheck = false;
+        }
+
+        let cgcheck = false;
+        if ($("#cgcheck").is(":checked")) {
+            console.log("The checkbox is checked.");
+             cgcheck = true;
+        } else {
+            console.log("The checkbox is not checked.");
+             cgcheck = false;
+        }
+
+        let catcheck = false;
+        if ($("#catcheck").is(":checked")) {
+            console.log("The checkbox is checked.");
+             catcheck = true;
+        } else {
+            console.log("The checkbox is not checked.");
+             catcheck = false;
+        }
+
+        if ((shootcheck == false) && (cgcheck == false) && (catcheck == false)) {
+            $("#select_service_err").html("Select Services to generate LOT is required");
+            document.getElementById("select_service_err").style.display = "block";
+            select_service_to_generate_lot_valid = false;
+        }
+
+        if (user_id_is_Valid && brand_id_Valid && select_service_to_generate_lot_valid) {
+        return true
+        } else {
+            return false
+        }
+    }
+
+</script>
+
+<script type="text/javascript">
+    // validate generate lot
+        function validateFormShoot(event) {
+            $(".input_err").css("display", "none");
+            $(".input_err").html("");
+
+            const check_servicesType = $('#servicesType').val();
+            const check_locationType = $('#locationType').val();
+            const check_verticalType = $('#verticalType').val();
+            const check_clientBucket = $('#clientBucket').val();
+    
+            let servicesType_is_Valid = true;
+            let locationType_is_Valid = true;
+            let verticalType_is_Valid = true;
+            let clientBucket_is_Valid = true;
+    
+            if (check_servicesType === '') {
+                $("#servicesType_err").html("Type of Service is required");
+                document.getElementById("servicesType_err").style.display = "block";
+                servicesType_is_Valid = false;
+            }
+
+            if (check_locationType === '') {
+                $("#locationType_err").html("Location is required");
+                document.getElementById("locationType_err").style.display = "block";
+                locationType_is_Valid = false;
+            }
+
+            if (check_verticalType === '') {
+                $("#verticalType_err").html("Vertical Type is required");
+                document.getElementById("verticalType_err").style.display = "block";
+                verticalType_is_Valid = false;
+            }
+
+            if (check_clientBucket === '') {
+                $("#clientBucket_err").html("Client Bucket is required");
+                document.getElementById("clientBucket_err").style.display = "block";
+                clientBucket_is_Valid = false;
+            }
+    
+    
+            if (servicesType_is_Valid && locationType_is_Valid && verticalType_is_Valid && clientBucket_is_Valid) {
+                return true
+            } else {
+                return false
+            }
+        }
+    
+    </script>
+
+<script type="text/javascript">
+    // validate generate lot
+        function validateFormCreativeGraphics(event) {
+            $(".input_err").css("display", "none");
+            $(".input_err").html("");
+
+            const check_project_name = $('#project_name').val();
+            const check_verticalType = $('#verticalType_c').val();
+            const check_clientBucket = $('#clientBucket_c').val();
+            const check_lot_delevery_days = $('#lot_delevery_days').val();
+    
+            let project_name_is_Valid = true;
+            let verticalType_is_Valid = true;
+            let lot_delevery_days_is_Valid = true;
+            let clientBucket_is_Valid = true;
+    
+            if (check_project_name === '') {
+                $("#project_name_err").html("Project Name is required");
+                document.getElementById("project_name_err").style.display = "block";
+                project_name_is_Valid = false;
+            }
+
+            if (check_clientBucket === '') {
+                $("#clientBucket_err_c").html("Client Bucket is required");
+                document.getElementById("clientBucket_err_c").style.display = "block";
+                clientBucket_is_Valid = false;
+            }
+
+            if (check_verticalType === '') {
+                $("#verticalType_err_c").html("Vertical Type is required");
+                document.getElementById("verticalType_err_c").style.display = "block";
+                verticalType_is_Valid = false;
+            }
+
+            if (check_lot_delevery_days === '') {
+                $("#lot_delevery_days_err").html("LOT Delivery Days is required");
+                document.getElementById("lot_delevery_days_err").style.display = "block";
+                lot_delevery_days_is_Valid = false;
+            }
+
+    
+            if (project_name_is_Valid && verticalType_is_Valid && lot_delevery_days_is_Valid && clientBucket_is_Valid) {
+                return true
+            } else {
+                return false
+            }
+        }
+    
+    </script>
+
+<script type="text/javascript">
+    // validate generate lot
+        function validateFormCatloging(event) {
+            $(".input_err").css("display", "none");
+            $(".input_err").html("");
+
+            const check_servicesType_c = $('#servicesType_c').val();
+            const check_requestType = $('#requestType_c').val();
+            const check_reqDate = $('#reqDate').val();
+            const check_rawimgDate = $('#rawimgDate').val();
+    
+            let project_name_is_Valid = true;
+            let requestType_is_Valid = true;
+            let rawimgDate_is_Valid = true;
+            let reqDate_is_Valid = true;
+    
+            if (check_servicesType_c === '') {
+                $("#servicesType_c_err").html("Type of Service is required");
+                document.getElementById("servicesType_c_err").style.display = "block";
+                project_name_is_Valid = false;
+            }
+
+            if (check_requestType === '') {
+                $("#requestType_c_err").html("Request Type is required");
+                document.getElementById("requestType_c_err").style.display = "block";
+                requestType_is_Valid = false;
+            }
+
+            if (check_reqDate === '') {
+                $("#reqDate_err").html("Request Received Date is required");
+                document.getElementById("reqDate_err").style.display = "block";
+                rawimgDate_is_Valid = false;
+            }
+
+            if (check_rawimgDate === '') {
+                $("#rawimgDate_err").html("Raw Image Receive Date is required");
+                document.getElementById("rawimgDate_err").style.display = "block";
+                reqDate_is_Valid = false;
+            }
+    
+            if (project_name_is_Valid && requestType_is_Valid && rawimgDate_is_Valid && reqDate_is_Valid) {
+                return true
+            } else {
+                return false
+            }
+        }
+    
+    </script>
 @endsection

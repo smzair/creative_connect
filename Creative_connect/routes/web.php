@@ -142,3 +142,19 @@ Route::get('/Consolidated-Lot' , [ConsolidatedLotController::class , 'view'])->n
 
 //create consolidated lot
 Route::post('/Consolidated-Lot' , [ConsolidatedLotController::class , 'create'])->name('create_consolidated_lot');
+
+//continue task on  consolidated lot
+Route::get('/Consolidated-Lot/{id}' , [ConsolidatedLotController::class , 'continueTask']);
+
+
+//view consolidated lot
+Route::get('/Consolidated-Lot-List' , [ConsolidatedLotController::class , 'list'])->name('consolidated_lot_view');
+
+//create  consolidated shoot
+Route::post('/Consolidated-Lot-Shoot' , [ConsolidatedLotController::class , 'createConsolidatedShoot'])->name('create_consolidated_shoot');
+
+// create consolidated Creative
+Route::post('/Consolidated-Lot-Creative-Graphics' , [ConsolidatedLotController::class , 'createConsolidatedCreativeGraphics'])->name('create_consolidated_creative_graphics');
+
+// create consolidated catlog
+Route::post('/Consolidated-Lot-Catlog' , [ConsolidatedLotController::class , 'createConsolidatedCatlog'])->name('create_consolidated_catlog');

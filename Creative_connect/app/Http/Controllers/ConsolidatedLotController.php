@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ConsolidatedLot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,16 +20,23 @@ class ConsolidatedLotController extends Controller
         $CreativeLots = (object) [
             'id'=>0,
             'user_id'=>'',
-            'brand_id'=>''
+            'brand_id'=>'',
+            'shoot' => '',
+            'creative_graphic' => '',
+            'shoot_form_data' => 0,
+            'creative_graphic_form_data' => 0,
+            'cataloging_form_data' => 0,
+            'cataloging' => ''
         ];
-        return view('consolidatedLot-Panel.Consolidated-Lot')->with(['CreativeLots'=>$CreativeLots, 'users_data'=> $users_data]);;
+        return view('consolidatedLot-Panel.Consolidated-Lot')->with(['CreativeLots'=>$CreativeLots, 'users_data'=> $users_data]);
     }
 
     // consolidated lot create
 
     public function create(Request $request){
         
-        dd($request);
+        // dd($request);
+        $lot_number  = null;
         $c_short = $request->c_short;
         $short_name = $request->short_name;
         $user_id = $request->user_id;
@@ -41,10 +49,244 @@ class ConsolidatedLotController extends Controller
         $catcheck_val = $catcheck == 0 ? 0 : 1; // Cataloging
         $shootcheck_val = $shootcheck == 0 ? 0 : 1;// Shoot
 
+        $consolidatedLot = new ConsolidatedLot();
+        $consolidatedLot->shoot = $shootcheck_val;
+        $consolidatedLot->creative_graphic = $cgcheck_val;
+        $consolidatedLot->cataloging = $catcheck_val;
+        $consolidatedLot->user_id = $user_id;
+        $consolidatedLot->brand_id = $brand_id;
+        $consolidatedLot->save(); 
+
+        $shoot_id = 0;
+        $cg_id = 0;
+        $cat_id = 0;
+
         // generate lot number 
         //  $lot_number = 'ODN' . date('dmY') ."-". $request->c_short . $request->short_name . $id;
-
         // dd(['shootcheck'=> $shootcheck_val, 'cgcheck'=> $cgcheck_val, 'catcheck'=>$catcheck_val]);
 
+        // shoot entry 
+        if($shootcheck_val == 1){
+            $shoot_id = DB::table('lots')->insertGetId([
+                'user_id' => $user_id,
+                'brand_id' => $brand_id
+            ]);
+        }
+        if( $shoot_id > 0){
+            // lot number 
+            $lot_number = 'ODN' . date('dmY') ."-". $c_short . $short_name . $shoot_id;
+
+              // creative lot entry
+            if($cgcheck_val == 1){
+                $cg_id = DB::table('creative_lots')->insertGetId([
+                    'user_id' => $user_id,
+                    'brand_id' => $brand_id,
+                    'linked_lot_id' => $shoot_id,
+                    'linked_lot_id_add_from' => 'Shoot',
+                    'lot_number' =>  $lot_number
+                ]);
+            }
+
+             // catlog lot entry
+            if($catcheck_val == 1){
+                $cat_id = DB::table('lots_catalog')->insertGetId([
+                    'user_id' => $user_id,
+                    'brand_id' => $brand_id,
+                    'linked_lot_id' => $shoot_id,
+                    'linked_lot_id_add_from' => 'Shoot',
+                    'lot_number' =>  $lot_number
+                ]);
+            }
+
+            // update lot number and linked lot id
+            DB::table('lots')->where('id',$shoot_id)->update(
+                [
+                    'lot_id' => $lot_number,
+                    'linked_lot_id' => $cat_id,
+                    'linked_lot_id_add_from' => 'Catlog',
+
+                ]
+            );
+            $cgcheck_val = 0;
+            $catcheck_val = 0;
+        }
+
+
+        // creative lot entry
+        if($cgcheck_val == 1){
+
+            $cg_id = DB::table('creative_lots')->insertGetId([
+                'user_id' => $user_id,
+                'brand_id' => $brand_id
+            ]);
+            if( $cg_id > 0){
+                // lot number 
+                $lot_number = 'ODN' . date('dmY') ."-". $c_short . $short_name . $cg_id;
+
+                // catlog lot entry
+                if($catcheck_val == 1){
+                    $cat_id = DB::table('lots_catalog')->insertGetId([
+                        'user_id' => $user_id,
+                        'brand_id' => $brand_id,
+                        'linked_lot_id' => $cg_id,
+                        'linked_lot_id_add_from' => 'Creative',
+                        'lot_number' =>  $lot_number
+                    ]);
+                }
+
+                // update lot number and linked lot id
+                DB::table('creative_lots')->where('id',$cg_id)->update(
+                    [
+                        'lot_number' => $lot_number,
+                        'linked_lot_id' => $cat_id,
+                        'linked_lot_id_add_from' => 'Catlog'
+                    ]
+                );
+            }
+
+            $catcheck_val = 0;
+           
+        }
+
+         // catlog lot entry
+        if($catcheck_val == 1){
+            $cat_id = DB::table('lots_catalog')->insertGetId([
+                'user_id' => $user_id,
+                'brand_id' => $brand_id
+            ]);
+            $lot_number = 'ODN' . date('dmY') ."-". $c_short . $short_name . $cat_id;
+            // update lot number and linked lot id
+            DB::table('lots_catalog')->where('id',$cg_id)->update(
+                [
+                    'lot_number' => $lot_number,
+                    'linked_lot_id' => $cat_id,
+                    'linked_lot_id_add_from' => 'Catlog'
+                ]
+            );
+        }
+
+        // update linked_shoot_id, linked_creative_id, linked_catlog_id
+        ConsolidatedLot::where('id',$consolidatedLot->id)->update(
+            [
+                'linked_shoot_id' => $shoot_id,
+                'linked_creative_id' => $cg_id,
+                'linked_catlog_id' => $cat_id,
+                'lot_number' => $lot_number
+            ]
+        );
+
+        if($consolidatedLot){
+            request()->session()->flash('success','Lot Generated Successfully');
+        }
+        else{
+            request()->session()->flash('error','Please try again!!');
+        }
+        
+        return $this->continueTask($request,$consolidatedLot->id);
+
+    }
+
+    // consolidated lot view
+    public function list(Request $request){
+        $ConsolidatedLot = ConsolidatedLot::getConsolidatedLot();
+        // dd( $ConsolidatedLot);
+        return view('consolidatedLot-Panel.Consolidated-Lot-View')->with(['ConsolidatedLot'=>$ConsolidatedLot]);
+    }
+
+    // continue consolidated lot task 
+
+    public function continueTask(Request $request, $id){
+        $users_data = DB::table('users')
+            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
+            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
+            ->where([ ['users.Company' ,'<>' ,NULL], ['roles.name','=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
+
+        $CreativeLots = ConsolidatedLot::where('id',$id)->first();
+
+        return view('consolidatedLot-Panel.Consolidated-Lot')->with(['CreativeLots'=>$CreativeLots, 'users_data'=> $users_data]);
+    }
+
+    public function createConsolidatedShoot(Request $request){
+
+        $ConsolidatedLot = $request->consolidated_lot_id;
+        $servicesType = $request->servicesType;
+        $locationType = $request->locationType;
+        $verticalType = $request->verticalType;
+        $clientBucket = $request->clientBucket;
+        $ConsolidatedLotData = ConsolidatedLot::where('id',$ConsolidatedLot)->first(['linked_shoot_id']);
+        $linked_shoot_id = $ConsolidatedLotData != null ? $ConsolidatedLotData->linked_shoot_id : 0;
+
+        if($linked_shoot_id > 0){
+            DB::table('lots')->where('id',$linked_shoot_id)->update([
+                's_type' =>  $servicesType,
+                'location' =>  $locationType,
+                'verticleType' =>  $verticalType,
+                'clientBucket' =>  $clientBucket
+            ]);
+            ConsolidatedLot::where('id',$ConsolidatedLot)->update(['shoot_form_data' => 1]);
+        }
+        if($linked_shoot_id){
+            request()->session()->flash('success','Shoot Data Saved Successfully');
+        }
+        else{
+            request()->session()->flash('error','Please try again!!');
+        }
+        return $this->continueTask($request,$ConsolidatedLot);
+    }
+
+    public function createConsolidatedCreativeGraphics(Request $request){
+        // dd($request);
+        $ConsolidatedLot = $request->consolidated_lot_id;
+        $project_name = $request->project_name;
+        $verticalType = $request->verticalType;
+        $clientBucket = $request->clientBucket;
+        $lot_delevery_days = $request->lot_delevery_days;
+        $ConsolidatedLotData = ConsolidatedLot::where('id',$ConsolidatedLot)->first(['linked_creative_id']);
+        $linked_creative_id = $ConsolidatedLotData != null ? $ConsolidatedLotData->linked_creative_id : 0;
+
+        if($linked_creative_id > 0){
+            DB::table('creative_lots')->where('id',$linked_creative_id)->update([
+                'project_name' =>  $project_name,
+                'verticle' =>  $verticalType,
+                'client_bucket' =>  $clientBucket,
+                'lot_delivery_days' =>  $lot_delevery_days
+            ]);
+            ConsolidatedLot::where('id',$ConsolidatedLot)->update(['creative_graphic_form_data' => 1]);
+        }
+        if($linked_creative_id){
+            request()->session()->flash('success','Creative Graphics Data Saved Successfully');
+        }
+        else{
+            request()->session()->flash('error','Please try again!!');
+        }
+        return $this->continueTask($request,$ConsolidatedLot);
+    }
+
+    public function createConsolidatedCatlog(Request $request){
+        // dd($request);
+        $ConsolidatedLot = $request->consolidated_lot_id;
+        $servicesType = $request->servicesType;
+        $requestType = $request->requestType;
+        $reqDate = $request->reqDate;
+        $rawimgDate = $request->rawimgDate;
+        $ConsolidatedLotData = ConsolidatedLot::where('id',$ConsolidatedLot)->first(['linked_catlog_id']);
+        $linked_catlog_id = $ConsolidatedLotData != null ? $ConsolidatedLotData->linked_catlog_id : 0;
+
+        if($linked_catlog_id > 0){
+            DB::table('lots_catalog')->where('id',$linked_catlog_id)->update([
+                'serviceType' =>  $servicesType,
+                'requestType' =>  $requestType,
+                'reqReceviedDate' =>  $reqDate,
+                'imgReceviedDate' =>  $rawimgDate
+            ]);
+            ConsolidatedLot::where('id',$ConsolidatedLot)->update(['cataloging_form_data' => 1]);
+        }
+        if($linked_catlog_id){
+            request()->session()->flash('success','Cataloging Data Saved Successfully');
+        }
+        else{
+            request()->session()->flash('error','Please try again!!');
+        }
+        return $this->continueTask($request,$ConsolidatedLot);
     }
 }
