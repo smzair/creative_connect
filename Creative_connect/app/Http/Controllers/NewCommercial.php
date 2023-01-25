@@ -103,7 +103,14 @@ class NewCommercial extends Controller
     // Function for store new Shoot Commercial
     public function saveShootCommercial(Request $request)
     {
-        dd($request->all());
+        $newCommercialId = $request->newCommercialId;
+        $create_commercial_Id = NewCommercialModel::saveShootCommercial($request);
+        if ($create_commercial_Id > 0) {
+            request()->session()->flash('success', 'Shoot Commercial  Successfully Added!!');
+        } else {
+            request()->session()->flash('false', 'Somthing went wrong try again!!!');
+        }
+        return Redirect::route('EditNewCommercial', ['id' => $newCommercialId]);
     }
     
     // Function for store new Creative Commercial

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class NewCommercialModel extends Model
 {
@@ -106,7 +107,63 @@ class NewCommercialModel extends Model
     // store new Shoot Commercial
     public static function saveShootCommercial($request)
     {
+        // SELECT `id`, `user_id`, `brand_id`, `flat_shot`, `extra_mood_shot`, `product_category`, `main_com`, `type_of_shoot`, `type_of_clothing`, `gender`, `adaptation_1`, `adaptation_2`, `adaptation_3`, `adaptation_4`, `adaptation_5`, `specfic_adaptation`, `commercial_value_per_sku`, `newCommercialId`, `comercial_c`, `created_at`, `updated_at` FROM `commercial` WHERE 1
+        $newCommercialId = $request->newCommercialId;
+        $user_id = $request->user_id;
+        $brand_id = $request->brand_id;
+        $product_category = $request->product_category;
+        $type_of_shoot = $request->type_of_shoot;
+        $type_of_clothing = $request->type_of_clothing;
+        $gender = $request->gender;
+        $adaptation_1 = $request->adaptation_1;
+        $adaptation_2 = $request->adaptation_2;
+        $adaptation_3 = $request->adaptation_3;
+        $adaptation_4 = $request->adaptation_4;
+        $adaptation_5 = $request->adaptation_5;
+        $commercial_value_per_sku = $request->commercial_value_per_sku;
 
+        // $create_commercial = new create_commercial();
+        // $create_commercial->user_id = $user_id;
+        // $create_commercial->brand_id = $brand_id;
+        // $create_commercial->product_category = $product_category;
+        // $create_commercial->type_of_shoot = $type_of_shoot;
+        // $create_commercial->type_of_clothing = $type_of_clothing;
+        // $create_commercial->gender = $gender;
+        // $create_commercial->adaptation_1 = $adaptation_1;
+        // $create_commercial->adaptation_2 = $adaptation_2;
+        // $create_commercial->adaptation_3 = $adaptation_3;
+        // $create_commercial->adaptation_4 = $adaptation_4;
+        // $create_commercial->adaptation_5 = $adaptation_5;
+        // $create_commercial->commercial_value_per_sku = $commercial_value_per_sku;
+        // $create_commercial->newCommercialId = $newCommercialId;
+
+        $now = new \DateTime();
+        $data_arr = [
+            'user_id' => $user_id,
+            'brand_id' => $brand_id,
+            'product_category' => $product_category,
+            'type_of_shoot' => $type_of_shoot,
+            'type_of_clothing' => $type_of_clothing,
+            'gender' => $gender,
+            'adaptation_1' => $adaptation_1,
+            'adaptation_2' => $adaptation_2,
+            'adaptation_3' => $adaptation_3,
+            'adaptation_4' => $adaptation_4,
+            'adaptation_5' => $adaptation_5,
+            'commercial_value_per_sku' => $commercial_value_per_sku,
+            'newCommercialId' => $newCommercialId,
+            'created_at' => $now,
+            'updated_at' => $now
+        ];
+        $create_shoot_Id = DB::table('commercial')->insertGetId($data_arr);
+
+        if($create_shoot_Id > 2){
+            $createNewCommercial =  NewCommercialModel::find($newCommercialId);
+            $createNewCommercial->shootCheckIsDone = 2;
+            $upstatus = $createNewCommercial->update();
+        }
+        // dd($create_shoot_Id,$data_arr, $request->all());
+        return $create_shoot_Id;
     }
     // store new Creative Commercial
     public static function SaveCreativeCommercial($request)

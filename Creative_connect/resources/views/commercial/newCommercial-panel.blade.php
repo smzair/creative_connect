@@ -102,9 +102,11 @@
                                     $catCheckIsDone = $newCommercial['catCheckIsDone'];
                                     $check_disabled = '';
                                     $show_submit = 1;
+                                    $btn_display = "";
                                     if($shootCheckIsDone == 2 || $cgCheckIsDone == 2 || $catCheckIsDone == 2){
                                         $show_submit = 0;
                                         $check_disabled = "disabled";
+                                        $btn_display = "d-none";
                                     }
                                     $formRoute = 'SaveNewCommercial';
                                     $btn_Name = 'Create Commercial';
@@ -121,7 +123,7 @@
                                     
                                 @endphp
                                 <div class="custom-panel-form-group">
-                                    <form action="{{route($formRoute)}}" method="post" class="comm-panel-form" id="panelForm2">
+                                    <form action="{{route($formRoute)}}"  method="post" class="comm-panel-form" id="panelForm2">
                                         @csrf
                                         <div class="row">
                                             <div class="col-sm-4 col-12">
@@ -132,7 +134,7 @@
                                                     <label class="control-label required">Company Name</label>
 
                                                     <select class="custom-select form-control-border"
-                                                        name="commCompanyId" id="commcompanyNameP">
+                                                        name="commCompanyId" id="commcompanyNameP" onchange="validateNewCommercialForm()">
                                                         <option value="0">Select Company Name</option>
                                                         @foreach ($users as $user)
                                                             <option value="{{ $user->id }}"
@@ -150,7 +152,7 @@
                                                 <div class="form-group">
                                                     <label class="control-label required">Brand Name</label>
                                                     <select class="custom-select form-control-border" name="commBrandId"
-                                                        id="commbrandNameP">
+                                                        id="commbrandNameP" onchange="validateNewCommercialForm()">
                                                         <option value="0"  data-short_name="" > -- Select Brand Name -- </option>
                                                     </select>
                                                 </div>
@@ -171,17 +173,17 @@
                                                         Commercial</label>
                                                     <div class="custom-two-check">
                                                         <div class="checkcontainer">
-                                                            <input {{$check_disabled}} type="checkbox"  {{$newCommercial['commshootcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commshootcheck" id="commshootcheck" value="1">
+                                                            <input {{$check_disabled}} type="checkbox"  {{$newCommercial['commshootcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commshootcheck" id="commshootcheck" value="1" onclick="validateNewCommercialForm()">
                                                             <span class="checkmark"></span>
                                                             Shoot
                                                         </div>
                                                         <div class="checkcontainer">
-                                                            <input {{$check_disabled}}  type="checkbox" {{$newCommercial['commcgcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commcgcheck" id="commcgcheck" value="1">
+                                                            <input {{$check_disabled}}  type="checkbox" {{$newCommercial['commcgcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commcgcheck" id="commcgcheck" value="1" onclick="validateNewCommercialForm()">
                                                             <span class="checkmark"></span>
                                                             Creative Graphics
                                                         </div>
                                                         <div class="checkcontainer">
-                                                            <input {{$check_disabled}} type="checkbox" {{$newCommercial['commcatcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commcatcheck" id="commcatcheck" value="1">
+                                                            <input {{$check_disabled}} type="checkbox" {{$newCommercial['commcatcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commcatcheck" id="commcatcheck" value="1" onclick="validateNewCommercialForm()">
                                                             <span class="checkmark"></span>
                                                             Cataloging
                                                         </div>
@@ -192,8 +194,8 @@
                                                 <div class="btn-form-group">
                                                     <div class="custom-action-btn-wrapper">
                                                         @if ($show_submit == 1)
-                                                            <button type="submit" class="btn btn-warning" id="genCommBTN">{{$btn_Name}}</button>
                                                         @endif
+                                                        <button type="submit" class="btn btn-warning {{$btn_display}}" id="genCommBTN">{{$btn_Name}}</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -235,7 +237,7 @@
                                                             <input type="hidden" name="brand_id" value="{{$newCommercial['commBrandId']}}">
 
                                                             <select class="custom-select form-control-border"
-                                                                name="commproductCat" id="commproductCat">
+                                                                name="product_category" id="commproductCat">
                                                                 <option value="">Select Product Category</option>
                                                                  @foreach($getProductList as $index => $getProduct)
                                                                     @php
@@ -250,7 +252,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Type of Shoot</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commshootType" id="commshootType">
+                                                                name="type_of_shoot" id="commshootType">
                                                                 <option value="">Select Type of Shoot</option>
                                                                  @foreach($getTypeOfShootList as $index => $typeOfShoot)
                                                                     @php
@@ -265,7 +267,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Type of Clothing</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commclothingType" id="commclothingType">
+                                                                name="type_of_clothing" id="commclothingType">
                                                                 <option>Select Type of Clothing</option>
                                                                 <option value="Sets">Sets</option>
                                                                 <option value="Mix">Mix</option>
@@ -279,7 +281,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Gender</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commGender" id="commGender">
+                                                                name="gender" id="commGender">
                                                                 <option selected>Select Gender</option>
                                                                 <option value="Male">Male</option>
                                                                 <option value="Female">Female</option>
@@ -294,7 +296,7 @@
                                                             <label class="control-label required">Primary
                                                                 Adaptation</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commPAdpt" id="commPAdpt">
+                                                                name="adaptation_1" id="commPAdpt">
                                                                 <option value="">Select Primary Adaptation</option>
                                                                 @foreach($AdaptationsList as $index => $adaptations)
                                                                     @php
@@ -309,7 +311,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Adaptation 1</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commAdpt1" id="commAdpt1">
+                                                                name="adaptation_2" id="commAdpt1">
                                                                 <option value="">Select Adaptation 1</option>
                                                                 @foreach($AdaptationsList as $index => $adaptations)
                                                                     @php
@@ -324,7 +326,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Adaptation 2</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commAdpt2" id="commAdpt2">
+                                                                name="adaptation_3" id="commAdpt2">
                                                                 <option value="">Select Adaptation 2</option>
                                                                 @foreach($AdaptationsList as $index => $adaptations)
                                                                     @php
@@ -339,7 +341,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Adaptation 3</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commAdpt3" id="commAdpt3">
+                                                                name="adaptation_4" id="commAdpt3">
                                                                 <option value="">Select Adaptation 3</option>
                                                                 @foreach($AdaptationsList as $index => $adaptations)
                                                                     @php
@@ -354,7 +356,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Adaptation 4</label>
                                                             <select class="custom-select form-control-border"
-                                                                name="commAdpt4" id="commAdpt4">
+                                                                name="adaptation_5" id="commAdpt4">
                                                                 <option value="">Select Adaptation 4</option>
                                                                 @foreach($AdaptationsList as $index => $adaptations)
                                                                     @php
@@ -369,7 +371,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label required">Commercial per
                                                                 SKU</label>
-                                                            <input type="text" class="form-control" name="commSKU"
+                                                            <input type="text" class="form-control" name="commercial_value_per_sku"
                                                                 id="commSKU" placeholder="Enter Commercial per SKU">
                                                         </div>
                                                     </div>
@@ -378,7 +380,7 @@
                                                     <div class="col-12">
                                                         <div class="btn-form-group">
                                                             <div class="custom-action-btn-wrapper">
-                                                                 @if ($catCheckIsDone != 2)
+                                                                 @if ($shootCheckIsDone != 2)
                                                                     <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commshsaveBTN">  Save  </button>
                                                                 @else
                                                                     <p style="color: #00ff00">Shoot Commercial Already Saved</p>
@@ -600,6 +602,26 @@
         const user_id_val_is = +"{{ $newCommercial['commCompanyId'] }}";
         const saved_brand_id_is = +"{{ $newCommercial['commBrandId'] }}";
     </script>
+
+    {{-- Validation for  --}}
+    <script>
+        function validateNewCommercialForm(){
+            const eleman = document.getElementById('genCommBTN');
+            eleman.setAttribute("disabled", true);
+            const commcompanyNameP = +$('#commcompanyNameP').val();
+            const commbrandNameP = +$('#commbrandNameP').val();
+            const commshootcheck = $('#commshootcheck').is(':checked')
+            const commcgcheck = $('#commcgcheck').is(':checked')
+            const commcatcheck = $('#commcatcheck').is(':checked')
+            // console.log({commcompanyNameP , commbrandNameP ,commshootcheck ,commcgcheck ,commcatcheck})
+            if(commcompanyNameP > 0 && commbrandNameP > 0 && (commshootcheck || commcgcheck || commcatcheck)){
+                eleman.removeAttribute("disabled");
+            }
+        }
+        validateNewCommercialForm()
+    </script>
+   
+
 
     <!-- script for setting short_name -->
     <script type="text/javascript">

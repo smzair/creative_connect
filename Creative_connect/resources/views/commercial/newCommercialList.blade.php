@@ -68,7 +68,7 @@
                   <th class="p-2">Shoot</th>
                   <th class="p-2">Creative Graphics</th>
                   <th class="p-2">Cataloging</th>
-                  <th class="p-2">Action</th>
+                  <th class="p-2" style="text-align: center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -83,19 +83,25 @@
                     $shootCheckIsDone = $row->shootCheckIsDone;
                     $cgCheckIsDone = $row->cgCheckIsDone;
                     $catCheckIsDone = $row->catCheckIsDone;
-                    $commshootcheck = $commcgcheck = $commcatcheck = "No Need to generate";
+                    $commshootcheck = $commcgcheck = $commcatcheck = "-";
+
+                    $show_btn = 0;
+                    if($shootCheckIsDone == 1 || $cgCheckIsDone == 1 || $catCheckIsDone == 1){
+                      $show_btn = 1;
+
+                    }
 
                     if($shootCheckIsDone > 0){
                       // $commshootcheck = $shootCheckIsDone == 1 ? 'Generate New commercial Pending' : 'New commercial Generated';
-                      $commshootcheck = $shootCheckIsDone == 1 ? 'Pending' : 'Generated';
+                      $commshootcheck = $shootCheckIsDone == 1 ? 'Pending' : 'Done';
                     }
 
                     if($cgCheckIsDone > 0){
-                      $commcgcheck = $cgCheckIsDone == 1 ? 'Pending' : 'Generated';
+                      $commcgcheck = $cgCheckIsDone == 1 ? 'Pending' : 'Done';
                     }
 
                     if($catCheckIsDone > 0){
-                      $commcatcheck = $catCheckIsDone == 1 ? 'Pending' : 'Generated';
+                      $commcatcheck = $catCheckIsDone == 1 ? 'Pending' : 'Done';
                     }
 
                 @endphp
@@ -108,8 +114,13 @@
                   <td class="p-sm-2 p-1">{{$commshootcheck}}</td>
                   <td class="p-sm-2 p-1">{{$commcgcheck}}</td>
                   <td class="p-sm-2 p-1">{{$commcatcheck}}</td>
-                  <td>
-                   <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{ route('EditNewCommercial', ['id' => $createNewCommercialIdIs]) }}">Continue Task</a>  
+                  <td style="text-align: center">
+
+                    @if ($show_btn == 1)
+                      <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{ route('EditNewCommercial', ['id' => $createNewCommercialIdIs]) }}">Continue Creation</a>  
+                    @else
+                      <button disabled class="btn btn-warning px-1 py-1 btn-xs mt-1"> Done</button>
+                    @endif
                   </td>               
                 </tr>
                 @endforeach
