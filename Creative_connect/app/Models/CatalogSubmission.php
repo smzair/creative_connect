@@ -141,4 +141,83 @@ class CatalogSubmission extends Model
 
 
     }
+
+    // Catalog Wrc List For Invoice Genrate 
+    public static function catalog_Wrc_For_Invoice($tsak_status_is)
+    {
+        $catalog_Wrc_list_for_Submission = CatalogSubmission::
+        WHERE('catalog_submissions.ar_status', '=', '1')->
+        leftJoin(
+            'catalog_wrc_batches',
+            function ($join) {
+                $join->on('catalog_wrc_batches.wrc_id', '=', 'catalog_submissions.wrc_id');
+                $join->on('catalog_wrc_batches.batch_no', '=', 'catalog_submissions.batch_no');
+            }
+        )->
+        leftJoin('catlog_wrc', 'catlog_wrc.id', 'catalog_submissions.wrc_id')->
+        leftJoin('lots_catalog', 'lots_catalog.id', 'catlog_wrc.lot_id')->
+        leftJoin('create_commercial_catalog', 'create_commercial_catalog.id', 'catlog_wrc.commercial_id')->
+        leftJoin('users', 'users.id', 'lots_catalog.user_id')->
+        leftJoin('brands', 'brands.id', 'lots_catalog.brand_id')->
+        select(
+            'lots_catalog.lot_number',
+            'users.Company as company',
+            'brands.name as brands_name',
+            'lots_catalog.serviceType as kind_of_work',
+            'catlog_wrc.wrc_number',
+            'catalog_wrc_batches.batch_no',
+            'catalog_wrc_batches.sku_count as sku_qty',
+            'create_commercial_catalog.CommercialSKU',
+            'catalog_submissions.invoiceNumber',
+            'catalog_submissions.id as submissionId',
+            'catalog_wrc_batches.created_at as wrc_created_at',
+
+            'catalog_wrc_batches.wrc_id',
+            'catlog_wrc.commercial_id',
+            'catlog_wrc.alloacte_to_copy_writer',
+            'catlog_wrc.sku_qty as wrc_t_sku_qty',
+            'catlog_wrc.work_brief',
+            'catlog_wrc.modeOfDelivary',
+            'catlog_wrc.lot_id',
+            'lots_catalog.brand_id',
+            'create_commercial_catalog.market_place',
+            'create_commercial_catalog.type_of_service as project_type',
+            'users.c_short',
+            'brands.short_name',
+        )->
+        groupBy(['catalog_submissions.wrc_id', 'catalog_submissions.batch_no'])->
+        orderBy('catalog_submissions.updated_at')->
+        get()->toArray();
+        return $catalog_Wrc_list_for_Submission;
+    }
+
+    // Catalog Wrc Invoice Save / Update
+    public static function SaveCatalogInvoiceNumber($request)
+    {
+        $submission_id = $request->submission_id;
+        $wrc_id = $request->wrc_id;
+        $batch_no = $request->batch_no;
+        $invoiceNumber = $request->invoiceNumber;
+
+        $data = CatalogSubmission::where('id', $submission_id)->where('ar_status', '<>', '0')->get()->toArray();
+        $count_data = count($data);
+        $update_status = 0;
+        $new_wrc_id = 0;
+        $massage = "somthing went Wrong!!!";
+
+        $update_status = CatalogSubmission::where('id', $submission_id)->update(['invoiceNumber' => $invoiceNumber]);
+        if($update_status){
+            $massage = "Wrc Invoice Number Updated!!";
+        }
+
+        $response = array(
+            'wrc_id' => $wrc_id,
+            'count_data' => $count_data,
+            'update_status' => $update_status,
+            'massage' => $massage,
+        );
+        return json_encode($response);
+    }
+    
+
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CatalogAllocationController;
 use App\Http\Controllers\CatalogClientARController;
+use App\Http\Controllers\CatalogInvoiceController;
 use App\Http\Controllers\CatalogSubmissionController;
 use App\Http\Controllers\CatalogUploadedMarketplaceCountController;
 use App\Http\Controllers\CatalogWrcBatchController;
@@ -138,4 +139,7 @@ Route::POST('/saveShootCommercial', [NewCommercial::class, 'saveShootCommercial'
 Route::POST('/saveCreativeCommercial', [NewCommercial::class, 'SaveCreativeCommercial'])->name('SaveCreativeCommercial'); // Save SaveCreativeCommercial And genrating data
 Route::POST('/saveCatalogingCommercial', [NewCommercial::class, 'SaveCatalogingCommercial'])->name('SaveCatalogingCommercial'); // Save SaveCatalogingCommercial And genrating data
 
+Route::get('/catalog-Invoice', [CatalogInvoiceController::class, 'index'])->name('ViewNewCommercial'); // Listing For NewCommercial
+Route::POST('/save-Catalog-invoice-number', [CatalogInvoiceController::class, 'SaveCatalogInvoiceNumber'])->name('SaveCatalogInvoiceNumber'); // Save SaveCatalogingCommercial And genrating data
+// 
 
