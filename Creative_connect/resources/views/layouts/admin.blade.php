@@ -285,6 +285,13 @@
                                                         <p>Catalog WRC Status</p>
                                                     </a>
                                                 </li>
+                                                {{-- catalog-Invoice --}}
+                                                <li class="nav-item">
+                                                    <a href="{{route('CatalogInvoice')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Catalog Invoice</p>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </li>
                                   
