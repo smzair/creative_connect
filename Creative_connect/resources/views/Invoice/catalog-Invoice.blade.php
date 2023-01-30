@@ -121,12 +121,78 @@ Update CataLog Invoice Number
             /* border: 1px solid #666; */
         }
 </style>
+
+<style>
+    .card-body .box{
+        padding: 2px 20px;
+        /* background: #fff; */
+    }
+
+</style>
 <div class="container-fluid mt-5 plan-shoot">
+
+    <div class="row" id="upload_row" style="display: none">
+        <div class="col-3">
+            <div class="card card-transparent card-info mt-3">
+                
+                <div class="card-header">
+                    <h2 class="card-title" > Upload CataLog Wrc Invoice Numbers</h2>
+                    <button type="button" class="close"  aria-label="Close" onclick="hideUpload()">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                
+                <div class="card-body">
+                    <div class="row" style="width: 100%">
+                        <form method="POST"  action="{{route('SaveCataLogBulkInvoice')}}" enctype="multipart/form-data" style="width: 100%" >
+                            @csrf
+                            <div class="col-12">
+                                <div class="box">
+                                    {{-- <label class="control-label  required" style="display: block">Upload CataLog Wrc Invoice Numbers</label> --}}
+                                    
+                                    <div class="form-group">
+                                        <input required  id="files"  type="file" id="invoice_sheet" name="invoice_sheet" class="btn btn-xl btn-warning mb-2">
+                                    </div>
+                                </div>
+                            </div>
+                                    
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-xl btn-warning mb-2"> Upload</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- 2nd Row --}}
     <div class="row">
         <div class="col-12">
             <div class="card card-transparent">
+                <div id="msg_div">
+                    @if (Session::has('success'))
+                        <div class="alert alert-success" role="alert">
+                            {{ Session::get('success') }}
+                        </div>
+                    @endif
+
+                    @if (Session::has('error'))
+                        <div class="alert alert-false" role="alert">
+                            {{ Session::get('false') }}
+                        </div>
+                    @endif
+                </div>
                 <div class="card-header">
-                    <h3 class="card-title" style="font-size: 2rem;">Update CataLog Invoice Number</h3>
+                    <div class="row">
+                        <div class="col-6">
+                            <h3 class="card-title" style="font-size: 2rem;">Update CataLog Invoice Number</h3>
+                        </div>
+                        <div class="col-6">
+                            <a  class="btn btn-warning" id="uploadPlanSkuCsv" onclick="displayRow()">Upload SKU CSV to Plan</a>
+                            <a download="catalog Plan SKU CSV" href="{{ asset('fiels/CataloginvoiceNumber.csv') }}" class="btn btn-warning" id="downloadPlanSkuCsv">Download Plan SKU CSV</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
                     <table id="qaTableCat" class="table table-head-fixed text-nowrap data-table">
@@ -305,6 +371,16 @@ Update CataLog Invoice Number
     console.log(invoice_not_yet)
 </script>
 
+<script>
+    function displayRow(){
+        $("#upload_row").css("display", "Block");
+    }
+
+    function hideUpload(){
+        $("#upload_row").css("display", "none");
+    }
+</script>
+
 {{-- script for setdata into modal  --}}
 <script>
     function setdata(val){
@@ -402,6 +478,12 @@ Update CataLog Invoice Number
             $("#msg_box").css("display", "none");
         }, 2000);
     }
+</script>
+
+<script>
+    setTimeout( () => {
+        $("#msg_div").css("display", "none");
+    }, 2000);
 </script>
 
 {{-- submit_wrc --}}

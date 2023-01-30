@@ -79,6 +79,8 @@ Catalog WRC Status
                                         $lot_number = $row['lot_number'];
                                         $wrc_number = $row['wrc_number'];
                                         $batch_no = $row['batch_no'];
+                                        $batch_no_is = $batch_no > 0 ? $batch_no :'None';
+
                                         $Company = $row['Company'];
                                         $brand_name = $row['brand_name'];
                                         $wrc_created_at = $row['wrc_created_at'];
@@ -128,7 +130,7 @@ Catalog WRC Status
                                         <td>{{$wrc_number}}</td>
                                         <td>{{$Company}}</td>
                                         <td>{{$brand_name}}</td>
-                                        <td>{{$batch_no}}</td>
+                                        <td>{{$batch_no_is}}</td>
                                         {{-- <td>{{$wrc_created_at}}</td> --}}
                                         <td>{{$sku_qty}}</td>
                                         <td>{{$wrcStatus}}</td>

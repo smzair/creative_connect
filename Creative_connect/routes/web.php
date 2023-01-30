@@ -140,6 +140,7 @@ Route::POST('/saveCreativeCommercial', [NewCommercial::class, 'SaveCreativeComme
 Route::POST('/saveCatalogingCommercial', [NewCommercial::class, 'SaveCatalogingCommercial'])->name('SaveCatalogingCommercial'); // Save SaveCatalogingCommercial And genrating data
 
 Route::get('/catalog-Invoice', [CatalogInvoiceController::class, 'index'])->name('CatalogInvoice'); // Listing For NewCommercial
-Route::POST('/save-Catalog-invoice-number', [CatalogInvoiceController::class, 'SaveCatalogInvoiceNumber'])->name('SaveCatalogInvoiceNumber'); // Save SaveCatalogingCommercial And genrating data
-// 
+Route::POST( '/save-Catalog-invoice-number', [CatalogInvoiceController::class, 'SaveCatalogInvoiceNumber'])->name('SaveCatalogInvoiceNumber'); // Save SaveCatalogingCommercial And genrating data
+Route::POST('/catalog-Invoice', [CatalogInvoiceController::class, 'SaveCataLogBulkInvoice'])->name('SaveCataLogBulkInvoice'); // Save SaveCatalogingCommercial And genrating data
+// SaveCataLogInvoice
 
