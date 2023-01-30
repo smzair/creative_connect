@@ -256,6 +256,13 @@
                                                     <p>Consolidated-Lot-View</p>
                                                 </a>
                                             </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('update_invoice_number_panel') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Update Invoice Number Panel</p>
+                                                </a>
+                                            </li>
                                            
                                         </ul>
                                     </li>

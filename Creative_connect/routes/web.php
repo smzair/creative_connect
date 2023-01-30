@@ -5,6 +5,7 @@ use App\Http\Controllers\CreativeAllocationController;
 use App\Http\Controllers\CreativeSubmissionController;
 use App\Http\Controllers\CreativeQcController;
 use App\Http\Controllers\creativeWrc;
+use App\Http\Controllers\WrcInvoiceNumber;
 use Illuminate\Support\Facades\Route;
 /*
   |--------------------------------------------------------------------------
@@ -158,3 +159,10 @@ Route::post('/Consolidated-Lot-Creative-Graphics' , [ConsolidatedLotController::
 
 // create consolidated catlog
 Route::post('/Consolidated-Lot-Catlog' , [ConsolidatedLotController::class , 'createConsolidatedCatlog'])->name('create_consolidated_catlog');
+
+// Update Invoice Number Panel
+Route::get('/Creative-Update-Invoice-Number' , [WrcInvoiceNumber::class , 'index'])->name('update_invoice_number_panel');
+
+
+// update Wrc Invoice No
+Route::post('/Creative-Update-Invoice-Number' , [WrcInvoiceNumber::class , 'updateWrcInvoice'])->name('update_wrc_invoice_no');
