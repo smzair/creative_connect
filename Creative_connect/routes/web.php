@@ -9,6 +9,7 @@ use App\Http\Controllers\CatalogWrcBatchController;
 use App\Http\Controllers\CatalogWrcController;
 use App\Http\Controllers\CatalogWrcMasterSheetController;
 use App\Http\Controllers\CatlaogQcController;
+use App\Http\Controllers\EditorsCommercialController;
 use App\Http\Controllers\NewCommercial;
 use Illuminate\Support\Facades\Route;
 /*
@@ -139,8 +140,14 @@ Route::POST('/saveShootCommercial', [NewCommercial::class, 'saveShootCommercial'
 Route::POST('/saveCreativeCommercial', [NewCommercial::class, 'SaveCreativeCommercial'])->name('SaveCreativeCommercial'); // Save SaveCreativeCommercial And genrating data
 Route::POST('/saveCatalogingCommercial', [NewCommercial::class, 'SaveCatalogingCommercial'])->name('SaveCatalogingCommercial'); // Save SaveCatalogingCommercial And genrating data
 
-Route::get('/catalog-Invoice', [CatalogInvoiceController::class, 'index'])->name('CatalogInvoice'); // Listing For NewCommercial
+Route::get( '/catalog-Invoice', [CatalogInvoiceController::class, 'index'])->name('CatalogInvoice'); // Listing For NewCommercial
 Route::POST( '/save-Catalog-invoice-number', [CatalogInvoiceController::class, 'SaveCatalogInvoiceNumber'])->name('SaveCatalogInvoiceNumber'); // Save SaveCatalogingCommercial And genrating data
 Route::POST('/catalog-Invoice', [CatalogInvoiceController::class, 'SaveCataLogBulkInvoice'])->name('SaveCataLogBulkInvoice'); // Save SaveCatalogingCommercial And genrating data
 // SaveCataLogInvoice
+
+// 
+Route::get('/Commercial-Editor', [EditorsCommercialController::class, 'create'])->name('CommercialEditor'); // Create Commercial-Editor
+Route::POST('/Commercial-Editor', [EditorsCommercialController::class, 'store'])->name('SaveCommercialEditor'); // Save Commercial-Editor
+Route::get('/Commercial-Editor-List', [EditorsCommercialController::class, 'index'])->name('ViewCommercialEditor'); // View Commercial-Editor
+Route::get('/Commercial-Editor/{id}', [EditorsCommercialController::class, 'edit'])->name('EditCommercialEditor'); // Create Commercial-Editor
 

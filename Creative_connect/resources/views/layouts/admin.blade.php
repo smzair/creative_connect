@@ -292,6 +292,22 @@
                                                         <p>Catalog Invoice</p>
                                                     </a>
                                                 </li>
+
+                                                {{-- Commercial-Editor --}}
+                                                <li class="nav-item">
+                                                    <a href="{{route('CommercialEditor')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Create Commercial-Editor</p>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="{{route('ViewCommercialEditor')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>View Commercial-Editor</p>
+                                                    </a>
+                                                </li>
+
+
                                             </ul>
                                         </li>
                                   
