@@ -1,8 +1,17 @@
+<!-- New View LOTs Table (For Editing) -->
+
 @extends('layouts.admin')
 @section('title')
-Create New Commercial for Creative
+Editor Lot List
 @endsection
 @section('content')
+<div class="lot-table mt-1">
+    <div class="container-fluid">
+        @if (Session::has('success'))
+                        <div class="alert alert-success" id="msg_div" role="alert">
+                            {{ Session::get('success') }}
+                        </div>
+        @endif
 <div class="lot-table mt-1">
     <div class="container-fluid">
       <div class="row">
@@ -48,13 +57,13 @@ Create New Commercial for Creative
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="card-tools float-md-right float-sm-none ml-md-0 mr-0 ml-sm-0 mt-sm-1 float-none ml-xs-0 mt-2">
-                    <a href="{{ route('CREATELOT') }}" class="btn btn-xs float-left align-middle mt-0 mr-2 py-1 px-2 mb-2 mb-sm-1" style="position: relative; top: 2px;">Create a new LOT</a>
+                    <a href="{{ route('editor_create_lot') }}" class="btn btn-xs float-left align-middle mt-0 mr-2 py-1 px-2 mb-2 mb-sm-1" style="position: relative; top: 2px;">Create a new LOT</a>
                   </div>
                 </div>
               </div>
             </div>
             <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
-              <table id="lotTable" class="table table-head-fixed table-hover text-nowrap">
+              <table id="ElotTable" class="table table-head-fixed table-hover text-nowrap">
                 <thead>
                   <tr>
                     <th class="p-2">Id</th>
@@ -62,9 +71,8 @@ Create New Commercial for Creative
                     <th class="p-2">Company Name</th>
                     <th class="p-2">Brand Name</th>
                     <th class="p-2">Client ID</th>
-                    <th class="p-2">LOT Delivery Days</th>
-                    {{-- <th class="p-2">Initiate Date</th> --}}
-                    {{-- <th class="p-2">Committed Date</th> --}}
+                    <th class="p-2">Request Name</th>
+                    <th class="p-2">Creation Date</th>
                     <th class="p-2">Actions</th>
                   </tr>
                 </thead>
@@ -76,17 +84,15 @@ Create New Commercial for Creative
                     <td class="p-sm-2 p-1">{{$lot->Company}}</td>
                     <td class="p-sm-2 p-1">{{$lot->name}}</td>
                     <td class="p-sm-2 p-1">{{$lot->client_id}}</td>
-                    <td class="p-sm-2 p-1">{{$lot->lot_delivery_days}}</td>
-                    {{-- <td class="p-sm-2 p-1">{{dateFormat($lot->work_initiate_date)}}<br><b>{{timeFormat($lot->work_initiate_date)}}</b></td> --}}
-                    {{-- <td class="p-sm-2 p-1">{{dateFormat($lot->Comitted_initiate_date)}}<br><b>{{timeFormat($lot->Comitted_initiate_date)}}</b></td> --}}
+                    <td class="p-sm-2 p-1">{{$lot->request_name}}</td>
+                    <td class="p-sm-2 p-1">{{dateFormat($lot->created_at)}}<br><b>{{timeFormat($lot->created_at)}}</b></td>
                     <td class="p-sm-2 p-1">
                       <div class="btn-group-vertical">
-                        <button type="button" class="btn btn-primary px-1 py-1 btn-xs" data-client_id="{{$lot->client_id}}"  data-created_at="{{dateFormat($lot->created_at)}} {{timeFormat($lot->created_at)}}"  data-Company="{{$lot->Company}}" data-lot_id = "{{$lot->lot_id}}" data-name = "{{$lot->name}}" onclick="viewlots(this)">View Status</button>
-                        <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Creative-editLots/'.$lot->id) }}">Edit Lot</a>
+                        {{-- <button type="button" class="btn btn-primary px-1 py-1 btn-xs" data-client_id="{{$lot->client_id}}"  data-created_at="{{dateFormat($lot->created_at)}} {{timeFormat($lot->created_at)}}"  data-Company="{{$lot->Company}}" data-lot_id = "{{$lot->lot_id}}" data-name = "{{$lot->name}}" onclick="viewlots(this)">View</button> --}}
+                        <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="">Edit Lot</a>
                       </div>
                     </td>
-                  </tr> 
-                  @endforeach
+                  </tr> @endforeach
                 </tbody>
               </table>
             </div>
@@ -132,45 +138,36 @@ Create New Commercial for Creative
 
 <script src="https://mdbcdn.b-cdn.net/wp-content/themes/mdbootstrap4/js/plugins/mdb-file-upload.min.js"></script>
 
-<script type="text/javascript">
- 
- $('[data-toggle="datepicker"]').datepicker({
-    autoHide: true,
-    zIndex: 2048,
-    format: 'yyyy-mm-dd'
-});
 
-</script>
 
-<!-- End of Table -->
+<!-- End of New View LOTs Table (For Editing) -->
 
 <!-- DataTable Plugins Path -->
 
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
 
 <!-- End of DataTable Plugins Path -->
 
+
 <script>
-    $('#lotTable').DataTable({
+	$('#ElotTable').DataTable({
         dom: 'lBfrtip',
         "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ],
         "buttons": ["copy", "csv", "excel", "pdf"]
-    }).buttons().container().insertAfter('#masterData_wrapper .dataTables_length');
+  	}).buttons().container().insertAfter('#masterData_wrapper .dataTables_length');
 </script>
 
 
-<!-- End of New View LOTs Table (For Creative) -->
-
 @endsection
 
-<!-- New View WRCs Table (For Creative) -->
+

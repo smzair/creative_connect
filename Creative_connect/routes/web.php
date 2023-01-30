@@ -5,6 +5,7 @@ use App\Http\Controllers\CreativeAllocationController;
 use App\Http\Controllers\CreativeSubmissionController;
 use App\Http\Controllers\CreativeQcController;
 use App\Http\Controllers\creativeWrc;
+use App\Http\Controllers\editorLotController;
 use App\Http\Controllers\WrcInvoiceNumber;
 use Illuminate\Support\Facades\Route;
 /*
@@ -166,3 +167,13 @@ Route::get('/Creative-Update-Invoice-Number' , [WrcInvoiceNumber::class , 'index
 
 // update Wrc Invoice No
 Route::post('/Creative-Update-Invoice-Number' , [WrcInvoiceNumber::class , 'updateWrcInvoice'])->name('update_wrc_invoice_no');
+
+/* ----------Editor Panel-------------*/
+
+// Editor Create Lot
+Route::get('/Editor-Create-Lot' , [editorLotController::class , 'index'])->name('editor_create_lot');
+
+Route::post('/Editor-Create-Lot', [editorLotController::class , 'store'])->name('store_editor_lot');
+
+// editor lot listing
+Route::get('/Editor-Lot-View', [editorLotController::class , 'getEditorLotData'])->name('get_editor_lot_data');

@@ -263,6 +263,20 @@
                                                     <p>Update Invoice Number Panel</p>
                                                 </a>
                                             </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('editor_create_lot') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Create Lot Editor Panel</p>
+                                                </a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a href="{{ route('get_editor_lot_data') }}" class="nav-link">
+                                                    <i class="far fa-circle nav-icon"></i>
+                                                    <p>Get Lot Editor Panel</p>
+                                                </a>
+                                            </li>
                                            
                                         </ul>
                                     </li>
