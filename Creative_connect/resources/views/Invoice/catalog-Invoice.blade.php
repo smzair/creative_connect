@@ -173,7 +173,8 @@ Update CataLog Invoice Number
                                 $market_place = $row['market_place'];
                                 $wrc_id_is = $row['wrc_id'];
                                 $wrc_id_is = ""; 
-                                $invoiceNumber = $row['invoiceNumber'] == null ? '' : $row['invoiceNumber'] ;
+                                $invoice_not_yet = 'Invoice Not Raised Yet';
+                                $invoiceNumber = ($row['invoiceNumber'] == null || $row['invoiceNumber'] == '' ) ? $invoice_not_yet : $row['invoiceNumber'] ;
                                 $wrc_created_at =  $row['wrc_created_at'] != '0000-00-00 00:00:00' ? date('d-m-Y h:i A',strtotime($row['wrc_created_at'])) : '';
                                 $modeOfDelivary = $row['modeOfDelivary'];
                                 $modeofdelivary_is = $modeOfDelivary_arr[$modeOfDelivary];
@@ -249,7 +250,7 @@ Update CataLog Invoice Number
                             <input type="hidden" name="batch_no" id="batch_no">
                             <input type="hidden" name="submission_id" id="submission_id">
                             <input type="hidden" name="catalog_allocation_ids" id="catalog_allocation_ids">
-                            <button onclick="submit_invoice_number()" type="button" class="btn btn-warning">Submit</button>
+                            <button onclick="submit_invoice_number()" type="button" class="btn btn-warning" id="submit_invoice_number_btn">Submit</button>
 
                         </div>
                         <p id="msg_box" class="msg_box" style="display: none"></p>
@@ -299,6 +300,11 @@ Update CataLog Invoice Number
 
 </script>
 
+<script>
+    const invoice_not_yet = '{{$invoice_not_yet}}'
+    console.log(invoice_not_yet)
+</script>
+
 {{-- script for setdata into modal  --}}
 <script>
     function setdata(val){
@@ -309,9 +315,14 @@ Update CataLog Invoice Number
         
         const lot_number = $("#"+data_id).data("lot_number")
         const wrc_number = $("#"+data_id).data("wrc_number")
-        // const invoicenumber = $("#"+data_id).data("invoicenumber")
-        const invoicenumber =  document.getElementById("invoiceNumber_"+val).innerHTML
+        // const invoicenumber = $("#"+data_id).data("invoicenumber") 
+        let invoicenumber =  document.getElementById("invoiceNumber_"+val).innerHTML
 
+        document.getElementById("submit_invoice_number_btn").innerHTML = "Update";
+        if(invoicenumber == invoice_not_yet){
+            invoicenumber = '';
+            document.getElementById("submit_invoice_number_btn").innerHTML = "Save";
+        }
         
         const brand_name = $("#"+data_id).data("brands_name")
         const company = $("#"+data_id).data("company")
@@ -352,6 +363,9 @@ Update CataLog Invoice Number
        const batch_no = document.getElementById('batch_no').value 
        const invoiceNumber = document.getElementById("invoiceNumber").value 
        const submission_id = document.getElementById("submission_id").value 
+
+       let old_invoicenumber =  document.getElementById("invoiceNumber_"+submission_id).innerHTML
+        
         $.ajax({
             url: "{{ url('save-Catalog-invoice-number')}}",
             type: "POST",
@@ -365,12 +379,17 @@ Update CataLog Invoice Number
             },
             success: function(res) {
                 console.log(res)
-                const {update_status , massage } = res;
+                let {update_status , massage } = res;
                 console.log({update_status , massage})
                 if(update_status == 1){
                     // alert(massage);
                     document.getElementById("invoiceNumber_"+submission_id).innerHTML = invoiceNumber
                     $("#msg_box").css("color", "green");
+                    if(old_invoicenumber == invoice_not_yet){
+                        invoicenumber = '';
+                        document.getElementById("submit_invoice_number_btn").innerHTML = "Update";
+                        massage = "Wrc Invoice Number Saved!!"
+                    }
                 }
                 $("#msg_box").css("display", "block");
 

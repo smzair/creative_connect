@@ -168,8 +168,9 @@ class CatalogSubmission extends Model
             'catalog_wrc_batches.batch_no',
             'catalog_wrc_batches.sku_count as sku_qty',
             'create_commercial_catalog.CommercialSKU',
-            'catalog_submissions.invoiceNumber',
-            'catalog_submissions.id as submissionId',
+            'catalog_wrc_batches.invoiceNumber',
+            'catalog_wrc_batches.id as submissionId',
+            // 'catalog_submissions.id as submissionId',
             'catalog_wrc_batches.created_at as wrc_created_at',
 
             'catalog_wrc_batches.wrc_id',
@@ -198,21 +199,17 @@ class CatalogSubmission extends Model
         $wrc_id = $request->wrc_id;
         $batch_no = $request->batch_no;
         $invoiceNumber = $request->invoiceNumber;
-
-        $data = CatalogSubmission::where('id', $submission_id)->where('ar_status', '<>', '0')->get()->toArray();
-        $count_data = count($data);
         $update_status = 0;
-        $new_wrc_id = 0;
         $massage = "somthing went Wrong!!!";
 
-        $update_status = CatalogSubmission::where('id', $submission_id)->update(['invoiceNumber' => $invoiceNumber]);
+        $update_status = CatalogWrcBatch::where('id', $submission_id)->update(['invoiceNumber' => $invoiceNumber]);
         if($update_status){
             $massage = "Wrc Invoice Number Updated!!";
         }
 
         $response = array(
             'wrc_id' => $wrc_id,
-            'count_data' => $count_data,
+            'batch_no' => $batch_no,
             'update_status' => $update_status,
             'massage' => $massage,
         );
