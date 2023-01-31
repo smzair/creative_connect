@@ -89,7 +89,7 @@ Editor Lot List
                     <td class="p-sm-2 p-1">
                       <div class="btn-group-vertical">
                         {{-- <button type="button" class="btn btn-primary px-1 py-1 btn-xs" data-client_id="{{$lot->client_id}}"  data-created_at="{{dateFormat($lot->created_at)}} {{timeFormat($lot->created_at)}}"  data-Company="{{$lot->Company}}" data-lot_id = "{{$lot->lot_id}}" data-name = "{{$lot->name}}" onclick="viewlots(this)">View</button> --}}
-                        <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="">Edit Lot</a>
+                        <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Editor-editLots/'.$lot->id) }}">Edit Lot</a>
                       </div>
                     </td>
                   </tr> @endforeach

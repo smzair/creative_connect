@@ -153,6 +153,11 @@ Consolidated-Lot Create
                                                         <span class="checkmark"></span>
                                                         Cataloging
                                                     </div>
+                                                    <div class="checkcontainer">
+                                                        <input type="checkbox" class="" name="editor_lot" id="editor_lot" <?php if($CreativeLots->editor_lot_check == 1)echo 'checked'?>>
+                                                        <span class="checkmark"></span>
+                                                        Editor Lot
+                                                    </div>
                                                     <p class="input_err" style="color: red; display: none;" id="select_service_err"></p>
                                                 </div>
                                             </div>
@@ -453,6 +458,56 @@ Consolidated-Lot Create
                                 </div>
                             </div>
                         </div>
+
+                        <div class="accordian-item" id="editor-accor-item" style="display:none;">
+                            <div class="card card-transparent">
+                                <div class="card-header acc-card-header" id="ctAccor" data-toggle="collapse" data-target="#editorcollapse" aria-expanded="true" aria-controls="editorcollapse">
+                                    <h3 class="card-title">
+                                        <span class="card-text">
+                                        Editor Lot
+                                        </span>
+                                        <i class="right fas fa-angle-left"></i>
+                                    </h3>
+                                </div>
+                                <div id="editorcollapse" class="collapse" aria-labelledby="ctAccor" data-parent="#accordionPanel">
+                                    <div class="card-body">
+                                        <form action="{{ route('create_consolidated_editor_lot') }}" onsubmit="return validateFormEditorLot(event)"  method="post" id="ctForm">
+                                            <input type="hidden" name="consolidated_lot_id" value="{{$CreativeLots->id}}">
+                                            @csrf
+                                            <div class="row">
+                                                <div class="col-sm-4 col-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label required">Request Name</label>
+                                                        <input type="text" class="form-control" name="request_name"
+                                                            value="" id="request_name"
+                                                            placeholder="Enter Request Name">
+                                                        <p class="input_err" style="color: red; display: none;" id="request_name_err">
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="btn-form-group">
+                                                        <div class="custom-action-btn-wrapper">
+                                                            {{-- <a href="javascript:;" class="btn btn-warning" id="ctsaveBTN">
+                                                                Save
+                                                            </a> --}}
+                                                            <?php if($CreativeLots->editor_lot_form_data == 0){ ?>
+                                                                <button type="submit" class="btn btn-sm btn-warning md-2" id="">Save</button>
+                                                            <?php }else{ ?>
+                                                                <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="">Editor Lot Already Saved</button>
+                                                            <?php } ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -512,7 +567,19 @@ Consolidated-Lot Create
         } else if (!this.checked) {
             $('#ct-accor-item').css('display', 'none');
         }
-    });*/
+    });
+
+    // Display Editor lot 
+    $("#editor_lot").change(function () {
+        if (this.checked) {
+            $('#v-accor-item').css('display', 'block');
+        } else if (!this.checked) {
+            $('#v-accor-item').css('display', 'none');
+        }
+    });
+    
+    
+    */
 	
 </script>
 
@@ -535,6 +602,12 @@ Consolidated-Lot Create
             $('#ct-accor-item').css('display', 'block');
         } else {
             $('#ct-accor-item').css('display', 'none');
+        }
+
+        if ($("#editor_lot").is(":checked")) {
+            $('#editor-accor-item').css('display', 'block');
+        } else {
+            $('#editor-accor-item').css('display', 'none');
         }
     });
 
@@ -656,14 +729,23 @@ Consolidated-Lot Create
              catcheck = false;
         }
 
-        if ((shootcheck == false) && (cgcheck == false) && (catcheck == false)) {
+        let editor_lot_check = false;
+        if ($("#editor_lot").is(":checked")) {
+            console.log("The checkbox is checked.");
+            editor_lot_check = true;
+        } else {
+            console.log("The checkbox is not checked.");
+            editor_lot_check = false;
+        }
+
+        if ((shootcheck == false) && (cgcheck == false) && (catcheck == false) && (editor_lot_check == false)) {
             $("#select_service_err").html("Select Services to generate LOT is required");
             document.getElementById("select_service_err").style.display = "block";
             select_service_to_generate_lot_valid = false;
         }
 
         if (user_id_is_Valid && brand_id_Valid && select_service_to_generate_lot_valid) {
-        return true
+            return true
         } else {
             return false
         }
@@ -818,5 +900,30 @@ Consolidated-Lot Create
             }
         }
     
+    </script>
+
+    <script type="text/javascript">
+        function validateFormEditorLot(event) {
+            $(".input_err").css("display", "none");
+            $(".input_err").html("");
+
+            const check_request_name = $('#request_name').val();
+            
+    
+            let request_name_is_Valid = true;
+           
+    
+            if (check_request_name === '') {
+                $("#request_name_err").html("Request name is required");
+                document.getElementById("request_name_err").style.display = "block";
+                request_name_is_Valid = false;
+            }
+    
+            if (request_name_is_Valid) {
+                return true
+            } else {
+                return false
+            }
+        }
     </script>
 @endsection

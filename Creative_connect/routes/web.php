@@ -161,6 +161,10 @@ Route::post('/Consolidated-Lot-Creative-Graphics' , [ConsolidatedLotController::
 // create consolidated catlog
 Route::post('/Consolidated-Lot-Catlog' , [ConsolidatedLotController::class , 'createConsolidatedCatlog'])->name('create_consolidated_catlog');
 
+// create create_consolidated_editor_lot
+
+Route::post('/Consolidated-Lot-Editor' , [ConsolidatedLotController::class , 'createConsolidatedEditorLot'])->name('create_consolidated_editor_lot');
+
 // Update Invoice Number Panel
 Route::get('/Creative-Update-Invoice-Number' , [WrcInvoiceNumber::class , 'index'])->name('update_invoice_number_panel');
 
@@ -177,3 +181,9 @@ Route::post('/Editor-Create-Lot', [editorLotController::class , 'store'])->name(
 
 // editor lot listing
 Route::get('/Editor-Lot-View', [editorLotController::class , 'getEditorLotData'])->name('get_editor_lot_data');
+
+// editor lot edit
+Route::get('/Editor-editLots/{id}',[editorLotController::class, 'edit']);
+
+// editor lot edit
+Route::post('/Editor-Lot-View',[editorLotController::class, 'update'])->name('editor_update_lot');

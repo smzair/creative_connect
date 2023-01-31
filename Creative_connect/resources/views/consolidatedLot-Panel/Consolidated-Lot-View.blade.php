@@ -69,9 +69,11 @@ Consilidated Lot View
                                     <th class="p-2">Shoot check</th>
                                     <th class="p-2">Creative Graphics Check</th>
                                     <th class="p-2">Cat Log Check</th>
+                                    <th class="p-2">Editor Lot Check</th>
                                     <th class="p-2">Shoot Data</th>
                                     <th class="p-2">Creative Graphics Data</th>
                                     <th class="p-2">Cat Log Data</th>
+                                    <th class="p-2">Editor Lot Data</th>
                                     <th class="p-2">Actions</th>
                                 </tr>
                             </thead>
@@ -103,9 +105,17 @@ Consilidated Lot View
                                             --
                                         <?php } ?>
                                     </td>
+                                    <td class="p-sm-2 p-1">
+                                        <?php if($val->editor_lot_check == 1){ ?>
+                                           <i class="fa fa-check" style="font-size:20px;color:#49e649;"></i>
+                                        <?php }else{ ?>
+                                            --
+                                        <?php } ?>
+                                    </td>
                                     <td  class="p-sm-2 p-1">{{$val->shoot_form_data == 1 ? 'Submitted' : '--'}}</td>
                                     <td  class="p-sm-2 p-1">{{$val->creative_graphic_form_data == 1 ? 'Submitted' : '--'}}</td>
                                     <td  class="p-sm-2 p-1">{{$val->cataloging_form_data == 1 ? 'Submitted' : '--'}}</td>
+                                    <td  class="p-sm-2 p-1">{{$val->editor_lot_form_data == 1 ? 'Submitted' : '--'}}</td>
                                     <td class="p-sm-2 p-1">
                                         <div class="btn-group-vertical">
                                             <?php if(($val->shoot == $val->shoot_form_data) && ($val->creative_graphic == $val->creative_graphic_form_data) && ($val->cataloging == $val->cataloging_form_data)){ ?>

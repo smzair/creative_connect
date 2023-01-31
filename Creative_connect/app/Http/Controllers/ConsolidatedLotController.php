@@ -26,7 +26,9 @@ class ConsolidatedLotController extends Controller
             'shoot_form_data' => 0,
             'creative_graphic_form_data' => 0,
             'cataloging_form_data' => 0,
-            'cataloging' => ''
+            'editor_lot_form_data' => 0,
+            'cataloging' => '',
+            'editor_lot_check' => ''
         ];
         return view('consolidatedLot-Panel.Consolidated-Lot')->with(['CreativeLots'=>$CreativeLots, 'users_data'=> $users_data]);
     }
@@ -43,16 +45,19 @@ class ConsolidatedLotController extends Controller
         $brand_id = $request->brand_id;
         $cgcheck = isset($request->cgcheck) ?   $request->cgcheck : 0; // Creative Graphics
         $catcheck = isset($request->catcheck) ? $request->catcheck : 0; // Cataloging
+        $editor_lot_check = isset($request->editor_lot) ? $request->editor_lot : 0; // editor_lot
         $shootcheck = isset($request->shootcheck) ?   $request->shootcheck : 0; // Shoot
 
         $cgcheck_val = $cgcheck == 0 ? 0 : 1; // Creative Graphics
         $catcheck_val = $catcheck == 0 ? 0 : 1; // Cataloging
         $shootcheck_val = $shootcheck == 0 ? 0 : 1;// Shoot
+        $editor_lot_check_val = $editor_lot_check == 0 ? 0 : 1;// Shoot
 
         $consolidatedLot = new ConsolidatedLot();
         $consolidatedLot->shoot = $shootcheck_val;
         $consolidatedLot->creative_graphic = $cgcheck_val;
         $consolidatedLot->cataloging = $catcheck_val;
+        $consolidatedLot->editor_lot_check = $editor_lot_check_val;
         $consolidatedLot->user_id = $user_id;
         $consolidatedLot->brand_id = $brand_id;
         $consolidatedLot->save(); 
@@ -60,6 +65,7 @@ class ConsolidatedLotController extends Controller
         $shoot_id = 0;
         $cg_id = 0;
         $cat_id = 0;
+        $editor_lot_id = 0;
 
         // generate lot number 
         //  $lot_number = 'ODN' . date('dmY') ."-". $request->c_short . $request->short_name . $id;
@@ -98,6 +104,17 @@ class ConsolidatedLotController extends Controller
                 ]);
             }
 
+              // editor  lot entry
+              if($editor_lot_check_val == 1){
+                    $editor_lot_id = DB::table('editor_lots')->insertGetId([
+                        'user_id' => $user_id,
+                        'brand_id' => $brand_id,
+                        'linked_lot_id' => $shoot_id,
+                        'linked_lot_id_add_from' => 'Shoot',
+                        'lot_number' =>  $lot_number
+                    ]);
+                }
+
             // update lot number and linked lot id
             DB::table('lots')->where('id',$shoot_id)->update(
                 [
@@ -134,6 +151,17 @@ class ConsolidatedLotController extends Controller
                     ]);
                 }
 
+                 // editor  lot entry
+                if($editor_lot_check_val == 1){
+                    $editor_lot_id = DB::table('editor_lots')->insertGetId([
+                        'user_id' => $user_id,
+                        'brand_id' => $brand_id,
+                        'linked_lot_id' => $cg_id,
+                        'linked_lot_id_add_from' => 'Creative',
+                        'lot_number' =>  $lot_number
+                    ]);
+                }
+
                 // update lot number and linked lot id
                 DB::table('creative_lots')->where('id',$cg_id)->update(
                     [
@@ -155,6 +183,18 @@ class ConsolidatedLotController extends Controller
                 'brand_id' => $brand_id
             ]);
             $lot_number = 'ODN' . date('dmY') ."-". $c_short . $short_name . $cat_id;
+
+             // editor  lot entry
+             if($editor_lot_check_val == 1){
+                $editor_lot_id = DB::table('editor_lots')->insertGetId([
+                    'user_id' => $user_id,
+                    'brand_id' => $brand_id,
+                    'linked_lot_id' => $cat_id,
+                    'linked_lot_id_add_from' => 'Catlog',
+                    'lot_number' =>  $lot_number
+                ]);
+            }
+
             // update lot number and linked lot id
             DB::table('lots_catalog')->where('id',$cg_id)->update(
                 [
@@ -163,7 +203,30 @@ class ConsolidatedLotController extends Controller
                     'linked_lot_id_add_from' => 'Catlog'
                 ]
             );
+
+            $editor_lot_check_val = 0;
         }
+
+         // editor lot entry
+         if($editor_lot_check_val == 1){
+            $editor_lot_id = DB::table('editor_lots')->insertGetId([
+                'user_id' => $user_id,
+                'brand_id' => $brand_id
+            ]);
+            $lot_number = 'ODN' . date('dmY') ."-". $c_short . $short_name . $editor_lot_id;
+
+          
+
+            // update lot number and linked lot id
+            DB::table('editor_lots')->where('id',$editor_lot_id)->update(
+                [
+                    'lot_number' => $lot_number,
+                    'linked_lot_id' => $editor_lot_id,
+                    'linked_lot_id_add_from' => 'editorLot'
+                ]
+            );
+        }
+
 
         // update linked_shoot_id, linked_creative_id, linked_catlog_id
         ConsolidatedLot::where('id',$consolidatedLot->id)->update(
@@ -171,6 +234,7 @@ class ConsolidatedLotController extends Controller
                 'linked_shoot_id' => $shoot_id,
                 'linked_creative_id' => $cg_id,
                 'linked_catlog_id' => $cat_id,
+                'linked_editor_lot_id' => $editor_lot_id,
                 'lot_number' => $lot_number
             ]
         );
@@ -283,6 +347,28 @@ class ConsolidatedLotController extends Controller
         }
         if($linked_catlog_id){
             request()->session()->flash('success','Cataloging Data Saved Successfully');
+        }
+        else{
+            request()->session()->flash('error','Please try again!!');
+        }
+        return $this->continueTask($request,$ConsolidatedLot);
+    }
+
+    public function createConsolidatedEditorLot(Request $request){
+        // dd($request);
+        $ConsolidatedLot = $request->consolidated_lot_id;
+        $request_name = $request->request_name;
+        $ConsolidatedLotData = ConsolidatedLot::where('id',$ConsolidatedLot)->first(['linked_editor_lot_id']);
+        $linked_editor_lot_id = $ConsolidatedLotData != null ? $ConsolidatedLotData->linked_editor_lot_id : 0;
+
+        if($linked_editor_lot_id > 0){
+            DB::table('editor_lots')->where('id',$linked_editor_lot_id)->update([
+                'request_name' =>  $request_name
+            ]);
+            ConsolidatedLot::where('id',$ConsolidatedLot)->update(['editor_lot_form_data' => 1]);
+        }
+        if($linked_editor_lot_id){
+            request()->session()->flash('success','Editor Lot Data Saved Successfully');
         }
         else{
             request()->session()->flash('error','Please try again!!');

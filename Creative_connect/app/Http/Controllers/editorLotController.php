@@ -8,40 +8,40 @@ use Illuminate\Support\Facades\DB;
 
 class editorLotController extends Controller
 {
+    // get data for create lot
     public function index(){
-        // return view('EditorLotPanel.Editor-Create-Lot')->with(['users'=> [], 'getProductList'=>[]]);
-
-        $users_data = DB::table('users')
-            ->leftJoin('model_has_roles', 'model_has_roles.model_id', 'users.id')
-            ->leftJoin('roles', 'roles.id', 'model_has_roles.role_id')
-            ->where([ ['users.Company' ,'<>' ,NULL], ['roles.name','=', 'Client']])->get(['users.id', 'users.client_id', 'users.name', 'users.Company', 'users.c_short']);
-            // dd($users_data);
-
-        $EditorLots = (object) [
-            'id'=>0,
-            'user_id'=>'',
-            'brand_id'=>'',
-            'lot_number'=>'',
-            'request_name'=>'',
-            'status'=>'',
-            'button_name' => 'Create Lot',
-            'route' => 'store_editor_lot'
-        ];
-        return view('EditorLotPanel.Editor-Create-Lot')->with('users_data', $users_data)->with('EditorLots',$EditorLots);
+        return EditorLotModel::index();
     }
 
+    // store lot data
     public function store(Request $request)
     {
-        
-        //create
-        // dd($request);
-        $EditorLots = new EditorLotModel();
+        EditorLotModel::store($request);
+        return $this->index();
+    }
+
+    // lot listing data
+    public function getEditorLotData(){
+        return EditorLotModel::getEditorLotData();
+
+    }
+
+    // get lot data for edit
+    public function edit(Request $request, $id){
+        return EditorLotModel::edit($request, $id);
+    }
+
+    // update lot
+    public  function update(Request $request)
+    {
+        $id = $request->id;
+        $EditorLots = EditorLotModel::find($id);
         $EditorLots->user_id = $request->user_id;
         $EditorLots->brand_id = $request->brand_id;
         $EditorLots->lot_number = "";
         $EditorLots->request_name = $request->request_name;
         $EditorLots->status = 'ready_for_inwarding';
-        $EditorLots->save();
+        $EditorLots->update();
         
         $id =  $EditorLots->id;
         // $request->s_type
@@ -62,25 +62,15 @@ class editorLotController extends Controller
 
         EditorLotModel::where('id',$id)->update(['lot_number'=>$lot_number]);
         if($EditorLots){
-            request()->session()->flash('success','Lots Created Successfully');
+            request()->session()->flash('success','Lots Updated Successfully');
         }
         else{
             request()->session()->flash('error','Please try again!!');
         }
-
-       return $this->index();
+        return EditorLotModel::edit($request, $id);
         
     }
 
-    public function getEditorLotData(){
-        $lots = EditorLotModel::orderBy('id', 'DESC')
-        ->leftJoin('users', 'users.id', 'editor_lots.user_id')
-        ->leftJoin('brands', 'brands.id', 'editor_lots.brand_id')
-        ->select('editor_lots.*','users.Company','users.client_id','brands.name')
-        ->get();
-        return view('EditorLotPanel.Editor-View-Lot')->with('lots', $lots);
-
-    }
 
     
 }
