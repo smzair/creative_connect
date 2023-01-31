@@ -8,9 +8,9 @@
 
         <div class="container-lg container-fluid my-5 lot-create-updateversion">
             @if (Session::has('success'))
-            <div class="alert alert-success" id="msg_div" role="alert">
-                {{ Session::get('success') }}
-            </div>
+                <div class="alert alert-success" id="msg_div" role="alert">
+                    {{ Session::get('success') }}
+                </div>
             @endif
             <div class="row lotNoShowHide" style="padding-bottom: 2rem">
                 <div class="col-12">
@@ -107,6 +107,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- End of New Create Lot (For Editing) -->
 

@@ -118,7 +118,7 @@ Consilidated Lot View
                                     <td  class="p-sm-2 p-1">{{$val->editor_lot_form_data == 1 ? 'Submitted' : '--'}}</td>
                                     <td class="p-sm-2 p-1">
                                         <div class="btn-group-vertical">
-                                            <?php if(($val->shoot == $val->shoot_form_data) && ($val->creative_graphic == $val->creative_graphic_form_data) && ($val->cataloging == $val->cataloging_form_data)){ ?>
+                                            <?php if(($val->shoot == $val->shoot_form_data) && ($val->creative_graphic == $val->creative_graphic_form_data) && ($val->cataloging == $val->cataloging_form_data) && ($val->editor_lot_check == $val->editor_lot_form_data)){ ?>
                                             <button  disabled class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Consolidated-Lot/'.$val->id) }}">Done</button>
                                             <?php }else{ ?>
                                                 <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Consolidated-Lot/'.$val->id) }}">Continue Task</a>

@@ -171,7 +171,8 @@ Consolidated-Lot Create
                                                     <?php if(($CreativeLots->id == 0)){?> 
                                                     <button type="submit" class="btn btn-sm btn-warning md-2" id="genLotBTN">Generate LOT No.</button>
                                                     <?php }else{ ?>
-                                                        <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="genLotBTN">Generate LOT</button>
+                                                        
+                                                        <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="genLotBTN">Generate LOT No.</button>
                                                         <?php } ?>
                                                 </div>
                                             </div>
@@ -926,4 +927,15 @@ Consolidated-Lot Create
             }
         }
     </script>
+
+    @if($CreativeLots->id > 0)
+    <script>
+        document.getElementById("editor_lot").disabled = true;
+        document.getElementById("catcheck").disabled = true;
+        document.getElementById("cgcheck").disabled = true;
+        document.getElementById("shootcheck").disabled = true;
+        document.getElementById("brand_id").disabled = true;
+        document.getElementById("user_id").disabled = true;
+    </script>
+    @endif
 @endsection
