@@ -24,9 +24,11 @@ class NewCommercial extends Controller
             'commshootcheck' => '0',
             'commcgcheck' => '0',
             'commcatcheck' => '0',
+            'commEditorcheck' =>'0',
             'shootCheckIsDone' => '0',
             'cgCheckIsDone' => '0',
             'catCheckIsDone' => '0',
+            'editorCheckIsDone' => '0',
         ];
         return view('commercial.newCommercial-panel')->with('newCommercial', $newCommercial);
     }
@@ -77,7 +79,9 @@ class NewCommercial extends Controller
             'new_commercials.commcatcheck',
             'new_commercials.shootCheckIsDone',
             'new_commercials.cgCheckIsDone',
-            'new_commercials.catCheckIsDone', 
+            'new_commercials.catCheckIsDone',
+            'new_commercials.commEditorcheck',
+            'new_commercials.editorCheckIsDone', 
             'users.Company as company', 
             'brands.name'
             )
@@ -136,6 +140,21 @@ class NewCommercial extends Controller
 
         if ($create_Cataloging_Id > 0) {
             request()->session()->flash('success', 'Creative Cataloging  Successfully Added!!');
+        } else {
+            request()->session()->flash('false', 'Somthing went wrong try again!!!');
+        }
+        return Redirect::route('EditNewCommercial', ['id' => $newCommercialId]);
+    }
+
+    
+    // Function for store new Editors Commercial
+    public function SaveEditorCommercial(Request $request)
+    {
+        $newCommercialId = $request->newCommercialId;
+        $create_Cataloging_Id = NewCommercialModel::SaveEditorCommercial($request);
+
+        if ($create_Cataloging_Id > 0) {
+            request()->session()->flash('success', 'Editor Commercial Successfully Added!!');
         } else {
             request()->session()->flash('false', 'Somthing went wrong try again!!!');
         }

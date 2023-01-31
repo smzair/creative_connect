@@ -24,11 +24,14 @@ class NewCommercialModel extends Model
         'commcatcheck',
         'shootCheckIsDone',
         'cgCheckIsDone',
-        'catCheckIsDone'
+        'catCheckIsDone',
+        'commEditorcheck',
+        'editorCheckIsDone',
     ];
 
     // Save New Commercial into Db
     public static function createNewCommercial($request){
+        // dd($request->all());
         $commCompanyId = $request->commCompanyId;
         $commBrandId = $request->commBrandId;
         $c_short = $request->c_short;
@@ -37,10 +40,12 @@ class NewCommercialModel extends Model
         $commshootcheck = request()->has('commshootcheck') ? $request->commshootcheck : 0;
         $commcgcheck = request()->has('commcgcheck') ? $request->commcgcheck : 0;
         $commcatcheck = request()->has('commcatcheck') ? $request->commcatcheck : 0;
+        $commEditorcheck = request()->has('commEditorcheck') ? $request->commEditorcheck : 0;
 
         $shootCheckIsDone = $commshootcheck > 0 ? 1 : 0;
         $cgCheckIsDone = $commcgcheck > 0 ? 1 : 0;
         $catCheckIsDone = $commcatcheck > 0 ? 1 : 0;
+        $editorCheckIsDone = $commEditorcheck > 0 ? 1 : 0;
 
         $createNewCommercial = new NewCommercialModel();
         $createNewCommercial->commCompanyId = $commCompanyId;
@@ -54,6 +59,8 @@ class NewCommercialModel extends Model
         $createNewCommercial->shootCheckIsDone = $shootCheckIsDone;
         $createNewCommercial->cgCheckIsDone = $cgCheckIsDone;
         $createNewCommercial->catCheckIsDone = $catCheckIsDone;
+        $createNewCommercial->commEditorcheck = $commEditorcheck;
+        $createNewCommercial->editorCheckIsDone = $editorCheckIsDone;
         $status = $createNewCommercial->save();
 
         if($status){
@@ -76,9 +83,11 @@ class NewCommercialModel extends Model
         $commshootcheck = request()->has('commshootcheck') ? $request->commshootcheck : 0;
         $commcgcheck = request()->has('commcgcheck') ? $request->commcgcheck : 0;
         $commcatcheck = request()->has('commcatcheck') ? $request->commcatcheck : 0;
+        $commEditorcheck = request()->has('commEditorcheck') ? $request->commEditorcheck : 0;
         $shootCheckIsDone = $commshootcheck > 0 ? 1 : 0;
         $cgCheckIsDone = $commcgcheck > 0 ? 1 : 0;
         $catCheckIsDone = $commcatcheck > 0 ? 1 : 0;
+        $editorCheckIsDone = $commEditorcheck > 0 ? 1 : 0;
 
         $createNewCommercial =  NewCommercialModel::find($request->id);
         $createNewCommercial->commCompanyId = $commCompanyId;
@@ -92,6 +101,8 @@ class NewCommercialModel extends Model
         $createNewCommercial->shootCheckIsDone = $shootCheckIsDone;
         $createNewCommercial->cgCheckIsDone = $cgCheckIsDone;
         $createNewCommercial->catCheckIsDone = $catCheckIsDone;
+        $createNewCommercial->commEditorcheck = $commEditorcheck;
+        $createNewCommercial->editorCheckIsDone = $editorCheckIsDone;
         $status = $createNewCommercial->update();
 
         if ($status) {
@@ -219,6 +230,36 @@ class NewCommercialModel extends Model
         if ($status) {
             $createNewCommercial =  NewCommercialModel::find($newCommercialId);
             $createNewCommercial->catCheckIsDone = 2;
+            $upstatus = $createNewCommercial->update();
+            $create_Cataloging_Id = $create_commercial->id;
+        } else {
+            $create_Cataloging_Id = 0;
+        }
+        return $create_Cataloging_Id;
+    }
+
+    // store new Cataloging Commercial
+    public static function SaveEditorCommercial($request)
+    {
+        $newCommercialId = $request->newCommercialId;
+        $company_id = $request->user_id;
+        $brand_id = $request->brand_id;
+        $type_of_service = $request->type_of_service;
+        $CommercialPerImage = $request->CommercialPerImage;
+        
+        
+        $create_commercial = new EditorsCommercial();
+        // dd($request->all(), $create_commercial);
+        $create_commercial->company_id = $company_id;
+        $create_commercial->brand_id = $brand_id;
+        $create_commercial->type_of_service = $type_of_service;
+        $create_commercial->CommercialPerImage = $CommercialPerImage;
+        $create_commercial->newCommercialId = $newCommercialId;
+        $status = $create_commercial->save();
+
+        if ($status) {
+            $createNewCommercial =  NewCommercialModel::find($newCommercialId);
+            $createNewCommercial->editorCheckIsDone = 2;
             $upstatus = $createNewCommercial->update();
             $create_Cataloging_Id = $create_commercial->id;
         } else {

@@ -68,6 +68,7 @@
                   <th class="p-2">Shoot</th>
                   <th class="p-2">Creative Graphics</th>
                   <th class="p-2">Cataloging</th>
+                  <th class="p-2">Editor's</th>
                   <th class="p-2" style="text-align: center">Action</th>
                 </tr>
               </thead>
@@ -83,12 +84,12 @@
                     $shootCheckIsDone = $row->shootCheckIsDone;
                     $cgCheckIsDone = $row->cgCheckIsDone;
                     $catCheckIsDone = $row->catCheckIsDone;
-                    $commshootcheck = $commcgcheck = $commcatcheck = "-";
+                    $editorCheckIsDone = $row->editorCheckIsDone;
+                    $commshootcheck = $commcgcheck = $commcatcheck = $commEditorcheck = "-";
 
                     $show_btn = 0;
-                    if($shootCheckIsDone == 1 || $cgCheckIsDone == 1 || $catCheckIsDone == 1){
+                    if($shootCheckIsDone == 1 || $cgCheckIsDone == 1 || $catCheckIsDone == 1 || $editorCheckIsDone == 1){
                       $show_btn = 1;
-
                     }
 
                     if($shootCheckIsDone > 0){
@@ -104,6 +105,10 @@
                       $commcatcheck = $catCheckIsDone == 1 ? 'Pending' : 'Done';
                     }
 
+                    if($editorCheckIsDone > 0){
+                      $commEditorcheck = $editorCheckIsDone == 1 ? 'Pending' : 'Done';
+                    }
+
                 @endphp
                 
                 <tr class="wrc-tt">
@@ -114,6 +119,7 @@
                   <td class="p-sm-2 p-1">{{$commshootcheck}}</td>
                   <td class="p-sm-2 p-1">{{$commcgcheck}}</td>
                   <td class="p-sm-2 p-1">{{$commcatcheck}}</td>
+                  <td class="p-sm-2 p-1">{{$commEditorcheck}}</td>
                   <td style="text-align: center">
 
                     @if ($show_btn == 1)

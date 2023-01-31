@@ -129,7 +129,7 @@ Route::get('catalog-wrc-master-sheet', [CatalogWrcMasterSheetController::class ,
 // New Panel for WRCs Status
 Route::get('catalog-wrc-status', [CatalogWrcController::class , 'CatalogWrcStatus'])->name('CatalogWrcStatus');
 
-// NewCommercial Routing
+// NewCommercial Routing 
 Route::get( '/newCommercial', [NewCommercial::class, 'index'])->name('NewCommercial'); // NewCommercial Form 
 Route::POST('/newCommercial', [NewCommercial::class, 'create'])->name('SaveNewCommercial'); // Save NewCommercial And genrating data
 Route::get('/newCommercialList', [NewCommercial::class, 'view'])->name('ViewNewCommercial'); // Listing For NewCommercial
@@ -139,6 +139,7 @@ Route::POST('/UpdateNewCommercial', [NewCommercial::class, 'update'])->name('Upd
 Route::POST('/saveShootCommercial', [NewCommercial::class, 'saveShootCommercial'])->name('saveShootCommercial'); // Save SaveShootCommercial And genrating data
 Route::POST('/saveCreativeCommercial', [NewCommercial::class, 'SaveCreativeCommercial'])->name('SaveCreativeCommercial'); // Save SaveCreativeCommercial And genrating data
 Route::POST('/saveCatalogingCommercial', [NewCommercial::class, 'SaveCatalogingCommercial'])->name('SaveCatalogingCommercial'); // Save SaveCatalogingCommercial And genrating data
+Route::POST('/saveEditorCommercial', [NewCommercial::class, 'SaveEditorCommercial'])->name('SaveEditorCommercial'); // Save SaveCatalogingCommercial And genrating data
 
 Route::get( '/catalog-Invoice', [CatalogInvoiceController::class, 'index'])->name('CatalogInvoice'); // Listing For NewCommercial
 Route::POST( '/save-Catalog-invoice-number', [CatalogInvoiceController::class, 'SaveCatalogInvoiceNumber'])->name('SaveCatalogInvoiceNumber'); // Save SaveCatalogingCommercial And genrating data

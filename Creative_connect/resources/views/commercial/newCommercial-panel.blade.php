@@ -54,6 +54,10 @@
             transform: rotate(90deg);
         }
 
+        .btn-form-group p{
+            font-size: 20px;
+        }
+
         /* End of Lot New Panel Style */
     </style>
     <!-- Commercial Panel -->
@@ -100,10 +104,11 @@
                                     $shootCheckIsDone = $newCommercial['shootCheckIsDone'];
                                     $cgCheckIsDone = $newCommercial['cgCheckIsDone'];
                                     $catCheckIsDone = $newCommercial['catCheckIsDone'];
+                                    $editorCheckIsDone = $newCommercial['editorCheckIsDone'];
                                     $check_disabled = '';
                                     $show_submit = 1;
                                     $btn_display = "";
-                                    if($shootCheckIsDone == 2 || $cgCheckIsDone == 2 || $catCheckIsDone == 2){
+                                    if($shootCheckIsDone == 2 || $cgCheckIsDone == 2 || $catCheckIsDone == 2 || $editorCheckIsDone == 2){
                                         $show_submit = 0;
                                         $check_disabled = "disabled";
                                         $btn_display = "d-none";
@@ -186,6 +191,11 @@
                                                             <input {{$check_disabled}} type="checkbox" {{$newCommercial['commcatcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commcatcheck" id="commcatcheck" value="1" onclick="validateNewCommercialForm()">
                                                             <span class="checkmark"></span>
                                                             Cataloging
+                                                        </div>
+                                                        <div class="checkcontainer">
+                                                            <input {{$check_disabled}} type="checkbox" {{$newCommercial['commEditorcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commEditorcheck" id="commEditorcheck" value="1" onclick="validateNewCommercialForm()">
+                                                            <span class="checkmark"></span>
+                                                            Editor's
                                                         </div>
                                                     </div>
                                                 </div>
@@ -548,6 +558,68 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            {{-- Editors secction  --}}
+                            <div class="accordian-item" id="comm-Editor-accor-item" style="display:none;">
+                                <div class="card card-transparent">
+                                    <div class="card-header acc-card-header" id="commEditorAccor" data-toggle="collapse"
+                                        data-target="#commEditorcollapse" aria-expanded="true"
+                                        aria-controls="commEditorcollapse">
+                                        <h3 class="card-title">
+                                            <span class="card-text">
+                                                Editor's
+                                            </span>
+                                            <i class="right fas fa-angle-left"></i>
+                                        </h3>
+                                    </div>
+                                    <div id="commEditorcollapse" class="collapse" aria-labelledby="commEditorAccor"
+                                        data-parent="#commaccordionPanel">
+                                        <div class="card-body">
+                                            <form action="{{route('SaveEditorCommercial')}}" method="post" id="commctForm">
+                                                @csrf
+                                                <div class="row">
+                                                    <div class="col-sm-4 col-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label required">Type of Service</label>
+                                                            <select class="custom-select form-control-border"
+                                                                name="type_of_service" id="type_of_service" onchange="validateEditorForm()">
+                                                                <option value="">Select Type of Service</option>
+                                                                @foreach($typeOfService as $index => $service)
+                                                                    <option value="{{$service}}">{{$service}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4 col-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label required">Commercial Per
+                                                                Unit</label>
+                                                            <input type="text" class="form-control" name="CommercialPerImage"
+                                                                id="CommercialPerImage" placeholder="Enter Commercial Per Image" onkeypress="return isNumber(event);" onkeyup="validateEditorForm()">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <div class="btn-form-group">
+                                                            <div class="custom-action-btn-wrapper">
+                                                                <input type="hidden" name="newCommercialId" value="{{$newCommercial['id']}}">
+                                                                <input type="hidden" name="user_id" value="{{$newCommercial['commCompanyId']}}">
+                                                                <input type="hidden" name="brand_id" value="{{$newCommercial['commBrandId']}}">
+                                                                @if ($editorCheckIsDone != 2)
+                                                                    <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commEditorSaveBTN">  Save  </button>
+                                                                @else
+                                                                    <p style="color: #00ff00">Editors Commercial Already Saved</p>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -592,6 +664,15 @@
                 $('#comm-ct-accor-item').css('display', 'none');
             }
         });
+
+        // Display Editors Accodian
+        $("#commEditorcheck").change(function() {
+            if (this.checked) {
+                $('#comm-Editor-accor-item').css('display', 'block');
+            } else if (!this.checked) {
+                $('#comm-Editor-accor-item').css('display', 'none');
+            }
+        });
     </script>
 
     {{-- data for update $newCommercial['commcatcheck'] --}}
@@ -599,6 +680,7 @@
         const commshootcheck_is = +"{{ $newCommercial['commshootcheck'] }}";
         const commcgcheck_is = +"{{ $newCommercial['commcgcheck'] }}";
         const commcatcheck_is = +"{{ $newCommercial['commcatcheck'] }}";
+        const commEditorcheck_is = +"{{ $newCommercial['commEditorcheck'] }}";
         const user_id_val_is = +"{{ $newCommercial['commCompanyId'] }}";
         const saved_brand_id_is = +"{{ $newCommercial['commBrandId'] }}";
     </script>
@@ -613,8 +695,9 @@
             const commshootcheck = $('#commshootcheck').is(':checked')
             const commcgcheck = $('#commcgcheck').is(':checked')
             const commcatcheck = $('#commcatcheck').is(':checked')
+            const commEditorcheck = $('#commEditorcheck').is(':checked')
             // console.log({commcompanyNameP , commbrandNameP ,commshootcheck ,commcgcheck ,commcatcheck})
-            if(commcompanyNameP > 0 && commbrandNameP > 0 && (commshootcheck || commcgcheck || commcatcheck)){
+            if(commcompanyNameP > 0 && commbrandNameP > 0 && (commshootcheck || commcgcheck || commcatcheck || commEditorcheck)){
                 eleman.removeAttribute("disabled");
             }
         }
@@ -681,6 +764,24 @@
             }
         }
         validateCatalogingForm()
+    </script>
+
+    {{-- Validation for Cataloging Form   --}}
+    <script>
+        function validateEditorForm(){
+            const saveBtn = document.getElementById('commEditorSaveBTN');
+            saveBtn.setAttribute("disabled", true);
+
+            const newCommercialId = +$('#newCommercialId').val();
+            const type_of_service = $('#type_of_service').val();
+            const CommercialPerImage = +$('#CommercialPerImage').val();
+            // console.log(commMarketplace)
+            // console.log({commctseviceType , commUnit , newCommercialId })
+            if( newCommercialId > 0  &&  type_of_service != "" &&  CommercialPerImage > 0){
+                saveBtn.removeAttribute("disabled");
+            }
+        }
+        validateEditorForm()
     </script>
 
     {{-- 
@@ -765,6 +866,10 @@
 
                 if(commcatcheck_is == 1){
                     $('#comm-ct-accor-item').css('display', 'block');
+                }
+
+                if(commEditorcheck_is == 1){
+                    $('#comm-Editor-accor-item').css('display', 'block');
                 }
             }
         })
