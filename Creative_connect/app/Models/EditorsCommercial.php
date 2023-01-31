@@ -81,6 +81,32 @@ class EditorsCommercial extends Model
         ->get();
     }
 
-   
+    // Show the form for editing the specified resource
+    public static function editcommercial($id)
+    {
+        return $commercial_data = EditorsCommercial::where('id',$id)
+        ->select('editors_commercials.*')
+        ->get()->first();
+    }
 
+    // Update the specified resource in storage.
+    public static function updateCommercial($request){
+        $id = $request->id;
+        $btn_val = $request->save;
+        $company_id = $request->company_id;
+        $brand_id = $request->brand_id;
+        $type_of_service = $request->type_of_service;
+        $CommercialPerImage = $request->CommercialPerImage;
+
+        $EditorsCommercial = EditorsCommercial::find($request->id);
+        $EditorsCommercial->company_id = $company_id;
+        $EditorsCommercial->brand_id = $brand_id;
+        $EditorsCommercial->type_of_service = $type_of_service;
+        $EditorsCommercial->CommercialPerImage = $CommercialPerImage;
+        $EditorsCommercial->newCommercialId = 0;
+        return $status = $EditorsCommercial->update();
+    }
+
+
+    
 }

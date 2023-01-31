@@ -68,7 +68,9 @@ class EditorsCommercialController extends Controller
      */
     public function edit($id)
     {
-        dd($id);
+        // dd($id);
+        $commercial_data = EditorsCommercial::editcommercial($id);
+        return view('Editor.Commercial-Editor')->with('commercial_data', $commercial_data);
     }
 
     /**
@@ -78,9 +80,19 @@ class EditorsCommercialController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $id = $request->id;
+
+        $status = EditorsCommercial::updateCommercial($request);
+        if ($status) {
+            request()->session()->flash('success', 'Commercial Successfully Updated!!');
+        }
+        if (!$status) {
+            request()->session()->flash('false', 'Somthing went wrong try again!!!');
+        }
+        return redirect()->route('EditCommercialEditor', [$id]);
+        // dd($request->all());
     }
 
     /**

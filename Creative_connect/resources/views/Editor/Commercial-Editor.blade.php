@@ -49,7 +49,7 @@ Create New Commercial for Editor
                         $btn_Name = 'Save';
                         // dd($commercial_data);
                         if($commercial_data->id > 0){
-                            $formRoute = 'UPDATECATALOG';
+                            $formRoute = 'UpdateCommercialEditor';
                             $btn_Name = 'Update';
                         }
                     @endphp

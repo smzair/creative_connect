@@ -150,4 +150,5 @@ Route::get('/Commercial-Editor', [EditorsCommercialController::class, 'create'])
 Route::POST('/Commercial-Editor', [EditorsCommercialController::class, 'store'])->name('SaveCommercialEditor'); // Save Commercial-Editor
 Route::get('/Commercial-Editor-List', [EditorsCommercialController::class, 'index'])->name('ViewCommercialEditor'); // View Commercial-Editor
 Route::get('/Commercial-Editor/{id}', [EditorsCommercialController::class, 'edit'])->name('EditCommercialEditor'); // Create Commercial-Editor
+Route::POST('/Update-Commercial-Editor', [EditorsCommercialController::class, 'update'])->name('UpdateCommercialEditor'); // Save Commercial-Editor
 
