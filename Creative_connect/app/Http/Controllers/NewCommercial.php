@@ -30,7 +30,7 @@ class NewCommercial extends Controller
             'catCheckIsDone' => '0',
             'editorCheckIsDone' => '0',
         ];
-        return view('commercial.newCommercial-panel')->with('newCommercial', $newCommercial);
+        return view('Consilidate-Commercial.Consilidate-Commercial')->with('newCommercial', $newCommercial);
     }
 
     // save newCommercial into db
@@ -87,7 +87,7 @@ class NewCommercial extends Controller
             )
             ->get();
         $num = 1;
-        return view('commercial.newCommercialList')->with('com', $commercial_list)->with('num', $num);
+        return view('Consilidate-Commercial.Consilidate-Commercial-List')->with('com', $commercial_list)->with('num', $num);
 
     }
 
@@ -101,7 +101,7 @@ class NewCommercial extends Controller
 
         // dd($newCommercial);
 
-        return view('commercial.newCommercial-panel')->with('newCommercial', $newCommercial[0]);
+        return view('Consilidate-Commercial.Consilidate-Commercial')->with('newCommercial', $newCommercial[0]);
     }
 
     // Function for store new Shoot Commercial
