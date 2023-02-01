@@ -241,6 +241,8 @@ Update CataLog Invoice Number
                                 $wrc_id_is = ""; 
                                 $invoice_not_yet = 'Invoice Not Raised Yet';
                                 $invoiceNumber = ($row['invoiceNumber'] == null || $row['invoiceNumber'] == '' ) ? $invoice_not_yet : $row['invoiceNumber'] ;
+
+                                $btn_text = $invoiceNumber != $invoice_not_yet ? "Update Invoice Number" :  "Add Invoice Number";
                                 $wrc_created_at =  $row['wrc_created_at'] != '0000-00-00 00:00:00' ? date('d-m-Y h:i A',strtotime($row['wrc_created_at'])) : '';
                                 $modeOfDelivary = $row['modeOfDelivary'];
                                 $modeofdelivary_is = $modeOfDelivary_arr[$modeOfDelivary];
@@ -271,7 +273,7 @@ Update CataLog Invoice Number
                                         data-invoiceNumber="{{ $invoiceNumber }}"  
                                         > </p>
 
-                                        <button data-company="{{ $wrc_id }}" onclick="setdata('{{ $submission_id }}')" class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal">Add Invoice Number</button>
+                                        <button id="btn_{{ $submission_id }}" data-company="{{ $wrc_id }}" onclick="setdata('{{ $submission_id }}')" class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#catalogueCommnentModal">{{$btn_text}}</button>
                                     </div>
                                 </td>
                                 <td class="text-center">{{ $wrc_created_at }}</td>
@@ -464,6 +466,7 @@ Update CataLog Invoice Number
                     if(old_invoicenumber == invoice_not_yet){
                         invoicenumber = '';
                         document.getElementById("submit_invoice_number_btn").innerHTML = "Update";
+                        document.getElementById("btn_"+submission_id).innerHTML = "Update Invoice Number";
                         massage = "Wrc Invoice Number Saved!!"
                     }
                 }

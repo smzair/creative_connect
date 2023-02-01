@@ -68,7 +68,7 @@
                   <th class="p-2">Shoot</th>
                   <th class="p-2">Creative Graphics</th>
                   <th class="p-2">Cataloging</th>
-                  <th class="p-2">Editor's</th>
+                  <th class="p-2">Editing</th>
                   <th class="p-2" style="text-align: center">Action</th>
                 </tr>
               </thead>

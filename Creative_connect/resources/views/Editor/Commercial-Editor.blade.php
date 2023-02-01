@@ -111,9 +111,11 @@ Create New Commercial for Editor
                                     <label class="control-label required">Type of Service</label>
                                     <select class="custom-select form-control-border reset" id="type_of_service" placeholder="Select Type of Service" name="type_of_service">
                                         <option value="">Select Type of Service</option>
-                                        @foreach($typeOfService as $index => $service)
-                                        <option value="{{$index}}">{{$service}}</option>
-                                        @endforeach
+                                        <option value="Background Change">Background Change</option>
+                                        <option value="Image Enhancement">Image Enhancement</option>
+                                        <option value="scraping">scraping</option>
+                                        <option value="Image Enhancement & Background Change">Image Enhancement & Background Change</option>
+                                        <option value="scraping & Background Change">scraping & Background Change</option>
                                     </select>
                                     <p class="input_err" style="color: red; display: none;" id="type_of_service_err"></p>
 

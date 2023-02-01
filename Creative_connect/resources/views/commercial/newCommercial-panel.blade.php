@@ -195,7 +195,7 @@
                                                         <div class="checkcontainer">
                                                             <input {{$check_disabled}} type="checkbox" {{$newCommercial['commEditorcheck'] == 1 ? 'checked' : ''}} class="panel-checkbox" name="commEditorcheck" id="commEditorcheck" value="1" onclick="validateNewCommercialForm()">
                                                             <span class="checkmark"></span>
-                                                            Editor's
+                                                            Editing
                                                         </div>
                                                     </div>
                                                 </div>
@@ -391,7 +391,9 @@
                                                         <div class="btn-form-group">
                                                             <div class="custom-action-btn-wrapper">
                                                                  @if ($shootCheckIsDone != 2)
-                                                                    <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commshsaveBTN">  Save  </button>
+                                                                    @if ($newCommercial['commshootcheck'] == 1 )
+                                                                        <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commshsaveBTN">  Save  </button>
+                                                                    @endif
                                                                 @else
                                                                     <p style="color: #00ff00">Shoot Commercial Already Saved</p>
                                                                 @endif
@@ -460,7 +462,9 @@
                                                         <div class="btn-form-group">
                                                             <div class="custom-action-btn-wrapper">
                                                                 @if ($cgCheckIsDone != 2)
-                                                                    <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commcgsaveBTN">Save</button>
+                                                                    @if ($newCommercial['commcgcheck'] == 1 )
+                                                                        <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commcgsaveBTN">Save</button>
+                                                                    @endif
                                                                  @else
                                                                     <p  style="color: #00ff00">Creative Commercial Already Saved</p>
                                                                 @endif
@@ -545,7 +549,9 @@
                                                         <div class="btn-form-group">
                                                             <div class="custom-action-btn-wrapper">
                                                                 @if ($catCheckIsDone != 2)
-                                                                    <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commctsaveBTN">  Save  </button>
+                                                                    @if ($newCommercial['commcatcheck'] == 1 )
+                                                                        <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commctsaveBTN">  Save  </button>
+                                                                    @endif
                                                                 @else
                                                                     <p style="color: #00ff00">Cataloging Commercial Already Saved</p>
                                                                 @endif
@@ -559,7 +565,7 @@
                                 </div>
                             </div>
                             
-                            {{-- Editors secction  --}}
+                            {{-- Editing secction  --}}
                             <div class="accordian-item" id="comm-Editor-accor-item" style="display:none;">
                                 <div class="card card-transparent">
                                     <div class="card-header acc-card-header" id="commEditorAccor" data-toggle="collapse"
@@ -567,7 +573,7 @@
                                         aria-controls="commEditorcollapse">
                                         <h3 class="card-title">
                                             <span class="card-text">
-                                                Editor's
+                                                Editing
                                             </span>
                                             <i class="right fas fa-angle-left"></i>
                                         </h3>
@@ -584,9 +590,11 @@
                                                             <select class="custom-select form-control-border"
                                                                 name="type_of_service" id="type_of_service" onchange="validateEditorForm()">
                                                                 <option value="">Select Type of Service</option>
-                                                                @foreach($typeOfService as $index => $service)
-                                                                    <option value="{{$service}}">{{$service}}</option>
-                                                                @endforeach
+                                                                <option value="Background Change">Background Change</option>
+                                                                <option value="Image Enhancement">Image Enhancement</option>
+                                                                <option value="scraping">scraping</option>
+                                                                <option value="Image Enhancement & Background Change">Image Enhancement & Background Change</option>
+                                                                <option value="scraping & Background Change">scraping & Background Change</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -607,7 +615,9 @@
                                                                 <input type="hidden" name="user_id" value="{{$newCommercial['commCompanyId']}}">
                                                                 <input type="hidden" name="brand_id" value="{{$newCommercial['commBrandId']}}">
                                                                 @if ($editorCheckIsDone != 2)
-                                                                    <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commEditorSaveBTN">  Save  </button>
+                                                                    @if ($newCommercial['commEditorcheck'] == 1 )
+                                                                        <button title="{{$btn_title}}"  {{$btn_disabled}} type="submit" class="btn btn-warning" id="commEditorSaveBTN">  Save  </button>
+                                                                    @endif
                                                                 @else
                                                                     <p style="color: #00ff00">Editors Commercial Already Saved</p>
                                                                 @endif
