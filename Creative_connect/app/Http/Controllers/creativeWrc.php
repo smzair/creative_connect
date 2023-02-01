@@ -97,12 +97,10 @@ class creativeWrc extends Controller
             $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
 
             $wrcNumber = $request->c_short . $request->short_name . $project_name . $request->lot_id . '-' . chr($wrcCount + 65);
-
+            $sku_required_num = 0;
             $sku_required = $request->sku_required;
             if($sku_required == 'sku_yes'){
                 $sku_required_num = 1;
-            }else{
-                $sku_required_num = 0;
             }
 
             $createWrc = new CreativeWrcModel();
@@ -158,7 +156,6 @@ class creativeWrc extends Controller
                     
                 }
             }
-
             $wrc_data = CreativeWrcModel::where('id',$createWrc->id)->get(['sku_count'])->first();
             $old_sku_count = $wrc_data != null ?  $wrc_data->sku_count : 0;
             $skus = CreativeWrcSkus::where('wrc_id',$createWrc->id)->get()->count();
@@ -197,6 +194,11 @@ class creativeWrc extends Controller
             else{
                 request()->session()->flash('error','Please try again!!');
             }
+            /* send notification start */
+            $data = CreativeWrcModel::find($createWrc->id);
+            $creation_type = 'Wrc';
+            $this->send_notification($data, $creation_type);
+            /******  send notification end*******/    
 
             return $this->view();
             // return $this->edit($request,$createWrc->id);// update in same page

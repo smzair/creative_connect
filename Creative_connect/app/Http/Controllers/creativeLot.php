@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifyUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\CreatLots;
+use App\Notifications\sendNewNotification;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Mail;
 
 class creativeLot extends Controller
 {
@@ -49,7 +52,6 @@ class creativeLot extends Controller
     
     public function store(Request $request)
     {
-        
         //create
         // dd($request);
         $CreativeLots = new CreatLots();
@@ -89,8 +91,14 @@ class creativeLot extends Controller
         else{
             request()->session()->flash('error','Please try again!!');
         }
+        /* send notification start */
+        $data = CreatLots::find($CreativeLots->id);
+        $creation_type = 'Lot';
+        $this->send_notification($data, $creation_type);
 
-       return $this->edit($request,$id);
+       /******  send notification end*******/
+
+        return $this->edit($request,$id);
         
     }
 
