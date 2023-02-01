@@ -2,7 +2,7 @@
 
 @extends('layouts.admin')
 @section('title')
-Editor Lot List
+Editing List
 @endsection
 @section('content')
 <div class="lot-table mt-1">

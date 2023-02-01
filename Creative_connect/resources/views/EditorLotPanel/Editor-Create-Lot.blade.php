@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-    Editor Lot Create
+    Editing Create
 @endsection
 @section('content')
     <div class="container-fluid">
@@ -15,7 +15,7 @@
             <div class="row lotNoShowHide" style="padding-bottom: 2rem">
                 <div class="col-12">
                     <div class="card card-transparent m-0" style="flex-direction:row;">
-                        <h5 style="float: left;padding:2%">Editor Lot Number :- </h5>
+                        <h5 style="float: left;padding:2%">Editing Lot Number :- </h5>
                         <h5 class="lotNo" style="float: right;padding-top:2%">{{ $EditorLots->lot_number }}</h5>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                                 class="card-tools float-md-right float-sm-none ml-md-0 mr-0 ml-sm-0 mt-sm-1 float-none ml-xs-0 mt-2">
                                 <a href="{{ route('get_editor_lot_data') }}"
                                     class="btn btn-xs float-left align-middle mt-0 mr-2 py-1 px-2 mb-2 mb-sm-1"
-                                    style="position: relative; top: 2px;">Editor Lot List</a>
+                                    style="position: relative; top: 2px;">Editing Lot List</a>
                             </div>
                         </div>
                         <div class="card-body">

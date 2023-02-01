@@ -107,7 +107,7 @@ class creativeWrc extends Controller
 
             $createWrc = new CreativeWrcModel();
             $createWrc->lot_id = $request->lot_id;
-            $createWrc->wrc_number = $wrcNumber;
+            $createWrc->wrc_number = strtoupper($wrcNumber);
             $createWrc->commercial_id = $request->commercial_id;
             $createWrc->order_qty = $request->order_qty;
             $createWrc->work_brief = $request->work_brief;

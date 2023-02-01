@@ -60,7 +60,7 @@ class editorLotController extends Controller
         $lot_number = 'ODN' . date('dmY') ."-". $request->c_short . $request->short_name .  $request_name . $id;
         //update lot number
 
-        EditorLotModel::where('id',$id)->update(['lot_number'=>$lot_number]);
+        EditorLotModel::where('id',$id)->update(['lot_number'=> strtoupper($lot_number)]);
         if($EditorLots){
             request()->session()->flash('success','Lots Updated Successfully');
         }

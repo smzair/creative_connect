@@ -156,7 +156,7 @@ Consolidated-Lot Create
                                                     <div class="checkcontainer">
                                                         <input type="checkbox" class="" name="editor_lot" id="editor_lot" <?php if($CreativeLots->editor_lot_check == 1)echo 'checked'?>>
                                                         <span class="checkmark"></span>
-                                                        Editor Lot
+                                                        Editing
                                                     </div>
                                                     <p class="input_err" style="color: red; display: none;" id="select_service_err"></p>
                                                 </div>
@@ -212,6 +212,9 @@ Consolidated-Lot Create
                                                             <option value="ODN Verse">ODN Verse</option>
                                                             <option value="GO Live">GO Live</option>
                                                         </select>
+                                                        <script type="text/javascript">
+                                                            document.querySelector("#servicesType").value = value="{{$shoot_data != null ? $shoot_data->s_type : ""}}"
+                                                        </script>
                                                     </div>
                                                     <p class="input_err" style="color: red; display: none;" id="servicesType_err"></p>
                                                 </div>
@@ -223,6 +226,9 @@ Consolidated-Lot Create
                                                             <option value="Delhi">Delhi</option>
                                                             <option value="Bangalore">Bangalore</option>
                                                         </select>
+                                                        <script type="text/javascript">
+                                                            document.querySelector("#locationType").value = value="{{$shoot_data != null ? $shoot_data->location : ""}}"
+                                                        </script>
                                                     </div>
                                                     <p class="input_err" style="color: red; display: none;" id="locationType_err"></p>
                                                 </div>
@@ -235,6 +241,9 @@ Consolidated-Lot Create
                                                             <option value="New Shoot">New Shoot</option>
                                                             <option value="Editing">Editing</option>
                                                         </select>
+                                                        <script type="text/javascript">
+                                                            document.querySelector("#verticalType").value = value="{{$shoot_data != null ? $shoot_data->verticleType : ""}}"
+                                                        </script>
                                                     </div>
                                                     <p class="input_err" style="color: red; display: none;" id="verticalType_err"></p>
                                                 </div>
@@ -246,6 +255,9 @@ Consolidated-Lot Create
                                                             <option value="New">New</option>
                                                             <option value="Existing">Existing</option>
                                                         </select>
+                                                        <script type="text/javascript">
+                                                            document.querySelector("#clientBucket").value = value="{{$shoot_data != null ? $shoot_data->clientBucket : ""}}"
+                                                        </script>
                                                     </div>
                                                     <p class="input_err" style="color: red; display: none;" id="clientBucket_err"></p>
                                                 </div>
@@ -260,6 +272,12 @@ Consolidated-Lot Create
                                                             <?php if($CreativeLots->shoot_form_data == 0){ ?>
                                                                 <button type="submit" class="btn btn-sm btn-warning md-2" id="saveShootBtn">Save</button>
                                                             <?php }else{ ?>
+                                                                <script type="text/javascript">
+                                                                    document.getElementById("servicesType").disabled = true;
+                                                                    document.getElementById("locationType").disabled = true;
+                                                                    document.getElementById("verticalType").disabled = true;
+                                                                    document.getElementById("clientBucket").disabled = true;
+                                                                </script>
                                                                 <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="saveShootBtn">Shoot Already Saved</button>
                                                             <?php } ?>
                                                         </div>
@@ -291,7 +309,7 @@ Consolidated-Lot Create
                                                     <div class="col-sm-6 col-12">
                                                         <div class="form-group">
                                                             <label class="control-label required">Project Name</label>
-                                                            <input type="text" value="" class="form-control" name="project_name" id="project_name" placeholder="Enter Project Name" onKeyPress="return isAlphabet(event);">
+                                                            <input type="text" value="{{$creative_data != null ? $creative_data->project_name : ""}}"  class="form-control" name="project_name" id="project_name" placeholder="Enter Project Name" onKeyPress="return isAlphabet(event);">
                                                         </div>
                                                         <p class="input_err" style="color: red; display: none;" id="project_name_err"></p>
                                                     </div>
@@ -308,6 +326,9 @@ Consolidated-Lot Create
                                                                     <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <script type="text/javascript">
+                                                                document.querySelector("#verticalType_c").value = value="{{$creative_data != null ? $creative_data->verticle : ""}}"
+                                                            </script>
                                                         </div>
                                                         <p class="input_err" style="color: red; display: none;" id="verticalType_err_c"></p>
                                                     </div>
@@ -328,6 +349,9 @@ Consolidated-Lot Create
                                                                     <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <script type="text/javascript">
+                                                                document.querySelector("#clientBucket_c").value = value="{{$creative_data != null ? $creative_data->client_bucket : ""}}"
+                                                            </script>
                                                             <p class="input_err" style="color: red; display: none;" id="clientBucket_err_c"></p>
                                                         </div>
                                                     </div>
@@ -335,7 +359,7 @@ Consolidated-Lot Create
                                                         <div class="form-group">
                                                             <label class="control-label required">LOT Delivery Days</label>
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" name="lot_delevery_days" id="lot_delevery_days" value="" placeholder="Enter LOT Delivery Days" onkeypress="return isNumber(event);">
+                                                                <input type="text" value="{{$creative_data != null ? $creative_data->lot_delivery_days : ""}}" class="form-control" name="lot_delevery_days" id="lot_delevery_days" value="" placeholder="Enter LOT Delivery Days" onkeypress="return isNumber(event);">
                                                             </div>
                                                         </div>
                                                         <p class="input_err" style="color: red; display: none;" id="lot_delevery_days_err"></p>
@@ -353,6 +377,12 @@ Consolidated-Lot Create
                                                                 <?php if($CreativeLots->creative_graphic_form_data == 0){ ?>
                                                                     <button type="submit" class="btn btn-sm btn-warning md-2" id="saveCreativeBtn">Save</button>
                                                                 <?php }else{ ?>
+                                                                    <script type="text/javascript">
+                                                                        document.getElementById("project_name").disabled = true;
+                                                                        document.getElementById("verticalType_c").disabled = true;
+                                                                        document.getElementById("clientBucket_c").disabled = true;
+                                                                        document.getElementById("lot_delevery_days").disabled = true;
+                                                                    </script>
                                                                     <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="saveCreativeBtn">Creative Graphics Already Saved</button>
                                                                 <?php } ?>
                                                             </div>
@@ -392,6 +422,9 @@ Consolidated-Lot Create
                                                                 <option value="{{$index}}">{{$service}}</option>
                                                             @endforeach
                                                         </select>
+                                                        <script type="text/javascript">
+                                                            document.querySelector("#servicesType_c").value = value="{{$catlog_data != null ? $catlog_data->serviceType : ""}}"
+                                                        </script>
                                                         <p class="input_err" style="color: red; display: none;" id="servicesType_c_err"></p>
                                                     </div>
                                                 </div>
@@ -404,6 +437,9 @@ Consolidated-Lot Create
                                                             <option value="Existing">Existing</option>
                                                             <option value="Retainer">Retainer</option>
                                                         </select>
+                                                        <script type="text/javascript">
+                                                            document.querySelector("#requestType_c").value = value="{{$catlog_data != null ? $catlog_data->requestType : ""}}"
+                                                        </script>
                                                         <p class="input_err" style="color: red; display: none;" id="requestType_c_err"></p>
                                                     </div>
                                                 </div>
@@ -411,7 +447,7 @@ Consolidated-Lot Create
                                                     <div class="form-group">
                                                         <label class="control-label required">Request Received Date</label>
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="reqDate" id="reqDate" placeholder="yyyy-mm-dd" data-toggle="datepicker">
+                                                            <input type="text" class="form-control" value="{{$catlog_data != null ? $catlog_data->reqReceviedDate : ""}}" name="reqDate" id="reqDate" placeholder="yyyy-mm-dd" data-toggle="datepicker">
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text">
                                                                     <i class="far fa-calendar-alt"></i>
@@ -427,7 +463,7 @@ Consolidated-Lot Create
                                                     <div class="form-group">
                                                         <label class="control-label required">Raw Image Receive Date</label>
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" name="rawimgDate" id="rawimgDate" placeholder="yyyy-mm-dd" data-toggle="datepicker">
+                                                            <input type="text" class="form-control" value="{{$catlog_data != null ? $catlog_data->imgReceviedDate : ""}}" name="rawimgDate" id="rawimgDate" placeholder="yyyy-mm-dd" data-toggle="datepicker">
                                                             <div class="input-group-prepend">
                                                                 <span class="input-group-text">
                                                                     <i class="far fa-calendar-alt"></i>
@@ -448,6 +484,12 @@ Consolidated-Lot Create
                                                             <?php if($CreativeLots->cataloging_form_data == 0){ ?>
                                                                 <button type="submit" class="btn btn-sm btn-warning md-2" id="saveCatlogBtn">Save</button>
                                                             <?php }else{ ?>
+                                                                <script type="text/javascript">
+                                                                    document.getElementById("servicesType_c").disabled = true;
+                                                                    document.getElementById("requestType_c").disabled = true;
+                                                                    document.getElementById("reqDate").disabled = true;
+                                                                    document.getElementById("rawimgDate").disabled = true;
+                                                                </script>
                                                                 <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="saveCatlogBtn">Cataloging Already Saved</button>
                                                             <?php } ?>
                                                         </div>
@@ -465,7 +507,7 @@ Consolidated-Lot Create
                                 <div class="card-header acc-card-header" id="ctAccor" data-toggle="collapse" data-target="#editorcollapse" aria-expanded="true" aria-controls="editorcollapse">
                                     <h3 class="card-title">
                                         <span class="card-text">
-                                        Editor Lot
+                                        Editing
                                         </span>
                                         <i class="right fas fa-angle-left"></i>
                                     </h3>
@@ -480,7 +522,7 @@ Consolidated-Lot Create
                                                     <div class="form-group">
                                                         <label class="control-label required">Request Name</label>
                                                         <input type="text" class="form-control" name="request_name"
-                                                            value="" id="request_name"
+                                                            value="{{$editor_data != null ? $editor_data->request_name : ""}}" id="request_name"
                                                             placeholder="Enter Request Name">
                                                         <p class="input_err" style="color: red; display: none;" id="request_name_err">
                                                         </p>
@@ -498,7 +540,10 @@ Consolidated-Lot Create
                                                             <?php if($CreativeLots->editor_lot_form_data == 0){ ?>
                                                                 <button type="submit" class="btn btn-sm btn-warning md-2" id="">Save</button>
                                                             <?php }else{ ?>
-                                                                <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="">Editor Lot Already Saved</button>
+                                                                <script type="text/javascript">
+                                                                    document.getElementById("request_name").disabled = true;
+                                                                </script>
+                                                                <button type="submit" disabled class="btn btn-sm btn-warning md-2" id="">Editing Already Saved</button>
                                                             <?php } ?>
                                                         </div>
                                                     </div>
@@ -929,7 +974,7 @@ Consolidated-Lot Create
     </script>
 
     @if($CreativeLots->id > 0)
-    <script>
+    <script type="text/javascript">
         document.getElementById("editor_lot").disabled = true;
         document.getElementById("catcheck").disabled = true;
         document.getElementById("cgcheck").disabled = true;

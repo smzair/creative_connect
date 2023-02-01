@@ -69,11 +69,11 @@ Consilidated Lot View
                                     <th class="p-2">Shoot check</th>
                                     <th class="p-2">Creative Graphics Check</th>
                                     <th class="p-2">Cat Log Check</th>
-                                    <th class="p-2">Editor Lot Check</th>
+                                    <th class="p-2">Editing Check</th>
                                     <th class="p-2">Shoot Data</th>
                                     <th class="p-2">Creative Graphics Data</th>
                                     <th class="p-2">Cat Log Data</th>
-                                    <th class="p-2">Editor Lot Data</th>
+                                    <th class="p-2">Editing Data</th>
                                     <th class="p-2">Actions</th>
                                 </tr>
                             </thead>
@@ -121,7 +121,7 @@ Consilidated Lot View
                                             <?php if(($val->shoot == $val->shoot_form_data) && ($val->creative_graphic == $val->creative_graphic_form_data) && ($val->cataloging == $val->cataloging_form_data) && ($val->editor_lot_check == $val->editor_lot_form_data)){ ?>
                                             <button  disabled class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Consolidated-Lot/'.$val->id) }}">Done</button>
                                             <?php }else{ ?>
-                                                <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Consolidated-Lot/'.$val->id) }}">Continue Task</a>
+                                                <a class="btn btn-warning px-1 py-1 btn-xs mt-1" href="{{('/Consolidated-Lot/'.$val->id) }}">Continue</a>
                                             <?php } ?>
                                         </div>
                                     </td>

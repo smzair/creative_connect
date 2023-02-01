@@ -87,7 +87,7 @@ class CatalogWrcController extends Controller
         $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
         $createWrc = new CatlogWrc();
         $createWrc->lot_id = $request->lot_id;
-        $createWrc->wrc_number = $wrcNumber;
+        $createWrc->wrc_number = strtoupper($wrcNumber);
         $createWrc->commercial_id = $request->commercial_id;
         $createWrc->img_recevied_date = $request->img_recevied_date;
         $createWrc->missing_info_notify_date = $request->missing_info_notify_date;
@@ -178,7 +178,7 @@ class CatalogWrcController extends Controller
 
         $createWrc = CatlogWrc::find($id);
         $createWrc->lot_id = $request->lot_id;
-        $createWrc->wrc_number = $wrcNumber;
+        $createWrc->wrc_number = strtoupper($wrcNumber);
         $createWrc->commercial_id = $request->commercial_id;
         $createWrc->img_recevied_date = $request->img_recevied_date;
         $createWrc->missing_info_notify_date = $request->missing_info_notify_date;

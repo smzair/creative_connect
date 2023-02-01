@@ -82,7 +82,7 @@ class creativeLot extends Controller
         $lot_number = 'ODN' . date('dmY') ."-". $request->c_short . $request->short_name .  $project_name . $id;
         //update lot number
 
-        CreatLots::where('id',$id)->update(['lot_number'=>$lot_number]);
+        CreatLots::where('id',$id)->update(['lot_number'=> strtoupper($lot_number)]);
         if($CreativeLots){
             request()->session()->flash('success','Lots Successfully added');
         }
@@ -141,7 +141,7 @@ class creativeLot extends Controller
         $lot_number = 'ODN' . date('dmY') ."-". $request->c_short . $request->short_name .  $project_name . $id;
         //update lot number
 
-        CreatLots::where('id',$id)->update(['lot_number'=>$lot_number]);
+        CreatLots::where('id',$id)->update(['lot_number'=>strtoupper($lot_number)]);
 
 
         if($CreativeLots){
