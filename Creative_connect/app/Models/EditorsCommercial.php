@@ -103,7 +103,6 @@ class EditorsCommercial extends Model
         $EditorsCommercial->brand_id = $brand_id;
         $EditorsCommercial->type_of_service = $type_of_service;
         $EditorsCommercial->CommercialPerImage = $CommercialPerImage;
-        $EditorsCommercial->newCommercialId = 0;
         return $status = $EditorsCommercial->update();
     }
 

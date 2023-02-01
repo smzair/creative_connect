@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\CatalogCommercial;
 use App\Models\create_commercial;
+use App\Models\EditorsCommercial;
 use App\Models\NewCommercialModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class NewCommercial extends Controller
@@ -30,7 +32,19 @@ class NewCommercial extends Controller
             'catCheckIsDone' => '0',
             'editorCheckIsDone' => '0',
         ];
-        return view('Consilidate-Commercial.Consilidate-Commercial')->with('newCommercial', $newCommercial);
+        $shootCommercialArr = [];
+        $cgCommercialArr = [];
+        $catlogingCommercialArr = [];
+        $editorCommercialArr = [];
+
+        $data_array = array(
+            "shootCommercialArr" => $shootCommercialArr,
+            "cgCommercialArr" => $cgCommercialArr,
+            "catlogingCommercialArr" => $catlogingCommercialArr,
+            "editorCommercialArr" => $editorCommercialArr,
+        );
+
+        return view('Consilidate-Commercial.Consilidate-Commercial')->with('newCommercial', $newCommercial)->with('data_array', $data_array);
     }
 
     // save newCommercial into db
@@ -97,11 +111,50 @@ class NewCommercial extends Controller
         leftJoin('brands', 'brands.id', '=', 'new_commercials.commBrandId')
         ->leftJoin('users', 'new_commercials.commCompanyId', 'users.id')
         ->select('new_commercials.id', 'new_commercials.*', 'users.Company as company', 'brands.name')
-        ->get()->toArray();
+        ->first()->toArray();
 
         // dd($newCommercial);
+        extract($newCommercial);
+        $newCommercialId = $newCommercial['id'];
+        $shootCommercialArr = [];
+        $cgCommercialArr = [];
+        $catlogingCommercialArr = [];
+        $editorCommercialArr = [];
+        if ($shootCheckIsDone == 2) {
+            $result = DB::table('commercial')->where('newCommercialId', $newCommercialId)->get()->first();
+            if($result != null){
+                $shootCommercialArr = (array) $result;
+                // $shootCommercialArr = $shootCommercialArr->toArray();
+            }    
+        }
+        if ($cgCheckIsDone == 2) {
+            $result = create_commercial::where('newCommercialId', $newCommercialId)->first();
+            if ($result != null) {
+                $cgCommercialArr = $result->toArray();
+            }    
+        }
+        if ($catCheckIsDone == 2) {
+            $result = CatalogCommercial::where('newCommercialId', $newCommercialId)->first();
+            if ($result != null) {
+                $catlogingCommercialArr = $result->toArray();
+            }
+        }
+        if ($editorCheckIsDone == 2) {
+            $result = EditorsCommercial::where('newCommercialId', $newCommercialId)->get()->first();
+            if ($result != null) {
+                $editorCommercialArr = $result->toArray();
+            }
+        }
+        $data_array = array(
+            "shootCommercialArr" => $shootCommercialArr,
+            "cgCommercialArr" => $cgCommercialArr,
+            "catlogingCommercialArr" => $catlogingCommercialArr,
+            "editorCommercialArr" => $editorCommercialArr,
+        );
+        // dd($data_array);
 
-        return view('Consilidate-Commercial.Consilidate-Commercial')->with('newCommercial', $newCommercial[0]);
+
+        return view('Consilidate-Commercial.Consilidate-Commercial')->with('newCommercial', $newCommercial)->with('data_array', $data_array);
     }
 
     // Function for store new Shoot Commercial

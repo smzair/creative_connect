@@ -168,7 +168,7 @@ class NewCommercialModel extends Model
         ];
         $create_shoot_Id = DB::table('commercial')->insertGetId($data_arr);
 
-        if($create_shoot_Id > 2){
+        if($create_shoot_Id > 0){
             $createNewCommercial =  NewCommercialModel::find($newCommercialId);
             $createNewCommercial->shootCheckIsDone = 2;
             $upstatus = $createNewCommercial->update();
@@ -225,6 +225,7 @@ class NewCommercialModel extends Model
         $create_commercial->market_place = $market_place;
         $create_commercial->type_of_service = $type_of_service;
         $create_commercial->CommercialSKU = $CommercialSKU;
+        $create_commercial->newCommercialId = $newCommercialId;
         $status = $create_commercial->save();
 
         if ($status) {

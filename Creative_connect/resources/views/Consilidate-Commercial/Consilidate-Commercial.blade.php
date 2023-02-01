@@ -235,6 +235,20 @@
                                     <div id="commshootcollapse" class="collapse" aria-labelledby="commshootAccor"
                                         data-parent="#commaccordionPanel">
                                         <div class="card-body">
+                                            @php
+                                                // pre($data_array);
+                                                if(count($data_array['shootCommercialArr']) > 0){
+                                                    extract($data_array['shootCommercialArr']);
+                                                }else{
+                                                    
+                                                    $product_category = "";
+                                                    $type_of_shoot = "";
+                                                    $type_of_clothing = "";
+                                                    $gender = "";
+                                                    $adaptation_1 = $adaptation_2 = $adaptation_3 = $adaptation_4 = $adaptation_5 = "";
+                                                    $commercial_value_per_sku = "";
+                                                }
+                                            @endphp
                                             <form action="{{route('saveShootCommercial')}}" method="post" id="commshootForm">
                                                 @csrf
                                                 <div class="row">
@@ -246,8 +260,7 @@
                                                             <input type="hidden" name="user_id" value="{{$newCommercial['commCompanyId']}}">
                                                             <input type="hidden" name="brand_id" value="{{$newCommercial['commBrandId']}}">
 
-                                                            <select class="custom-select form-control-border"
-                                                                name="product_category" id="commproductCat" onchange="validateShootForm()">
+                                                            <select class="custom-select form-control-border" name="product_category" id="commproductCat" onchange="validateShootForm()">
                                                                 <option value="">Select Product Category</option>
                                                                  @foreach($getProductList as $index => $getProduct)
                                                                     @php
@@ -256,6 +269,9 @@
                                                                     <option {{ $selected }} value="{{$getProduct}}">{{$getProduct}}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("commproductCat").value = "{{ $product_category }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-3 col-12">
@@ -271,6 +287,9 @@
                                                                     <option {{ $selected }} value="{{$typeOfShoot}}">{{$typeOfShoot}}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("commshootType").value = "{{ $type_of_shoot }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-3 col-12">
@@ -285,6 +304,9 @@
                                                                 <option value="Topwear">Topwear</option>
                                                                 <option value="Bottom Wear">Bottom Wear</option>
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("commclothingType").value = "{{ $type_of_clothing }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-3 col-12">
@@ -297,6 +319,9 @@
                                                                 <option value="Female">Female</option>
                                                                 <option value="Others">Others</option>
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("commGender").value = "{{ $gender }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -315,6 +340,9 @@
                                                                     <option {{ $selected }} value="{{$adaptations}}">{{$adaptations}}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("commPAdpt").value = "{{ $adaptation_1 }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 col-12">
@@ -330,6 +358,9 @@
                                                                     <option {{ $selected }} value="{{$adaptations}}">{{$adaptations}}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("commAdpt1").value = "{{ $adaptation_2 }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 col-12">
@@ -345,6 +376,9 @@
                                                                     <option {{ $selected }} value="{{$adaptations}}">{{$adaptations}}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("commAdpt2").value = "{{ $adaptation_3 }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 col-12">
@@ -360,6 +394,9 @@
                                                                     <option {{ $selected }} value="{{$adaptations}}">{{$adaptations}}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("commAdpt2").value = "{{ $adaptation_3 }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 col-12">
@@ -375,14 +412,16 @@
                                                                     <option {{ $selected }} value="{{$adaptations}}">{{$adaptations}}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("commAdpt4").value = "{{ $adaptation_5 }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 col-12">
                                                         <div class="form-group">
                                                             <label class="control-label required">Commercial per
                                                                 SKU</label>
-                                                            <input type="text" class="form-control" name="commercial_value_per_sku"
-                                                                id="commSKU" placeholder="Enter Commercial per SKU"  onkeypress="return isNumber(event);" onchange="validateShootForm()">
+                                                            <input type="text" class="form-control" name="commercial_value_per_sku" value="{{$commercial_value_per_sku}}" id="commSKU" placeholder="Enter Commercial per SKU"  onkeypress="return isNumber(event);" onchange="validateShootForm()">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -422,6 +461,16 @@
                                     <div id="commcgcollapse" class="collapse" aria-labelledby="commcgAccor"
                                         data-parent="#commaccordionPanel">
                                         <div class="card-body">
+                                            @php
+                                                // pre($data_array);
+                                                if(count($data_array['cgCommercialArr']) > 0){
+                                                    extract($data_array['cgCommercialArr']);
+                                                }else{
+                                                    $project_name = "";
+                                                    $kind_of_work = "";
+                                                    $per_qty_value = "";
+                                                }
+                                            @endphp
                                             <form action="{{route('SaveCreativeCommercial')}}" method="post" id="commcgForm">
                                                 @csrf
                                                 <div class="row">
@@ -433,27 +482,28 @@
                                                             <input type="hidden" name="user_id" value="{{$newCommercial['commCompanyId']}}">
                                                             <input type="hidden" name="brand_id" value="{{$newCommercial['commBrandId']}}">
 
-                                                            <input type="text" class="form-control" name="commProjectName" id="commProjectName" placeholder="Enter Project Name" onkeypress="return isAlphabet(event);"  onchange="validateCreativeForm()">
+                                                            <input type="text" class="form-control" name="commProjectName" id="commProjectName" value="{{$project_name}}" placeholder="Enter Project Name" onkeypress="return isAlphabet(event);"  onchange="validateCreativeForm()">
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 col-12">
                                                         <div class="form-group">
                                                             <label class="control-label required">Kind of Work</label>
-                                                            <select class="custom-select form-control-border"
-                                                                name="commWorkType" id="commWorkType"  onchange="validateCreativeForm()">
+                                                            <select class="custom-select form-control-border" name="commWorkType" id="commWorkType"  onchange="validateCreativeForm()">
                                                                 <option value="">Select Kind of Work</option>
                                                                 @foreach ($kindOfWork as $row)
                                                                     <option value="{{ $row['value'] }}">{{ $row['value'] }}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("commWorkType").value = "{{ $kind_of_work }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 col-12">
                                                         <div class="form-group">
                                                             <label class="control-label required">Commercial Per
                                                                 Qty</label>
-                                                            <input type="text" class="form-control" name="commQty"
-                                                                id="commQty" placeholder="Enter Commercial Per Qty" onkeypress="return isNumber(event);" onkeyup="validateCreativeForm()">
+                                                            <input type="text" class="form-control" name="commQty" value="{{$per_qty_value}}"  id="commQty" placeholder="Enter Commercial Per Qty" onkeypress="return isNumber(event);" onkeyup="validateCreativeForm()">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -493,6 +543,21 @@
                                     <div id="commctcollapse" class="collapse" aria-labelledby="commctAccor"
                                         data-parent="#commaccordionPanel">
                                         <div class="card-body">
+                                            @php
+                                                // pre($data_array);
+                                                if(count($data_array['catlogingCommercialArr']) > 0){
+                                                    extract($data_array['catlogingCommercialArr']);
+                                                }else{
+                                                    $market_place = "";
+                                                    $type_of_service = "";
+                                                    $CommercialSKU = "";
+                                                }
+                                                $commercial_id_is = 0;
+                                                if($market_place != ''){
+                                                    $market_place_arr = explode(',',$market_place);
+                                                    $commercial_id_is = count($market_place_arr);
+                                                }
+                                            @endphp
                                             <form action="{{route('SaveCatalogingCommercial')}}" method="post" id="commctForm">
                                                 @csrf
                                                 <div class="row">
@@ -512,11 +577,11 @@
                                                                         $marketPlace_id =  $getProduct['id'];
                                                                         $marketPlace_name =  $getProduct['marketPlace_name'];
                                                                         $selected = "";
-                                                                        // if($commercial_id_is > 0){
-                                                                        //     if(in_array($marketPlace_id , $market_place_arr)){
-                                                                        //     $selected = "selected";
-                                                                        //     }
-                                                                        // }
+                                                                        if($commercial_id_is > 0){
+                                                                            if(in_array($marketPlace_id , $market_place_arr)){
+                                                                            $selected = "selected";
+                                                                            }
+                                                                        }
                                                                     @endphp
                                                                     <option {{ $selected }} value="{{$marketPlace_id}}">{{$marketPlace_name}}</option>
                                                                 @endforeach
@@ -578,9 +643,20 @@
                                             <i class="right fas fa-angle-left"></i>
                                         </h3>
                                     </div>
+                                    
                                     <div id="commEditorcollapse" class="collapse" aria-labelledby="commEditorAccor"
                                         data-parent="#commaccordionPanel">
                                         <div class="card-body">
+                                            @php
+                                                // pre($data_array);
+                                                if(count($data_array['editorCommercialArr']) > 0){
+                                                    $editorCommercialArr = $data_array['editorCommercialArr'];
+                                                    extract($data_array['editorCommercialArr']);
+                                                }else{
+                                                    $type_of_service = "";
+                                                    $CommercialPerImage = "";
+                                                }
+                                            @endphp
                                             <form action="{{route('SaveEditorCommercial')}}" method="post" id="commctForm">
                                                 @csrf
                                                 <div class="row">
@@ -596,13 +672,16 @@
                                                                 <option value="Image Enhancement & Background Change">Image Enhancement & Background Change</option>
                                                                 <option value="scraping & Background Change">scraping & Background Change</option>
                                                             </select>
+                                                            <script>
+                                                                document.getElementById("type_of_service").value = "{{ $type_of_service }}";
+                                                            </script>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-4 col-12">
                                                         <div class="form-group">
                                                             <label class="control-label required">Commercial Per
-                                                                Unit</label>
-                                                            <input type="text" class="form-control" name="CommercialPerImage"
+                                                                Image</label>
+                                                            <input type="text" class="form-control" name="CommercialPerImage"  value="{{$CommercialPerImage}}"
                                                                 id="CommercialPerImage" placeholder="Enter Commercial Per Image" onkeypress="return isNumber(event);" onkeyup="validateEditorForm()">
                                                         </div>
                                                     </div>

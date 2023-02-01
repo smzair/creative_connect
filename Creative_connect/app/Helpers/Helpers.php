@@ -90,7 +90,7 @@ if (!function_exists('getProductList')) {
         $productList =
         array(
             'Athleisure' => 'Athleisure',
-            'Bags/Wallets/Facemask/Socks & Other Accessories' => 'Bags/Wallets/Face Mask/Socks & Other Accessories',
+            'Bags/Wallets/Facemask/Socks and Other Accessories' => 'Bags/Wallets/Face Mask/Socks & Other Accessories',
             'Bags/Wallets/Other Accessories' => 'Bags/Wallets/Other Accessories',
             'Bags/Wallets/Other Accessories(Facemasks)' => 'Bags/Wallets/Other Accessories (Face Masks)',
             'Bags/Wallets/Other Accessories (Socks)' => 'Bags/Wallets/Other Accessories (Socks)',
