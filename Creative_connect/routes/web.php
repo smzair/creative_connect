@@ -9,6 +9,8 @@ use App\Http\Controllers\CatalogWrcBatchController;
 use App\Http\Controllers\CatalogWrcController;
 use App\Http\Controllers\CatalogWrcMasterSheetController;
 use App\Http\Controllers\CatlaogQcController;
+use App\Http\Controllers\EditingWrcController;
+use App\Http\Controllers\editorLotController;
 use App\Http\Controllers\EditorsCommercialController;
 use App\Http\Controllers\NewCommercial;
 use Illuminate\Support\Facades\Route;
@@ -152,3 +154,31 @@ Route::POST('/Commercial-Editor', [EditorsCommercialController::class, 'store'])
 Route::get('/Commercial-Editor-List', [EditorsCommercialController::class, 'index'])->name('ViewCommercialEditor'); // View Commercial-Editor
 Route::get('/Commercial-Editor/{id}', [EditorsCommercialController::class, 'edit'])->name('EditCommercialEditor'); // Create Commercial-Editor
 Route::POST('/Update-Commercial-Editor', [EditorsCommercialController::class, 'update'])->name('UpdateCommercialEditor'); // Save Commercial-Editor
+
+/* ----------Editor Panel Rajesh Code -------------*/
+
+// Editor Create Lot
+Route::get('/Editor-Create-Lot', [editorLotController::class, 'index'])->name('editor_create_lot');
+
+Route::post('/Editor-Create-Lot', [editorLotController::class, 'store'])->name('store_editor_lot');
+
+// editor lot listing
+Route::get('/Editor-Lot-View', [editorLotController::class, 'getEditorLotData'])->name('get_editor_lot_data');
+
+// editor lot edit
+Route::get('/Editor-editLots/{id}', [editorLotController::class, 'edit']);
+
+// editor lot edit
+Route::post('/Editor-Lot-View', [editorLotController::class, 'update'])->name('editor_update_lot');
+
+/* ----------Editor Panel Rajesh Code End -------------*/
+
+// Editing WRC Routeing SRS
+Route::get('/Editing-Wrc-Create', [EditingWrcController::class, 'create'])->name('EditingWrcCreate'); // For create New Wrc for Editing
+Route::post('/get-Editing-lot-number', [EditingWrcController::class, 'getLotNumber']);
+Route::POST('/Editing-Wrc-Create', [EditingWrcController::class, 'store'])->name('SaveEditingWrcCreate'); // Save Wrc for Editing
+Route::get('/Editing-Wrc-List', [EditingWrcController::class, 'index'])->name('EditingWrcView'); 
+Route::get('/Editing-Wrc-Create/{id}', [EditingWrcController::class, 'edit'])->name('EditingWrcEdit'); 
+Route::POST('/Update-Editing-Wrc-Create', [EditingWrcController::class, 'update'])->name('UpdateEditingWrcCreate'); // Update Wrc for Editing
+// Route::post('/Catalog-Wrc-marketplace-Credentials-list', [CatalogWrcController::class, 'marketplace_Credentials_List'])->name('M-P-C-List');
+// Route::post('/save-wrc-Credentials', [CatalogWrcController::class, 'save_wrc_Credentials'])->name('S-W-Credentials');

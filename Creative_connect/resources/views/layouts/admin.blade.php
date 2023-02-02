@@ -307,6 +307,34 @@
                                                     </a>
                                                 </li>
 
+                                                {{-- Editing Panel links --}}
+                                                <li class="nav-item">
+                                                    <a href="{{ route('editor_create_lot') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Create Lot Editor Panel</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('get_editor_lot_data') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Get Lot Editor Panel</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('EditingWrcCreate')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Create Editing Wrc</p>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="{{route('EditingWrcView')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Editing Wrc List</p>
+                                                    </a>
+                                                </li>
+
 
                                             </ul>
                                         </li>
