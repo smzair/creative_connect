@@ -10,7 +10,7 @@ use App\Models\CreativeWrcSkus as ModelsCreativeWrcSkus;
 use Carbon\Carbon;
 use CreativeWrcSkus;
 use Illuminate\Http\Request;
-
+use stdClass;
 
 class CreativeAllocationController extends Controller
 {
@@ -107,6 +107,19 @@ class CreativeAllocationController extends Controller
         else{
             request()->session()->flash('error','Please try again!!');
         }
+
+        /* send notification start */
+
+        $wrc_data = CreativeWrcModel::where('id',$wrc_id)->first(['wrc_number']);
+        $wrc_number = $wrc_data != null ? $wrc_data->wrc_number : "";
+
+        $data = new stdClass();
+        $data->batch_no = $batch_no;
+        $data->wrc_number = $wrc_number;
+
+        $creation_type = 'WrcAllocation';
+        $this->send_notification($data, $creation_type);
+        /******  send notification end*******/ 
         
         $allocationList = CreativeWrcModel::getDataForCreativeAllocation() ;
         return view('Allocation.creative_allocation')->with('allocationList',$allocationList);
@@ -391,6 +404,18 @@ class CreativeAllocationController extends Controller
                     request()->session()->flash('error','Please try again!!');
                 }
             }
+
+            /* send notification start */
+            $wrc_id = 0;
+            $wrc_data = CreativeWrcModel::where('id',$wrc_id)->first(['wrc_number']);
+            $wrc_number = $wrc_data != null ? $wrc_data->wrc_number : "";
+
+            $data = new stdClass();
+            $data->wrc_number = $wrc_number;
+
+            $creation_type = 'completeTaskInUpload';
+            $this->send_notification($data, $creation_type);
+            /******  send notification end*******/ 
         }
 
         return $this->uploadCreative();

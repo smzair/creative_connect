@@ -91,8 +91,12 @@ class creativeWrc extends Controller
             //     $project_name .= $val[0];
             // }
             //get first char of first and last word
-            $project_name .= $project_name_array[0][0];
-            $project_name .= $project_name_array[$count-1][0];
+            // dd($project_name_array);
+            if(count($project_name_array) > 0){
+                $project_name .= $project_name_array[0] != "" ? $project_name_array[0][0] : "";
+                $project_name .= $project_name_array[$count-1] != "" ? $project_name_array[$count-1][0] : "";
+            }
+            
 
             $alloacte_to_copy_writer = ((isset($request->alloacte_to_copy_writer) && $request->alloacte_to_copy_writer == 1)) ? 1 : 0;
 
@@ -204,6 +208,7 @@ class creativeWrc extends Controller
             // return $this->edit($request,$createWrc->id);// update in same page
             // all good
         } catch (\Exception $e) {
+            throw $e;
             DB::rollback();
             // something went wrong
         }

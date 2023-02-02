@@ -14,6 +14,7 @@ use CreativeWrcs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
+use stdClass;
 
 class CreativeQcController extends Controller
 {
@@ -179,7 +180,21 @@ class CreativeQcController extends Controller
     
                 }
                 CreativeWrcModel::where('id', $wrc_id )->update(['qc_status'=>1]);
+                /* send notification start */
+
+                $wrc_data = CreativeWrcModel::where('id',$wrc_id)->first(['wrc_number']);
+                $wrc_number = $wrc_data != null ? $wrc_data->wrc_number : "";
+                $batch_no = "";
+                $data = new stdClass();
+                $data->batch_no = $batch_no;
+                $data->wrc_number = $wrc_number;
+
+                $creation_type = 'Qc';
+                $this->send_notification($data, $creation_type);
+                /******  send notification end*******/
             }
+
+
         }
 
         if($button_action == 'Completed'){
@@ -189,6 +204,7 @@ class CreativeQcController extends Controller
                     CreativeTimeHash::where('allocation_id',$allocation_id)->update(['task_status'=>1]);
     
                 }
+                
                 CreativeWrcModel::where('id', $wrc_id )->update(['qc_status'=>0]);
         }
         echo $check;
