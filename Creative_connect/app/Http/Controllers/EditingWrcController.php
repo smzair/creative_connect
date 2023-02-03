@@ -95,7 +95,7 @@ class EditingWrcController extends Controller
      */
     public function store(Request $request)
     {
-       return $status = EditingWrc::store($request);
+       return $status = EditingWrc::storedata($request);
     }
 
     /**
@@ -117,7 +117,20 @@ class EditingWrcController extends Controller
      */
     public function edit($id)
     {
-        dd($id);
+
+        $EditingWrc =  EditingWrc::find($id);
+        $lot_id = $EditingWrc->lot_id;
+        $lot = DB::table('editor_lots')->where('id', $lot_id)->first(['user_id', 'brand_id']);
+        $user_id = $lot != null ? $lot->user_id : 0;
+        $brand_id = $lot != null ? $lot->brand_id : 0;
+        $EditingWrc->user_id = $user_id;
+        $EditingWrc->brand_id = $brand_id;
+        $sku_details = array(
+            'unique_Count' => 0,
+            'variant_Count' => 0,
+            'total_Count' => 0,
+        );
+        return view('Wrc.Editing_wrc_create')->with('EditingWrc', $EditingWrc)->with('sku_details', $sku_details);
     }
 
     /**
@@ -129,7 +142,7 @@ class EditingWrcController extends Controller
      */
     public function update(Request $request)
     {
-        dd($request->all());
+        return $status = EditingWrc::updatedata($request);
     }
 
     /**
