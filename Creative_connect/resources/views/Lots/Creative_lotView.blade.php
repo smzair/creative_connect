@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-Create New Commercial for Creative
+Creative LOTs View
 @endsection
 @section('content')
 <div class="lot-table mt-1">

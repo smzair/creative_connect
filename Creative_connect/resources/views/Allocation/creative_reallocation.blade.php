@@ -125,29 +125,27 @@ Creative Allocation
                                 <th>Project Type</th>
                                 <th>Kind of Work</th>
                                 <th>WRC Created At</th>
-                                <th>Batches No</th>
-
+                                <th >Batches No</th>
+                                <th>Allocated Users Name</th>
                                 <th>Order Qty</th>
                                 <th>Sku Qty</th>
-                                <th style="display: none;"></th>
-                                <th style="display: none;"></th>
-                               
                                 <th>GD Allocated Qty</th>
                                 <th>GD Pending Qty</th>
                                 <th>CW Allocated Qty</th>
                                 <th>CW Pending Qty</th>
-                                {{-- <th>Work Initiate Date</th>
-                                <th>Work Committed Date</th> --}}
-                                
+                                <th>Work Initiate Date</th>
+                                <th>Work Committed Date</th>
+                                <th style="display: none;"></th>
+                                <th style="display: none;"></th>
+                              
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($allocationList['resData']  as $key => $lotinfo)
-
-                            <?php  if( ((($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']) == 0) && ((($lotinfo['cw_allocated_qty'] == null || $lotinfo['cw_allocated_qty'] == 0) ? 0 : $lotinfo['cw_allocated_qty']) == 0)) {?>
-
+                            <?php  if( ((($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']) != 0) || ((($lotinfo['cw_allocated_qty'] == null || $lotinfo['cw_allocated_qty'] == 0) ? 0 : $lotinfo['cw_allocated_qty']) != 0)) {?>
                                 <tr>
+                                    {{-- <?php dd($lotinfo); ?> --}}
                                     <td id="wrc_number{{$key}}">{{$lotinfo['wrc_number']}}</td>
                                     <td style="display: none;" id="wrc_number_id{{$key}}">{{$lotinfo['wrc_id']}}</td>
                                     <td style="display: none;" id="alloacte_to_copy_writer{{$key}}">{{$lotinfo['alloacte_to_copy_writer']}}</td>
@@ -158,7 +156,16 @@ Creative Allocation
                                     <td id="kind_of_work{{$key}}">{{$lotinfo['kind_of_work']}}</td>
                                     <td id="created_at{{$key}}">{{dateFormat($lotinfo->created_at)}}<br><b>{{timeFormat($lotinfo->created_at)}}</td>
                                     <td title="0 for not retainer and other for retainer" id="batch_batch_no{{$key}}">{{$lotinfo['batch_batch_no'] != null ? $lotinfo['batch_batch_no'] : 'None'}}</td>
+                                    <td id="brand_name{{$key}}">
+                                        @foreach($lotinfo['allocated_users']  as $ukey => $uval)
+                                        <ul>{{$uval['name']}}</ul>
 
+                                        @endforeach
+                                        
+                                        
+                                    
+                                    
+                                    </td>
                                     <!-- <td>{{--count($lotinfo['wrcs'])--}}</td> -->
 
 
@@ -172,7 +179,7 @@ Creative Allocation
                                         <td id="sku_count{{$key}}">{{$lotinfo['sku_count'] != null ? $lotinfo['sku_count'] : 0}}</td>
                                     <?php  } ?>
                                     {{-- add this logic for lot with Retainer client bucket --end--}}
-                                   
+                                    
 
                                     <td id="gd_allocated_qty{{$key}}">{{($lotinfo['gd_allocated_qty'] == null || $lotinfo['gd_allocated_qty'] == 0) ? 0 : $lotinfo['gd_allocated_qty']}}</td>
 
@@ -195,8 +202,13 @@ Creative Allocation
                                     <?php  } ?>
                                 
 
-                                    {{-- <td id="work_initiate_date{{$key}}">{{dateFormat($lotinfo->work_initiate_date)}}<br><b>{{timeFormat($lotinfo->work_initiate_date)}}</b></td>
-                                    <td id="Comitted_initiate_date{{$key}}">{{dateFormat($lotinfo->Comitted_initiate_date)}}<br><b>{{timeFormat($lotinfo->Comitted_initiate_date)}}</b></td> --}}
+                                   
+                                    <td id="work_initiate_date{{$key}}">{{dateFormat($lotinfo->work_initiate_date)}}
+                                        {{--<br> <b>{{timeFormat($lotinfo->work_initiate_date)}}</b> --}}
+                                    </td>
+                                    <td id="Comitted_initiate_date{{$key}}">{{dateFormat($lotinfo->Comitted_initiate_date)}}
+                                        {{--<br> <b>{{timeFormat($lotinfo->Comitted_initiate_date)}}</b> --}}
+                                    </td>
                                    
                                     <td>
                                         <button class="btn btn-warning" id="allocateBTn" data-toggle="modal" data-target="#allocateWRCPopup" onclick='setdata(<?php echo $key;?>)'>
@@ -205,7 +217,6 @@ Creative Allocation
                                     </td>
                                 </tr>
                             <?php } ?>
-
                             @endforeach
                         </tbody>
                     </table>
@@ -245,7 +256,7 @@ Creative Allocation
 
                         <div class="col-sm-4 col-12">
                             <div class="col-ac-details">
-                                <h6>Batches No</h6>
+                                <h6 title="0 for not retainer and other for retainer">Batches No</h6>
                                 <p class="batchesNo"></p>
                             </div>
                         </div>
@@ -281,9 +292,9 @@ Creative Allocation
                                 <p class="PendingCountCw"></p>
                             </div>
                         </div>
+                       
+                       
                         
-                       
-                       
                     </div>
                 </div>
                 <div class="custom-dt-row allocater-selection">
@@ -317,7 +328,7 @@ Creative Allocation
                                         </div>
                                         <div class="group-inner input-wrapper">
                                             <label class="control-label">Qty</label>
-                                            <input type="text"  onkeypress="return isNumber(event);" class="form-control GDQTYSTYLE'.$data.'" id="GraphicDesignerQty" name="GraphicDesignerQty[]">
+                                            <input type="text" class="form-control GDQTYSTYLE'.$data.'" id="GraphicDesignerQty"  onkeypress="return isNumber(event);" name="GraphicDesignerQty[]">
                                         </div>  
                                     </div>
                                 </div>
@@ -331,42 +342,42 @@ Creative Allocation
                                         </div>
                                         <div class="group-inner input-wrapper">
                                             <label class="control-label">Qty</label>
-                                            <input type="text"  onkeypress="return isNumber(event);" class="form-control CWQTYSTYLE'.$data.'" name="copyWriterQty[]" id="copyWriterQty">
+                                            <input type="text" class="form-control CWQTYSTYLE'.$data.'" onkeypress="return isNumber(event);" name="copyWriterQty[]" id="copyWriterQty">
                                         </div>  
                                     </div>
                                 </div>';
                             }
                         ?>
-                        <div class="row">
-                            <div class="col-sm-4">
-                                  <div class="form-group">
-                                      <label class="control-label required">Work Initiate Date</label>
-                                      <div class="input-group">
-                                          {{-- <div class="input-group-prepend">
-                                              <span class="input-group-text">
-                                                  <i class="far fa-calendar-alt"></i>
-                                              </span>
-                                          </div> --}}
-                                          <input type="date" class="form-control" name="int_date" id="int_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
-                                      </div>
-                                      <p class="input_err" style="color: red; display: none;" id="int_date_err"></p>
-                                  </div>
-                          </div>
+                          <div class="row">
                           <div class="col-sm-4">
-                                  <div class="form-group">
-                                      <label class="control-label required">Work Committed Date</label>
-                                      <div class="input-group">
-                                          {{-- <div class="input-group-prepend">
-                                              <span class="input-group-text">
-                                                  <i class="far fa-calendar-alt"></i>
-                                              </span>
-                                          </div> --}}
-                                          <input type="date" class="form-control" name="cmt_date" id="cmt_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
-                                      </div>
-                                      <p class="input_err" style="color: red; display: none;" id="cmt_date_err"></p>
-                                  </div>
+                                <div class="form-group">
+                                    <label class="control-label required">Work Initiate Date</label>
+                                    <div class="input-group">
+                                        {{-- <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div> --}}
+                                        <input type="text" class="form-control int_date" name="int_date" id="int_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
+                                    </div>
+                                    <p class="input_err" style="color: red; display: none;" id="int_date_err"></p>
+                                </div>
+                        </div>
+                        <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label class="control-label required">Work Committed Date</label>
+                                    <div class="input-group">
+                                        {{-- <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="far fa-calendar-alt"></i>
+                                            </span>
+                                        </div> --}}
+                                        <input type="text" class="form-control cmt_date" name="cmt_date" id="cmt_date" placeholder="yyyy-mm-dd" data-toggle="datepicker" value="">
+                                    </div>
+                                    <p class="input_err" style="color: red; display: none;" id="cmt_date_err"></p>
+                                </div>
+                        </div>
                           </div>
-                            </div>
                         <div class="row">
                             <?= $check ?>
                             <div class="col-sm-12 col-12">
@@ -493,7 +504,20 @@ Creative Allocation
         const wrc_id = document.getElementById(wrc_id_td).innerHTML;
         document.querySelector(".wrc_id").value = wrc_id
 
-         
+        // work_initiate_date
+        const work_initiate_date_td = "work_initiate_date"+id;
+        const work_initiate_date = document.getElementById(work_initiate_date_td).innerHTML;
+        console.log('work_initiate_date', work_initiate_date)
+        // document.querySelector(".int_date").value = work_initiate_date
+        document.getElementById("int_date").value = work_initiate_date
+
+        // cmt_date
+
+        // Comitted_initiate_date
+        const Comitted_initiate_date_td = "Comitted_initiate_date"+id;
+        const Comitted_initiate_date = document.getElementById(Comitted_initiate_date_td).innerHTML;
+        // document.querySelector(".cmt_date").value = Comitted_initiate_date
+        document.getElementById("cmt_date").value = Comitted_initiate_date
 
         // set wrc id
         const alloacte_to_copy_writer_td = "alloacte_to_copy_writer"+id;
@@ -624,6 +648,16 @@ Creative Allocation
     }
 </script>
 
+<script type="application/javascript" src="{{asset('plugins/datepicker-in-bootstrap-modal/js/datepicker.js')}}"></script>
+<script type="text/javascript">
+ 
+ $('[data-toggle="datepicker"]').datepicker({
+    autoHide: true,
+    zIndex: 2048,
+    format: 'yyyy-mm-dd'
+});
+
+</script>
 
 {{-- reset enable disable of sku and order qty modal reset--}}
 <script type="application/javascript"> 
