@@ -140,9 +140,7 @@ Create Editing WRCs
                                         <option value = "">Select LOT Number</option>
 
                                     </select>
-                                    <script>
-                                        document.querySelector("#lot_id").value = "{{$EditingWrc->lot_id }}"
-                                    </script>
+                                   
                                     <p class="input_err" style="color: red; display: none;" id="lot_id_err"></p>
                                 </div>
                             </div>
@@ -165,7 +163,7 @@ Create Editing WRCs
                             <div class="col-sm-4 col-12">
                                 <div class="form-group">
                                     <label class="control-label required">Tentative Image Count</label>
-                                    <input type="text" class="form-control" name="imgQty" id="imgQty" placeholder="Enter Tentative Image Count">
+                                    <input type="text" class="form-control" name="imgQty" id="imgQty" value="{{$EditingWrc->imgQty}}" placeholder="Enter Tentative Image Count">
                                     <p class="input_err" style="color: red; display: none;" id="imgQty_err"></p>
 
                                 </div>
@@ -186,8 +184,7 @@ Create Editing WRCs
                             <div class="col-sm-4 col-12">
                                 <div class="form-group d-none" id="imgLinkReceviedDiv">
                                     <label class="control-label required">Upload Image Link Received</label>
-                                    <input type="text" class="form-control" name="documentUrl" id="documentUrl" placeholder="Add Link" {{$EditingWrc->documentUrl}}  >
-                                    <input type="hidden" class="form-control" name="oldDocumentUrl" id="oldDocumentUrl" {{$EditingWrc->documentType == 1 ? $EditingWrc->documentUrl : ""}} >
+                                    <input type="text" class="form-control" name="documentUrl" id="documentUrl" placeholder="Add Link" value="{{$EditingWrc->documentType == 0 ? $EditingWrc->documentUrl : ''}}"  >
                                     <p class="input_err" style="color: red; display: none;" id="documentUrl_err"></p>
 
                                 </div>
@@ -195,6 +192,7 @@ Create Editing WRCs
                                 <div class="form-group d-none" id="sku_sheetDiv">
                                     <label for="files" class="control-label required" style="font-weight:400;">Upload SKU Sheet</label>
                                     <input accept=".xls,.xlsx,.csv" type="file" id="sku_sheet" name="sku_sheet" class="btn btn-success btn-xl btn-warning mb-2">
+                                    <input type="hidden" class="form-control" name="oldDocumentUrl" id="oldDocumentUrl" value="{{$EditingWrc->documentType == 1 ? $EditingWrc->documentUrl : ''}}" >
                                     <p class="input_err" style="color: red; display: none;" id="sku_sheet_err"></p>
                                 </div>
                             </div>
@@ -202,7 +200,7 @@ Create Editing WRCs
                         
                         <div class="row mt-2 float-right">
                             <div class="col-sm-12">
-                                <button type="submit" class="btn btn-success btn-xl btn-warning mb-2" onclick="">{{$btn_Name}}</button>
+                                <button type="submit" class="btn btn-success btn-xl btn-warning mb-2" >{{$btn_Name}}</button>
                             </div>
                         </div>
                     </form>
@@ -386,11 +384,11 @@ Create Editing WRCs
                 }
             });
 
-            // if(lot_id_val > 0 && saved_brand_id_is == brand_id_is){
-            //     document.querySelector("#lot_id").value = "<?= $EditingWrc->lot_id ?>"
-            //     document.querySelector("#commercial_id").value = "<?= $EditingWrc->commercial_id ?>"
-            //     setStype();
-            // }
+            if(lot_id_val > 0 && saved_brand_id_is == brand_id_is){
+                document.querySelector("#lot_id").value = "<?= $EditingWrc->lot_id ?>"
+                document.querySelector("#commercial_id").value = "<?= $EditingWrc->commercial_id ?>"
+                setStype();
+            }
 
            
         });
@@ -612,12 +610,10 @@ Create Editing WRCs
             $("#sku_sheet_err").html("SKU Sheet is required");
             if(file_is_vaild == 2){
                 $("#sku_sheet_err").html("Selected file is not a CSV or Excel file");
-
             }
             document.getElementById("sku_sheet_err").style.display = "block";
             sku_sheet_Is_Vailid = false;
         }
-     
        
         if (user_id_is_Valid && brand_id_Valid && lot_id_Valid && commercial_id_Valid && imgQty_Is_Vailid && documentUrl_Is_Vailid && sku_sheet_Is_Vailid) {
             return true
