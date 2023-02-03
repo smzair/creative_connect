@@ -161,12 +161,7 @@
                                                     </a>
                                                 </li>
 
-                                                <li class="nav-item">
-                                                    <a href="{{route('CREATELOT')}}" class="nav-link">
-                                                        <i class="far fa-circle nav-icon"></i>
-                                                        <p>Create Lots</p>
-                                                    </a>
-                                                </li>
+                                               
 
                                                 <li class="nav-item">
                                                     <a href="{{route('CREATELOTCATALOG')}}" class="nav-link">
@@ -307,21 +302,6 @@
                                                     </a>
                                                 </li>
 
-                                                {{-- Editing Panel links --}}
-                                                <li class="nav-item">
-                                                    <a href="{{ route('editor_create_lot') }}" class="nav-link">
-                                                        <i class="far fa-circle nav-icon"></i>
-                                                        <p>Create Lot Editor Panel</p>
-                                                    </a>
-                                                </li>
-
-                                                <li class="nav-item">
-                                                    <a href="{{ route('get_editor_lot_data') }}" class="nav-link">
-                                                        <i class="far fa-circle nav-icon"></i>
-                                                        <p>Get Lot Editor Panel</p>
-                                                    </a>
-                                                </li>
-
                                                 <li class="nav-item">
                                                     <a href="{{route('EditingWrcCreate')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
@@ -335,7 +315,139 @@
                                                     </a>
                                                 </li>
 
+                                                {{-- Start Rajesh Changes And files --}}
+                                                <li class="nav-item">
+                                                    <a href="{{ route('CREATELOT') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Creative-create Lots</p>
+                                                    </a>
+                                                </li>
 
+                                                <li class="nav-item">
+                                                    <a href="{{ route('viewLOT') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>View Creative LOTs</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('CREATEWRC') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p> Create Creative WRCs</p>
+                                                    </a>
+                                                </li>
+    
+                                                <li class="nav-item">
+                                                    <a href="{{ route('viewWRC') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>View Creative WRCs</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('viewWRCBatchPanel') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>View Creative WRCs Batch Panel</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('CREATIVE_ALLOCATION_CREATE') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Creative Allocation Create</p>
+                                                    </a>
+                                                </li>
+    
+                                                <li class="nav-item">
+                                                    <a href="{{ route('CREATIVE_REALLOCATION_CREATE') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Creative ReAllocation Create</p>
+                                                    </a>
+                                                </li>
+                                               
+                                                <li class="nav-item">
+                                                    <a href="{{ route('CREATIVE_ALLOCATION_GET') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Creative Allocation GET</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('UPLOAD_CREATIVE_PANEL') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Upload Creative Panel</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('CREATIVE_QC_GET') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>QC Approval - Creative</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('CREATIVE_SUBMISSION_GET') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Ready for Submission</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('CREATIVE_SUBMISSION_DONE') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Creative Submission Done</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('CREATIVE_WRC_CLIENT_APPROVAL_REJECTION') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Creative WRC Client Approval & Rejection</p>
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="{{ route('creative_wrc_status_view') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Creative-wrcs-status-view</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('consolidated_lot_panel') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Consolidated-Lot-Panel</p>
+                                                    </a>
+                                                </li>
+    
+                                                <li class="nav-item">
+                                                    <a href="{{ route('consolidated_lot_view') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Consolidated-Lot-View</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('update_invoice_number_panel') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Update Invoice Number Panel</p>
+                                                    </a>
+                                                </li>
+    
+                                                <li class="nav-item">
+                                                    <a href="{{ route('editor_create_lot') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Create Lot Editor Panel</p>
+                                                    </a>
+                                                </li>
+    
+                                                <li class="nav-item">
+                                                    <a href="{{ route('get_editor_lot_data') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Get Lot Editor Panel</p>
+                                                    </a>
+                                                </li>
+                                                {{-- End Rajesh Changes And files --}}
                                             </ul>
                                         </li>
                                   

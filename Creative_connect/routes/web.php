@@ -9,10 +9,16 @@ use App\Http\Controllers\CatalogWrcBatchController;
 use App\Http\Controllers\CatalogWrcController;
 use App\Http\Controllers\CatalogWrcMasterSheetController;
 use App\Http\Controllers\CatlaogQcController;
+use App\Http\Controllers\ConsolidatedLotController;
+use App\Http\Controllers\CreativeAllocationController;
+use App\Http\Controllers\CreativeQcController;
+use App\Http\Controllers\CreativeSubmissionController;
+use App\Http\Controllers\creativeWrc;
 use App\Http\Controllers\EditingWrcController;
 use App\Http\Controllers\editorLotController;
 use App\Http\Controllers\EditorsCommercialController;
 use App\Http\Controllers\NewCommercial;
+use App\Http\Controllers\WrcInvoiceNumber;
 use Illuminate\Support\Facades\Route;
 /*
   |--------------------------------------------------------------------------
@@ -46,22 +52,94 @@ Route::post('/Creative-updateCatalog', 'catalogCommercials@update')->name('UPDAT
 
 
 
-//////////////// Creative Lots Routes VIEWLOTCATALOG ///////////////// 
-Route::get('/Creative-createLots', 'creativeLot@index')->name('CREATELOT');
-Route::get('/Creative-viewLots', 'creativeLot@view')->name('viewLOT');
+/****************  Creative-createLots  **************/
+Route::get('/Creative-createLots','creativeLot@index')->name('CREATELOT');
+Route::post('/Creative-createLots', 'creativeLot@store')->name('STORELOTS');
+Route::get('/Creative-viewLots','creativeLot@view')->name('viewLOT');
+Route::get('/Creative-editLots/{id}','creativeLot@edit');
+Route::post('/Creative-updateLots','creativeLot@update')->name('UPDATELOT');
 
+/****************  Catalog- create Lots  **************/
 
 Route::get('/Creative-createLotCatalog', 'CatalogLotsController@index')->name('CREATELOTCATALOG');
-
 Route::post('/Creative-createLotCatalog', 'CatalogLotsController@create')->name('SAVELOTSCATALOG'); // For save Lots Catalog  Log
 Route::get('/Creative-lotsCatalogView', 'CatalogLotsController@view')->name('VIEWLOTCATALOG'); // for Listing Lots Catalog
 Route::get('/Creative-createLotCatalog/{id}', 'CatalogLotsController@edit')->name('EDITLOTCATALOG'); // for Lots Catalog edit Form
 Route::post('/Creative-UpdateLotCatalog', 'CatalogLotsController@update')->name('UPDATELOTSCATALOG'); // For save Lots Catalog  Log
 
+// --rajesh routing creative and editing panel---start
+/****************  Creative-createWrc  **************/
+Route::get('/Creative-createWrcs','creativeWrc@index')->name('CREATEWRC');
+Route::post('/Creative-createWrcs', 'creativeWrc@store')->name('STOREWRC');
+Route::get('/Creative-createWrcs/{id}','creativeWrc@edit');
+Route::post('/Creative-viewWrcs','creativeWrc@update')->name('UPDATEWRC');
+Route::get('/Creative-viewWrcs','creativeWrc@view')->name('viewWRC');
 
-//////////////// Creative Wrc Routes /////////////////
-Route::get('/Creative-viewWrcs', 'creativeWrc@view')->name('viewWRC');
-Route::get('/Creative-createWrcs', 'creativeWrc@index')->name('CREATEWRC');
+/****************  Creative-createWrc-Batch-Panel  **************/
+Route::get('/Creative-viewWrcsBatchPanel','creativeWrc@viewBatchPanel')->name('viewWRCBatchPanel');
+Route::post('/Creative-viewWrcsBatchPanel','creativeWrc@storeNewBatch')->name('INVERD_NEW_BATCH');
+
+/****************  Creative-Allocation  **************/
+Route::get('/Creative-allocation-create' , [CreativeAllocationController::class , 'index'])->name('CREATIVE_ALLOCATION_CREATE');//creative allocation create
+Route::get('/Creative-Reallocation-create' , [CreativeAllocationController::class , 'indexForReAllocation'])->name('CREATIVE_REALLOCATION_CREATE');//creative reallocation create
+Route::get('/Creative-allocation-get' , [CreativeAllocationController::class , 'CreativeAllocationGet'])->name('CREATIVE_ALLOCATION_GET');//creative allocation get
+Route::get('/Creative-allocation-get' , [CreativeAllocationController::class , 'CreativeAllocationGet'])->name('CREATIVE_ALLOCATION_GET');
+Route::post('/Creative-allocation-create', 'CreativeAllocationController@store')->name('CREATIVE_ALLOCATION_STORE');// store creative allocation
+
+/****************  Creative-Uploading (Tasking)  **************/
+Route::get('/Upload-Creative' , [CreativeAllocationController::class , 'uploadCreative'])->name('UPLOAD_CREATIVE_PANEL');//creative allocation get
+Route::post('/set-creative-allocation-start' , [CreativeAllocationController::class , 'setCreativeAllocationStart']);//update start time
+Route::post('/Upload-Creative', 'CreativeAllocationController@storeUploaddata')->name('CREATIVE_ALLOCATION_UPLOAD_STORE');// store creative allocation upload data
+
+/****************  Creative-Qc Panel  **************/
+Route::get('/Creative-Qc', [CreativeQcController::class , 'getDataForQcList'])->name('CREATIVE_QC_GET');// creative qc get
+Route::post('/get-user-for-rework','CreativeQcController@getUserListForRework');// get user list for rework in qc approval create// ajax api
+Route::post('/Creative-Qc','CreativeQcController@storeUserDataForRework')->name('CREATIVE_REWORK_STORE');//creative rework store
+Route::post('/check_completed_wrc','CreativeQcController@checkCompletedWrc');//check_completed_wrc
+Route::post('/cw_check_completed_wrc','CreativeQcController@cwCheckCompletedWrc');//cw_check_completed_wrc
+Route::post('/get-sku-list' , [CreativeAllocationController::class , 'getSkuList']);//get sku based on wrc id and batch no
+
+/****************creative Submission **************/
+Route::get('/Creative-Submission' , [CreativeSubmissionController::class , 'getCreativeSubmission'])->name('CREATIVE_SUBMISSION_GET');//get sku based on wrc id and batch no
+Route::post('/Creative-Submission' , [CreativeSubmissionController::class , 'addCreativeSubmission'])->name('add_ready_for_submission');//Add Ready For Submission
+
+/****************creative Submission done**************/
+Route::get('/Creative-Submission-Done' , [CreativeSubmissionController::class , 'getDataForCreativeSubmissionDone'])->name('CREATIVE_SUBMISSION_DONE');// get wrc list for submission done
+Route::post('/Creative-Submission-Done' , [CreativeSubmissionController::class , 'addCreativeSubmissionDone'])->name('add_submission_done');//Add  Submission Done
+
+
+/****************creative Client-Approval-Rejection**************/
+Route::get('/Creative-WRC-Client-Approval-Rejection' , [CreativeSubmissionController::class , 'creativeWrcClientApprovalRejection'])->name('CREATIVE_WRC_CLIENT_APPROVAL_REJECTION');//CREATIVE_WRC_CLIENT_APPROVAL_REJECTION
+Route::post('/Creative-WRC-Client-Approval-Rejection' , [CreativeSubmissionController::class , 'creativeWrcApprove'])->name('creative_wrc_approve');// approve action for wrc
+Route::post('/Creative-WRC-Client-Rejection' , [CreativeSubmissionController::class , 'creativeWrcReject'])->name('creative_wrc_reject');// reject action for wrc
+Route::get('/set-creative-allocation-pause' , [CreativeAllocationController::class , 'setCreativeAllocationPause']);//cron api for update pause time when task is start
+Route::get('/Creative-Wrc-Detail-Master-Sheet' , [CreativeSubmissionController::class , 'getCreativeWrcDetail'])->name('get_creative_wrc_detail');//get creative wrc detail ( master sheet)
+Route::get('/Creative-wrcs-status-view' , [creativeWrc::class , 'wrcStatusView'])->name('creative_wrc_status_view');//creative wrc status view listing
+
+
+/****************consolidated lot panel**************/
+Route::get('/Consolidated-Lot' , [ConsolidatedLotController::class , 'view'])->name('consolidated_lot_panel');//consolidated lot panel
+Route::post('/Consolidated-Lot' , [ConsolidatedLotController::class , 'create'])->name('create_consolidated_lot');//create consolidated lot
+Route::get('/Consolidated-Lot/{id}' , [ConsolidatedLotController::class , 'continueTask']);//continue task on  consolidated lot
+Route::get('/Consolidated-Lot-List' , [ConsolidatedLotController::class , 'list'])->name('consolidated_lot_view');//view consolidated lot
+Route::post('/Consolidated-Lot-Shoot' , [ConsolidatedLotController::class , 'createConsolidatedShoot'])->name('create_consolidated_shoot');//create  consolidated shoot
+Route::post('/Consolidated-Lot-Creative-Graphics' , [ConsolidatedLotController::class , 'createConsolidatedCreativeGraphics'])->name('create_consolidated_creative_graphics');// create consolidated Creative
+Route::post('/Consolidated-Lot-Catlog' , [ConsolidatedLotController::class , 'createConsolidatedCatlog'])->name('create_consolidated_catlog');// create consolidated catlog
+Route::post('/Consolidated-Lot-Editor' , [ConsolidatedLotController::class , 'createConsolidatedEditorLot'])->name('create_consolidated_editor_lot');// create create_consolidated_editor_lot
+
+
+
+Route::get('/Creative-Update-Invoice-Number' , [WrcInvoiceNumber::class , 'index'])->name('update_invoice_number_panel');// Update Invoice Number Panel
+Route::post('/Creative-Update-Invoice-Number' , [WrcInvoiceNumber::class , 'updateWrcInvoice'])->name('update_wrc_invoice_no');// update Wrc Invoice No
+
+/****************Editor Panel**************/
+
+Route::get('/Editor-Create-Lot' , [editorLotController::class , 'index'])->name('editor_create_lot');// Editor Create Lot
+Route::post('/Editor-Create-Lot', [editorLotController::class , 'store'])->name('store_editor_lot');
+Route::get('/Editor-Lot-View', [editorLotController::class , 'getEditorLotData'])->name('get_editor_lot_data');// editor lot listing
+Route::get('/Editor-editLots/{id}',[editorLotController::class, 'edit']);// editor lot edit
+Route::post('/Editor-Lot-View',[editorLotController::class, 'update'])->name('editor_update_lot');// editor lot update
+// --rajesh routing creative and editing panel---end
 
 // rajesh wrc route start
 
@@ -88,6 +166,8 @@ Route::post('/get-catlog-lot-number', [CatalogWrcController::class, 'getLotNumbe
 
 /********** Ajax calling /{id} ********/
 Route::post('/get-brand', 'AjaxController@getBrand');
+Route::post('/get-lot-number', 'creativeWrc@getLotNumber');
+
 
 /****** Allocation Route  set-catalog-allocation  set-catalog-allocation-start *********/
 Route::get('catalog-allocation', [CatalogAllocationController::class, 'index'])->name('CATALOG_ALLOCT'); // 
@@ -154,24 +234,6 @@ Route::POST('/Commercial-Editor', [EditorsCommercialController::class, 'store'])
 Route::get('/Commercial-Editor-List', [EditorsCommercialController::class, 'index'])->name('ViewCommercialEditor'); // View Commercial-Editor
 Route::get('/Commercial-Editor/{id}', [EditorsCommercialController::class, 'edit'])->name('EditCommercialEditor'); // Create Commercial-Editor
 Route::POST('/Update-Commercial-Editor', [EditorsCommercialController::class, 'update'])->name('UpdateCommercialEditor'); // Save Commercial-Editor
-
-/* ----------Editor Panel Rajesh Code -------------*/
-
-// Editor Create Lot
-Route::get('/Editor-Create-Lot', [editorLotController::class, 'index'])->name('editor_create_lot');
-
-Route::post('/Editor-Create-Lot', [editorLotController::class, 'store'])->name('store_editor_lot');
-
-// editor lot listing
-Route::get('/Editor-Lot-View', [editorLotController::class, 'getEditorLotData'])->name('get_editor_lot_data');
-
-// editor lot edit
-Route::get('/Editor-editLots/{id}', [editorLotController::class, 'edit']);
-
-// editor lot edit
-Route::post('/Editor-Lot-View', [editorLotController::class, 'update'])->name('editor_update_lot');
-
-/* ----------Editor Panel Rajesh Code End -------------*/
 
 // Editing WRC Routeing SRS
 Route::get('/Editing-Wrc-Create', [EditingWrcController::class, 'create'])->name('EditingWrcCreate'); // For create New Wrc for Editing
