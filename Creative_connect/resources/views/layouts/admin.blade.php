@@ -288,7 +288,7 @@
                                                     </a>
                                                 </li>
 
-                                                {{-- Commercial-Editor --}}
+                                                {{-- Editing Panel --}}
                                                 <li class="nav-item">
                                                     <a href="{{route('CommercialEditor')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
@@ -308,10 +308,18 @@
                                                         <p>Create Editing Wrc</p>
                                                     </a>
                                                 </li>
+
                                                 <li class="nav-item">
                                                     <a href="{{route('EditingWrcView')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
                                                         <p>Editing Wrc List</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('Editing_Allocation')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Editing Allocatiion</p>
                                                     </a>
                                                 </li>
 

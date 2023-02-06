@@ -14,6 +14,7 @@ use App\Http\Controllers\CreativeAllocationController;
 use App\Http\Controllers\CreativeQcController;
 use App\Http\Controllers\CreativeSubmissionController;
 use App\Http\Controllers\creativeWrc;
+use App\Http\Controllers\EditingAllocationController;
 use App\Http\Controllers\EditingWrcController;
 use App\Http\Controllers\editorLotController;
 use App\Http\Controllers\EditorsCommercialController;
@@ -244,3 +245,8 @@ Route::get('/Editing-Wrc-Create/{id}', [EditingWrcController::class, 'edit'])->n
 Route::POST('/Update-Editing-Wrc-Create', [EditingWrcController::class, 'update'])->name('UpdateEditingWrcCreate'); // Update Wrc for Editing
 // Route::post('/Catalog-Wrc-marketplace-Credentials-list', [CatalogWrcController::class, 'marketplace_Credentials_List'])->name('M-P-C-List');
 // Route::post('/save-wrc-Credentials', [CatalogWrcController::class, 'save_wrc_Credentials'])->name('S-W-Credentials');
+
+/* ---------- Editing Panel Allocation -------------*/
+Route::get('Editing-allocation', [EditingAllocationController::class, 'index'])->name('Editing_Allocation'); // 
+Route::post('Editing-allocated-sku-count', [EditingAllocationController::class, 'Editing_alocated_sku_count']); // for list of allocated Editing WRC sku count ajax
+
