@@ -60,6 +60,11 @@ class CatalogLotsController extends Controller
                 'imgReceviedDate' => ''
             ];
             request()->session()->flash('success', 'Lots Catalog Successfully added');
+             /* send notification start */
+                $data = LotsCatalog::find($id);
+                $creation_type = 'CatlogLot';
+                $this->send_notification($data, $creation_type);
+            /******  send notification end*******/ 
         }else{
             $lotInfo = (object)[
                 'id' => $user_id,
@@ -71,7 +76,7 @@ class CatalogLotsController extends Controller
                 'imgReceviedDate' => $imgReceviedDate
             ];
             request()->session()->flash('false', 'Somthing went Wrong try agian!!');
-        }
+        }      
         return view('Lots.Catalog_lots_create')->with('lotInfo' , $lotInfo);
 
     }
