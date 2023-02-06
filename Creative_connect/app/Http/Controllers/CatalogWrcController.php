@@ -189,7 +189,7 @@ class CatalogWrcController extends Controller
             $createWrc->sku_qty = $sku_qty_is;
             $createWrc->is_retainer = $is_retainer;
             $createWrc->status = 'Ready_for_allocation';
-            $createWrc->save();
+            $createWrcStatus = $createWrc->save();
 
             $wrc_id_is = $createWrc->id;
 
@@ -203,23 +203,27 @@ class CatalogWrcController extends Controller
                 'variant_Count' => 0,
                 'total_Count' => 0,
             );
+            $csv_batch_arr = [];
+
             while ($csvLine = fgetcsv($handle, 1000, ",")) {
                 if ($count <= 1) {
                     $count++;
                     continue;
                 }
                 $count++;
+               
+                $sku_code = trim($csvLine[0]);
+                $style = trim($csvLine[1]);
+                $batch = trim($csvLine[2]);
+                $type_of_service = trim($csvLine[3]);
 
-                $sku_code = $csvLine[0];
-                $style = $csvLine[1];
-                $type_of_service = $csvLine[2];
-                
                 if ($sku_code != null && $style != null && $type_of_service != null && $sku_code != '' && $style != '' && $type_of_service != '') {
                     $skuObj = new CatalogWrcSku();
                     $skuObj->sku_code = $sku_code;
                     $skuObj->style = $style;
                     $skuObj->type_of_service = $type_of_service;
                     $skuObj->batch_no = $batch_no;
+                    $skuObj->batch = $batch;
                     $skuObj->wrc_id = $wrc_id_is;
                     $skuObj->save();
                     $saved_rows++;
@@ -230,21 +234,50 @@ class CatalogWrcController extends Controller
                         $sku_details['variant_Count']++;
                     }
                 }
+                if (array_key_exists($batch, $csv_batch_arr)) {
+                    $csv_batch_arr[$batch] += 1;
+                } else {
+                    $csv_batch_arr[$batch] = 1;
+                }
+            }
+            $cnt_batch = 1;
+            $batch_no_is = $batch_no;
+            if ($is_retainer == 1) {
+                foreach($csv_batch_arr as $batch_is => $csvKeyCount){
+                    if($cnt_batch != 1){
+                        $batch_no_is = $cnt_batch;
+                        CatalogWrcSku::where('batch', $batch_is)->update(['batch_no' => $batch_no_is]);
+                    }
+                    $storeWrcBatch = new CatalogWrcBatch();
+                    $storeWrcBatch->wrc_id = $wrc_id_is;
+                    $storeWrcBatch->batch_no = $batch_no_is;
+                    $storeWrcBatch->sku_count = $csvKeyCount;
+                    $storeWrcBatch->prequisites = '';
+                    $storeWrcBatch->work_initiate_date = '';
+                    $storeWrcBatch->work_committed_date = '';
+                    $storeWrcBatch->invoiceNumber = '';
+                    $storeWrcBatchStatus = $storeWrcBatch->save();
+                    if($storeWrcBatchStatus){
+                        $cnt_batch++;
+                    }
+                }
+            } else {
+                $storeWrcBatch = new CatalogWrcBatch();
+                $storeWrcBatch->wrc_id = $wrc_id_is;
+                $storeWrcBatch->batch_no = $batch_no_is;
+                $storeWrcBatch->sku_count = $saved_rows;
+                $storeWrcBatch->prequisites = '';
+                $storeWrcBatch->work_initiate_date = '';
+                $storeWrcBatch->work_committed_date = '';
+                $storeWrcBatch->invoiceNumber = '';
+                $storeWrcBatch->save();
             }
 
-            $storeWrcBatch = new CatalogWrcBatch();
-            $storeWrcBatch->wrc_id = $wrc_id_is;
-            $storeWrcBatch->batch_no = $batch_no;
-            $storeWrcBatch->sku_count = $saved_rows;
-            $storeWrcBatch->prequisites = '';
-
-            $storeWrcBatch->save();
 
             $tot_sku_qty_is = $saved_rows + $sku_qty_is;
             CatlogWrc::where('id', $wrc_id_is)->update(['sku_qty' => $tot_sku_qty_is]);
-           
-            DB::commit();
-            if ($createWrc) {
+            if ($createWrcStatus) {
+                DB::commit();
                 request()->session()->flash('success', 'Catlog Wrc Successfully added');
             } else {
                 request()->session()->flash('error', 'Please try again!!');

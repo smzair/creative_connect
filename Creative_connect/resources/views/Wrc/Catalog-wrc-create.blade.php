@@ -44,7 +44,7 @@ Create Catlog WRCs
         <div class="col-3">
             <div class="card card-transparent m-0 " style="align-items:center; padding: 10px; height: 100%;justify-content: center;" >
                 <div>
-                    <a  download="catalog sku Master Sheet" href="{{ asset('fiels/catalog_sku.csv') }}" class="btn" style="margin-bottom: 6px"><i class="fa fa-download"></i> Download Master Sheet</a>
+                    <a  download="catalog sku Master Sheet" href="{{ asset('files/catalog_sku_Master_Sheet.csv') }}" class="btn" style="margin-bottom: 6px"><i class="fa fa-download"></i> Download Master Sheet</a>
                 </div>
                 <div style="{{ $dis_none }}">
                     <label for="files" class="btn">Upload Sheet</label>

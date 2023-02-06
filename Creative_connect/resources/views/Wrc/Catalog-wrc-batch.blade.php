@@ -9,7 +9,7 @@ Catalog-wrc-batch
         <div class="row">
             <div class="col-12">
                 <div class="card card-transparent">
-                    <div id="msg_div" style="width: 100%">
+                    <div id="msg_div" style="width: 100%;">
                         @if (Session::has('success'))
                             <div class="alert alert-success" role="alert">
                                 {{ Session::get('success') }}
@@ -179,7 +179,7 @@ Catalog-wrc-batch
                         </div>
                     </div>
                     <div class="custom-dt-row">
-                        <form method="POST" action="{{ route('WRC_INVERD_NEW_BATCH') }}" id="workdetailsform"  enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('WRC_INVERD_NEW_BATCH') }}" onsubmit="return validateForm(event)" id="workdetailsform"  enctype="multipart/form-data">
 
                              @csrf
                             <div class="row">
@@ -199,12 +199,11 @@ Catalog-wrc-batch
                                 
                                 <div class="col-sm-6 col-12">
                                     <div class="form-group">
-                                        <label for="files" class="control-label required" style="visibility: hidden;">Upload Sheet</label>
+                                        <label for="files" class="control-label required" style="">Upload Sheet</label>
                                         <input type="hidden" name="wrc_id" id="wrc_id" value="">
-                                        <input id="files" type="file" name="sku_sheet" class="btn btn-success btn-xl btn-warning mb-2 form-control" style="margin-top: 0px !important">
+                                        <input accept=".csv" type="file" name="sku_sheet" id="sku_sheet" class="btn btn-success btn-xl btn-warning mb-2 form-control" style="margin-top: 0px !important">
                                     </div>
-                                    
-
+                                    <div class="input_err" style="background: #c8c6c6;color: #FF0000;display: none;font-size: 1.2em;padding: 0 15px;" id="input_err"></div>
                                 </div>
 
                                 <div class="col-sm-6 col-12">
@@ -214,14 +213,12 @@ Catalog-wrc-batch
                                     <button type="submit" name = "submit" value="complete_allocation" class="btn btn-warning" href="javascript:void(0)" style="float:right;margin-right:10px">Save & Add Another</button> --}}
 
                                 </div>
+                                <div class="col-sm-12 col-12">
+                                </div>
 
                             </div>
                             <div class="row" style="float:right">
-                                    
-                                    <button type="submit" name="submit" value="save" class="btn btn-warning" id="save_btn" href="javascript:void(0)" style="float:right;margin-right:10px;display: flex" >Save</button>
-
-                                    {{-- <button type="submit" name = "submit" value="complete_allocation" class="btn btn-warning" href="javascript:void(0)" style="float:right;margin-right:10px">Save & Add Another</button> --}}
-
+                                <button type="submit" name="submit" value="save" class="btn btn-warning" id="save_btn"  style="float:right;margin-right:10px;display: flex" >Save</button>
                             </div>
                         </form>
                     </div>
@@ -296,13 +293,62 @@ Catalog-wrc-batch
     }
 </script>
 
+<!-- validateForm script -->
+<script>
+    function validateForm(event) {
+        // event.preventDefault() // this will stop the form from submitting
+        // debugger
+        $(".input_err").css("display", "none");
+        $(".input_err").html("");
 
-<script defer>
+        const Prequisites = $('#Prequisites').val();
+        const sku_sheet = document.getElementById("sku_sheet");
+
+        console.log({Prequisites})
+        console.log(sku_sheet)
+        let sku_sheet_Is_Vailid = true;
+
+        let file_is_vaild = 0;
+
+        if (sku_sheet.files.length > 0) {
+            var file = sku_sheet.files[0];
+            var fileName = file.name;
+            var fileType = file.type;
+            var csvType = "text/csv";
+            var excelType = "application/vnd.ms-excel";
+
+            if (fileType === csvType || fileName.endsWith(".csv") ) {
+                file_is_vaild = 1;
+            }else{
+                file_is_vaild = 2;
+            }
+        }
+        if(file_is_vaild != 1){
+            $("#input_err").html("SKU Sheet is required");
+            if(file_is_vaild == 2){
+                $("#input_err").html("Selected file is not a CSV");
+            }
+            document.getElementById("input_err").style.display = "block";
+            sku_sheet_Is_Vailid = false;
+        }
+        setTimeout(() => {
+            $('#input_err').attr("style", "display:none")
+        }, 2500);
+       
+        if (sku_sheet_Is_Vailid) {
+            return true
+        } else {
+            return false
+        }
+    }
+</script>
+
+<script>
     $(document).ready(function() {
         setTimeout(() => {
             console.log("gdfhglkfhd sdfkh ")
             $('#msg_div').attr("style", "display:none")
-        }, 2500);
+        }, 3500);
     });
 </script>
 @endsection
