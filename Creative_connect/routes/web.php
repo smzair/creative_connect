@@ -251,4 +251,6 @@ Route::get('Editing-allocation', [EditingAllocationController::class, 'index'])-
 Route::get('Editing-Re-Allocation', [EditingAllocationController::class, 'Editing_Re_Allocation'])->name('Editing_Re_Allocation'); // 
 
 Route::post('set-Editing-allocation', [EditingAllocationController::class, 'save']); // for save Editing allocation
+Route::get('Editing-Allocation-details', [EditingAllocationController::class, 'Editing_Allocation_Details'])->name('Editing_Allocation_Details'); // 
+
 
