@@ -247,6 +247,8 @@ Route::POST('/Update-Editing-Wrc-Create', [EditingWrcController::class, 'update'
 // Route::post('/save-wrc-Credentials', [CatalogWrcController::class, 'save_wrc_Credentials'])->name('S-W-Credentials');
 
 /* ---------- Editing Panel Allocation -------------*/
-Route::get('Editing-allocation', [EditingAllocationController::class, 'index'])->name('Editing_Allocation'); // 
-Route::post('Editing-allocated-sku-count', [EditingAllocationController::class, 'Editing_alocated_sku_count']); // for list of allocated Editing WRC sku count ajax
+Route::get('Editing-allocation', [EditingAllocationController::class, 'index'])->name( 'Editing_Allocation'); // 
+Route::get('Editing-Re-Allocation', [EditingAllocationController::class, 'Editing_Re_Allocation'])->name('Editing_Re_Allocation'); // 
+
+Route::post('set-Editing-allocation', [EditingAllocationController::class, 'save']); // for save Editing allocation
 
