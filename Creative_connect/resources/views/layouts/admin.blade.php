@@ -323,6 +323,20 @@
                                                     </a>
                                                 </li>
 
+                                                <li class="nav-item">
+                                                    <a href="{{route('Editing_Re_Allocation')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Editing Re-Allocatiion</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('Editing_Allocation_Details')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Editing Allocatiion Details</p>
+                                                    </a>
+                                                </li>
+
                                                 {{-- Start Rajesh Changes And files --}}
                                                 <li class="nav-item">
                                                     <a href="{{ route('CREATELOT') }}" class="nav-link">

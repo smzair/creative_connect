@@ -15,22 +15,20 @@ class EditingAllocation extends Model
     ];
 
     // Function for Get WRC list for allocation 
-    public static function get_wrc_list_for_allocation()
+    public static function get_wrc_list_for_allocation($allocation_type = 1)
     {
+        if($allocation_type == 1){
+            $having_con = "=";
+        }else{
+            $having_con = ">";
+        }
         $wrcList = EditingWrc::
-        // leftJoin('catalog_wrc_batches', 'catalog_wrc_batches.wrc_id', 'editing_wrcs.id')->
-        // leftJoin(
-        //     'editing_allocations',
-        //     function ($join) {
-        //         $join->on('editing_allocations.wrc_id', '=', 'catalog_wrc_batches.wrc_id');
-        //         $join->on('editing_allocations.batch_no', '=', 'catalog_wrc_batches.batch_no');
-        //     }
-        // )->
+        leftJoin('editing_allocations', 'editing_allocations.wrc_id', 'editing_wrcs.id')->
         leftJoin('editor_lots', 'editor_lots.id', 'editing_wrcs.lot_id')->
         leftJoin('editors_commercials', 'editors_commercials.id', 'editing_wrcs.commercial_id')->
         leftJoin('users', 'editor_lots.user_id', 'users.id')->
         leftJoin('brands', 'brands.id', '=', 'editor_lots.brand_id')->
-        // leftJoin('users as u1', 'editing_allocations.user_id', 'u1.id')->
+        leftJoin('users as assign_users', 'editing_allocations.user_id', 'assign_users.id')->
         select(
             'editing_wrcs.id',
             'editing_wrcs.lot_id',
@@ -47,19 +45,66 @@ class EditingAllocation extends Model
             'users.Company',
             'brands.name',
             'editors_commercials.type_of_service',
-            // DB::raw('SUM(CASE WHEN user_role = 0 THEN allocated_qty else 0 END)  as cataloger_sum'),
-            // DB::raw('SUM(CASE WHEN user_role = 1 THEN allocated_qty else 0 END)  as cp_sum'),
-            // DB::raw('GROUP_CONCAT(u1.name) as ass_users'),
-            // DB::raw('GROUP_CONCAT(editing_allocations.user_id) as ass_cataloger'),
-            // 'catalog_wrc_batches.batch_no',
-            // 'catalog_wrc_batches.id as wrc_batch_id',
-            // 'catalog_wrc_batches.work_initiate_date',
-            // 'catalog_wrc_batches.work_committed_date',
-            // 'catalog_wrc_batches.sku_count as sku_qty',
+            DB::raw('GROUP_CONCAT(editing_allocations.user_id) as ass_users'),
+            DB::raw('SUM(CASE WHEN user_role = 0 THEN allocated_qty else 0 END)  as editors_sum'),
+            DB::raw('GROUP_CONCAT(assign_users.name) as ass_users'),
         )->
+        havingRaw("editors_sum $having_con 0 AND editors_sum <> imgQty")->
+        // having('editors_sum', $having_con, 0)->
         groupBy('editing_wrcs.id')->
         get()->toArray();
         return $wrcList;
     }
+
+    // save Editing Allocation users 
+    public static function saveEditingAllocation($request){
+        $user_id = $request->user_id;
+        $editor_Qty = $request->editor_Qty;
+        $wrc_id = $request->wrc_id;
+        $batch_no = $request->batch_no;
+        $wrc_batch_id_is = $request->wrc_batch_id_is;
+        $work_initiate_date_is = $request->work_initiate_date_is;
+        $work_committed_date_is = $request->work_committed_date_is;
+        $allocation_type = $request->allocation_type; // 1 for allocation 2 for Re-Allocation
+        $res = [];
+        // DB::beginTransaction();
+        $res['user'] = '0';
+        if ($user_id > 0) {
+            $CatalogAllocation_list = EditingAllocation::where([
+                ['user_id',  $user_id],
+                ['wrc_id',  $wrc_id],
+            ])->get()->toArray();
+            $all_cnt = count($CatalogAllocation_list);
+
+            if ($all_cnt > 0) {
+                $res['user'] = '3';
+            } else {
+                $catalog_allocation_user = new EditingAllocation();
+                $catalog_allocation_user->user_id = $user_id;
+                $catalog_allocation_user->wrc_id = $wrc_id;
+                $catalog_allocation_user->allocated_qty = $editor_Qty;
+                $catalog_allocation_user->user_role = 0;
+                $status = $catalog_allocation_user->save();
+                if ($status) {
+                    $res['user'] = '1';
+                } else {
+                    $res['user'] = '2';
+                }
+            }
+        }
+        
+        // DB::rollback();
+        $updateData = EditingWrc::find($wrc_id);
+        if ($allocation_type == 1 || $updateData->work_initiate_date == null || $updateData->work_initiate_date == '0000-00-00') {
+            $updateData->work_initiate_date = $work_initiate_date_is != null ? $work_initiate_date_is : $updateData->work_initiate_date;
+        }
+        if ($allocation_type == 1 || $updateData->work_initiate_date == null || $updateData->work_initiate_date == '0000-00-00') {
+            $updateData->work_committed_date = $work_committed_date_is != null ? $work_committed_date_is : $updateData->work_committed_date;
+        }
+        $update_status = $updateData->update();
+        $res['update_status'] = $update_status;
+        return $res;
+    }
+
 
 }

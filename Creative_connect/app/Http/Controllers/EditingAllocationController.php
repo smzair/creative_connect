@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CatalogAllocation as ModelsCatalogAllocation;
+use App\Models\EditingAllocation as ModelsCatalogAllocation;
 use App\Models\EditingAllocation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,9 +11,18 @@ class EditingAllocationController extends Controller
 {
     function index()
     {
-        $wrcList = EditingAllocation::get_wrc_list_for_allocation();
-        return view('Allocation.Editing_allocation')->with('wrcList', $wrcList);
+        $allocation_type = 1;
+        $wrcList = EditingAllocation::get_wrc_list_for_allocation($allocation_type);
+        return view('Allocation.Editing_allocation')->with('wrcList', $wrcList)->with('allocation_type', $allocation_type);
     }
+
+    function Editing_Re_Allocation()
+    {
+        $allocation_type = 2;
+        $wrcList = EditingAllocation::get_wrc_list_for_allocation($allocation_type);
+        return view('Allocation.Editing_allocation')->with('wrcList', $wrcList)->with('allocation_type', $allocation_type);
+    }
+
 
     function Editing_alocated_sku_count(Request $request)
     {
@@ -35,4 +44,14 @@ class EditingAllocationController extends Controller
             echo 0;
         }
     }
+
+    // save Editing Allocation users 
+    function save(Request $request){
+        $res = EditingAllocation::saveEditingAllocation($request);
+        echo json_encode($res, true);
+    }
+
+    
+
+
 }

@@ -55,8 +55,8 @@ Editing Allocation
             <div class="card card-transparent">
                 <div class="card-header">
                     {{-- <h3 class="card-title">Catalog Allocation</h3> --}}
-                    <h3 class="card-title">Allocation - To be Allocated</h3>
-                    <a style="float: right;" class="btn btn-success swalDefaultSuccess" href="{{route('CATALOG_ALLOCTED_DETAILS')}}">Allocation Details</a>
+                    <h3 class="card-title"> {{ $allocation_type == 2 ? 'Re-':''}}Allocation - To be Allocated</h3>
+                    <a style="float: right;" class="btn btn-success swalDefaultSuccess" href="{{route('Editing_Allocation_Details')}}">Allocation Details</a>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0" style="max-height: 700px; height: 100%;">
@@ -68,7 +68,7 @@ Editing Allocation
                         $editorsList = getEditors();
                         // $wrcList_arr = array_column($wrcList, 'wrc_number', 'id');
                         // pre($market_place_arr);
-                        // pre($editorsList);
+                        // pre($wrcList);
                     @endphp
                     <table id="allocTableC" class="table table-head-fixed text-nowrap data-table">
                         <thead>
@@ -80,8 +80,9 @@ Editing Allocation
                                 <th>Type of Service</th>
                                 <th>WRC Created At</th>
                                 <th>Tentative Image Count</th>
-                                {{-- <th>Cata Allocated Qty</th>
-                                <th>Cata Pending Qty</th>
+                                <th>Allocated Qty</th>
+                                <th>Pending Qty</th>
+                                {{-- 
                                 <th>CW Allocated Qty</th>
                                 <th>CW Pending Qty</th> --}}
                                 <th>Action</th>
@@ -102,6 +103,8 @@ Editing Allocation
                                     <td data-value="type_of_service">{{ $row['type_of_service'] }}</td>
                                     <td data-value="wrc_cr_at">{{ dateFormet_dmy($row['created_at']) }}</td>
                                     <td data-value="imgQty">{{ $row['imgQty'] }}</td>
+                                    <td id="editors_sum{{ $key }}" data-value="editors_sum">{{ $row['editors_sum'] }}</td>
+                                    <td id="editors_pending{{ $key }}" data-value="editors_pending">{{ $row['imgQty'] - $row['editors_sum'] }}</td>
                                     <td>
                                         <button class="btn btn-warning" id="allocateBTnC" data-toggle="modal"  data-target="#allocateWRCPopupCAt" onclick="setvalue({{ $key }})"> Allocate </button>
                                     </td>
@@ -152,20 +155,20 @@ Editing Allocation
                                 </div>
                             </div>
                         </div>
-                        {{-- Cataloger Allocated SKU --}}
+                        {{-- Editor Allocated SKU --}}
                         <div class="row ">
-                            {{-- <div class="col-sm-3 col-12">
+                            <div class="col-sm-4 col-12">
                                 <div class="col-ac-details">
-                                    <h6>Cataloger Allocated SKU</h6>
-                                    <p id="cata_allocated_sku"></p>
+                                    <h6>Editor Allocated SKU</h6>
+                                    <p id="editor_allocated_qty"></p>
                                 </div>
                             </div>
-                             <div class="col-sm-3 col-12">
+                             <div class="col-sm-4 col-12">
                                 <div class="col-ac-details">
-                                    <h6>Cataloger Pending SKU</h6>
-                                    <p id="cata_pending_sku">5</p>
+                                    <h6>Editor Pending SKU</h6>
+                                    <p id="Editor_pending_sku">5</p>
                                 </div>
-                            </div> --}}
+                            </div>
                             {{-- Copy Writer Allocated SKU  --}}
                             {{-- <div class="col-sm-6">
                                 <div  id="copywriter_sky_row">
@@ -191,7 +194,7 @@ Editing Allocation
                                     <label class="control-label w-100 required" for="work_initiate_date_is">Work Initiate Date <span style="color: red">*</span></label>
                                     <input class="form-control" type="date" name="work_initiate_date_is" id="work_initiate_date_is">
                                 </div>
-                                <p class="" style="color: red; display: none;"  id="work_initiate_date_is_err"></p>
+                                <p class="input_err" style="color: red; display: none;"  id="work_initiate_date_is_err"></p>
 
                             </div>
                             {{-- <div class="col-sm-2">
@@ -202,7 +205,7 @@ Editing Allocation
                                     <label class="control-label  w-100 required" for="work_committed_date_is">Work Committed Date <span style="color: red">*</span></label>
                                     <input class="form-control" type="date" name="work_committed_date_is" id="work_committed_date_is">
                                 </div>
-                                <p class="" style="color: red; display: none;"  id="work_committed_date_is_err"></p>
+                                <p class="input_err" style="color: red; display: none;"  id="work_committed_date_is_err"></p>
 
                             </div>
                              <div class="col-sm-2">
@@ -215,9 +218,9 @@ Editing Allocation
                             <div class="col-sm-6 col-12" id="Cataloguer_row">
                                 <div class="form-group custom-new-form-group">
                                     <div class="group-inner select-wrapper">
-                                        <label class="control-label required">Allocate Cataloguer</label>
-                                        <select class="custom-select form-control-border Cataloguer-name" name="CataloguerName"  id="CataloguerName" style="width:100%;">
-                                            <option value="">--Select Editor--</option>
+                                        <label class="control-label required">Allocate Editor</label>
+                                        <select class="custom-select form-control-border Editor-name" name="editorName"  id="editorName" style="width:100%;">
+                                            <option value=""  data-name="">--Select Editor--</option>
                                             @foreach ($editorsList as $row)
                                                 <option value="{{ $row->id }}" data-name="{{ $row->name }}">{{ $row->name }}</option>
                                             @endforeach
@@ -225,7 +228,7 @@ Editing Allocation
                                     </div>
                                     <div class="group-inner input-wrapper">
                                         <label class="control-label">Qty</label>
-                                        <input type="number" class="form-control" name="Cataloguer_Qty" id="Cataloguer_Qty">
+                                        <input type="text" class="form-control" onkeypress="return isNumber(event);" name="editor_Qty" id="editor_Qty" >
                                     </div> 
                                 </div>
                                 <p class="input_err" style="color: red; display: none;"  id="user_id_err"></p>
@@ -235,7 +238,7 @@ Editing Allocation
                                 <div class="form-group custom-new-form-group">
                                     <div class="group-inner select-wrapper">
                                         <label class="control-label required">Allocate copywriter</label>
-                                        <select class="custom-select form-control-border Cataloguer-name" name="copywriterName"  id="copywriterName" style="width:100%;">
+                                        <select class="custom-select form-control-border Editor-name" name="copywriterName"  id="copywriterName" style="width:100%;">
                                             <option value="" data-name="">--Select copywriter--</option>
                                             @foreach ($getcopywriter as $row)
                                                 <option value="{{ $row->id }}" data-name="{{ $row->name }}">{{ $row->name }}</option>
@@ -293,11 +296,15 @@ Editing Allocation
         "buttons": ["copy", "csv", "excel", "pdf"]
   }).buttons().container().insertAfter('#masterData_wrapper .dataTables_length');
 </script>
-
+<script>
+    let allocation_type_is = +'{{$allocation_type}}'
+</script>
 
 {{-- setvalue to model --}}
 <script>
    async function setvalue(val){
+        document.querySelector("#editorName").value = "";
+        document.querySelector("#editor_Qty").value = "";
         let data = {}
         var rowItems = $("#tr"+val).children('td').map(function () {
             data = {
@@ -310,8 +317,8 @@ Editing Allocation
         const imgQty = data.imgQty
         const work_initiate_date_is = document.querySelector("#work_initiate_date"+val).value
         const work_committed_date_is = document.querySelector("#work_committed_date"+val).value
-        console.log({work_initiate_date_is, work_committed_date_is , wrc_id_is})
-
+        console.log({work_initiate_date_is, work_committed_date_is , wrc_id_is, data})
+        
         document.querySelector("#work_initiate_date_is").value =  work_initiate_date_is != '0000:00:00' ? work_initiate_date_is : ''
         document.querySelector("#work_committed_date_is").value =  work_committed_date_is != '0000:00:00' ? work_committed_date_is : ''
         document.querySelector("#key_is").value =  val
@@ -319,9 +326,11 @@ Editing Allocation
         document.querySelector("#wrcNo").innerHTML = data.wrc_number
         document.querySelector("#imgQty").innerHTML = imgQty
         document.querySelector("#lot_number").value = data.lot_number
+        document.querySelector("#editor_allocated_qty").innerHTML = data.editors_sum
+        document.querySelector("#Editor_pending_sku").innerHTML = data.editors_pending
         
-        // await $.ajax({
-        //     url: "{{ url('catalog-allocated-sku-count') }}",
+        // await $.ajax({ 
+        //     url: "{{ url('Editing-allocated-sku-count') }}",
         //     type: "POST",
         //     dataType: 'json',
         //     data: {
@@ -339,15 +348,15 @@ Editing Allocation
         //             if(cp_sum == null){
         //                 cp_sum = 0
         //             }
-        //             document.querySelector("#cata_allocated_sku").innerHTML = cataloger_sum 
-        //             document.querySelector("#cata_pending_sku").innerHTML = sku_qty - cataloger_sum 
+        //             document.querySelector("#editor_allocated_qty").innerHTML = cataloger_sum 
+        //             document.querySelector("#Editor_pending_sku").innerHTML = sku_qty - cataloger_sum 
         //             document.querySelector("#cp_allocated_sku").innerHTML = cp_sum 
         //             document.querySelector("#cp_pending_sku").innerHTML = sku_qty - cp_sum 
         //         }else{
         //             cataloger_sum = 0;
         //             cp_sum = 0;
-        //             document.querySelector("#cata_allocated_sku").innerHTML = cataloger_sum 
-        //             document.querySelector("#cata_pending_sku").innerHTML = sku_qty - cataloger_sum 
+        //             document.querySelector("#editor_allocated_qty").innerHTML = cataloger_sum 
+        //             document.querySelector("#Editor_pending_sku").innerHTML = sku_qty - cataloger_sum 
         //             document.querySelector("#cp_allocated_sku").innerHTML = cp_sum 
         //             document.querySelector("#cp_pending_sku").innerHTML = sku_qty - cp_sum 
         //         }
@@ -359,147 +368,99 @@ Editing Allocation
 {{-- save Data to allocation   --}}
 <script>
     const saveData = async () => {
+        $(".input_err").css("display", "none");
 
         const wrc_id =  document.querySelector("#wrc_id").value 
         const batch_no =  document.querySelector("#batch_no").value 
-        const user_id_is =  document.querySelector("#CataloguerName").value 
-        const Cataloguer_Qty =  +document.querySelector("#Cataloguer_Qty").value 
-        const CataloguerName = $("#CataloguerName").find(':selected').data('name');
-        
-        const copywriter_id_is =  document.querySelector("#copywriterName").value 
-        const copywriter_Qty =  +document.querySelector("#copywriter_Qty").value 
-        const copywriterName = $("#copywriterName").find(':selected').data('name');
-
-        const cata_allocated_sku =   +document.querySelector("#cata_allocated_sku").innerHTML 
-        const cata_pending_sku   =   +document.querySelector("#cata_pending_sku").innerHTML 
-        const cp_allocated_sku   =   +document.querySelector("#cp_allocated_sku").innerHTML 
-        const cp_pending_sku     =   +document.querySelector("#cp_pending_sku").innerHTML 
-
-
-        console.log({user_id_is,Cataloguer_Qty,wrc_id,batch_no,copywriter_id_is,copywriter_Qty})
-        
-        // console.log({user_id_is,CataloguerName, Cataloguer_Qty ,copywriter_id_is,copywriterName , copywriter_Qty})
-
-        $(".input_err").css("display", "none");
-        if(user_id_is === ''  &&  copywriter_id_is === ''){
-            document.querySelector("#user_id_err").innerHTML  = "Cataloguer/copywriter not selected "
-            $(".input_err").css("display", "block");
-            $("#copywriter_err").css("display", "none");
-            return
-        }
-        if(user_id_is > 0 &&  (Cataloguer_Qty < 1 || Cataloguer_Qty == '')){
-            document.querySelector("#user_id_err").innerHTML  = "Qty not entered"
-            $(".input_err").css("display", "block");
-            $("#copywriter_err").css("display", "none");
-            return
-        }
-
-
-        if(copywriter_Qty > cp_pending_sku){
-            document.querySelector("#copywriter_err").innerHTML  = "Allocated qty is more then pending qty";
-            if(cp_pending_sku === 0){
-                document.querySelector("#copywriter_err").innerHTML  = "No qty for allocation";
-                document.querySelector("#copywriterName").value = "";
-            }
-            document.querySelector("#copywriter_Qty").value = "";
-            $("#copywriter_err").css("display", "block");
-            return
-        }
-
-        if(Cataloguer_Qty > cata_pending_sku){
-            document.querySelector("#user_id_err").innerHTML  = "Allocated qty is more then pending qty";
-            if(cata_pending_sku === 0){
-                document.querySelector("#user_id_err").innerHTML  = "No qty for allocation";
-                document.querySelector("#CataloguerName").value = "";
-            }
-            document.querySelector("#Cataloguer_Qty").value = "";
-            $("#user_id_err").css("display", "block");
-            return
-        }
-
-        if(copywriter_id_is > 0 &&  (copywriter_Qty < 1 || copywriter_Qty == '')){
-            document.querySelector("#copywriter_err").innerHTML  = "Qty not entered"
-            $(".input_err").css("display", "block");
-            $("#user_id_err").css("display", "none");
-            return
-        }
+        const user_id_is =  document.querySelector("#editorName").value 
+        let editor_Qty =  +document.querySelector("#editor_Qty").value
+        const Editor_pending_sku = +document.querySelector("#Editor_pending_sku").innerHTML 
+        const editorName = $("#editorName").find(':selected').data('name');
+        const editor_allocated_qty =   +document.querySelector("#editor_allocated_qty").innerHTML 
 
         const key_is =  document.querySelector("#key_is").value 
         const wrc_batch_id_is =  document.querySelector("#wrc_batch_id_is").value 
         const work_initiate_date_is =  document.querySelector("#work_initiate_date_is").value 
         const work_committed_date_is =  document.querySelector("#work_committed_date_is").value 
 
-        console.log({work_initiate_date_is , work_committed_date_is })
+        if(work_initiate_date_is == ''){
+            document.querySelector("#work_initiate_date_is_err").innerHTML  = "Work Initiate Date not selected "
+            $("#work_initiate_date_is_err").css("display", "block");
+            return
+        }
+        if(work_committed_date_is == ''){
+            document.querySelector("#work_committed_date_is_err").innerHTML  = "Work Commited Date not selected "
+            $("#work_committed_date_is_err").css("display", "block");
+            return
+        }
 
-        // debugger
-        // if(work_initiate_date_is == ''){
-        //     document.querySelector("#work_initiate_date_is_err").innerHTML  = "Work Initiate Date not selected "
-        //     return
-        // }
+       
+        if(user_id_is === '' || user_id_is == 0){
+            document.querySelector("#user_id_err").innerHTML  = "Editor not selected "
+            $("#user_id_err").css("display", "block");
+            return
+        }
+        if(user_id_is > 0 &&  (editor_Qty < 1 || editor_Qty == '')){
+            let qtyMsg = "Qty should be greter then 0"
+            document.querySelector("#user_id_err").innerHTML  = qtyMsg
+            $("#user_id_err").css("display", "block");
+            return
+        }
+
+        if(editor_Qty > Editor_pending_sku){
+            document.querySelector("#user_id_err").innerHTML  = "Allocated qty is more then pending qty";
+            if(Editor_pending_sku === 0){
+                document.querySelector("#user_id_err").innerHTML  = "No qty for allocation";
+                document.querySelector("#editorName").value = "";
+            }
+            document.querySelector("#editor_Qty").value = "";
+            $("#user_id_err").css("display", "block");
+            return
+        }
 
         await $.ajax({
-            url: "{{ url('set-catalog-allocation') }}",
+            url: "{{ url('set-Editing-allocation') }}",
             type: "POST",
             dataType: 'json',
             data: {
                 user_id: user_id_is,
-                Cataloguer_Qty,
+                editor_Qty,
                 wrc_id,
                 batch_no,
                 wrc_batch_id_is,
                 work_initiate_date_is,
                 work_committed_date_is,
-                allocation_type : 1,
-                copywriter_id : copywriter_id_is,
-                copywriter_Qty,
+                allocation_type : allocation_type_is,
                 _token: '{{ csrf_token() }}'
             },
             success: function(res) {
-                
                 if(res.update_status){
                     document.querySelector("#work_initiate_date"+key_is).value = work_initiate_date_is
-                    document.querySelector("#work_committed_date"+key_is).value = work_initiate_date_is
+                    document.querySelector("#work_committed_date"+key_is).value = work_committed_date_is
                 }
 
-                console.log(res.user)
-                if(user_id_is > 0 && Cataloguer_Qty > 0){
+                if(user_id_is > 0 && editor_Qty > 0){
                     if(res.user == 1){
-                        document.querySelector("#CataloguerName").value = "";
-                        document.querySelector("#Cataloguer_Qty").value = "";
+                        document.querySelector("#editorName").value = "";
+                        document.querySelector("#editor_Qty").value = "";
                         $("#msg_box1").css("color", "green");
-                        document.querySelector("#cata_allocated_sku").innerHTML  = cata_allocated_sku + Cataloguer_Qty
-                        document.querySelector("#cata_pending_sku").innerHTML  = cata_pending_sku - Cataloguer_Qty
-                        document.querySelector("#msg_box1").innerHTML  = "Catalog Wrc allocated to "+CataloguerName+" Successfully"
+                        const editors_sum = editor_allocated_qty + editor_Qty
+                        const editors_pending = Editor_pending_sku - editor_Qty
+                        document.querySelector("#editor_allocated_qty").innerHTML  = editors_sum
+                        document.querySelector("#editors_sum"+key_is).innerHTML  = editors_sum
+                        document.querySelector("#Editor_pending_sku").innerHTML  = editors_pending
+                        document.querySelector("#editors_pending"+key_is).innerHTML  = editors_pending
+                        document.querySelector("#msg_box1").innerHTML  = "Wrc allocated to "+editorName+" Successfully"
                     }else if(res.user == 3){
-                        document.querySelector("#CataloguerName").value = "";
-                        document.querySelector("#Cataloguer_Qty").value = "";
+                        document.querySelector("#editorName").value = "";
+                        document.querySelector("#editor_Qty").value = "";
                         $("#msg_box1").css("color", "red");
-                        document.querySelector("#msg_box1").innerHTML  = "This Wrc already allocated to "+CataloguerName;
+                        document.querySelector("#msg_box1").innerHTML  = "This Wrc already allocated to "+editorName;
                     }else if(res.user == 2) {
                         $("#msg_box1").css("color", "red");
                         document.querySelector("#msg_box1").innerHTML  = "Somthing went Wrong please try again!!!"
                     }
                     $("#msg_box1").css("display", "block");
-                }
-
-                if(copywriter_id_is > 0 && copywriter_Qty > 0){
-                    if(res.copywriter == 1){
-                        document.querySelector("#copywriterName").value = "";
-                        document.querySelector("#copywriter_Qty").value = "";
-                        document.querySelector("#cp_allocated_sku").innerHTML = cp_allocated_sku + copywriter_Qty
-                        document.querySelector("#cp_pending_sku").innerHTML  = cp_pending_sku - copywriter_Qty
-                        $("#msg_box2").css("color", "green");
-                        document.querySelector("#msg_box2").innerHTML  = "Catalog Wrc allocated to "+copywriterName+" Successfully"
-                    }else if(res.copywriter == 3){
-                        document.querySelector("#copywriterName").value = "";
-                        document.querySelector("#copywriter_Qty").value = "";
-                        $("#msg_box2").css("color", "red");
-                        document.querySelector("#msg_box2").innerHTML  = "This Wrc already allocated to "+copywriterName;
-                    }else if(res.copywriter == 2) {
-                        $("#msg_box2").css("color", "red");
-                        document.querySelector("#msg_box2").innerHTML  = "Somthing went Wrong please try again!!!"
-                    }
-                    $("#msg_box2").css("display", "block");
                 }
             }
         });
