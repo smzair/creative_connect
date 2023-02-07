@@ -105,7 +105,7 @@ class CatalogWrcBatchController extends Controller
                         $storeWrcBatchStatus = $storeWrcBatch->save();
                         array_push($updated_batch_arr, $storeWrcBatchStatus);
                         if ($storeWrcBatchStatus) {
-                            CatalogWrcSku::where('batch', $batch_is)->update(['batch_no' => $batch_no_is]);
+                            CatalogWrcSku::where('wrc_id', $wrc_id_is)->where('batch', $batch_is)->update(['batch_no' => $batch_no_is]);
                             $batch_no_is++;
                         }
                     }

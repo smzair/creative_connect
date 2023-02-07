@@ -246,7 +246,7 @@ class CatalogWrcController extends Controller
                 foreach($csv_batch_arr as $batch_is => $csvKeyCount){
                     if($cnt_batch != 1){
                         $batch_no_is = $cnt_batch;
-                        CatalogWrcSku::where('batch', $batch_is)->update(['batch_no' => $batch_no_is]);
+                        CatalogWrcSku::where('wrc_id', $wrc_id_is)->where('batch', $batch_is)->update(['batch_no' => $batch_no_is]);
                     }
                     $storeWrcBatch = new CatalogWrcBatch();
                     $storeWrcBatch->wrc_id = $wrc_id_is;
