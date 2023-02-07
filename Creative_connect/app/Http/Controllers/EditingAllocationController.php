@@ -51,7 +51,12 @@ class EditingAllocationController extends Controller
         echo json_encode($res, true);
     }
 
+    // Wrc allocated usrs and wrc Details
+    function Editing_Allocation_Details(Request $request)
+    {
+        dd('Editing_Allocation_Details');
+        // $res = EditingAllocation::Editing_Allocation_Details($request);
+        // echo json_encode($res, true);
+    }
     
-
-
 }
