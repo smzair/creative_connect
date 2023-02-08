@@ -54,9 +54,15 @@ class EditingAllocationController extends Controller
     // Wrc allocated usrs and wrc Details
     function Editing_Allocation_Details(Request $request)
     {
-        dd('Editing_Allocation_Details');
-        // $res = EditingAllocation::Editing_Allocation_Details($request);
-        // echo json_encode($res, true);
+        // Allocated Editors list
+        $editing_allocated_Editors_list = EditingAllocation::editing_allocated_Editors_list();
+
+        //Lot wise Editing allocated user and Wrc List
+        $editing_allocation_List_by_lot_numbers = EditingAllocation::editing_allocation_List_by_lot_numbers();
+
+        return view('Allocation.editing_allocation_detail')->with('editing_allocation_List_by_lot_numbers', $editing_allocation_List_by_lot_numbers)->with('editing_allocated_Editors_list', $editing_allocated_Editors_list);
     }
+    
+
     
 }

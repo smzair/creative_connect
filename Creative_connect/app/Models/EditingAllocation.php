@@ -106,5 +106,47 @@ class EditingAllocation extends Model
         return $res;
     }
 
+    // Allocated Editors list  
+    public static function editing_allocated_Editors_list()
+    {
+        $editing_allocated_Editors_list = EditingAllocation::leftJoin('users', 'editing_allocations.user_id', 'users.id')->select(
+                'editing_allocations.id',
+                'editing_allocations.wrc_id',
+                'editing_allocations.user_id',
+                'users.name as editor',
+            )->groupBy('editing_allocations.user_id')->get()->toArray();
+
+        return $editing_allocated_Editors_list;
+    }
+
+    //Lot wise Editing allocated user and Wrc List
+    public static function editing_allocation_List_by_lot_numbers()
+    {
+
+        $editing_allocation_List_by_lot_numbers = EditingAllocation::
+        leftJoin('users', 'editing_allocations.user_id', 'users.id')->
+        leftJoin('editing_wrcs', 'editing_wrcs.id', 'editing_allocations.wrc_id')->
+        leftJoin('editor_lots', 'editor_lots.id', 'editing_wrcs.lot_id')->
+        select(
+            'editing_allocations.id',
+            'editing_allocations.wrc_id',
+            'editing_allocations.user_id',
+            'users.name as editor',
+            'editing_wrcs.imgQty',
+            'editing_wrcs.lot_id',
+            'editor_lots.lot_number',
+            DB::raw('GROUP_CONCAT(editing_allocations.wrc_id) as wrc_ids'),
+            DB::raw('GROUP_CONCAT(editing_allocations.allocated_qty) as allocated_qtys'),
+            DB::raw('GROUP_CONCAT(editing_wrcs.wrc_number) as wrc_numbers'),
+            DB::raw('COUNT(editing_allocations.wrc_id) as wrc_cnt'),
+            DB::raw('sum(editing_allocations.allocated_qty) as tot_sku_qty')
+        )->
+        groupBy(['editing_allocations.user_id', 'editor_lots.id'])->
+        orderBy('editing_allocations.wrc_id', 'asc')->
+        get()->
+        toArray();
+        return $editing_allocation_List_by_lot_numbers;
+    }
+
 
 }
