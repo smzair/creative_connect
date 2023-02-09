@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Routing\Contracts\ControllerDispatcher;
+use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class CatalogUploadLinks extends Model
 {

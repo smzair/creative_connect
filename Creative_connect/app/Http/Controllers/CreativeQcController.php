@@ -6,10 +6,12 @@ use App\Models\CreativeAllocation as ModelsCreativeAllocation;
 use App\Models\CreativeQcComments;
 use App\Models\CreativeTimeHash;
 use App\Models\CreativeUploadLink as ModelsCreativeUploadLink;
+use App\Models\CreativeWrcBatch as ModelsCreativeWrcBatch;
 use App\Models\CreativeWrcModel;
 use Carbon\Carbon;
 use CreativeAllocation;
 use CreativeUploadLink;
+use CreativeWrcBatch;
 use CreativeWrcs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -177,18 +179,25 @@ class CreativeQcController extends Controller
                 foreach($all_creative_allocation as $key => $val){
                     $allocation_id = $val['allocation_id'];
                     CreativeTimeHash::where('allocation_id',$allocation_id)->update(['task_status'=>2]);
-    
                 }
                 CreativeWrcModel::where('id', $wrc_id )->update(['qc_status'=>1]);
                 /* send notification start */
 
-                $wrc_data = CreativeWrcModel::where('id',$wrc_id)->first(['wrc_number']);
+                $creative_time_hash_data = CreativeTimeHash::where('allocation_id',$allocation_id)->first(['task_status','is_rework']);
+                $is_rework = $creative_time_hash_data != null ? $creative_time_hash_data->is_rework : "";
+                $task_status = $creative_time_hash_data != null ? $creative_time_hash_data->task_status : "";
+
+
+                $wrc_data = CreativeWrcModel::where('id',$wrc_id)->first(['wrc_number','qc_status']);
                 $wrc_number = $wrc_data != null ? $wrc_data->wrc_number : "";
+                $max_batch_no = ModelsCreativeWrcBatch::where('wrc_id', $wrc_id)->max('batch_no');
+                $qc_status = $wrc_data != null ? $wrc_data->qc_status : "";
                 $batch_no = "";
                 $data = new stdClass();
                 $data->batch_no = $batch_no;
                 $data->wrc_number = $wrc_number;
-
+                $data->batch_no = $max_batch_no == 0 ? 'None' : $max_batch_no;
+                $data->qc_status = $is_rework == 1 ? 'Rework' : ( $task_status == 2 ? "Completed" : "Pending");
                 $creation_type = 'Qc';
                 $this->send_notification($data, $creation_type);
                 /******  send notification end*******/

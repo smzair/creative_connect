@@ -11,7 +11,7 @@ use CreativeLots;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-
+use stdClass;
 
 class creativeWrc extends Controller
 {
@@ -199,8 +199,8 @@ class creativeWrc extends Controller
                 request()->session()->flash('error','Please try again!!');
             }
             /* send notification start */
-            $data = CreativeWrcModel::find($createWrc->id);
             $creation_type = 'Wrc';
+            $data = CreativeWrcModel::find($createWrc->id);
             $this->send_notification($data, $creation_type);
             /******  send notification end*******/    
 

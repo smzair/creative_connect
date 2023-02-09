@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\CatalogAllocation;
 use App\Models\CatalogTimeHash;
+use App\Models\CatalogWrcBatch;
 use App\Models\CatlaogQc;
+use App\Models\CatlogWrc;
 use Google\Service\DataCatalog\Resource\Catalog;
 use Illuminate\Http\Request;
+use stdClass;
 
 class CatlaogQcController extends Controller
 {
@@ -67,6 +70,22 @@ class CatlaogQcController extends Controller
                 $up_status = CatalogTimeHash::where('allocation_id', $allocation_id)->update(['task_status' => 2]);
                 array_push($res_arr , $up_status);
             }
+            /* send notification start */
+            $wrc_data = CatlogWrc::where('id',$wrc_id)->first(['wrc_number']);
+            $wrc_number = $wrc_data != null ? $wrc_data->wrc_number : "";
+            $max_batch_no = CatalogWrcBatch::where('wrc_id', $wrc_id)->max('batch_no');
+            $catlog_time_hash_data = CatalogTimeHash::where('allocation_id',$allocation_ids)->first(['task_status','is_rework']);
+            $is_rework = $catlog_time_hash_data != null ? $catlog_time_hash_data->is_rework : "";
+            $task_status = $catlog_time_hash_data != null ? $catlog_time_hash_data->task_status : "";
+            $batch_no = "";
+            $data = new stdClass();
+            $data->batch_no = $batch_no;
+            $data->wrc_number = $wrc_number;
+            $data->batch_no = $max_batch_no == 0 ? 'None' : $max_batch_no;
+            $data->qc_status = $is_rework == 1 ? 'Rework' : ( $task_status == 2 ? "Completed" : "Pending");
+            $creation_type = 'QcCatlog';
+            $this->send_notification($data, $creation_type);
+            /******  send notification end*******/
 
             if(count($res_arr) == array_sum($res_arr) && array_sum($res_arr) ==  count($all_catalog_allocation)){
                 $response = 1;

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\CatalogCommercial;
 use App\Models\LotsCatalog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class CatalogLotsController extends Controller
 {
@@ -61,8 +63,12 @@ class CatalogLotsController extends Controller
             ];
             request()->session()->flash('success', 'Lots Catalog Successfully added');
              /* send notification start */
-                $data = LotsCatalog::find($id);
+                $brand_data = DB::table('brands')->where('id', $request->brand_id)->first(['name']);
+                $brand_name =  $brand_data != null ?  $brand_data->name : "";
                 $creation_type = 'CatlogLot';
+                $data = new stdClass();
+                $data->lot_number = strtoupper($lot_number);
+                $data->brand_name = $brand_name;
                 $this->send_notification($data, $creation_type);
             /******  send notification end*******/ 
         }else{
