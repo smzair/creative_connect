@@ -148,5 +148,55 @@ class EditingAllocation extends Model
         return $editing_allocation_List_by_lot_numbers;
     }
 
+    // allocated list for upload 
+    public static function allocated_wrc_list_by_user($login_user_id_is)
+    {
+        $allocated_wrc_list_by_user = EditingAllocation::
+        select(
+            'editing_allocations.id',
+            'editing_allocations.wrc_id',
+            'editing_allocations.user_id',
+            'editing_allocations.user_role',
+            'editing_allocations.allocated_qty',
+            DB::raw('GROUP_CONCAT(editing_allocations.user_id) as ass_cataloger'),
+            DB::raw('GROUP_CONCAT(editing_allocations.id) as allocations_ids'),
+            DB::raw('GROUP_CONCAT(editing_allocations.user_role) as user_roles'),
+        )->groupBy('editing_allocations.wrc_id')->
+        get()->toArray();
+        return $allocated_wrc_list_by_user;
+    }
+
+    public static function get_Editing_Allocation_List($login_user_id = 0)
+    {
+        $editing_allocation_list = EditingAllocation::
+        where('editing_allocations.user_id', $login_user_id)->
+        leftJoin('editing_wrcs', 'editing_wrcs.id', 'editing_allocations.wrc_id')->
+        leftJoin('editors_commercials', 'editors_commercials.id', 'editing_wrcs.commercial_id')->
+        leftJoin('catalog_time_hash', 'catalog_time_hash.allocation_id', 'editing_allocations.id')->
+        leftJoin('editor_lots', 'editor_lots.id', 'editing_wrcs.lot_id')->
+        leftJoin('users', 'users.id', 'editor_lots.user_id')->
+        leftJoin('brands', 'brands.id', 'editor_lots.brand_id')->select(
+            'editing_allocations.id as allocation_id_is',
+            'editing_allocations.wrc_id',
+            'editing_allocations.allocated_qty',
+
+            'editing_wrcs.wrc_number',
+            'editing_wrcs.imgQty',
+            'editing_wrcs.lot_id',
+            'editing_wrcs.commercial_id',
+            'editing_wrcs.documentType',
+            'editing_wrcs.documentUrl',
+            'editing_wrcs.created_at',
+
+            'editor_lots.lot_number',
+            'editors_commercials.type_of_service',
+            'users.Company',
+            'brands.name as brand_name',
+            DB::raw('GROUP_CONCAT(editing_allocations.user_id) as ass_cataloger'),
+            DB::raw('GROUP_CONCAT(editing_allocations.user_role) as user_roles'),
+        )->groupBy('editing_allocations.wrc_id')->orderBy('editing_allocations.updated_at', 'DESC')->get()->toArray();
+        return $editing_allocation_list;
+    }
+
 
 }

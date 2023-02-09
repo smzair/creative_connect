@@ -15,6 +15,7 @@ use App\Http\Controllers\CreativeQcController;
 use App\Http\Controllers\CreativeSubmissionController;
 use App\Http\Controllers\creativeWrc;
 use App\Http\Controllers\EditingAllocationController;
+use App\Http\Controllers\EditingUploadLinkController;
 use App\Http\Controllers\EditingWrcController;
 use App\Http\Controllers\editorLotController;
 use App\Http\Controllers\EditorsCommercialController;
@@ -252,5 +253,11 @@ Route::get('Editing-Re-Allocation', [EditingAllocationController::class, 'Editin
 
 Route::post('set-Editing-allocation', [EditingAllocationController::class, 'save']); // for save Editing allocation
 Route::get('Editing-Allocation-details', [EditingAllocationController::class, 'Editing_Allocation_Details'])->name('Editing_Allocation_Details'); // 
+
+// Editing Panel Upload/Tasking
+Route::get('editing-upload', [EditingUploadLinkController::class, 'upload'])->name('Editing_Upload'); //
+Route::post('Editing-upload-link', [EditingUploadLinkController::class, 'Editing_upload_link']); // for upload Editing WRC link 
+Route::post('get-editing_upload_links', [EditingUploadLinkController::class, 'get_Editing_Uploaded_link']); // for get Editing uploaded link 
+
 
 

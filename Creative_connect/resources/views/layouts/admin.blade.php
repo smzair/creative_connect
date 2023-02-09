@@ -337,6 +337,13 @@
                                                     </a>
                                                 </li>
 
+                                                <li class="nav-item">
+                                                    <a href="{{route('Editing_Upload')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Editing Upload</p>
+                                                    </a>
+                                                </li>
+
                                                 {{-- Start Rajesh Changes And files --}}
                                                 <li class="nav-item">
                                                     <a href="{{ route('CREATELOT') }}" class="nav-link">
