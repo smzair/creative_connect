@@ -292,13 +292,27 @@
                                                 <li class="nav-item">
                                                     <a href="{{route('CommercialEditor')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
-                                                        <p>Create Commercial-Editor</p>
+                                                        <p>Create Editing Commercial</p>
                                                     </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a href="{{route('ViewCommercialEditor')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
-                                                        <p>View Commercial-Editor</p>
+                                                        <p>Editing Commercial List</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{ route('editor_create_lot') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Create Editing Lot</p>
+                                                    </a>
+                                                </li>
+    
+                                                <li class="nav-item">
+                                                    <a href="{{ route('get_editor_lot_data') }}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Editing Lot List</p>
                                                     </a>
                                                 </li>
 
@@ -341,6 +355,20 @@
                                                     <a href="{{route('Editing_Upload')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
                                                         <p>Editing Upload</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('Editing_Submission')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Editing Submission</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
+                                                    <a href="{{route('Editing_Submission_Done')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Editing Submission Done</p>
                                                     </a>
                                                 </li>
 
@@ -460,20 +488,6 @@
                                                     <a href="{{ route('update_invoice_number_panel') }}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
                                                         <p>Update Invoice Number Panel</p>
-                                                    </a>
-                                                </li>
-    
-                                                <li class="nav-item">
-                                                    <a href="{{ route('editor_create_lot') }}" class="nav-link">
-                                                        <i class="far fa-circle nav-icon"></i>
-                                                        <p>Create Lot Editor Panel</p>
-                                                    </a>
-                                                </li>
-    
-                                                <li class="nav-item">
-                                                    <a href="{{ route('get_editor_lot_data') }}" class="nav-link">
-                                                        <i class="far fa-circle nav-icon"></i>
-                                                        <p>Get Lot Editor Panel</p>
                                                     </a>
                                                 </li>
                                                 {{-- End Rajesh Changes And files --}}

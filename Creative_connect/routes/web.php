@@ -15,6 +15,7 @@ use App\Http\Controllers\CreativeQcController;
 use App\Http\Controllers\CreativeSubmissionController;
 use App\Http\Controllers\creativeWrc;
 use App\Http\Controllers\EditingAllocationController;
+use App\Http\Controllers\EditingSubmissionController;
 use App\Http\Controllers\EditingUploadLinkController;
 use App\Http\Controllers\EditingWrcController;
 use App\Http\Controllers\editorLotController;
@@ -259,5 +260,9 @@ Route::get('editing-upload', [EditingUploadLinkController::class, 'upload'])->na
 Route::post('Editing-upload-link', [EditingUploadLinkController::class, 'Editing_upload_link']); // for upload Editing WRC link 
 Route::post('get-editing_upload_links', [EditingUploadLinkController::class, 'get_Editing_Uploaded_link']); // for get Editing uploaded link 
 
+// Editing Submission And Client Approval Routing
+Route::get('Editing-ready-for-submission', [EditingSubmissionController::class, 'index'])->name('Editing_Submission'); //Editing WRC list Which Is ready for Submmition
+Route::post('Editing-comp-submission', [EditingSubmissionController::class, 'comp_Editing_Submission'])->name('comp_Editing_Submission'); // completed-qc-wrc
+Route::get('Editing-submission-done', [EditingSubmissionController::class, 'Editing_Submission_Done'])->name('Editing_Submission_Done'); // Qc List 
 
 
