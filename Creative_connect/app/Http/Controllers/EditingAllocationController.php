@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\EditingAllocation as ModelsCatalogAllocation;
 use App\Models\EditingAllocation;
+use App\Models\EditingWrc;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class EditingAllocationController extends Controller
 {
@@ -48,6 +50,22 @@ class EditingAllocationController extends Controller
     // save Editing Allocation users 
     function save(Request $request){
         $res = EditingAllocation::saveEditingAllocation($request);
+        $check_create = json_decode(json_encode($res, true));
+        /* send notification start */
+        if($check_create->user == 1){
+            $allocated_qty = $request->editor_Qty;
+            // $max_batch_no = Editor::where('wrc_id', $wrc_id)->max('batch_no');
+            $wrc_data = EditingWrc::where('id',$request->wrc_id)->first(['wrc_number']);
+            $wrc_number = $wrc_data != null ? $wrc_data->wrc_number : "";
+    
+            $data = new stdClass();
+            $data->wrc_number = $wrc_number;
+            $data->allocated_count = $allocated_qty;
+            $data->allocate_editor_id = $request->user_id;
+            $creation_type = 'WrcAllocationEditor';
+            $this->send_notification($data, $creation_type);
+        }
+        /******  send notification end*******/
         echo json_encode($res, true);
     }
 

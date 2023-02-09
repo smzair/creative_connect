@@ -138,8 +138,6 @@ class CatalogSubmission extends Model
 
         return json_encode($comp_submission_details);
 
-
-
     }
 
     // Catalog Wrc List For Invoice Genrate 

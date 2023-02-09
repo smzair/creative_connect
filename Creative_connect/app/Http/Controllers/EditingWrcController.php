@@ -95,7 +95,14 @@ class EditingWrcController extends Controller
      */
     public function store(Request $request)
     {
-       return $status = EditingWrc::storedata($request);
+          
+        $status = EditingWrc::storedata($request);
+        /* send notification start */
+            $creation_type = 'WrcEditor';
+            $data = EditingWrc::orderBy('id','DESC')->first(['wrc_number','imgQty']);
+            $this->send_notification($data, $creation_type);
+        /******  send notification end*******/
+        return $status;
     }
 
     /**

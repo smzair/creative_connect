@@ -10,6 +10,7 @@ use App\Models\CreativeWrcSkus as ModelsCreativeWrcSkus;
 use Carbon\Carbon;
 use CreativeWrcSkus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use stdClass;
 
 class CreativeAllocationController extends Controller
@@ -50,6 +51,8 @@ class CreativeAllocationController extends Controller
             $allocated_qty_cw = $presentDataCW != NULL ? $presentDataCW->allocated_qty : 0;
 
             // dd($presentIdCW);
+            $cw_user_array = [];
+            $gd_user_array = [];
 
             if($requestedData['copywriterName'][$key] != 0){
                 if($presentIdCW === 0){
@@ -60,6 +63,8 @@ class CreativeAllocationController extends Controller
                     $CreativeAllocation->allocated_qty = $requestedData['copyWriterQty'][$key];
                     $CreativeAllocation->save();
                     $msgCheck = true;
+                    //cw data push to send e mail
+                    array_push($cw_user_array, $requestedData['copywriterName'][$key]);
                 }else{
                     $CreativeAllocation                =  CreativeAllocation::find($presentIdCW);
                     $CreativeAllocation->wrc_id        = $request->wrc_id;
@@ -68,6 +73,8 @@ class CreativeAllocationController extends Controller
                     $CreativeAllocation->allocated_qty = $requestedData['copyWriterQty'][$key] + $allocated_qty_cw;
                     $CreativeAllocation->update();
                     $msgCheck = true;
+                    //gd data push to send e mail
+                    array_push($cw_user_array, $requestedData['copywriterName'][$key]);
                 }
             }
 
@@ -90,6 +97,8 @@ class CreativeAllocationController extends Controller
                     $CreativeAllocation->allocated_qty  = $requestedData['GraphicDesignerQty'][$key];
                     $CreativeAllocation->save();
                     $msgCheck = true;
+                    //gd data push to send e mail
+                    array_push($gd_user_array, $requestedData['designerName'][$key]);
                 }else{
                     $CreativeAllocation                 =  CreativeAllocation::find($presentIdGd);
                     $CreativeAllocation->wrc_id         = $request->wrc_id;
@@ -98,6 +107,8 @@ class CreativeAllocationController extends Controller
                     $CreativeAllocation->allocated_qty  = $requestedData['GraphicDesignerQty'][$key] + $allocated_qty_gd;
                     $CreativeAllocation->update();
                     $msgCheck = true;
+                    //gd data push to send e mail
+                    array_push($gd_user_array, $requestedData['designerName'][$key]);
                 }
             }
         }
@@ -109,16 +120,21 @@ class CreativeAllocationController extends Controller
         }
 
         /* send notification start */
-
-        $wrc_data = CreativeWrcModel::where('id',$wrc_id)->first(['wrc_number']);
-        $wrc_number = $wrc_data != null ? $wrc_data->wrc_number : "";
-
-        $data = new stdClass();
-        $data->batch_no = $batch_no;
-        $data->wrc_number = $wrc_number;
-
-        $creation_type = 'WrcAllocation';
-        $this->send_notification($data, $creation_type);
+            $creative_allocation_data = CreativeAllocation::where('id',$CreativeAllocation->id)->first(['wrc_id','user_id']);
+            $wrc_id = $creative_allocation_data != null ? $creative_allocation_data->wrc_id : 0;
+            $user_id = $creative_allocation_data != null ? $creative_allocation_data->user_id : 0;
+            $allocated_qty = CreativeAllocation::where('wrc_id',$wrc_id)->where('user_id',$user_id)->sum('allocated_qty');
+            $wrc_data = CreativeWrcModel::where('id',$wrc_id)->first(['wrc_number']);
+            $wrc_number = $wrc_data != null ? $wrc_data->wrc_number : "";
+            $max_batch_no = CreativeWrcBatch::where('wrc_id', $wrc_id)->max('batch_no');
+            $data = new stdClass();
+            $data->wrc_number = $wrc_number;
+            $data->batch_no = $max_batch_no;
+            $data->allocated_count = $allocated_qty;
+            $data->cw_user_data = $cw_user_array;
+            $data->gd_user_data = $gd_user_array;
+            $creation_type = 'WrcAllocation';
+            $this->send_notification($data, $creation_type);
         /******  send notification end*******/ 
         
         $allocationList = CreativeWrcModel::getDataForCreativeAllocation() ;
@@ -357,8 +373,8 @@ class CreativeAllocationController extends Controller
                 $storeData->save();
 
                 $timeHashData = CreativeTimeHash::where('allocation_id', $creative_allocation_id)->get()->first();
-                $old_start_time = $timeHashData->start_time;
-                $old_spent_time = $timeHashData->spent_time;
+                $old_start_time = $timeHashData != null ? $timeHashData->start_time : null;
+                $old_spent_time = $timeHashData != null ? $timeHashData->spent_time : null;
                 $old_spent_time = ($old_spent_time == "" || $old_spent_time == 0) ? 0 : (int)$old_spent_time;
                 // "%Y-%m-%d %H:%i:%s"
                 // $new_spent_time = (new Carbon($end_time))->diff(new Carbon($old_start_time))->format('%Y-%m-%d %H:%I:%s');
@@ -385,8 +401,8 @@ class CreativeAllocationController extends Controller
                 $storeData->update();
 
                 $timeHashData = CreativeTimeHash::where('allocation_id', $creative_allocation_id)->get()->first();
-                $old_start_time = $timeHashData->start_time;
-                $old_spent_time = $timeHashData->spent_time;
+                $old_start_time = $timeHashData != null ? $timeHashData->start_time : null;
+                $old_spent_time = $timeHashData != null ? $timeHashData->spent_time : null;
                 $old_spent_time = ($old_spent_time == "" || $old_spent_time == 0) ? 0 : (int)$old_spent_time;
                 // "%Y-%m-%d %H:%i:%s"
                 // $new_spent_time = (new Carbon($end_time))->diff(new Carbon($old_start_time))->format('%Y-%m-%d %H:%I:%s');
@@ -406,13 +422,24 @@ class CreativeAllocationController extends Controller
             }
 
             /* send notification start */
-            $wrc_id = 0;
+            $creative_allocation_data = CreativeAllocation::where('id',$creative_allocation_id)->first(['wrc_id','user_id']);
+            $wrc_id = $creative_allocation_data != null ? $creative_allocation_data->wrc_id : 0;
+            $user_id = $creative_allocation_data != null ? $creative_allocation_data->user_id : 0;
+            $allocated_qty = CreativeAllocation::where('wrc_id',$wrc_id)->where('user_id',$user_id)->sum('allocated_qty');
             $wrc_data = CreativeWrcModel::where('id',$wrc_id)->first(['wrc_number']);
             $wrc_number = $wrc_data != null ? $wrc_data->wrc_number : "";
+            $max_batch_no = CreativeWrcBatch::where('wrc_id', $wrc_id)->max('batch_no');
+
+            $user_id = 9;
+            // $user_id = Auth::user()->id;
+            $logged_in_user_data = DB::table('users')->where('id', $user_id )->first(['name']);
+            $uploaded_by_user_name = $logged_in_user_data != null ? $logged_in_user_data->name : " ";
 
             $data = new stdClass();
             $data->wrc_number = $wrc_number;
-
+            $data->batch_no = $max_batch_no;
+            $data->uploaded_by_user_name = $uploaded_by_user_name;
+            $data->uploaded_detail = $creative_link != null ? $creative_link  : $copy_link;
             $creation_type = 'completeTaskInUpload';
             $this->send_notification($data, $creation_type);
             /******  send notification end*******/ 

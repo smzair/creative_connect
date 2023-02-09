@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\CreatLots;
 use App\Notifications\sendNewNotification;
+use Google\Service\ServiceControl\Auth;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
+use stdClass;
 
 class creativeLot extends Controller
 {
@@ -92,11 +94,15 @@ class creativeLot extends Controller
             request()->session()->flash('error','Please try again!!');
         }
         /* send notification start */
-        $data = CreatLots::find($CreativeLots->id);
-        $creation_type = 'Lot';
-        $this->send_notification($data, $creation_type);
+            $brand_data = DB::table('brands')->where('id', $request->brand_id)->first(['name']);
+            $brand_name =  $brand_data != null ?  $brand_data->name : "";
+            $creation_type = 'Lot';
 
-       /******  send notification end*******/
+            $data = new stdClass();
+            $data->lot_number = strtoupper($lot_number);
+            $data->brand_name = $brand_name;
+            $this->send_notification($data, $creation_type);
+        /******  send notification end*******/
 
         return $this->edit($request,$id);
         

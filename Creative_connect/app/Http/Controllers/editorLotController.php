@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\EditorLotModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class editorLotController extends Controller
 {
@@ -18,6 +19,17 @@ class editorLotController extends Controller
     public function store(Request $request)
     {
         EditorLotModel::store($request);
+        /* send notification start */
+            $brand_data = DB::table('brands')->where('id', $request->brand_id)->first(['name']);
+            $brand_name =  $brand_data != null ?  $brand_data->name : "";
+            $creation_type = 'LotEditor';
+            $lot_number_data = EditorLotModel::orderBY('id','DESC')->first(['lot_number']);
+            $lot_number = $lot_number_data != null ? $lot_number_data->lot_number : "";
+            $data = new stdClass();
+            $data->lot_number = strtoupper($lot_number);
+            $data->brand_name = $brand_name;
+            $this->send_notification($data, $creation_type);
+        /******  send notification end*******/
         return $this->index();
     }
 

@@ -136,6 +136,7 @@ class CatalogWrcController extends Controller
     // for store data
     public function store(Request $request)
     {
+
         // $wrcNumber = $lotInfo->c_short . $lotInfo->short_name . $lotInfo->s_type . $lotInfo->id . '-' . chr($wrcCount + 65);
         DB::beginTransaction();
 
@@ -277,6 +278,11 @@ class CatalogWrcController extends Controller
             $tot_sku_qty_is = $saved_rows + $sku_qty_is;
             CatlogWrc::where('id', $wrc_id_is)->update(['sku_qty' => $tot_sku_qty_is]);
             if ($createWrcStatus) {
+                 /* send notification start */
+                    $data = CatlogWrc::find($createWrc->id);
+                    $creation_type = 'CatlogWrc';
+                    $this->send_notification($data, $creation_type);
+                /******  send notification end*******/  
                 DB::commit();
                 request()->session()->flash('success', 'Catlog Wrc Successfully added');
             } else {
@@ -318,6 +324,7 @@ class CatalogWrcController extends Controller
 
             // return $this->Index($request, $createWrc->id);
         } catch (\Exception $e) {
+            throw $e;
             DB::rollback();
             request()->session()->flash('error', 'Please try again!!');
         }
