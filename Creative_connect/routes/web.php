@@ -15,6 +15,7 @@ use App\Http\Controllers\CreativeQcController;
 use App\Http\Controllers\CreativeSubmissionController;
 use App\Http\Controllers\creativeWrc;
 use App\Http\Controllers\EditingAllocationController;
+use App\Http\Controllers\EditingClientARController;
 use App\Http\Controllers\EditingSubmissionController;
 use App\Http\Controllers\EditingUploadLinkController;
 use App\Http\Controllers\EditingWrcController;
@@ -263,6 +264,8 @@ Route::post('get-editing_upload_links', [EditingUploadLinkController::class, 'ge
 // Editing Submission And Client Approval Routing
 Route::get('Editing-ready-for-submission', [EditingSubmissionController::class, 'index'])->name('Editing_Submission'); //Editing WRC list Which Is ready for Submmition
 Route::post('Editing-comp-submission', [EditingSubmissionController::class, 'comp_Editing_Submission'])->name('comp_Editing_Submission'); // completed-qc-wrc
-Route::get('Editing-submission-done', [EditingSubmissionController::class, 'Editing_Submission_Done'])->name('Editing_Submission_Done'); // Qc List 
+Route::get('Editing-submission-done', [EditingSubmissionController::class, 'Editing_Submission_Done'])->name('Editing_Submission_Done'); //Editing WRC Submmition Done List
+Route::get('Editing-Wrc-client-ar', [EditingClientARController::class, 'index'])->name('EditingClientARList'); // Editing Wrc List for client Approval & Rejection
+Route::post('Editing-client-wrc-AR', [EditingClientARController::class, 'Editing_reject_approve_wrc'])->name('Editing_reject_approve_wrc'); // Editing Wrc client Approval or Rejection
 
 
