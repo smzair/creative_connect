@@ -60,6 +60,7 @@ Upload/Tasking Panel
                                 <th class="cls_comp_name">Company Name</th>
                                 <th class="cls_brand_name">Brand Name</th>
                                 <th>Order Qty</th>
+                                <th>Type of Service</th>
                                 <th>Document</th>
                                 <th>Upload</th>
                             </tr>
@@ -86,30 +87,7 @@ Upload/Tasking Panel
                                     $display_date_time = "display:none;";
                                     $display_start     = "display:block;";
                                     $btn_disable       = "";
-
                                     $extra = "";
-                                    
-                                    
-                                    // if($time_hash_id > 0 && $is_started == 0 && $is_rework == 0){
-                                    //     $display_pause = "";
-                                    //     $display_start = "display:none;";
-                                    // $btn_disable = "";
-
-                                    // }
-                                    // if($time_hash_id > 0 && $is_rework == 0){
-                                    //     $start_btn_text = "Continue";
-                                    // $btn_disable = "";
-                                    // }else if( $time_hash_id > 0 && $is_rework == 1){
-                                    //     $start_btn_text = "Start Rework";
-                                    //     $display_pause = "display:none;";
-                                    //     $display_start = "";
-                                    // }
-
-                                    // if($time_hash_id > 0 && $task_status > 0){
-                                    //     $display_pause = "display:none;";
-                                    //     $display_start = "display:none;";
-                                    // }
-                                
                                 @endphp
                                 <tr>
                                     <td class="cls_wrc_number">{{ $row['wrc_number'] }}</td>
@@ -118,6 +96,7 @@ Upload/Tasking Panel
                                     <td class="cls_brand_name">{{ $row['brand_name'].$extra }}</td>
                                     <td>{{ $allocated_qty }}</td>
                                     {{-- Guidelines Links --}}
+                                    <td class="cls_comp_name">{{ $row['type_of_service'] }}</td>
                                     <td>
                                         @if ($row['documentType'] == 0)
                                             <a target="_blank" href="{{$row['documentUrl']}}">Image Received Link</a>

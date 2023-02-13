@@ -124,4 +124,58 @@ class EditingSubmission extends Model
         return json_encode($comp_submission_details);
     }
 
+    // Catalog Wrc List For Invoice Genrate 
+    public static function Editing_Wrc_list_for_Invoice()
+    {
+        $Editing_Wrc_list_for_Invoice = EditingSubmission::WHERE('editing_submissions.ar_status', '<>', '0')->
+        leftJoin('editing_wrcs', 'editing_wrcs.id', 'editing_submissions.wrc_id')->
+        leftJoin('editor_lots', 'editor_lots.id', 'editing_wrcs.lot_id')->
+        leftJoin('editors_commercials', 'editors_commercials.id', 'editing_wrcs.commercial_id')->
+        leftJoin('users', 'users.id', 'editor_lots.user_id')->
+        leftJoin('brands', 'brands.id', 'editor_lots.brand_id')->
+        select(
+            'editing_submissions.id as submission_id',
+            'editing_submissions.wrc_id',
+            'editing_submissions.submission_date',
+            'editing_submissions.ar_status',
+            'editing_submissions.action_date',
+            'editor_lots.lot_number',
+            'editor_lots.brand_id',
+            'users.Company as company',
+            'users.c_short',
+            'brands.name as brands_name',
+            'brands.short_name',
+            'editors_commercials.type_of_service',
+            'editors_commercials.CommercialPerImage',
+            'editors_commercials.type_of_service as project_type',
+            'editing_wrcs.wrc_number',
+            'editing_wrcs.commercial_id',
+            'editing_wrcs.imgQty as imgqty',
+            'editing_wrcs.lot_id',
+            'editing_wrcs.invoice_number',
+            'editing_wrcs.created_at as wrc_created_at',
+        )->
+        orderBy('editing_submissions.updated_at')->get()->toArray();
+        return $Editing_Wrc_list_for_Invoice;
+    }
+
+    // Catalog Wrc Invoice Save / Update
+    public static function SaveEditingInvoiceNumber($request)
+    {
+        $wrc_id = $request->wrc_id;
+        $invoice_number = $request->invoice_number;
+        $update_status = 0;
+        $massage = "somthing went Wrong!!!";
+        $update_status = EditingWrc::where('id', $wrc_id)->update(['invoice_number' => $invoice_number]);
+        if ($update_status) {
+            $massage = "Wrc Invoice Number Updated!!";
+        }
+        $response = array(
+            'wrc_id' => $wrc_id,
+            'update_status' => $update_status,
+            'massage' => $massage,
+        );
+        return json_encode($response);
+    }
+
 }
