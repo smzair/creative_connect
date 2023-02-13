@@ -16,6 +16,7 @@ use App\Http\Controllers\CreativeSubmissionController;
 use App\Http\Controllers\creativeWrc;
 use App\Http\Controllers\EditingAllocationController;
 use App\Http\Controllers\EditingClientARController;
+use App\Http\Controllers\EditingInvoiceController;
 use App\Http\Controllers\EditingSubmissionController;
 use App\Http\Controllers\EditingUploadLinkController;
 use App\Http\Controllers\EditingWrcController;
@@ -268,4 +269,8 @@ Route::get('Editing-submission-done', [EditingSubmissionController::class, 'Edit
 Route::get('Editing-Wrc-client-ar', [EditingClientARController::class, 'index'])->name('EditingClientARList'); // Editing Wrc List for client Approval & Rejection
 Route::post('Editing-client-wrc-AR', [EditingClientARController::class, 'Editing_reject_approve_wrc'])->name('Editing_reject_approve_wrc'); // Editing Wrc client Approval or Rejection
 
+// Editing Invoice Route
+Route::get('/Editing-Invoice', [EditingInvoiceController::class, 'index'])->name('EditingInvoice'); // Listing For NewCommercial
+Route::POST('/save-Editing-invoice-number', [EditingInvoiceController::class, 'SaveEditingInvoiceNumber'])->name('SaveEditingInvoiceNumber'); // Save SaveEditingingCommercial And genrating data
+Route::POST('/Editing-Invoice', [EditingInvoiceController::class, 'SaveEditingBulkInvoice'])->name('SaveEditingBulkInvoice'); // Save SaveEditingingCommercial And genrating data
 
