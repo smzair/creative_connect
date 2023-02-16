@@ -17,6 +17,7 @@ use App\Http\Controllers\creativeWrc;
 use App\Http\Controllers\EditingAllocationController;
 use App\Http\Controllers\EditingClientARController;
 use App\Http\Controllers\EditingInvoiceController;
+use App\Http\Controllers\EditingMasterSheetController;
 use App\Http\Controllers\EditingSubmissionController;
 use App\Http\Controllers\EditingUploadLinkController;
 use App\Http\Controllers\EditingWrcController;
@@ -273,4 +274,7 @@ Route::post('Editing-client-wrc-AR', [EditingClientARController::class, 'Editing
 Route::get('/Editing-Invoice', [EditingInvoiceController::class, 'index'])->name('EditingInvoice'); // Listing For NewCommercial
 Route::POST('/save-Editing-invoice-number', [EditingInvoiceController::class, 'SaveEditingInvoiceNumber'])->name('SaveEditingInvoiceNumber'); // Save SaveEditingingCommercial And genrating data
 Route::POST('/Editing-Invoice', [EditingInvoiceController::class, 'SaveEditingBulkInvoice'])->name('SaveEditingBulkInvoice'); // Save SaveEditingingCommercial And genrating data
+
+// Editing Wrc Master Sheet Route
+Route::get('/Editing-Master-Sheet', [EditingMasterSheetController::class, 'index'])->name('EditingMasterSheet'); // Listing For NewCommercial
 

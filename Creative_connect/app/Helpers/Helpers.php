@@ -2,6 +2,7 @@
 // project / vartical type
 
 use App\Models\CatalogMarketplaceCredentials;
+use App\Models\EditingWrc;
 use App\Models\Marketplace;
 use Illuminate\Support\Facades\DB;
 
@@ -534,3 +535,17 @@ function timeFormat($date)
 }
 
 // 
+if (!function_exists('get_lot_wrc_data')) {
+
+    function get_lot_wrc_data($lot_id)
+    {
+        $lotdata = EditingWrc::where('lot_id','=', $lot_id)->
+        select(
+            DB::raw('SUM(imgQty)  as wrc_inward_qty'),
+            DB::raw('COUNT(lot_id)  as wrc_count'),
+        )->
+        get()->toArray();
+        return $lotdata;
+    }
+}
+
