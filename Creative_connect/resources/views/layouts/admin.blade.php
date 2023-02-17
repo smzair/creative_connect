@@ -22,17 +22,18 @@
 
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
 
-    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
-
-    <link rel="stylesheet" href="multiselect/jquery.multiselect.css">
-
     <!-- for new dashboard style we need to include this on main css -->
-    <link rel="stylesheet" href="{{ asset('dist/css/adminlte.css') }}">
+  <link rel="stylesheet" href="{{ asset('dist/css/adminlte.css') }}"> 
 
-    
-    <!--        <link rel="stylesheet" href="{{ asset('/css/jquery.dataTables.min.css') }}">-->
+  <link rel="stylesheet" href="{{ asset('plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+  
+  <link rel="stylesheet" href="{{ asset('plugins/daterangepicker/daterangepicker.css') }}">
+  <!-- summernote -->
+  <link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.min.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('/css/common.css') }}">
+  <link rel="stylesheet" href="{{ asset('plugins/select2/css/select2.min.css') }}"> 
+
+  <link rel="stylesheet" href="{{ asset('/css/common.css') }}"> 
 
     <style>
         .nav-item a{
@@ -331,6 +332,13 @@
                                                 </li>
 
                                                 <li class="nav-item">
+                                                    <a href="{{route('EditingWrcListForImgUpload')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Editing Raw Image Upload</p>
+                                                    </a>
+                                                </li>
+
+                                                <li class="nav-item">
                                                     <a href="{{route('Editing_Allocation')}}" class="nav-link">
                                                         <i class="far fa-circle nav-icon"></i>
                                                         <p>Editing Allocatiion</p>
@@ -598,8 +606,15 @@
 <script type="application/javascript" src="{{asset('plugins/jquery/jquery.min.js')}}"></script>
 <script type="application/javascript" src="{{asset('plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 
-<script type="text/javascript" src="{{asset('js/common.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/jquery.dataTables.min.js')}}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js" type="application/javascript" ></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js" type="application/javascript" ></script>
+<script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js" type="application/javascript" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js" type="text/javascript" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js" type="text/javascript" ></script>
+<script  src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="{{asset('js/common.js')}}"></script>
 
 
 <div id="sidebar-overlay"></div></div>
