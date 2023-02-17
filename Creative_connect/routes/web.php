@@ -23,6 +23,7 @@ use App\Http\Controllers\EditingUploadLinkController;
 use App\Http\Controllers\EditingWrcController;
 use App\Http\Controllers\editorLotController;
 use App\Http\Controllers\EditorsCommercialController;
+use App\Http\Controllers\ImageDownloadController;
 use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\NewCommercial;
 use App\Http\Controllers\WrcInvoiceNumber;
@@ -252,10 +253,6 @@ Route::POST('/Update-Editing-Wrc-Create', [EditingWrcController::class, 'update'
 // Route::post('/Catalog-Wrc-marketplace-Credentials-list', [CatalogWrcController::class, 'marketplace_Credentials_List'])->name('M-P-C-List');
 // Route::post('/save-wrc-Credentials', [CatalogWrcController::class, 'save_wrc_Credentials'])->name('S-W-Credentials');
 
-/* ---------- Editing Wrc Raw image upload -------------*/
-Route::get('/Editing-Wrc-raw-image-upload', [ImageUploadController::class, 'index'])->name('EditingWrcListForImgUpload');
-Route::Post('/Editing-Wrc-raw-image-upload1', [ImageUploadController::class, 'EditingRawImageUpload'])->name('EditingWrcRawImgUpload'); 
-
 
 /* ---------- Editing Panel Allocation -------------*/
 Route::get('Editing-allocation', [EditingAllocationController::class, 'index'])->name( 'Editing_Allocation'); // 
@@ -284,3 +281,9 @@ Route::POST('/Editing-Invoice', [EditingInvoiceController::class, 'SaveEditingBu
 // Editing Wrc Master Sheet Route
 Route::get('/Editing-Master-Sheet', [EditingMasterSheetController::class, 'index'])->name('EditingMasterSheet'); // Listing For NewCommercial
 
+/* ---------- Editing Wrc Raw image upload -------------*/
+Route::get('/Editing-Wrc-raw-image-upload', [ImageUploadController::class, 'index'])->name('EditingWrcListForImgUpload');
+Route::Post('/Editing-Wrc-raw-image-upload1', [ImageUploadController::class, 'EditingRawImageUpload'])->name('EditingWrcRawImgUpload');
+
+// Download Raw image Route
+Route::get('/Editing-Raw-image-downlaod/{wrc_id?}', [ImageDownloadController::class, 'Editing_Raw_Image_Download'])->name('Editing_Raw_Image_Download');

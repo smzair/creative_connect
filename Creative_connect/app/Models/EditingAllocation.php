@@ -23,6 +23,7 @@ class EditingAllocation extends Model
             $having_con = ">";
         }
         $wrcList = EditingWrc::
+        where('editing_wrcs.uploaded_img_qty', '>=', DB::raw('editing_wrcs.imgQty'))->
         leftJoin('editing_allocations', 'editing_allocations.wrc_id', 'editing_wrcs.id')->
         leftJoin('editor_lots', 'editor_lots.id', 'editing_wrcs.lot_id')->
         leftJoin('editors_commercials', 'editors_commercials.id', 'editing_wrcs.commercial_id')->
@@ -35,6 +36,7 @@ class EditingAllocation extends Model
             'editing_wrcs.wrc_number',
             'editing_wrcs.commercial_id',
             'editing_wrcs.imgQty',
+            'editing_wrcs.uploaded_img_qty',
             'editing_wrcs.documentType',
             'editing_wrcs.documentUrl',
             'editing_wrcs.work_initiate_date',
@@ -49,7 +51,7 @@ class EditingAllocation extends Model
             DB::raw('SUM(CASE WHEN user_role = 0 THEN allocated_qty else 0 END)  as editors_sum'),
             DB::raw('GROUP_CONCAT(assign_users.name) as ass_users'),
         )->
-        havingRaw("editors_sum $having_con 0 AND editors_sum <> imgQty")->
+        havingRaw("editors_sum $having_con 0 AND editors_sum <> uploaded_img_qty")->
         // having('editors_sum', $having_con, 0)->
         groupBy('editing_wrcs.id')->
         get()->toArray();
