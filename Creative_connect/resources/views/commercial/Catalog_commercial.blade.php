@@ -108,7 +108,7 @@ Create New Commercial for Creative
                                         //   $market_place_arr =  json_decode($commercial_data->market_place,true);
                                         //   print_r($market_place_arr);
                                         @endphp
-                                    <select class="custom-select select2bs4 form-control-border" placeholder="Select Marketplace" name="market_place[]" id="market_place" aria-hidden="true" style="width: 100%;" multiple="multiple">
+                                    <select class="custom-select select2 select2bs4 form-control-border js-example-basic-multiple" placeholder="Select Marketplace" name="market_place[]" id="market_place" aria-hidden="true" style="width: 100%;" multiple="multiple">
                                         <option value="" disabled>Select Marketplace</option>
                                         @foreach($marketPlace as $index => $getProduct)
 
@@ -133,7 +133,7 @@ Create New Commercial for Creative
                             <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                                 <div class="form-group">
                                     <label class="control-label required">Type of Service</label>
-                                    <select class="custom-select form-control-border reset" id="type_of_service" placeholder="Select Type of Service" name="type_of_service">
+                                    <select class="custom-select select2 form-control-border reset" id="type_of_service" placeholder="Select Type of Service" name="type_of_service">
                                         <option value="">Select Type of Service</option>
                                         @foreach($typeOfService as $index => $service)
                                         <option value="{{$index}}">{{$service}}</option>

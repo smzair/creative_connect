@@ -23,6 +23,7 @@ use App\Http\Controllers\EditingUploadLinkController;
 use App\Http\Controllers\EditingWrcController;
 use App\Http\Controllers\editorLotController;
 use App\Http\Controllers\EditorsCommercialController;
+use App\Http\Controllers\ImageUploadController;
 use App\Http\Controllers\NewCommercial;
 use App\Http\Controllers\WrcInvoiceNumber;
 use Illuminate\Support\Facades\Route;
@@ -250,6 +251,11 @@ Route::get('/Editing-Wrc-Create/{id}', [EditingWrcController::class, 'edit'])->n
 Route::POST('/Update-Editing-Wrc-Create', [EditingWrcController::class, 'update'])->name('UpdateEditingWrcCreate'); // Update Wrc for Editing
 // Route::post('/Catalog-Wrc-marketplace-Credentials-list', [CatalogWrcController::class, 'marketplace_Credentials_List'])->name('M-P-C-List');
 // Route::post('/save-wrc-Credentials', [CatalogWrcController::class, 'save_wrc_Credentials'])->name('S-W-Credentials');
+
+/* ---------- Editing Wrc Raw image upload -------------*/
+Route::get('/Editing-Wrc-raw-image-upload', [ImageUploadController::class, 'index'])->name('EditingWrcListForImgUpload');
+Route::Post('/Editing-Wrc-raw-image-upload1', [ImageUploadController::class, 'EditingRawImageUpload'])->name('EditingWrcRawImgUpload'); 
+
 
 /* ---------- Editing Panel Allocation -------------*/
 Route::get('Editing-allocation', [EditingAllocationController::class, 'index'])->name( 'Editing_Allocation'); // 
