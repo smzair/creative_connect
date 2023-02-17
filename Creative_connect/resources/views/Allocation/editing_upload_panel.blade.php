@@ -62,6 +62,7 @@ Upload/Tasking Panel
                                 <th>Order Qty</th>
                                 <th>Type of Service</th>
                                 <th>Document</th>
+                                <th>Download Raw Images</th>
                                 <th>Upload</th>
                             </tr>
                         </thead>
@@ -104,6 +105,10 @@ Upload/Tasking Panel
                                             <a href="{{ asset('/storage/Uploaded_SKU') }}{{"/".$row['documentUrl']}}" download >Download Excel</a>
                                         @endif
                                         {{-- <li><a target="_blank" href="{{ $row['img_as_per_guidelines'] }}" class="work-link">Link</a></li> --}}
+                                    </td>
+
+                                    <td>
+                                        <a href="{{route('Editing_Raw_Image_Download', [base64_encode($wrc_id)])}}">Download</a>
                                     </td>
                                     
                                     {{-- Upload market_place --}}
