@@ -378,7 +378,7 @@ Editing Wrc Raw Image Upload
                                     <th class="p-2">Tentative Image Count</th>
                                     <th class="p-2">Upload Image Link Received</th>
                                     <th class="p-2">Upload SKU Sheet</th>    
-                                    <th class="p-2">Upload Tentative Image Count</th>    
+                                    <th class="p-2">Upload Image Count</th>    
                                     <th class="p-2">Actions</th>
                                 </tr>
                             </thead>
@@ -418,7 +418,7 @@ Editing Wrc Raw Image Upload
                                         <td data-value="uploaded_img_qty" id="uploaded_img_qty{{$key}}">{{ $row['uploaded_img_qty'] }}</td>
 
                                         <td>
-                                            <button class="btn btn-warning" id="allocateBTnC" data-toggle="modal"  data-target="#allocateWRCPopupCAt" onclick="setvalue({{ $key }})"> Allocate </button>
+                                            <button class="btn btn-warning" id="allocateBTnC" data-toggle="modal"  data-target="#allocateWRCPopupCAt" onclick="setvalue({{ $key }})"> Upload Raw Image </button>
                                         </td>
                                         <input type="hidden" id="key_is{{ $key }}" value="{{ $key }}">
                                         <input type="hidden" id="wrc_id{{ $key }}" value="{{ $row['wrc_id'] }}">

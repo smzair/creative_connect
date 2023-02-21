@@ -287,3 +287,6 @@ Route::Post('/Editing-Wrc-raw-image-upload1', [ImageUploadController::class, 'Ed
 
 // Download Raw image Route
 Route::get('/Editing-Raw-image-downlaod/{wrc_id?}', [ImageDownloadController::class, 'Editing_Raw_Image_Download'])->name('Editing_Raw_Image_Download');
+Route::Post('/Editing-Wrc-Edited-image-upload', [ImageUploadController::class, 'EditingEditedImageUpload'])->name('EditingWrcEditedImgUpload');
+Route::get('/Editing-User-Edited-image-downlaod/{allocation_id?}', [ImageDownloadController::class, 'Editing_User_Edited_Image_Download'])->name('Editing_User_Edited_Image_Download'); // User Edited Image Download user and wrc wice
+
