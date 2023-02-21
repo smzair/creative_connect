@@ -22,7 +22,13 @@ class CatalogWrcBatch extends Model
         // , catlog_wrc.id , catlog_wrc.wrc_number , catlog_wrc.modeOfDelivary , catlog_wrc.commercial_id,catlog_wrc.is_retainer
 
         $catalog_Wrc_Batch_list = CatalogWrcBatch::
-        where('lots_catalog.requestType','=', 'Retainer')->
+        where('lots_catalog.requestType','=', 'Retainer')->leftJoin(
+            'catalog_wrc_skus',
+            function ($join) {
+                $join->on('catalog_wrc_batches.wrc_id', '=', 'catalog_wrc_skus.wrc_id');
+                $join->on('catalog_wrc_batches.batch_no', '=', 'catalog_wrc_skus.batch_no');
+            }
+        )->
         leftJoin('catlog_wrc', 'catlog_wrc.id', 'catalog_wrc_batches.wrc_id')->
         leftJoin('lots_catalog', 'lots_catalog.id', 'catlog_wrc.lot_id')->
         leftJoin('users', 'lots_catalog.user_id', 'users.id')->
@@ -32,6 +38,7 @@ class CatalogWrcBatch extends Model
             'catalog_wrc_batches.wrc_id',
             'catalog_wrc_batches.created_at as wrc_created_at',
             'catalog_wrc_batches.batch_no',
+            'catalog_wrc_skus.batch',
             'catalog_wrc_batches.sku_count',
             DB::raw('COUNT(catalog_wrc_batches.batch_no) as total_batch_no'),
             'catlog_wrc.wrc_number',

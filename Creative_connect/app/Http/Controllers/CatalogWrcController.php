@@ -334,12 +334,19 @@ class CatalogWrcController extends Controller
     {
         $wrcs =  CatlogWrc::OrderBy('catlog_wrc.updated_at', 'DESC')
             ->leftJoin('catalog_wrc_batches', 'catalog_wrc_batches.wrc_id', 'catlog_wrc.id')
+            ->leftJoin(
+            'catalog_wrc_skus',
+            function ($join) {
+                $join->on('catalog_wrc_batches.wrc_id', '=', 'catalog_wrc_skus.wrc_id');
+                $join->on('catalog_wrc_batches.batch_no', '=', 'catalog_wrc_skus.batch_no');
+            })
             ->leftJoin('lots_catalog', 'lots_catalog.id', 'catlog_wrc.lot_id')
             ->leftJoin('users', 'users.id', 'lots_catalog.user_id')
             ->leftJoin('brands', 'brands.id', 'lots_catalog.brand_id')
             ->select(
             'catlog_wrc.*',
             'catalog_wrc_batches.batch_no',
+            'catalog_wrc_skus.batch',
             'catalog_wrc_batches.updated_at',
             'lots_catalog.user_id',
             'lots_catalog.brand_id', 
@@ -347,6 +354,7 @@ class CatalogWrcController extends Controller
             'users.Company as Company_name', 
             'brands.name'
             )
+            -> groupBy(['catalog_wrc_batches.wrc_id', 'catalog_wrc_batches.batch_no'])
             ->get();
         //    dd($wrcs);
         return view('Wrc.Catalog-view-wrc')->with('wrcs', $wrcs);
