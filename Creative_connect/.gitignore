@@ -5,6 +5,8 @@
 /vendor
 /public/editing_raw_img_uploads
 /editing_raw_img_uploads
+/public/edited_img_uploads
+/edited_img_uploads
 .env
 .env.backup
 .phpunit.result.cache

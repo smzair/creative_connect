@@ -15,7 +15,8 @@ class AddNewColumnUploadedImgQtyAndPathToEditingWrcsTable extends Migration
     {
         Schema::table('editing_wrcs', function (Blueprint $table) {
             $table->integer('uploaded_img_qty')->default(0)->length(10)->unsigned()->after('invoice_number');
-            $table->string('file_path')->nullable()->after('uploaded_img_qty');
+            $table->string('raw_img_file_path')->nullable()->after('uploaded_img_qty');
+            $table->string('uploaded_img_file_path')->nullable()->after('raw_img_file_path');
         });
     }
 
@@ -28,7 +29,8 @@ class AddNewColumnUploadedImgQtyAndPathToEditingWrcsTable extends Migration
     {
         Schema::table('editing_wrcs', function (Blueprint $table) {
             $table->dropColumn('uploaded_img_qty');
-            $table->dropColumn('file_path');
+            $table->dropColumn('raw_img_file_path');
+            $table->dropColumn('uploaded_img_file_path');
         });
     }
 }

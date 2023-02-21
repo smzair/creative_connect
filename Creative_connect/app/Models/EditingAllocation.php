@@ -181,7 +181,8 @@ class EditingAllocation extends Model
             'editing_allocations.id as allocation_id_is',
             'editing_allocations.wrc_id',
             'editing_allocations.allocated_qty',
-
+            'editing_allocations.uploaded_qty',
+            'editing_allocations.file_path',
             'editing_wrcs.wrc_number',
             'editing_wrcs.imgQty',
             'editing_wrcs.lot_id',
@@ -194,8 +195,6 @@ class EditingAllocation extends Model
             'editors_commercials.type_of_service',
             'users.Company',
             'brands.name as brand_name',
-            DB::raw('GROUP_CONCAT(editing_allocations.user_id) as ass_cataloger'),
-            DB::raw('GROUP_CONCAT(editing_allocations.user_role) as user_roles'),
         )->groupBy('editing_allocations.wrc_id')->orderBy('editing_allocations.updated_at', 'DESC')->get()->toArray();
         return $editing_allocation_list;
     }

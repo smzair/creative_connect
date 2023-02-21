@@ -161,7 +161,7 @@ Editing Allocation
                         <div class="row ">
                             <div class="col-sm-4 col-6">
                                 <div class="col-ac-details">
-                                    <h6>Uploaded Tentative Image Count</h6>
+                                    <h6>Uploaded Image Count</h6>
                                     <p id="uploaded_img_qty"></p>
                                 </div>
                             </div>
