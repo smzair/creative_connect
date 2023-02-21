@@ -215,6 +215,7 @@ Update Editing Invoice Number
 
                             @php
                                 // pre($Editing_Wrc_list_for_Invoice);
+                                $invoice_not_yet = 'Invoice Not Raised Yet';
                             @endphp
                            
                             @foreach($Editing_Wrc_list_for_Invoice  as $row_key => $row)
@@ -230,7 +231,6 @@ Update Editing Invoice Number
                                     
                                     $wrc_id_is = $row['wrc_id'];
                                     $wrc_id_is = ""; 
-                                    $invoice_not_yet = 'Invoice Not Raised Yet';
                                     $invoice_number = ($row['invoice_number'] == null || $row['invoice_number'] == '' ) ? $invoice_not_yet : $row['invoice_number'] ;
 
                                     $btn_text = $invoice_number != $invoice_not_yet ? "Update Invoice Number" :  "Add Invoice Number";

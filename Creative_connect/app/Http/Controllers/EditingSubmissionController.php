@@ -28,7 +28,7 @@ class EditingSubmissionController extends Controller
         $tsak_status_is = 2; // Editing submission done
         $Editing_Wrc_Submission_Done_list = EditingSubmission::Editing_Wrc_Submission_list($tsak_status_is);
         // dd($Editing_Wrc_Submission_Done_list);
-        return view('Submission.Editing-submission-done')->with('Editing_Wrc_Submission_Done_list', $Editing_Wrc_Submission_Done_list);
+        return view('Submission.Editing-submission-done')->with('Editing_Wrc_list_ready_for_Submission', $Editing_Wrc_Submission_Done_list);
     }
 
 

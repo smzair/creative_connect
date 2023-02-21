@@ -32,6 +32,7 @@ class EditingSubmission extends Model
             'editing_wrcs.wrc_number',
             'editing_wrcs.commercial_id',
             'editing_wrcs.imgQty',
+            'editing_wrcs.uploaded_img_qty',
             'editing_wrcs.imgQty as wrc_t_sku_qty',
             'editor_lots.brand_id',
             'editor_lots.lot_number',
@@ -53,7 +54,7 @@ class EditingSubmission extends Model
             DB::raw('GROUP_CONCAT(allocated_users.id) as allo_users_id'),
             DB::raw('GROUP_CONCAT(allocated_users.name) as allocated_users_name'),
         )->
-        // havingRaw("editor_allocated_qty > 0 AND editor_allocated_qty = imgQty")->
+        havingRaw("editor_allocated_qty > 0 AND editor_allocated_qty = uploaded_img_qty")->
         groupBy(['editing_allocations.wrc_id'])->
         get()->toArray();
         return $Editing_Wrc_list_ready_for_Submission;

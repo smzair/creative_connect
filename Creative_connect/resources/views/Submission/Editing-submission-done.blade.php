@@ -139,35 +139,45 @@ Editing - Submission Done
                                 <th class="align-middle text-center">Brand Name</th>
                                 <th class="align-middle text-center">WRC Number</th>
                                 <th class="align-middle text-center">Wrc Created At</th>
-                                <th class="align-middle text-center">Tentative Image Count</th>
-                                <th class="align-middle text-center">Action</th>
+                                <th class="align-middle text-center">Total Tentative Image Count</th>
+                                <th class="align-middle text-center">Total Uploaded Count</th>
+                                <th class="align-middle text-center">Total Allocated Qty</th>
+                                <th class="align-middle text-center">Download Uploaded Image</th>
+                                {{-- <th class="align-middle text-center">Action</th> --}}
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($Editing_Wrc_Submission_Done_list as $row)
+                            @php
+                                // pre($Editing_Wrc_list_ready_for_Submission);
+                            @endphp
+                            @foreach($Editing_Wrc_list_ready_for_Submission as $row)
                                 @php
                                     $wrc_id = $row['wrc_id'];
-                                    $allow_to_submit = 0;
                                     $btn_disable = "disabled";
                                     $reworkbtn_disable = "";
                                     $submit_check_disable = "disabled"; // checked 
                                     $submit_check_is_checked = ""; //
-                                    
-                                
-                                    $wrc_id_is = $row['wrc_id'];
+                                   
                                     $wrc_id_is = ""; 
                                     $company = $row['company'];
-                                    $imgqty = $row['imgQty'];
+                                    $imgQty = $row['imgQty'];
+                                    $uploaded_img_qty = $row['uploaded_img_qty'];
                                     $brands_name = $row['brands_name'];
                                     $lot_number = $row['lot_number'];
                                     $wrc_number = $row['wrc_number'];
                                     $wrc_created_at =  $row['wrc_created_at'] != '0000-00-00 00:00:00' ? date('d-m-Y h:i A',strtotime($row['wrc_created_at'])) : '';
+                                    
+                                    $editor_allocated_qty = $row['editor_allocated_qty'];
                                     $final_link_list = $row['final_link_list'];
                                     $user_roles = $row['user_roles'];
                                     $allo_users_id = $row['allo_users_id'];
                                     $allocated_users_name = $row['allocated_users_name'];
-                                    $editor_allocated_qty = $row['editor_allocated_qty'];
                                     $editor_allocation_ids = $row['editor_allocation_ids'];
+
+                                    $editor_allocation_id_arr = explode(',', $editor_allocation_ids);
+                                    $allocated_users_name_arr = explode(',', $allocated_users_name);
+                                    $final_link_list_arr = explode(',', $final_link_list);
+                                    $editor_allocation_id_arr = explode(',', $editor_allocation_ids);
                                 @endphp
                                 <tr>
                                     <td class="text-center">{{ $wrc_id }}</td>
@@ -176,17 +186,36 @@ Editing - Submission Done
                                     <td class="text-center">{{ $brands_name .$wrc_id_is }}</td>
                                     <td class="text-center">{{ $wrc_number }}</td>
                                     <td class="text-center">{{ $wrc_created_at }}</td>
-                                    <td class="text-center">{{ $imgqty }}</td>
-                                    <td>
-                                        <div class="d-inline-block mt-1">
+                                    <td class="text-center">{{ $imgQty }}</td>
+                                    <td class="text-center">{{ $uploaded_img_qty }}</td>
+                                    <td class="text-center">{{ $editor_allocated_qty }}</td>
 
+                                    <td>
+
+                                        @foreach ($final_link_list_arr as $pos => $link)
+                                            @if ($link != '')
+                                                @php
+                                                $allocation_id = $editor_allocation_ids[$pos];
+                                                $allocated_users_name_is = $allocated_users_name_arr[$pos];
+                                                @endphp
+                                                <p>
+                                                    <a title="Download {{$allocated_users_name_is}} Uploaded Files" href="{{route('Editing_User_Edited_Image_Download', [base64_encode($allocation_id)])}}">Download </a>
+                                                </p>
+                                            @endif
+                                        
+                                        @endforeach
+                                    </td>
+
+                                    {{-- <td>
+                                        <div class="d-inline-block mt-1">
                                             <p class="d-none" id="data_id_{{ $wrc_id }}" 
                                             data-wrc_id="{{ $wrc_id }}" 
                                             data-company="{{ $company }}"  
                                             data-brands_name="{{ $brands_name }}"  
                                             data-lot_number="{{ $lot_number }}"  
                                             data-wrc_number="{{ $wrc_number }}"  
-                                            data-imgqty="{{ $imgqty }}"  
+                                            data-imgqty="{{ $imgQty }}"  
+                                            data-uploaded_img_qty="{{ $uploaded_img_qty }}"  
                                             data-final_link_list="{{ $final_link_list }}"  
                                             data-allo_users_id="{{ $allo_users_id }}"  
                                             data-allocated_users_name="{{ $allocated_users_name }}"  
@@ -196,12 +225,10 @@ Editing - Submission Done
                                             > </p>
 
                                             <button data-company="{{ $wrc_id }}" onclick="setdata('{{ $wrc_id }}')" class="btn btn-default py-1 mt-1" data-toggle="modal" data-target="#editorCommnentModal">
-                                               Details
+                                                Details
                                             </button>
-
-                                            
                                         </div>
-                                    </td>
+                                    </td> --}}
                                 </tr>  
                             @endforeach
                         </tbody>
