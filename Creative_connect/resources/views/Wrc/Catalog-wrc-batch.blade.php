@@ -90,6 +90,13 @@ Catalog-wrc-batch
                                     // pre($data_arr);
                                 @endphp
                                 @foreach($data_arr as $index => $row)
+                                @php
+                                    if($row['batch_no'] > 0){
+                                        $batch_no_is = ($row['batch'] != '' && $row['batch'] != null) ? $row['batch'] : $row['batch_no'];
+                                    }else{
+                                        $batch_no_is =  'None';
+                                    }
+                                @endphp
                                 <tr class="wrc-tt">
                                     <td class="p-sm-2 p-1">{{$index+1}}</td>
                                     <td id="wrc_number<?= $index?>" class="p-sm-2 p-1">{{$row['wrc_number']}}</td>
@@ -98,7 +105,7 @@ Catalog-wrc-batch
                                     <td id="brand_name<?= $index?>" class="p-sm-2 p-1">{{$row['brand_name']}}</td>
                                     <td id="serviceType<?= $index?>" class="p-sm-2 p-1">{{$row['serviceType']}}</td>
                                     <td id="wrc_created_at<?= $index?>" class="p-sm-2 p-1">{{$row['wrc_created_at']}}</td>
-                                    <td id="batch_no<?= $index?>" class="p-sm-2 p-1">{{$row['batch_no']}}</td>
+                                    <td id="batch_no<?= $index?>" class="p-sm-2 p-1">{{$batch_no_is}}</td>
                                     <td id="sku_count<?= $index?>" class="p-sm-2 p-1">{{$row['sku_count']}}</td>
                                     <td class="p-sm-2 p-1">                                        
                                         <input id="wrc_id<?= $index;?>" type="hidden" name="wrc_id" value="<?= $row['wrc_id']?>">
