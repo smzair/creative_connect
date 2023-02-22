@@ -166,7 +166,11 @@ Catalogue - Submission
                                 // $tot_allocation_ids = count($allocation_id_arr); 
 
                                 $batch_no = $row['batch_no'];
-                                $batch_no_is = $batch_no > 0 ? $batch_no :'None';
+                                if($row['batch_no'] > 0){
+                                    $batch_no_is = ($row['batch'] != '' && $row['batch'] != null) ? $row['batch'] : $row['batch_no'];
+                                }else{
+                                    $batch_no_is =  'None';
+                                }
                                 
                                 $ini_start_times = $row['ini_start_times'];
                                 $ini_start_times_arr = explode(",",$ini_start_times);

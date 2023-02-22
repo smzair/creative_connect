@@ -67,6 +67,7 @@ class CatlaogQc extends Model
             // DB::raw('COUNT(catalog_upload_links.catalog_link) as catalog_links'),
             // DB::raw('COUNT(catalog_upload_links.copy_link) as copy_links'),
         )->
+        selectRaw('(SELECT batch from catalog_wrc_skus WHERE catalog_wrc_skus.batch_no = catalog_wrc_batches.batch_no AND catalog_wrc_batches.wrc_id = catalog_wrc_skus.wrc_id limit 1) as "batch"')->
         groupBy('catalog_allocation.wrc_id')->groupBy('catalog_allocation.batch_no')->
         orderBy('catalog_allocation.wrc_id')->orderBy('catalog_allocation.batch_no')->
         get()->toArray();

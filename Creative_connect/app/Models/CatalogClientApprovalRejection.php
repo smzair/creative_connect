@@ -54,6 +54,7 @@ class CatalogClientApprovalRejection extends Model
             'brands.name as brands_name',
             'brands.short_name',
         )->
+        selectRaw('(SELECT batch from catalog_wrc_skus WHERE catalog_wrc_skus.batch_no = catalog_wrc_batches.batch_no AND catalog_wrc_batches.wrc_id = catalog_wrc_skus.wrc_id limit 1) as "batch"')->
         get()->toArray();
         return $catalog_client_cr_list;
     }

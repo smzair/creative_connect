@@ -83,7 +83,9 @@ class CatalogSubmission extends Model
             DB::raw('GROUP_CONCAT(catalog_allocation.id) as catalog_allocation_ids'),
             DB::raw('GROUP_CONCAT(allocated_users.id) as allo_users_id'),
             DB::raw('GROUP_CONCAT(allocated_users.name) as allocated_users_name'),
-        )->groupBy(['catalog_allocation.wrc_id', 'catalog_allocation.batch_no'])->get()->toArray();
+        )->
+        selectRaw('(SELECT batch from catalog_wrc_skus WHERE catalog_wrc_skus.batch_no = catalog_wrc_batches.batch_no AND catalog_wrc_batches.wrc_id = catalog_wrc_skus.wrc_id limit 1) as "batch"')->
+        groupBy(['catalog_allocation.wrc_id', 'catalog_allocation.batch_no'])->get()->toArray();
         return $catalog_Wrc_list_for_Submission;
     }
 
@@ -184,6 +186,7 @@ class CatalogSubmission extends Model
             'users.c_short',
             'brands.short_name',
         )->
+        selectRaw('(SELECT batch from catalog_wrc_skus WHERE catalog_wrc_skus.batch_no = catalog_wrc_batches.batch_no AND catalog_wrc_batches.wrc_id = catalog_wrc_skus.wrc_id limit 1) as "batch"')->
         groupBy(['catalog_submissions.wrc_id', 'catalog_submissions.batch_no'])->
         orderBy('catalog_submissions.updated_at')->
         get()->toArray();

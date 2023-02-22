@@ -142,9 +142,11 @@ Catalog Qc Panel
                                 $wrc_id = $qc['wrc_id'];
                                 $wrc_number = $qc['wrc_number'];
                                 $batch_no = $qc['batch_no'];
-                                $batch_no_is = $batch_no > 0 ? $batch_no :'None';
-
-                                
+                                if($qc['batch_no'] > 0){
+                                    $batch_no_is = ($qc['batch'] != '' && $qc['batch'] != null) ? $qc['batch'] : $qc['batch_no'];
+                                }else{
+                                    $batch_no_is =  'None';
+                                }
                                 $catalog_link_list = $qc['catalog_link_list'];
                                 $catalog_link_arr = explode(",",$catalog_link_list);
 
