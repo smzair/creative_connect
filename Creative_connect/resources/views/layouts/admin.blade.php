@@ -289,6 +289,14 @@
                                                     </a>
                                                 </li>
 
+                                                {{-- Catalog Wrc Master Sheet --}}
+                                                <li class="nav-item">
+                                                    <a href="{{route('CatalogWrcMasterSheet')}}" class="nav-link">
+                                                        <i class="far fa-circle nav-icon"></i>
+                                                        <p>Catalog Master Sheet</p>
+                                                    </a>
+                                                </li>
+
                                                 {{-- Editing Panel --}}
                                                 <li class="nav-item">
                                                     <a href="{{route('CommercialEditor')}}" class="nav-link">

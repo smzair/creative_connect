@@ -225,7 +225,11 @@ Update CataLog Invoice Number
                             @php
                                 $wrc_id = $row['wrc_id'];
                                 $batch_no = $row['batch_no'];
-                                $batch_no_is = $batch_no > 0 ? $batch_no :'None';
+                                if($row['batch_no'] > 0){
+                                    $batch_no_is = ($row['batch'] != '' && $row['batch'] != null) ? $row['batch'] : $row['batch_no'];
+                                }else{
+                                    $batch_no_is =  'None';
+                                }
 
                                 $lot_number = $row['lot_number'];
                                 $company = $row['company'];

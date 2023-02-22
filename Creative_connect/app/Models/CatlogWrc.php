@@ -124,6 +124,7 @@ class CatlogWrc extends Model
             'catalog_wrc_batches.id as wrc_batch_id',
             'catalog_wrc_batches.sku_count as sku_qty',
         )
+        ->selectRaw('(SELECT batch from catalog_wrc_skus WHERE catalog_wrc_skus.batch_no = catalog_wrc_batches.batch_no AND catalog_wrc_batches.wrc_id = catalog_wrc_skus.wrc_id limit 1) as "batch"')
         ->groupBy('catalog_wrc_batches.wrc_id')
         ->groupBy('catalog_wrc_batches.batch_no')
         ->get()->toArray();

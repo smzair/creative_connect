@@ -79,7 +79,11 @@ Catalog WRC Status
                                         $lot_number = $row['lot_number'];
                                         $wrc_number = $row['wrc_number'];
                                         $batch_no = $row['batch_no'];
-                                        $batch_no_is = $batch_no > 0 ? $batch_no :'None';
+                                        if($row['batch_no'] > 0){
+                                            $batch_no_is = ($row['batch'] != '' && $row['batch'] != null) ? $row['batch'] : $row['batch_no'];
+                                        }else{
+                                            $batch_no_is =  'None';
+                                        }
 
                                         $Company = $row['Company'];
                                         $brand_name = $row['brand_name'];

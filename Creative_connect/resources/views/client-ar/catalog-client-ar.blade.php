@@ -173,7 +173,11 @@ Catalogue - client approval rejection
                                 $ar_status = $row['ar_status'];
 
                                 $batch_no = $row['batch_no'];
-                                $batch_no_is = $batch_no > 0 ? $batch_no :'None';
+                                if($row['batch_no'] > 0){
+                                    $batch_no_is = ($row['batch'] != '' && $row['batch'] != null) ? $row['batch'] : $row['batch_no'];
+                                }else{
+                                    $batch_no_is =  'None';
+                                }
 
                                 $sku_qty = $row['sku_qty'];
                                 $sku_qty = $row['sku_qty'];

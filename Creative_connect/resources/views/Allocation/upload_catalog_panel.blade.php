@@ -173,6 +173,11 @@ Cataloger Panel
                                 $commercial_id =  $row['commercial_id'];
                                 $lot_id =  $row['lot_id'];
                                 $batch_no =  $row['batch_no'];
+                                if($row['batch_no'] > 0){
+                                    $batch_no_is = ($row['batch'] != '' && $row['batch'] != null) ? $row['batch'] : $row['batch_no'];
+                                }else{
+                                    $batch_no_is =  'None';
+                                }
                                 $market_place = $row['market_place'];
                                 
                                 $market_place_ids = explode(',',$row['market_place']);
@@ -282,7 +287,7 @@ Cataloger Panel
                                     ?>    
                                 </td>
                                 <td>
-                                    <?php echo $row['batch_no'] > 0 ? $row['batch_no'] : 'None' ;?>
+                                    <?php echo $batch_no_is;?>
                                 </td>
                                 <td>{{ $allocated_qty }}</td>
                                 <td>
